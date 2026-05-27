@@ -1,0 +1,15 @@
+/* 全局CSS变量 */
+:root {
+  --momcozy-primary: #C25B6E;
+  --momcozy-primary-dark: #A34759;
+  --color-success: #34c759;
+  --color-warning: #ff9500;
+  --color-danger: #ff3b30;
+  --bg-primary: #FDFCFB;
+  --bg-card: #ffffff;
+  --border-color: #EDE6DF;
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+}
+html { scroll-behavior: smooth; }
+::selection { background-color: #C25B6E15; color: #C25B6E; }

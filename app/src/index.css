@@ -1,0 +1,150 @@
+@import './styles/global.css';
+@tailwind base;
+/* ═══════════════════════════════════════════════════════════
+   Design Tokens — Momcozy Market Insight Workbench
+   ═══════════════════════════════════════════════════════════ */
+
+/* Border System: 统一为 #EDE6DF */
+/* Text Hierarchy:
+   Primary:   #1D1D1F (标题、正文)
+   Secondary: #86868B (辅助说明、常规次要文字)
+   Tertiary:  #B5AFA8 (数据来源、时间戳、placeholder)
+   Quaternary:#CFC9C2 (禁用态、极弱提示)
+
+   Background:
+   Page:      #F7F0EB (全局页面底色)
+   Card:      #FFFFFF (卡片底色)
+   Hover:     #FBF8F5 (hover底色)
+   Active:    #F5EDE8 (active/按下底色)
+
+   Border:
+   Default:   #EDE6DF (常规边框)
+   Focus:     #C25B6E (聚焦/激活边框)
+   Divider:   #EDE6DF (分隔线)
+*/
+
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 24 22% 97%;
+    --foreground: 0 15% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 15% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 15% 12%;
+    --primary: 350 45% 37%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 24 20% 95%;
+    --secondary-foreground: 0 15% 12%;
+    --muted: 24 15% 94%;
+    --muted-foreground: 0 5% 42%;
+    --accent: 24 20% 95%;
+    --accent-foreground: 0 15% 12%;
+    --destructive: 0 55% 52%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 24 14% 90%;
+    --input: 24 14% 90%;
+    --ring: 350 45% 37%;
+    --radius: 0.75rem;
+    --sidebar-background: 24 22% 98%;
+    --sidebar-foreground: 0 15% 12%;
+    --sidebar-primary: 350 45% 37%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 24 18% 94%;
+    --sidebar-accent-foreground: 0 15% 12%;
+    --sidebar-border: 24 14% 92%;
+    --sidebar-ring: 350 45% 37%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background-color: #F7F0EB;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ── Round 1: 卡片阴影系统 ── */
+@layer components {
+  .card-shadow {
+    box-shadow: 0 0.5px 1px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.03);
+    transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-shadow:hover {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.04), 0 12px 24px rgba(0,0,0,0.03);
+    transform: translateY(-1px);
+  }
+  .card-shadow-sm {
+    box-shadow: 0 0.5px 1.5px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.025);
+    transition: box-shadow 0.3s ease;
+  }
+  .card-shadow-sm:hover {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.035);
+  }
+}
+
+/* ── Round 2: 表格美化 ── */
+@layer components {
+  .table-row-hover {
+    transition: background-color 0.2s ease;
+  }
+  .table-row-hover:hover {
+    background-color: #FAF6F3;
+  }
+}
+
+/* ── Round 3: 微交互动画 ── */
+@layer utilities {
+  .transition-natural {
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .transition-fast {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* ── Round 4: 自定义动画 ── */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.7; }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ── Round 5: 滚动条美化 ── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D8D0CA;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B8AFA6;
+}
+
+/* 选择文字颜色 */
+::selection {
+  background: rgba(194, 91, 110, 0.15);
+  color: inherit;
+}
