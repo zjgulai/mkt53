@@ -1,0 +1,99 @@
+---
+title: 数据来源治理规则
+doc_type: knowledge
+module: data-governance
+topic: source-registry
+status: stable
+created: 2026-05-31
+updated: 2026-05-31
+owner: self
+source: human+ai
+---
+
+# 数据来源治理规则
+
+## 核心原则
+
+所有会影响业务判断的页面数据必须能追溯到 `app/src/data/source-registry.ts` 或明确标注为示例数据。没有复核证据的数据不得包装成确定事实。
+
+## Registry 字段
+
+`SourceRegistryItem` 当前字段：
+
+| 字段 | 用途 |
+|---|---|
+| `id` | 稳定唯一标识 |
+| `module` | 业务模块 |
+| `page` | 使用页面 |
+| `metric` | 指标或结论对象 |
+| `sourceName` | 来源名称 |
+| `sourceUrl` | 来源入口 |
+| `sourceType` | 来源类型 |
+| `year` | 来源年份或采集窗口 |
+| `reliability` | A、B、C、D 四级可信度 |
+| `verificationStatus` | `verified`、`needs-review`、`example` |
+| `lastVerified` | 最近复核日期 |
+| `note` | 复核说明 |
+| `gap` | 当前缺口 |
+| `action` | 下一步动作 |
+
+## 复核状态
+
+| 状态 | 显示含义 | 使用限制 |
+|---|---|---|
+| `verified` | 已复核 | 可用于正式看板结论，但仍需保留来源和口径说明 |
+| `needs-review` | 待复核 | 只能作为线索或待确认事项，不得写成已确认事实 |
+| `example` | 示例数据 | 只能用于演示结构，不得用于业务结论 |
+
+法规、平台采集、AI 模型输出和内部测算默认不得直接标为 `verified`。必须有明确来源、口径、时间窗口和负责人复核记录。
+
+## 可信度等级
+
+| 等级 | 来源类型 |
+|---|---|
+| A | 官方机构、内部系统、已采购且口径明确的行业报告 |
+| B | 品牌官网、平台数据、公开数据库、定性研究 |
+| C | 专家评估、内部测算、模型推断 |
+| D | 示例数据、缺少采集记录或无法复核的数据 |
+
+可信度不等于复核状态。A 级来源如果条目口径未确认，仍应保持 `needs-review`。
+
+## 当前硬约束
+
+1. CPSC/eFiling 相关条目保持 `needs-review`，直到法务确认 SKU 适用范围、证书字段和进口申报节奏。
+2. EU MDR Class IIa 相关条目保持 `needs-review`，直到法务按产品分类、证书状态和 notified body 路径复核。
+3. 海关、CRM、社媒、Amazon、AI 模型数据缺少真实接入记录时，不得从 `example` 或 `needs-review` 升级为 `verified`。
+4. 页面文案不得把 `needs-review` 显示为“已验证原文”。
+5. 新增来源必须补测试，至少覆盖 id 唯一性和关键风险状态。
+
+## 修改流程
+
+1. 在 `app/src/data/source-registry.ts` 新增或更新条目。
+2. 在使用页面通过 `getSourceRegistryItem` 或 `getSourceRegistryItemsByModule` 读取来源信息。
+3. 更新或新增 `app/tests/data/source-registry.test.ts` 断言关键状态。
+4. 执行：
+
+```bash
+cd app
+npm run test
+npm run lint
+npm audit
+npm run build
+```
+
+涉及页面展示时额外执行：
+
+```bash
+cd app
+npm run test:e2e
+```
+
+## 数据展示规则
+
+| 场景 | 展示方式 |
+|---|---|
+| 已复核行业报告 | 显示来源、年份、口径提示 |
+| 待复核法规 | 显示待复核状态、来源入口、负责人动作 |
+| 示例模型评分 | 明确标注为解释性模型或示例数据 |
+| 平台采集数据 | 显示采集时间、渠道范围、授权或合规前提 |
+| 内部系统数据 | 显示系统名、时间窗口、版本或快照 |

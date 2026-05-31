@@ -329,6 +329,12 @@ npm run test
 - 无草稿文档进入正式目录。
 - `rg -n "TODO|TBD|final_v2|最新版" docs README.md` 无命中。
 
+**执行记录（2026-05-31）:**
+- [x] 创建质量门禁、静态部署、数据来源治理三份正式文档。
+- [x] 创建根目录 `README.md`，收敛项目入口、质量门禁、部署和文档索引。
+- [x] 更新 `app/README.md`，移除旧依赖和手工 rsync 部署说明。
+- [x] 已验证：正式文档均有 frontmatter，`docs` 与 `README.md` 无禁用占位词。
+
 ---
 
 ## Loop 10: 产品能力收敛与下一阶段路线图
