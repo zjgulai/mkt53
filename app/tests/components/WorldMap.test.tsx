@@ -33,4 +33,16 @@ describe('WorldMap', () => {
 
     expect(onMarkerClick).toHaveBeenCalledWith('us');
   });
+
+  it('renders the active marker label and forwards non-active marker clicks', () => {
+    const onMarkerClick = vi.fn();
+
+    render(<WorldMap markers={markers} activeId="us" onMarkerClick={onMarkerClick} />);
+
+    expect(screen.getByText('美国')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: '中国：加速完善' }));
+
+    expect(onMarkerClick).toHaveBeenCalledWith('cn');
+  });
 });

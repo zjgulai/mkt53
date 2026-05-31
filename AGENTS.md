@@ -17,7 +17,7 @@ Momcozy 母婴品牌全球市场分析看板，面向内部团队的数据洞察
 | 样式 | Tailwind CSS v3 + shadcn/ui |
 | 路由 | React Router v7 |
 | 图表 | Recharts |
-| 地图 | react-simple-maps |
+| 地图 | 静态 world-map.jpg + 自定义坐标投影 |
 | UI 组件 | Radix UI 全套 |
 
 ## 目录结构
@@ -122,12 +122,12 @@ mkt53/
 
 ```bash
 cd app
-npm install --legacy-peer-deps  # react-simple-maps@3 不支持 React 19，需要此 flag
-npm run dev                      # 启动开发服务器 http://localhost:3000
-npm run build                    # 构建生产产物到 dist/
+npm ci          # 按 package-lock.json 安装依赖
+npm run dev     # 启动开发服务器 http://localhost:3000
+npm run test    # 运行 Vitest 测试
+npm run lint    # 运行 ESLint
+npm run build   # 构建生产产物到 dist/
 ```
-
-> **注意**：`npm ci` 会因 `react-simple-maps@3.0.0` peer dep 冲突报错，必须加 `--legacy-peer-deps`。
 
 ## 部署
 
@@ -147,14 +147,12 @@ npm run build                    # 构建生产产物到 dist/
 ### 更新部署（日常流程）
 
 ```bash
-# 1. 构建
-cd app && npm run build
-
-# 2. 上传（静态文件替换，nginx 无需重启）
-rsync -avz --progress \
-  -e "ssh -i ../ai_video.pem" \
-  dist/ ubuntu@101.34.52.232:/opt/mkt53/html/
+cd app
+npm run deploy:prod
+npm run smoke:prod
 ```
+
+`deploy:prod` 会依次执行 `test`、`lint`、`npm audit`、`build`，然后通过 `rsync --delete` 替换 `/opt/mkt53/html/` 静态文件；nginx 无需重启。
 
 ### 首次/变更 nginx 配置后重建容器
 
@@ -196,5 +194,5 @@ server {
 
 - `ai_video.pem` 已加入 `.gitignore`，不进仓库，本地保留在项目根目录
 - `app/dist/` 和 `app/node_modules/` 已 gitignore，不提交
-- 构建产物直接 rsync 到服务器，无 CI/CD 流程
+- GitHub Actions 已配置 `quality-gate`，覆盖 `npm ci`、测试、lint、audit、build
 - `docx_extracted/` 为原始需求文档解析产物，仅供参考，不参与构建
