@@ -300,6 +300,14 @@ npm run test
 - Mobile 390x844 通过。
 - 不要求像素完全一致，只断言关键标题、无水平滚动、无控制台 error。
 
+**执行记录（2026-05-31）:**
+- [x] 添加 `@playwright/test`、`app/playwright.config.ts` 和 `npm run test:e2e`。
+- [x] 新增 `app/tests/e2e/core-pages.spec.ts`，覆盖桌面与移动端核心路由。
+- [x] 隔离 Vitest 与 Playwright 测试发现范围，避免 `npm run test` 误执行 E2E 文件。
+- [x] 修复移动端侧栏挤压导致的水平溢出。
+- [x] 修复法规时间线重复 key 控制台错误。
+- [x] 已验证：`npm run test`、`npm run lint`、`npm audit`、`npm run build`、`npm run test:e2e`。
+
 ---
 
 ## Loop 9: 文档与目录治理

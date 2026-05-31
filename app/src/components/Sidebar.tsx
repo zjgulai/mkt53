@@ -189,7 +189,7 @@ function SidebarChildItem({
 
 export default function Sidebar({ items, activeSection, onSectionChange }: SidebarProps) {
   return (
-    <aside className="w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
+    <aside className="hidden lg:block w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
       <nav className="space-y-0.5">
         {items.map((item, idx) => (
           <SidebarItemComponent

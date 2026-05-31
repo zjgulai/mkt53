@@ -163,7 +163,7 @@ export default function DesignAssistant() {
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex gap-8">
-          <aside className="w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
+          <aside className="hidden lg:block w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
             <nav className="space-y-0.5">
               {aiAssistantSidebarItems.map((item, i) => (
                 <button key={i} onClick={() => navigate(item.path)} className={`w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-all ${item.label === '产品设计助手' ? 'bg-[#C25B6E]/10 text-[#C25B6E] font-medium' : 'text-[#1d1d1f] hover:bg-[#FBF8F5] transition-colors duration-200 duration-200'}`}>{item.label}</button>
@@ -173,7 +173,7 @@ export default function DesignAssistant() {
           <div className="flex-1 min-w-0 space-y-6">
             {/* Header */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-2xl bg-[#af52de] flex items-center justify-center shadow-sm" style={{ boxShadow: '0 2px 8px #af52de30' }}>
                     <Wand2 className="w-5 h-5 text-white" strokeWidth={2} />
@@ -183,9 +183,9 @@ export default function DesignAssistant() {
                     <p className="text-xs text-[#86868b]">AI驱动的产品视觉设计与概念生成工具</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 bg-[#FBF8F5] rounded-xl p-1">
+                <div className="flex flex-wrap items-center gap-1 bg-[#FBF8F5] rounded-xl p-1">
                   {tabs.map((t) => (
-                    <button key={t.id} onClick={() => setActiveTab(t.id)} className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === t.id ? 'bg-[#af52de] text-white' : 'text-[#86868b] hover:text-[#1d1d1f]'}`}>{t.icon}{t.label}</button>
+                    <button key={t.id} onClick={() => setActiveTab(t.id)} className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === t.id ? 'bg-[#af52de] text-white' : 'text-[#86868b] hover:text-[#1d1d1f]'}`}>{t.icon}{t.label}</button>
                   ))}
                 </div>
               </div>

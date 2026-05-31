@@ -317,8 +317,8 @@ export default function RegulationDetail() {
             {/* 时间线布局 */}
             <div className="relative pl-8 space-y-8">
               <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-gradient-to-b from-[#ff3b30] via-[#ff9500] to-[#34c759] rounded-full opacity-20" />
-              {filteredGroups.map(group => (
-                <div key={group.date}>
+              {filteredGroups.map((group, groupIndex) => (
+                <div key={`${group.date}-${groupIndex}`}>
                   {/* 日期标题 */}
                   <div className="relative flex items-center gap-3 mb-4">
                     <div className={`absolute -left-5 w-5 h-5 rounded-full border-2 border-white shadow-sm flex items-center justify-center z-10 ${group.isNew ? 'bg-[#C25B6E]' : 'bg-[#EDE6DF]'}`}>
