@@ -121,7 +121,7 @@ const changeHistory = [
   { date: '2026-05-23', tableId: 't_comp_product', action: '采集', user: '系统', desc: 'Amazon竞品价格周度采集', before: '-', after: '15条记录' },
   { date: '2026-05-22', tableId: 't_comment', action: '清洗', user: '孙研究员', desc: '评论情感NLP重跑', before: '准确率82%', after: '准确率87%' },
   { date: '2026-05-20', tableId: 't_customs', action: '导入', user: '王运营', desc: '4月海关数据导入', before: '缺失', after: '1,240条' },
-  { date: '2026-05-18', tableId: 't_policy', action: '新增', user: '郑法务', desc: '美国CPSC新规录入', before: '-', after: '1条记录' },
+  { date: '2026-05-18', tableId: 't_policy', action: '复核', user: '郑法务', desc: '美国CPSC CPC/eFiling来源复核', before: '官网实时声明口径', after: '待按官方CPC/eFiling规则重审' },
   { date: '2026-05-15', tableId: 't_social', action: '异常', user: '周运营', desc: 'TikTok API限流告警', before: '正常', after: '采集延迟6h' },
   { date: '2026-05-10', tableId: 't_rfm', action: '计算', user: '吴数据', desc: '5月RFM模型重算', before: 'Q1数据', after: 'Q2数据' },
   { date: '2026-05-01', tableId: 't_price', action: '更新', user: '系统', desc: 'Prime Day定价策略生效', before: '常规价', after: '促销价' },
@@ -818,7 +818,7 @@ export default function DataManage() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {(['source', 'clean', 'store', 'app'] as DataLayer[]).map((layer, li) => {
                   const meta = layerMeta[layer];
-                  const tablesInLayer = Object.entries(tableGovernance).filter(([_, g]) => g.layer === layer);
+                  const tablesInLayer = Object.entries(tableGovernance).filter(([, g]) => g.layer === layer);
                   return (
                     <div key={layer} className="rounded-xl border-2 p-4" style={{ borderColor: `${meta.color}30`, backgroundColor: `${meta.color}08` }}>
                       <div className="flex items-center gap-2 mb-3">
@@ -958,12 +958,12 @@ export default function DataManage() {
                       if (!acc[k]) acc[k] = [];
                       acc[k].push(g);
                       return acc;
-                    }, {} as Record<string, any[]>)).sort(([,a], [,b]) => ((b as any[])?.length || 0) - ((a as any[])?.length || 0)).slice(0, 6).map(([owner, tables]) => {
-                    const avgScore = Math.round((tables || []).reduce((s, g) => s + g.qualityScore, 0) / ((tables || []).length || 1));
+                    }, {} as Record<string, DataGovernance[]>)).sort(([, a], [, b]) => b.length - a.length).slice(0, 6).map(([owner, tables]) => {
+                    const avgScore = Math.round(tables.reduce((s, g) => s + g.qualityScore, 0) / (tables.length || 1));
                     return (
                       <div key={owner} className="flex items-center gap-2">
                         <span className="text-[10px] text-[#86868b] w-16 truncate">{owner}</span>
-                        <span className="text-[10px] text-[#C25B6E] font-medium w-6">{(tables || []).length}表</span>
+                        <span className="text-[10px] text-[#C25B6E] font-medium w-6">{tables.length}表</span>
                         <div className="flex-1 min-w-0 h-1.5 rounded-full bg-[#FBF8F5] overflow-hidden">
                           <div className="h-full rounded-full" style={{ width: `${avgScore}%`, backgroundColor: avgScore >= 85 ? '#34c759' : '#ff9500' }} />
                         </div>

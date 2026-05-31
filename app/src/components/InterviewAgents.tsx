@@ -22,7 +22,7 @@ export interface Agent {
   duration?: string;
 }
 
-export const defaultAgents: Agent[] = [
+const defaultAgents: Agent[] = [
   {
     id: 'moderator',
     name: '访谈主持人',

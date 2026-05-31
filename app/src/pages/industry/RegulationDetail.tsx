@@ -37,24 +37,24 @@ const sidebarItems = [
 // 法规数据 — 按日期分组
 const regulationGroups = [
   {
-    date: '2026-05-01',
+    date: '2026-07-08',
     label: 'NEW',
     isNew: true,
     items: [
       {
         id: 'r-005',
         icon: Gavel,
-        title: 'CPSC合规声明新规 (2026.5)',
+        title: 'CPSC CPC/eFiling证书数据要求复核',
         region: '美国',
         regionCode: 'US',
-        category: '合规新规',
-        desc: '美国CPSC正式实施新规：所有在美国销售儿童产品的企业官网必须嵌入实时生成、可验证的合规声明页面，覆盖ASTM F963-23和CPSIA铅/邻苯二甲酸盐限制。',
-        detail: '新规要求合规声明集成产品追溯信息，支持一键PDF生成和第三方检测报告验证接口。所有儿童产品制造商、进口商和自有品牌商均须在2026年5月1日前完成官网合规声明页面的嵌入和验证。',
-        fullText: 'https://www.federalregister.gov/documents/2026/04/15/2026-08452/',
-        source: { name: 'U.S. CPSC Federal Register', url: 'https://www.federalregister.gov', reliability: 'A', lastVerified: '2026-05-23' },
-        momcozyStatus: { status: '进行中', detail: '官网合规声明页开发中，预计6/15上线', progress: 60, owner: '郑法务' },
+        category: '合规复核',
+        desc: 'CPSC官方规则要求制造商/进口商为儿童产品出具CPC，并关注eFiling证书数据提交要求；未找到“官网必须嵌入实时生成合规声明页面”的官方依据。',
+        detail: '当前行动应从“建设官网实时声明页”改为复核CPC证书字段、测试报告、进口eFiling适用范围与实施日期。原Federal Register链接不可作为该规则依据。',
+        fullText: 'https://www.cpsc.gov/eFiling',
+        source: { name: 'U.S. CPSC CPC/eFiling', url: 'https://www.cpsc.gov/eFiling', reliability: 'A', lastVerified: '2026-05-31' },
+        momcozyStatus: { status: '进行中', detail: '复核CPC/eFiling字段与SKU适用范围，暂停按未证实官网声明要求开发', progress: 45, owner: '郑法务' },
         impactProducts: ['M5', 'M9', 'M6', 'W1'],
-        audit: {录入人: '郑法务', 录入时间: '2026-04-20', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文', 下次复核: '2026-07-20'},
+        audit: {录入人: '郑法务', 录入时间: '2026-04-20', 审核状态: '待复核', 审核人: '合规总监', 来源验证: '已核验CPSC官方CPC/eFiling页面，原链接不可采信', 下次复核: '2026-06-15'},
         color: '#ff3b30',
       },
       {

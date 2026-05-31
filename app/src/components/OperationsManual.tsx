@@ -125,7 +125,7 @@ const pageGuides = [
     ],
     businessValue: '合规风险前置化——将"被动应对监管"转变为"主动预判政策"，降低潜在罚款和召回损失',
     keyInsights: [
-      { title: '美国CPSC 2026新规要求所有吸奶器FDA 510(k)', desc: '合规成本$50K/SKU，需在2026-Q1前完成认证否则下架风险', type: 'alert' },
+      { title: '美国FDA/CPSC适用边界需复核', desc: '吸奶器FDA 510(k)路径与CPSC CPC/eFiling证书要求不能混同，需按SKU逐项确认', type: 'alert' },
       { title: '中国-东盟关税协定2026生效，税率从12%→5%', desc: '东南亚制造成本优势扩大，建议评估供应链转移可行性', type: 'opportunity' },
       { title: 'Willow申请2项核心泵体专利，2026-08授权', desc: '专利壁垒将加厚，需在授权前完成技术规避设计', type: 'risk' },
       { title: 'ABC Kids Expo 2026-10拉斯维加斯，竞品确认参展', desc: '必须参展并安排竞品暗访团队，获取新品情报', type: 'action' }
@@ -217,9 +217,9 @@ const insightStories = [
     title: '周围发生了什么？——五维环境扫描',
     icon: Zap,
     color: '#ff9500',
-    narrative: '政治维度：美国CPSC新规要求2026年所有吸奶器FDA 510(k)认证，合规成本$50K/SKU。经济维度：中国-东盟关税从12%降至5%，东南亚制造优势扩大。技术维度：Elvie$299智能款上市，AI哭声监测成为新赛道。竞争维度：Medela份额连续3月下降，但促销频率从季度→月度暗示价格战。',
-    dataPoints: ['CPSC新规2026生效', '中国-东盟关税↓7pp', 'Elvie智能款$299上市', 'Medela促销频率+300%'],
-    action: '优先级矩阵：P0-完成FDA认证 / P1-评估东南亚供应链转移 / P2-启动AI哭声监测预研'
+    narrative: '政治维度：美国吸奶器合规同时涉及FDA医疗器械路径与CPSC消费品证书/eFiling要求，不能把CPSC规则等同于FDA 510(k)认证。经济维度：中国-东盟关税从12%降至5%，东南亚制造优势扩大。技术维度：Elvie$299智能款上市，AI哭声监测成为新赛道。竞争维度：Medela份额连续3月下降，但促销频率从季度→月度暗示价格战。',
+    dataPoints: ['CPSC CPC/eFiling需复核', '中国-东盟关税↓7pp', 'Elvie智能款$299上市', 'Medela促销频率+300%'],
+    action: '优先级矩阵：P0-复核FDA/CPSC适用边界 / P1-评估东南亚供应链转移 / P2-启动AI哭声监测预研'
   },
   {
     chapter: '第三章：盲区',

@@ -250,7 +250,7 @@ export default function BreastPump() {
                         <XAxis type="number" dataKey="x" name="均价" unit="$" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} label={{ value: '平均售价 ($)', position: 'bottom', fontSize: 10, fill: '#86868b' }} />
                         <YAxis type="number" dataKey="y" name="评分" domain={[4.0, 5.0]} tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} label={{ value: '用户评分', angle: -90, position: 'left', fontSize: 10, fill: '#86868b' }} />
                         <ZAxis type="number" dataKey="z" range={[100, 1200]} />
-                        <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: '11px' }} formatter={(value: any, name: any) => {
+                        <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: '11px' }} formatter={(value: string | number, name: string) => {
                           if (name === 'x') return [`$${value}`, '均价'];
                           if (name === 'y') return [value, '评分'];
                           return [value, name];

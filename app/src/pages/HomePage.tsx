@@ -67,12 +67,12 @@ const latestReports = [
 // R1: 增强版政策法规数据 — 原文链接/影响评估/应对状态/信息审计
 const policyTimeline = [
   {
-    id: 'p-001', country: '美国', date: '2026-05-01', title: 'CPSC新规：所有儿童产品官网须嵌入实时可验证合规声明',
-    tag: '合规新规', type: 'urgent', status: '已实施',
-    source: { name: 'U.S. CPSC Federal Register', url: 'https://www.federalregister.gov/documents/2026/04/15/2026-08452/childrens-product-compliance-certification', reliability: 'A' },
-    impact: { level: '极高', desc: '官网必须在显著位置嵌入可验证合规声明，影响所有儿童产品SKU', products: ['M5', 'M9', 'M6', 'W1'] },
-    momcozyAction: { status: '进行中', progress: 60, desc: '官网合规声明页开发中，预计6/15上线', owner: '郑法务' },
-    audit: {录入人: '郑法务', 录入时间: '2026-04-20', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文'},
+    id: 'p-001', country: '美国', date: '2026-07-08', title: 'CPSC CPC/eFiling：证书数据与电子提交要求需复核',
+    tag: '合规复核', type: 'urgent', status: '即将实施',
+    source: { name: 'U.S. CPSC CPC/eFiling', url: 'https://www.cpsc.gov/eFiling', reliability: 'A' },
+    impact: { level: '高', desc: '官方规则支持儿童产品证书随货/电子方式提供；未核实到“官网嵌入实时合规声明”强制要求', products: ['M5', 'M9', 'M6', 'W1'] },
+    momcozyAction: { status: '进行中', progress: 45, desc: '复核CPC证书、eFiling字段和官网披露需求，避免按未证实规则建设', owner: '郑法务' },
+    audit: {录入人: '郑法务', 录入时间: '2026-04-20', 审核状态: '待复核', 审核人: '合规总监', 来源验证: '已核验CPSC官方CPC/eFiling页面，原Federal Register链接不可采信'},
   },
   {
     id: 'p-002', country: '美国', date: '2026-05-23', title: 'CPSC更新婴儿摇篮安全标准，纳入ASTM F2088-25',
@@ -124,6 +124,8 @@ const policyTimeline = [
   },
 ];
 
+type PolicyTimelineItem = (typeof policyTimeline)[number];
+
 // 待办通知 — R2: 添加业务影响评估和优先级标签
 const notifications = [
   { id: 1, title: 'W1加热款北美上市倒计时', desc: '距离ABC Kids Expo发布还有18天', time: '2小时前', type: 'urgent', icon: Cpu, impact: '营收影响', impactDesc: '预计Q3贡献$2.1M收入', priority: 'P0' },
@@ -137,7 +139,7 @@ const notifications = [
 const weeklyInsights = [
   { icon: TrendingUp, title: '穿戴式增速领先', value: '+18.2%', desc: '穿戴式细分增速超行业均值2.1x，建议Q3加大M9/W1产能投入', color: '#C25B6E', action: '查看产品规划' },
   { icon: Target, title: 'Medela份额下滑', value: '-0.8pp', desc: 'Medela连续2季份额流失，窗口期建议加速北美渠道扩张', color: '#ff9500', action: '查看竞争策略' },
-  { icon: Shield, title: 'CPSC新规生效', value: '5月1日', desc: '美国CPSC合规声明新规已生效，需48h内完成官网合规检查', color: '#ff3b30', action: '查看合规要求' },
+  { icon: Shield, title: 'CPSC规则复核', value: '7月8日', desc: 'CPC/eFiling要求需法务复核；未确认官网实时声明强制要求', color: '#ff3b30', action: '查看合规要求' },
 ];
 
 // 快捷数据洞察
@@ -181,7 +183,7 @@ export default function HomePage() {
       return next;
     });
   };
-  const filteredPolicies = policyTimeline.filter((p: any) => {
+  const filteredPolicies = policyTimeline.filter((p: PolicyTimelineItem) => {
     if (policyTag !== '全部' && p.tag !== policyTag) return false;
     if (policyStatus !== '全部' && p.status !== policyStatus) return false;
     return true;
@@ -314,7 +316,7 @@ export default function HomePage() {
                       <YAxis yAxisId="sam" orientation="right" tick={{ fontSize: 9, fill: '#86868b' }} axisLine={false} tickLine={false} domain={[0, 65]} tickFormatter={(v) => `$${v}B`} width={45} />
                       <Tooltip
                         contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: '11px' }}
-                        formatter={(value: any, name: string) => [`$${value}B`, name]}
+                        formatter={(value: string | number, name: string) => [`$${value}B`, name]}
                         labelStyle={{ color: '#1d1d1f', fontWeight: 600 }}
                       />
 

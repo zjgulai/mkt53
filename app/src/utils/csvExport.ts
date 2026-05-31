@@ -9,7 +9,7 @@
  * @param headers 表头映射 { key: '显示名称' }
  * @returns CSV字符串
  */
-export function objectsToCsv<T extends Record<string, any>>(
+export function objectsToCsv<T extends object>(
   data: T[],
   headers: Record<string, string>
 ): string {
@@ -22,7 +22,8 @@ export function objectsToCsv<T extends Record<string, any>>(
   csv += keys.map((k) => escapeCsvCell(headers[k])).join(',') + '\n';
   // Data rows
   for (const row of data) {
-    csv += keys.map((k) => escapeCsvCell(row[k])).join(',') + '\n';
+    const record = row as Record<string, unknown>;
+    csv += keys.map((k) => escapeCsvCell(record[k])).join(',') + '\n';
   }
   return csv;
 }
@@ -30,7 +31,7 @@ export function objectsToCsv<T extends Record<string, any>>(
 /**
  * 转义CSV单元格中的特殊字符
  */
-function escapeCsvCell(val: any): string {
+function escapeCsvCell(val: unknown): string {
   if (val === null || val === undefined) return '';
   const str = String(val);
   // 如果包含逗号、引号或换行，则用引号包裹并转义内部引号
@@ -63,7 +64,7 @@ export function downloadCsv(csvContent: string, filename: string): void {
  * @param headers 表头映射
  * @param filename 文件名
  */
-export function exportToCsv<T extends Record<string, any>>(
+export function exportToCsv<T extends object>(
   data: T[],
   headers: Record<string, string>,
   filename: string
@@ -79,7 +80,7 @@ export function exportToCsv<T extends Record<string, any>>(
 /**
  * 导出按钮组件用的通用配置
  */
-export interface CsvExportConfig<T> {
+export interface CsvExportConfig<T extends object> {
   data: T[];
   headers: Record<string, string>;
   filename: string;

@@ -1,45 +1,41 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Wand2, Image, Layers, Sparkles, Settings, CheckCircle, ArrowRight, Monitor, Zap, Palette, Maximize, Square, Info, Clock, Star, TrendingUp, Key, AlertTriangle, ExternalLink } from 'lucide-react';
+import { Wand2, Image, Layers, Sparkles, Settings, CheckCircle, ArrowRight, Monitor, Zap, Palette, Maximize, Square, Info, Clock, Star, TrendingUp, ExternalLink } from 'lucide-react';
 import { aiAssistantSidebarItems } from './constants';
 
-// AI Image Generation Models - Real models available via API
+// AI Image Generation Models - real calls must go through a server-side proxy.
 const aiModels = [
   {
     id: 'kimi-image',
     name: 'Kimi Image Generation',
-    description: 'Kimi平台内置的AI图像生成能力，通过Moonshot API调用。支持多种比例和分辨率，适合产品摄影和概念设计',
-    features: ['OpenAI兼容API', '多比例/分辨率', '参考图支持'],
+    description: 'Kimi平台内置的AI图像生成能力。真实调用必须由服务端代理完成，前端仅负责提交生成参数',
+    features: ['服务端代理', '多比例/分辨率', '参考图支持'],
     isDefault: true,
     icon: <Zap className="w-4 h-4" />,
-    apiEndpoint: 'https://api.kimi.com/coding/v1/images/generations',
   },
   {
     id: 'dall-e-3',
     name: 'DALL-E 3 (OpenAI)',
-    description: 'OpenAI DALL-E 3，prompt理解能力极强，适合高质量产品图和创意概念',
-    features: ['语义理解强', '细节丰富', '多语言支持'],
+    description: 'OpenAI DALL-E 3，prompt理解能力强，适合高质量产品图和创意概念。供应商密钥不得进入浏览器',
+    features: ['语义理解强', '细节丰富', '代理调用'],
     isDefault: false,
     icon: <Layers className="w-4 h-4" />,
-    apiEndpoint: 'https://api.openai.com/v1/images/generations',
   },
   {
     id: 'midjourney',
     name: 'Midjourney',
-    description: '业界领先的创意AI绘图工具，通过Discord API或第三方服务调用',
-    features: ['艺术感强', '概念设计', '风格独特'],
+    description: '创意AI绘图工具，适合概念设计。需要通过受控后端服务或合规第三方服务接入',
+    features: ['艺术感强', '概念设计', '受控接入'],
     isDefault: false,
     icon: <Palette className="w-4 h-4" />,
-    apiEndpoint: 'https://api.midjourney.com/v1/imagine',
   },
   {
     id: 'sd-xl',
     name: 'Stable Diffusion XL',
-    description: '开源高质量图像生成模型，可本地部署或调用Stability AI API',
-    features: ['开源可控', '可本地部署', '社区生态丰富'],
+    description: '开源高质量图像生成模型，可本地部署或通过后端代理调用 Stability AI',
+    features: ['开源可控', '可本地部署', '代理调用'],
     isDefault: false,
     icon: <Sparkles className="w-4 h-4" />,
-    apiEndpoint: 'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image',
   },
 ];
 
@@ -71,9 +67,9 @@ const workflowSteps = [
   },
   {
     step: 2,
-    title: '选择AI模型 & 配置API',
-    desc: '选择模型后通过对应API Key调用。默认推荐Kimi Image Generation，通过Moonshot API调用，兼容OpenAI格式。',
-    tip: 'Kimi Image（默认）：OpenAI兼容API，国内访问稳定。DALL-E 3：质量最高但成本较高',
+    title: '选择AI模型 & 代理通道',
+    desc: '选择模型后由服务端代理调用供应商 API。前端不接收、不保存、不传输供应商密钥。',
+    tip: '真实生成需先部署代理服务；当前静态站仅保留本地演示图生成流程',
     icon: <Layers className="w-5 h-5" />,
   },
   {
@@ -116,6 +112,20 @@ const sourcedProductImages = [
   { prompt: 'Momcozy baby carrier official product photo', ratio: '1:1', resolution: '1K', model: '官网采集', date: '2026-05-23', time: '—', output: '/images/momcozy-carrier-real.png', category: '婴儿背带', type: 'source' },
 ];
 
+function pickDemoImage(prompt: string): string {
+  const normalizedPrompt = prompt.trim().toLowerCase();
+  const firstToken = normalizedPrompt.split(/\s+/)[0] ?? '';
+  const categoryMatch = aiGeneratedImages.find((image) =>
+    image.category.toLowerCase().includes(firstToken) ||
+    image.prompt.toLowerCase().includes(firstToken)
+  );
+
+  if (categoryMatch) return categoryMatch.output;
+
+  const hash = [...normalizedPrompt].reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return aiGeneratedImages[hash % aiGeneratedImages.length].output;
+}
+
 // Design insights
 const designInsights = [
   { topic: 'AI生成产品图节省成本', stat: '85%', detail: '相比传统摄影棚拍摄，AI生成可节省85%的产品图制作成本', trend: '上升' },
@@ -132,95 +142,16 @@ export default function DesignAssistant() {
   const [activeTab, setActiveTab] = useState('generate'); // generate | workflow | history
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
-  // Pre-fill user's API key (Chat API - works for text, image gen requires separate permission)
-  const [apiKey, setApiKey] = useState('sk-REDACTED');
-  const [showApiInput, setShowApiInput] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
-  const [useFallback, setUseFallback] = useState(false);
-  const [apiStatus, setApiStatus] = useState<'unknown' | 'chat_ok' | 'image_ok' | 'invalid'>('chat_ok');
-
-  // Size mapping for API
-  const sizeMap: Record<string, string> = { '1:1': '1024x1024', '3:2': '1536x1024', '4:3': '1024x768', '16:9': '1792x1024', '9:16': '1024x1792', '2:3': '1024x1536' };
-
-  // Test API key on mount
-  useEffect(() => {
-    if (!apiKey.trim()) return;
-    fetch('https://api.moonshot.cn/v1/models', {
-      headers: { 'Authorization': `Bearer ${apiKey.trim()}` }
-    })
-    .then(r => {
-      if (r.ok) setApiStatus('chat_ok');
-      else setApiStatus('invalid');
-    })
-    .catch(() => setApiStatus('invalid'));
-  }, [apiKey]);
 
   const handleGenerate = useCallback(async () => {
     if (!promptText.trim()) return;
     setIsGenerating(true);
-    setApiError(null);
-    setUseFallback(false);
 
-    // If API key provided, try real API call
-    if (apiKey.trim()) {
-      try {
-        const baseUrl = 'https://api.moonshot.cn/v1';
-
-        const response = await fetch(`${baseUrl}/images/generations`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey.trim()}`,
-          },
-          body: JSON.stringify({
-            model: 'kimi-image',
-            prompt: promptText.trim(),
-            n: 1,
-            size: sizeMap[selectedRatio] || '1024x1024',
-          }),
-        });
-
-        if (response.status === 403) {
-          // Image generation not enabled, use Chat API to enhance prompt then fallback
-          setApiStatus('chat_ok');
-          throw new Error('图像生成权限未开通(403)。该Key支持Chat对话，但图像生成需单独申请权限。');
-        }
-        if (response.status === 401) {
-          setApiStatus('invalid');
-          throw new Error('API Key无效或已过期(401)');
-        }
-
-        if (!response.ok) {
-          const err = await response.json().catch(() => ({}));
-          throw new Error(err.error?.message || `HTTP ${response.status}`);
-        }
-
-        const data = await response.json();
-        if (data.data?.[0]?.url) {
-          setApiStatus('image_ok');
-          setGeneratedImage(data.data[0].url);
-          setIsGenerating(false);
-          return;
-        }
-      } catch (err: unknown) {
-        const errorMsg = err instanceof Error ? err.message : 'API调用失败';
-        console.warn('Image API failed:', errorMsg);
-        setApiError(errorMsg);
-        setUseFallback(true);
-      }
-    }
-
-    // Fallback: simulate generation with local images
     setTimeout(() => {
       setIsGenerating(false);
-      const keyword = promptText.toLowerCase();
-      const idx = aiGeneratedImages.findIndex(h =>
-        h.category.toLowerCase().includes(keyword.split(' ')[0]) ||
-        h.prompt.toLowerCase().includes(keyword.split(' ')[0])
-      );
-      setGeneratedImage(aiGeneratedImages[idx >= 0 ? idx : Math.floor(Math.random() * aiGeneratedImages.length)].output);
-    }, 2000);
-  }, [promptText, apiKey, selectedRatio]);
+      setGeneratedImage(pickDemoImage(promptText));
+    }, 1200);
+  }, [promptText]);
 
   const tabs = [
     { id: 'generate', label: 'AI生图', icon: <Image className="w-4 h-4" /> },
@@ -294,53 +225,18 @@ export default function DesignAssistant() {
                         placeholder="请详细描述产品外观、材质、颜色、光影和场景...&#10;例如：Professional product photo of Momcozy M5 wearable breast pump in soft pink, studio lighting, cream background, minimalist style"
                         className="w-full h-28 p-3 rounded-xl bg-[#FBF8F5] text-sm text-[#1d1d1f] outline-none resize-none placeholder:text-[#86868b]/60 focus:ring-2 focus:ring-[#af52de]/20 transition-all"
                       />
-                      {/* API Key Config */}
+                      {/* Proxy status */}
                       <div className="mt-2 mb-3">
-                        <button onClick={() => setShowApiInput(!showApiInput)} className="flex items-center gap-1.5 text-[10px] transition-colors duration-200">
-                          <Key className="w-3 h-3" />
-                          <span className={apiStatus === 'image_ok' ? 'text-[#34c759]' : apiStatus === 'chat_ok' ? 'text-[#ff9500]' : apiKey ? 'text-[#C25B6E]' : 'text-[#86868b] hover:text-[#af52de]'}>
-                            {apiStatus === 'image_ok' ? 'API Key 正常 (图像+对话)' : apiStatus === 'chat_ok' ? 'API Key 受限 (仅对话)' : apiStatus === 'invalid' ? 'API Key 无效' : apiKey ? 'API Key 已配置' : '配置 API Key（可选）'}
-                          </span>
-                          <span className="text-[#af52de]">{showApiInput ? '▲' : '▼'}</span>
-                        </button>
-                        {showApiInput && (
-                          <div className="mt-1.5 p-2.5 rounded-xl bg-[#FBF8F5] border border-[#EDE6DF]">
-                            <div className="flex gap-2">
-                              <input
-                                type="password"
-                                value={apiKey}
-                                onChange={(e) => { setApiKey(e.target.value); setApiError(null); setUseFallback(false); }}
-                                placeholder="输入 Moonshot / OpenAI API Key"
-                                className="flex-1 min-w-0 px-3 py-1.5 rounded-lg bg-white text-xs text-[#1d1d1f] outline-none placeholder:text-[#86868b]/60 border border-[#EDE6DF] focus:border-[#af52de]/40"
-                              />
-                              {apiKey && (
-                                <button onClick={() => { setApiKey(''); setApiError(null); }} className="px-2 py-1 rounded-lg text-[10px] text-[#86868b] hover:text-[#C25B6E]">清除</button>
-                              )}
-                            </div>
-                            <p className="text-[10px] text-[#B5AFA8] mt-1.5.5">支持 Moonshot (sk-xxx) 或 OpenAI API Key。留空则使用本地演示模式。</p>
-                          </div>
-                        )}
-                        {apiError && (
-                          <div className="mt-1.5 flex items-start gap-1.5 p-2 rounded-lg bg-[#ff3b3010] border border-[#ff3b3020]">
-                            <AlertTriangle className="w-3 h-3 text-[#ff3b30] mt-0.5 flex-shrink-0" />
-                            <div>
-                              <p className="text-[10px] text-[#ff3b30]">API调用失败: {apiError}</p>
-                              <p className="text-[10px] text-[#86868b]">已自动切换到本地演示模式。您可以更换 API Key 重试。</p>
-                            </div>
-                          </div>
-                        )}
-                        {useFallback && !apiError && (
-                          <div className="mt-1.5 flex items-center gap-1.5 p-2 rounded-lg bg-[#ff950010] border border-[#ff950020]">
-                            <Info className="w-3 h-3 text-[#ff9500] flex-shrink-0" />
-                            <p className="text-[10px] text-[#86868b]">当前使用本地演示模式（未配置 API Key）。输入 Key 可调用真实 AI 生成。</p>
-                          </div>
-                        )}
+                        <div className="flex items-start gap-1.5 p-2 rounded-lg bg-[#ff950010] border border-[#ff950020]">
+                          <Info className="w-3 h-3 text-[#ff9500] mt-0.5 flex-shrink-0" />
+                          <p className="text-[10px] text-[#86868b]">真实生图已切换为服务端代理模式；当前静态站未配置代理，仅使用本地演示图。不要在浏览器输入或保存供应商 API Key。</p>
+                        </div>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] text-[#86868b]">支持中英双语 | 推荐包含品牌名、产品类型、配色、风格</span>
                         <button onClick={handleGenerate} disabled={!promptText.trim() || isGenerating} className={`px-6 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all ${promptText.trim() && !isGenerating ? 'bg-[#af52de] text-white hover:bg-[#b860e0] shadow-sm' : 'bg-[#FBF8F5] text-[#86868b] cursor-not-allowed'}`}>
-                          {isGenerating ? <><Clock className="w-4 h-4 animate-spin" />生成中...</> : <><Sparkles className="w-4 h-4" />{apiKey.trim() ? 'API生成' : '演示生成'}</>}
+                          {isGenerating ? <><Clock className="w-4 h-4 animate-spin" />生成中...</> : <><Sparkles className="w-4 h-4" />演示生成</>}
                         </button>
                       </div>
                     </div>
@@ -511,94 +407,52 @@ export default function DesignAssistant() {
                   ))}
                 </div>
 
-                {/* API Code Examples */}
+                {/* Proxy Contract */}
                 <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-                  <h3 className="text-sm font-semibold text-[#1d1d1f] mb-2 flex items-center gap-2"><Zap className="w-4 h-4 text-[#af52de]" />API 调用代码示例</h3>
-                  <p className="text-xs text-[#86868b] mb-5">通过各平台的 API Key 调用图像生成服务。以下为 cURL 和 Python 示例。</p>
+                  <h3 className="text-sm font-semibold text-[#1d1d1f] mb-2 flex items-center gap-2"><Zap className="w-4 h-4 text-[#af52de]" />服务端代理接入契约</h3>
+                  <p className="text-xs text-[#86868b] mb-5">真实图像生成必须经由后端代理。供应商 API Key 只允许保存在服务端环境变量中，前端只提交业务参数。</p>
                   
-                  {/* Kimi Image Generation API */}
+                  {/* Image generation proxy */}
                   <div className="mb-5">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-[#C25B6E] text-white">默认</span>
-                      <span className="text-xs font-medium text-[#1d1d1f] truncate">Kimi Image Generation (Kimi Code API)</span>
+                      <span className="text-xs font-medium text-[#1d1d1f] truncate">POST /api/ai/images</span>
                     </div>
                     <div className="bg-[#1d1d1f] rounded-xl p-4 overflow-x-auto">
-                      <pre className="text-xs text-[#34c759] leading-relaxed whitespace-pre"><code>{`# cURL
-curl https://api.kimi.com/coding/v1/images/generations \\
+                      <pre className="text-xs text-[#34c759] leading-relaxed whitespace-pre"><code>{`# Frontend request
+curl https://mkt.lute-tlz-dddd.top/api/ai/images \\
   -H "Content-Type: application/json" \\
-  -H "Authorization: Bearer sk-kimi-xxxxxxxxxxxxxxxx" \\
   -d '{
     "model": "kimi-image",
     "prompt": "Professional product photo of Momcozy M5 wearable breast pump, soft pink, cream background, studio lighting",
-    "n": 1,
-    "size": "1024x1024"
+    "ratio": "1:1",
+    "resolution": "1K"
   }'
 
-# Python (OpenAI compatible)
-from openai import OpenAI
-
-client = OpenAI(
-    api_key="YOUR_KIMI_API_KEY",  # sk-kimi-...
-    base_url="https://api.kimi.com/coding/v1"
-)
-
-response = client.images.generate(
-    model="kimi-image",
-    prompt="Professional product photo of Momcozy M5 wearable breast pump...",
-    n=1,
-    size="1024x1024"
-)
-print(response.data[0].url)`}</code></pre>
+# Server responsibilities
+# 1. Read provider key from server env only.
+# 2. Apply auth, rate limit, audit log, and prompt policy.
+# 3. Return { imageUrl, provider, requestId } to the browser.`}</code></pre>
                     </div>
                     <p className="text-[10px] text-[#86868b] mt-2 flex items-center gap-1">
                       <ExternalLink className="w-3 h-3" />
-                      API 端点: https://api.kimi.com/coding/v1 | 支持 OpenAI 兼容格式
+                      代理未部署前，页面保持本地演示模式
                     </p>
                   </div>
 
-                  {/* DALL-E 3 API */}
-                  <div className="mb-5">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-medium text-[#1d1d1f] truncate">DALL-E 3 (OpenAI)</span>
-                    </div>
-                    <div className="bg-[#1d1d1f] rounded-xl p-4 overflow-x-auto">
-                      <pre className="text-xs text-[#34c759] leading-relaxed whitespace-pre"><code>{`# Python
-from openai import OpenAI
-
-client = OpenAI(api_key="YOUR_OPENAI_API_KEY")
-
-response = client.images.generate(
-    model="dall-e-3",
-    prompt="Professional product photo of Momcozy M5 wearable breast pump...",
-    n=1,
-    size="1024x1024",
-    quality="hd"  # hd for higher quality
-)
-print(response.data[0].url)`}</code></pre>
-                    </div>
-                  </div>
-
-                  {/* Stable Diffusion XL API */}
+                  {/* Required server guardrails */}
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-medium text-[#1d1d1f] truncate">Stable Diffusion XL (Stability AI)</span>
+                      <span className="text-xs font-medium text-[#1d1d1f] truncate">后端强制要求</span>
                     </div>
                     <div className="bg-[#1d1d1f] rounded-xl p-4 overflow-x-auto">
-                      <pre className="text-xs text-[#34c759] leading-relaxed whitespace-pre"><code>{`# Python
-import requests
-
-response = requests.post(
-    "https://api.stability.ai/v2beta/stable-image/generate/sd3",
-    headers={"Authorization": "Bearer YOUR_STABILITY_KEY", "Accept": "image/*"},
-    files={"none": ''},
-    data={
-        "prompt": "Professional product photo of Momcozy M5 wearable breast pump...",
-        "output_format": "jpeg",
-        "aspect_ratio": "1:1"
-    }
-)
-with open("output.png", "wb") as f:
-    f.write(response.content)`}</code></pre>
+                      <pre className="text-xs text-[#34c759] leading-relaxed whitespace-pre"><code>{`required:
+  auth: internal SSO or signed session
+  rate_limit: user + IP + provider budget
+  secrets: provider keys in server env only
+  logging: requestId, userId, model, cost, status
+  storage: generated assets stored under controlled bucket
+  policy: reject unsafe prompts before provider call`}</code></pre>
                     </div>
                   </div>
                 </div>
@@ -609,17 +463,17 @@ with open("output.png", "wb") as f:
                   <table className="w-full text-sm">
                     <thead><tr className="border-b border-[#EDE6DF] table-row-hover">
                       <th className="text-left py-2 px-3 text-xs text-[#86868b] font-medium">模型</th>
-                      <th className="text-left py-2 px-3 text-xs text-[#86868b] font-medium">API端点</th>
+                      <th className="text-left py-2 px-3 text-xs text-[#86868b] font-medium">接入方式</th>
                       <th className="text-left py-2 px-3 text-xs text-[#86868b] font-medium">最佳场景</th>
                       <th className="text-left py-2 px-3 text-xs text-[#86868b] font-medium">计费方式</th>
                       <th className="text-left py-2 px-3 text-xs text-[#86868b] font-medium">推荐指数</th>
                     </tr></thead>
                     <tbody>
                       {[
-                        { name: 'Kimi Image', endpoint: 'api.moonshot.cn', scene: '产品摄影/电商图', price: '按调用量', stars: 5, isDefault: true },
-                        { name: 'DALL-E 3', endpoint: 'api.openai.com', scene: '高质量产品图', price: '$0.04-0.08/张', stars: 5, isDefault: false },
-                        { name: 'Midjourney', endpoint: 'api.midjourney.com', scene: '概念设计', price: '订阅制', stars: 4, isDefault: false },
-                        { name: 'SD XL', endpoint: 'api.stability.ai', scene: '可本地部署', price: '$0.01-0.04/张', stars: 4, isDefault: false },
+                        { name: 'Kimi Image', endpoint: '服务端代理', scene: '产品摄影/电商图', price: '按调用量', stars: 5, isDefault: true },
+                        { name: 'DALL-E 3', endpoint: '服务端代理', scene: '高质量产品图', price: '$0.04-0.08/张', stars: 5, isDefault: false },
+                        { name: 'Midjourney', endpoint: '受控服务接入', scene: '概念设计', price: '订阅制', stars: 4, isDefault: false },
+                        { name: 'SD XL', endpoint: '本地部署/代理', scene: '可本地部署', price: '$0.01-0.04/张', stars: 4, isDefault: false },
                       ].map((m, i) => (
                         <tr key={i} className="border-b border-[#EDE6DF] hover:bg-[#FBF8F5] transition-colors duration-200">
                           <td className="py-2.5 px-3">

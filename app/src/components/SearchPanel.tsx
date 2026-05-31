@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════
 // 全局搜索面板 — 搜索产品/报告/法规/数据
 // ═══════════════════════════════════════════════════════════════
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X, FileText, Target, Shield, BarChart3, Clock, TrendingUp } from 'lucide-react';
 
@@ -27,7 +27,7 @@ const allSearchData: SearchResult[] = [
   { id: 'sr-03', title: 'Momcozy W1 加热款拆解与BOM成本分析', category: '报告', path: '/reports', desc: '52页 · 拆机报告 · 2026-04-18', icon: FileText, color: '#ff9500' },
   { id: 'sr-04', title: '北美母婴护理市场深度分析（2025-2026年度）', category: '报告', path: '/reports', desc: '86页 · 区域宏观 · 2026-03-22', icon: FileText, color: '#5856d6' },
   // 政策法规
-  { id: 'sl-01', title: 'CPSC新规：儿童产品官网须嵌入实时可验证合规声明', category: '法规', path: '/industry/regulation', desc: '美国 · 2026-05-01生效 · 合规新规 · 影响极高', icon: Shield, color: '#ff3b30' },
+  { id: 'sl-01', title: 'CPSC CPC/eFiling：证书数据要求复核', category: '法规', path: '/industry/regulation', desc: '美国 · 2026-07-08 · 合规复核 · 影响高', icon: Shield, color: '#ff3b30' },
   { id: 'sl-02', title: 'EU MDR 2017/745 过渡期截止', category: '法规', path: '/industry/regulation', desc: '欧盟 · 2027-01-01截止 · 医疗器械 · 影响极高', icon: Shield, color: '#5856d6' },
   { id: 'sl-03', title: '日本新《消费品安全法》：PSC标志强制认证', category: '法规', path: '/industry/regulation', desc: '日本 · 2025-12 · 强制认证 · 影响极高', icon: Shield, color: '#0077b6' },
   { id: 'sl-04', title: 'GB 46523-2025儿童用品通用安全要求', category: '法规', path: '/industry/regulation', desc: '中国 · 2026-11-01实施 · 国标实施', icon: Shield, color: '#ff3b30' },
@@ -37,8 +37,8 @@ const allSearchData: SearchResult[] = [
   { id: 'sm-03', title: '穿戴式吸奶器细分市场', category: '市场', path: '/market', desc: '$6.69B · CAGR 8.56% · Grand View Research', icon: BarChart3, color: '#34c759' },
 ];
 
-const recentSearches = ['M5', 'CPSC新规', '市场份额', 'W1加热款', 'Medela'];
-const hotSearches = ['CPSC合规声明', 'MDR过渡期', 'TikTok Shop', 'Prime Day定价', 'BCG矩阵'];
+const recentSearches = ['M5', 'CPSC复核', '市场份额', 'W1加热款', 'Medela'];
+const hotSearches = ['CPSC eFiling', 'MDR过渡期', 'TikTok Shop', 'Prime Day定价', 'BCG矩阵'];
 
 interface SearchPanelProps {
   isOpen: boolean;
@@ -51,20 +51,23 @@ export default function SearchPanel({ isOpen, onClose }: SearchPanelProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
+  const handleClose = useCallback(() => {
+    setQuery('');
+    onClose();
+  }, [onClose]);
+
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
-    } else {
-      setQuery('');
     }
   }, [isOpen]);
 
   // ESC关闭
   useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose(); };
     if (isOpen) { document.addEventListener('keydown', handleEsc); document.body.style.overflow = 'hidden'; }
     return () => { document.removeEventListener('keydown', handleEsc); document.body.style.overflow = ''; };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
   const categories = ['全部', '产品', '报告', '法规', '市场'];
 
@@ -76,14 +79,14 @@ export default function SearchPanel({ isOpen, onClose }: SearchPanelProps) {
   });
 
   const handleResultClick = (path: string) => {
-    onClose();
+    handleClose();
     navigate(path);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100]" onClick={onClose}>
+    <div className="fixed inset-0 z-[100]" onClick={handleClose}>
       {/* 背景遮罩 */}
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
       {/* 搜索面板 */}
@@ -100,7 +103,7 @@ export default function SearchPanel({ isOpen, onClose }: SearchPanelProps) {
               placeholder="搜索产品、报告、法规、市场数据..."
               className="flex-1 text-base text-[#1d1d1f] placeholder-[#B5AFA8] outline-none bg-transparent"
             />
-            <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center text-[#86868b] hover:bg-[#FBF8F5] transition-colors">
+            <button onClick={handleClose} className="w-8 h-8 rounded-full flex items-center justify-center text-[#86868b] hover:bg-[#FBF8F5] transition-colors">
               <X className="w-4 h-4" />
             </button>
           </div>

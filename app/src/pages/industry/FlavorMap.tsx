@@ -20,6 +20,19 @@ const countryFeatureRank = [
   { country: '澳大利亚', APP控制: 32, 静音: 28, 便携: 24, 吸力: 10, 其他: 6 },
 ];
 
+type FeatureName = 'APP控制' | '静音设计' | '便携穿戴' | '医院级吸力' | 'UV消毒' | '智能恒温';
+type CountryFeatureRank = (typeof countryFeatureRank)[number];
+type CountryFeatureKey = Exclude<keyof CountryFeatureRank, 'country'>;
+
+const countryFeatureKeyByName: Record<FeatureName, CountryFeatureKey> = {
+  APP控制: 'APP控制',
+  静音设计: '静音',
+  便携穿戴: '便携',
+  医院级吸力: '吸力',
+  UV消毒: '其他',
+  智能恒温: '其他',
+};
+
 const techAdoption = [
   { tech: 'APP蓝牙连接', adoption: 68, growth: 24, leader: 'Momcozy M5/M9', status: '主流' },
   { tech: '<40dB超静音', adoption: 55, growth: 18, leader: 'Momcozy / Medela', status: '主流' },
@@ -62,8 +75,8 @@ const sidebarItems = [
 ];
 
 export default function FlavorMap() {
-  const [activeFeature, setActiveFeature] = useState('APP控制');
-  const features = ['APP控制', '静音设计', '便携穿戴', '医院级吸力', 'UV消毒', '智能恒温'];
+  const [activeFeature, setActiveFeature] = useState<FeatureName>('APP控制');
+  const features: FeatureName[] = ['APP控制', '静音设计', '便携穿戴', '医院级吸力', 'UV消毒', '智能恒温'];
 
   const featureIcons: Record<string, React.ReactNode> = {
     'APP控制': <Smartphone className="w-4 h-4" />,
@@ -127,8 +140,8 @@ export default function FlavorMap() {
               <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">各国功能偏好排名 - {activeFeature}</h3>
                 <div className="space-y-2">
-                  {countryFeatureRank.sort((a, b) => (b as any)[activeFeature] - (a as any)[activeFeature]).map((c, i) => {
-                    const val = (c as any)[activeFeature];
+                  {[...countryFeatureRank].sort((a, b) => b[countryFeatureKeyByName[activeFeature]] - a[countryFeatureKeyByName[activeFeature]]).map((c, i) => {
+                    const val = c[countryFeatureKeyByName[activeFeature]];
                     return (
                       <div key={i} className="flex items-center gap-4">
                         <span className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold" style={{ backgroundColor: i < 3 ? ['#ff9500', '#af52de', '#ff3b30'][i] : '#86868b' }}>{i + 1}</span>

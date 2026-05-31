@@ -9,9 +9,13 @@ interface PerformanceMetrics {
 
 export function usePerformanceMonitor(pageName: string) {
   const renderCount = useRef(0);
-  const startTime = useRef(performance.now());
+  const startTime = useRef<number | null>(null);
 
   useEffect(() => {
+    if (startTime.current === null) {
+      startTime.current = performance.now();
+    }
+
     renderCount.current += 1;
     const loadTime = performance.now() - startTime.current;
 
@@ -29,7 +33,7 @@ export function usePerformanceMonitor(pageName: string) {
   return {
     getMetrics: (): PerformanceMetrics => ({
       pageName,
-      loadTime: performance.now() - startTime.current,
+      loadTime: performance.now() - (startTime.current ?? performance.now()),
       renderCount: renderCount.current,
     }),
   };

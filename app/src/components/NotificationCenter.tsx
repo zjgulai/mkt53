@@ -27,7 +27,7 @@ const initialNotifications: Notification[] = [
   { id: 2, title: 'Medela Melody InBra 7月加拿大首发', desc: '超静音差异化竞争预警', time: '5小时前', type: 'warning', icon: Target, impact: '竞争威胁', impactDesc: '可能侵蚀3-5%价格敏感用户', priority: 'P1', read: false, path: '/competition/new' },
   { id: 3, title: 'Q2竞品价格监测报告待审', desc: '报告中心有1份报告待审批', time: '1天前', type: 'normal', icon: FileText, impact: '决策支持', impactDesc: '支撑Q3定价策略制定', priority: 'P2', read: true, path: '/reports' },
   { id: 4, title: '日本PSC认证续期提醒', desc: '证书将于2026-08到期', time: '2天前', type: 'warning', icon: Shield, impact: '合规风险', impactDesc: '逾期未续期将暂停日本销售', priority: 'P1', read: false, path: '/industry/regulation' },
-  { id: 5, title: 'CPSC新规5月1日已生效', desc: '官网合规声明须在48h内完成', time: '3天前', type: 'urgent', icon: Shield, impact: '合规风险', impactDesc: '违反将面临产品下架风险', priority: 'P0', read: false, path: '/industry/regulation' },
+  { id: 5, title: 'CPSC规则源需复核', desc: '官网实时声明要求未找到官方依据', time: '3天前', type: 'warning', icon: Shield, impact: '合规风险', impactDesc: '需按CPC/eFiling官方规则重审SKU影响', priority: 'P1', read: false, path: '/industry/regulation' },
   { id: 6, title: 'M9产品评分升至4.7星', desc: 'Amazon评分连续3周上升', time: '4天前', type: 'success', icon: TrendingUp, impact: '品牌利好', impactDesc: '预计转化率提升2-3pp', priority: 'P3', read: true, path: '/competition' },
 ];
 

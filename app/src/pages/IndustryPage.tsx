@@ -7,9 +7,9 @@ import WorldMap from '@/components/WorldMap';
 import type { MapMarker } from '@/components/WorldMap';
 
 const policyMapData = [
-  { country: '美国', status: '严格标准', color: '#ff3b30', details: 'FDA 21 CFR 884.5160将吸奶器列为Class II器械。2026年5月CPSC新规要求儿童产品官网嵌入实时合规声明。ASTM F2088-25婴儿摇篮标准2026年7月生效。16 CFR 1242/1243哺乳枕/支撑垫标准已生效', tags: ['FDA 510(k)', 'CPSC CPSIA', 'ASTM F963-23', '16 CFR 1242'] },
+  { country: '美国', status: '严格标准', color: '#ff3b30', details: 'FDA 21 CFR 884.5160将吸奶器列为Class II器械。CPSC CPC/eFiling要求需按官方证书与电子提交规则复核；未确认官网实时声明强制要求。ASTM F2088-25婴儿摇篮标准2026年7月生效。16 CFR 1242/1243哺乳枕/支撑垫标准已生效', tags: ['FDA 510(k)', 'CPSC CPSIA', 'ASTM F963-23', '16 CFR 1242'] },
   { country: '欧盟', status: 'MDR监管', color: '#C25B6E', details: 'MDR 2017/745将吸奶器归为Class IIa医疗器械，需CE marking+notified body评定。过渡期延至2027-2028年。IEC 60601-1电气安全+ISO 10993生物相容性+REACH/RoHS化学品限制', tags: ['MDR 2017/745', 'CE marking', 'IEC 60601-1', 'REACH RoHS'] },
-  { country: '英国', status: '标准领先', color: '#ff9500', details: 'UKCA marking替代CE marking。BS EN 14350儿童饮水器具安全标准。GPSR通用产品安全法规适用。CPSC合规声明新规对英联邦渠道商产生连带影响', tags: ['UKCA', 'BS EN 14350', 'GPSR', '产品安全法'] },
+  { country: '英国', status: '标准领先', color: '#ff9500', details: 'UKCA marking替代CE marking。BS EN 14350儿童饮水器具安全标准。GPSR通用产品安全法规适用。美国CPSC规则不直接适用于英国渠道，跨境销售需按目的地市场单独判断', tags: ['UKCA', 'BS EN 14350', 'GPSR', '产品安全法'] },
   { country: '加拿大', status: '高标准', color: '#C25B6E', details: 'CCPSA《加拿大消费品安全法》严格执行。2025-2026财年禁止婴儿学步车、自喂养装置等6类产品在线销售。Health Canada 2025-2027监管计划延续配方奶粉进口豁免', tags: ['CCPSA', 'Health Canada', 'SOR/2018-83', '禁止清单'] },
   { country: '中国', status: '加速完善', color: '#34c759', details: 'GB 46523-2025儿童用品通用安全+GB 46516婴幼儿护理用品安全，2026年11月实施。GB/T 46491-2025婴儿食品加工器具2026年5月生效。GB 6675.1-4-2025玩具安全系列全面更新', tags: ['GB 46523-2025', 'GB 46516', 'GB 6675', '3C认证'] },
   { country: '日本', status: '强制认证', color: '#af52de', details: '2025年12月25日新《消费品安全法》实施：36个月以下玩具强制PSC标志。ST2025标准同步生效，覆盖ISO 8124-1/2、EN 71-1/2、ASTM F963-23。婴幼儿护理用品受食品卫生法监管', tags: ['PSC标志', 'ST2025', 'CPSA', '食品卫生法'] },
@@ -27,7 +27,7 @@ const policyMarkers: MapMarker[] = [
 ];
 
 const policyTimeline = [
-  { date: '2026-05-01', events: ['美国CPSC正式实施新规：所有在美国销售儿童产品的企业官网必须嵌入实时生成、可验证的合规声明页面，覆盖ASTM F963-23和CPSIA铅/邻苯二甲酸盐限制', '新规要求合规声明集成产品追溯信息，支持一键PDF生成和第三方检测报告验证接口'] },
+  { date: '2026-07-08', events: ['美国CPSC CPC/eFiling要求进入重点复核期：进口受监管消费品需关注证书数据电子提交字段、适用产品范围和实施节奏', '未核实到“所有儿童产品官网必须嵌入实时生成合规声明页面”的官方强制要求；原Federal Register链接需从可信来源中移除'] },
   { date: '2026-04-20', events: ['美国CPSC发布直接最终规则，更新16 CFR Part 1223婴儿摇篮联邦安全标准，纳入ASTM F2088-25', '新标准新增前警告标签可见性测试（第7.17节），强化窒息风险警告语言， restraint警告从"ALWAYS use"升级为"ALWAYS USE RESTRAINTS"，2026年7月25日生效'] },
   { date: '2026-03-16', events: ['CPSC宣布2026年推出婴儿睡眠安全新标准，加强婴儿睡衣可燃性要求', '新标准限制睡衣材料类型，要求所有婴儿睡衣具备阻燃性，限制绳带长度防止缠绕风险'] },
   { date: '2025-12-25', events: ['日本新《消费品安全法》（CPSA）正式生效：36个月以下玩具强制PSC标志认证', 'ST2025标准同步实施，覆盖ISO 8124-1:2022、ISO 8124-2:2023、EN 71-1/2、ASTM F963-23', '婴儿床被列为儿童特定产品+特殊特定产品，需PSC标志+特定设计标签'] },
@@ -160,7 +160,7 @@ export default function IndustryPage() {
                       <p className="text-sm font-semibold text-[#ff3b30]">Momcozy 合规风险总览</p>
                       <span className="px-1.5 py-0.5 rounded bg-[#ff3b30]/10 text-[#ff3b30] text-[9px] font-bold">P1</span>
                     </div>
-                    <p className="text-xs text-[#1d1d1f]">美国CPSC新规(5月1日生效)要求官网嵌入实时合规声明。Momcozy需48h内完成官网合规检查。日本PSC认证8月到期需续期。建议优先级：美国{'>'}日本{'>'}欧盟MDR。</p>
+                    <p className="text-xs text-[#1d1d1f]">美国CPSC CPC/eFiling规则需复核证书字段、适用SKU和实施日期；“官网实时合规声明”尚未找到官方依据，不应作为P0已生效规则执行。日本PSC认证8月到期需续期。建议优先级：美国复核{'>'}日本{'>'}欧盟MDR。</p>
                   </div>
                 </div>
                 <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">

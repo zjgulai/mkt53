@@ -5,7 +5,7 @@ import { exportToCsv } from '@/utils/csvExport';
 import Sidebar from '@/components/Sidebar';
 
 const regionPolicies = [
-  { region: '美国', standards: 16, pending: 4, risk: '高', key: 'FDA 510(k) + CPSC新规(2026.5) + ASTM F2088-25', compliance: 88 },
+  { region: '美国', standards: 16, pending: 4, risk: '高', key: 'FDA 510(k) + CPSC CPC/eFiling复核 + ASTM F2088-25', compliance: 88 },
   { region: '欧盟', standards: 18, pending: 5, risk: '高', key: 'MDR 2017/745 + EN 14350 + REACH/RoHS', compliance: 78 },
   { region: '英国', standards: 14, pending: 2, risk: '中', key: 'UKCA + BS EN + GPSR', compliance: 88 },
   { region: '加拿大', standards: 12, pending: 1, risk: '低', key: 'CCPSA + Health Canada 2025-2027计划', compliance: 93 },
@@ -24,7 +24,7 @@ const riskDist = [
 // R11: 增强版法规变更 — 含原文链接+Momcozy状态
 const upcomingChanges = [
   { date: '2026-07-25', region: '美国', regionCode: 'US', change: 'CPSC更新16 CFR 1223婴儿摇篮安全标准，ASTM F2088-25生效，新增前标签可见性测试和强化窒息警告', impact: '极高', action: '更新产品警告标签设计，通过可见性测试', source: { name: 'CPSC Federal Register', url: 'https://www.federalregister.gov' }, momcozyStatus: '已完成', verifiedBy: '郑法务', verifiedAt: '2026-05-20' },
-  { date: '2026-05-01', region: '美国', regionCode: 'US', change: 'CPSC新规：儿童产品官网必须嵌入实时可验证合规声明，覆盖ASTM F963-23和CPSIA限制', impact: '极高', action: '官网技术架构升级，集成合规声明页面和追溯系统', source: { name: 'Federal Register', url: 'https://www.federalregister.gov/documents/2026/04/15/2026-08452' }, momcozyStatus: '进行中', verifiedBy: '郑法务', verifiedAt: '2026-05-23' },
+  { date: '2026-07-08', region: '美国', regionCode: 'US', change: 'CPSC CPC/eFiling：复核儿童产品证书数据、进口申报字段和适用SKU；官网实时声明强制要求未获官方证实', impact: '高', action: '按CPSC官方CPC/eFiling页面重审证书字段、测试报告和数据提交流程', source: { name: 'CPSC eFiling', url: 'https://www.cpsc.gov/eFiling' }, momcozyStatus: '进行中', verifiedBy: '郑法务', verifiedAt: '2026-05-31' },
   { date: '2026-11-01', region: '中国', regionCode: 'CN', change: 'GB 46523-2025儿童用品通用安全+GB 46516婴幼儿护理用品安全正式实施', impact: '极高', action: '全面审核产品设计和材料，确保符合新国标', source: { name: 'SAMR 国家市场监管总局', url: 'https://www.samr.gov.cn' }, momcozyStatus: '进行中', verifiedBy: '王运营', verifiedAt: '2026-05-15' },
   { date: '2026-05-01', region: '中国', regionCode: 'CN', change: 'GB/T 46491-2025婴儿食品加工器具标准生效，规范材料安全和性能要求', impact: '高', action: '评估温奶器、消毒器等产品的材料合规性', source: { name: '国家标准化管理委员会', url: 'https://www.sac.gov.cn' }, momcozyStatus: '已完成', verifiedBy: '王运营', verifiedAt: '2026-04-28' },
   { date: '2027-01-01', region: '欧盟', regionCode: 'EU', change: 'MDR Class IIa医疗器械（含吸奶器）过渡期截止，需完成notified body合格评定', impact: '极高', action: '加速CE marking和UDI注册流程', source: { name: 'European Commission', url: 'https://health.ec.europa.eu' }, momcozyStatus: '进行中', verifiedBy: '郑法务', verifiedAt: '2026-05-18' },

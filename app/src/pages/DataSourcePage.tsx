@@ -13,6 +13,8 @@ interface DataSource {
   url?: string;
 }
 
+type DataSourceTabId = 'sources' | 'divergence' | 'models';
+
 const dataSources: DataSource[] = [
   // 看市场
   { id: 'ds-001', module: '看市场', page: 'MarketPage', metric: 'TAM/SAM/SOM', source: 'Precedence Research', sourceType: '行业报告', year: '2026-04', reliability: 'A', gap: '', action: 'OK', url: 'https://www.precedenceresearch.com/breast-pump-market' },
@@ -78,7 +80,7 @@ const relColors = { A: '#34c759', B: '#5856d6', C: '#ff9500', D: '#ff3b30' };
 const relLabels = { A: '高可信度', B: '中等可信度', C: '需谨慎', D: '示例数据' };
 
 export default function DataSourcePage() {
-  const [activeTab, setActiveTab] = useState<'sources' | 'divergence' | 'models'>('sources');
+  const [activeTab, setActiveTab] = useState<DataSourceTabId>('sources');
   const [filterModule, setFilterModule] = useState('全部');
 
   const modules = ['全部', ...Array.from(new Set(dataSources.map(d => d.module)))];
@@ -182,12 +184,12 @@ export default function DataSourcePage() {
 
         {/* Tabs */}
         <div className="flex items-center gap-2 mb-6">
-          {[
+          {([
             { id: 'sources', label: '数据溯源', icon: Database },
             { id: 'divergence', label: '机构差异', icon: AlertTriangle },
             { id: 'models', label: '测算模型', icon: BarChart3 },
-          ].map(tab => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id as any)}
+          ] satisfies Array<{ id: DataSourceTabId; label: string; icon: typeof Database }>).map(tab => (
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${activeTab === tab.id ? 'bg-[#C25B6E] text-white' : 'bg-white text-[#86868b] border border-[#EDE6DF]'}`}>
               <tab.icon className="w-4 h-4" />{tab.label}
             </button>

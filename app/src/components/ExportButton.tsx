@@ -1,14 +1,14 @@
 import { Download } from 'lucide-react';
 import { exportToCsv } from '@/utils/csvExport';
 
-interface ExportButtonProps<T extends Record<string, any>> {
+interface ExportButtonProps<T extends object> {
   data: T[];
   headers: Record<string, string>;
   filename: string;
   label?: string;
 }
 
-export default function ExportButton<T extends Record<string, any>>({
+export default function ExportButton<T extends object>({
   data,
   headers,
   filename,
