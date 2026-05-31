@@ -37,7 +37,7 @@ const exhibitions = [
     visitors: 45000, momcozyBooth: 'East Hall 4-220', boothSize: 90,
     leads: null, orders: null, satisfaction: null,
     highlights: ['日本限定樱花粉配色首发', '与本地母婴达人深度合作', 'Mini产品线的亚洲首秀'],
-    feedback: '日本消费者对产品细节和包装品质要求极高，正在优化展示材料的日语翻译。',
+    feedback: '日本消费者对产品细节和包装品质要求很高，正在优化展示材料的日语翻译。',
   },
 ];
 

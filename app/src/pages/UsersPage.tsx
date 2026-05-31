@@ -186,7 +186,7 @@ const rfmData = [
   { segment: '重要价值客户', count: '125K', pct: '25%', recency: '7天', frequency: '4.2次', monetary: '$486', ltv: '$2,043', churnRisk: '低', action: 'VIP专属服务·新品优先体验' },
   { segment: '重要发展客户', count: '86K', pct: '17%', recency: '14天', frequency: '2.1次', monetary: '$298', ltv: '$626', churnRisk: '中', action: '交叉销售·套装推荐' },
   { segment: '重要保持客户', count: '62K', pct: '12%', recency: '45天', frequency: '3.8次', monetary: '$412', ltv: '$1,566', churnRisk: '高', action: '召回活动·限时优惠' },
-  { segment: '重要挽留客户', count: '38K', pct: '8%', recency: '90天', frequency: '1.5次', monetary: '$156', ltv: '$234', churnRisk: '极高', action: '大额折扣·个性化关怀' },
+  { segment: '重要挽留客户', count: '38K', pct: '8%', recency: '90天', frequency: '1.5次', monetary: '$156', ltv: '$234', churnRisk: '高危', action: '大额折扣·个性化关怀' },
   { segment: '一般价值客户', count: '95K', pct: '19%', recency: '10天', frequency: '1.8次', monetary: '$186', ltv: '$335', churnRisk: '低', action: '频次提升·复购激励' },
   { segment: '一般发展客户', count: '52K', pct: '10%', recency: '21天', frequency: '1.2次', monetary: '$128', ltv: '$154', churnRisk: '中', action: '教育内容·使用指导' },
   { segment: '新客户', count: '42K', pct: '9%', recency: '3天', frequency: '1.0次', monetary: '$159', ltv: '$477', churnRisk: '中', action: '欢迎序列·二次购买引导' },

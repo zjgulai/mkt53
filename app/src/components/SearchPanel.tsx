@@ -28,8 +28,8 @@ const allSearchData: SearchResult[] = [
   { id: 'sr-04', title: '北美母婴护理市场深度分析（2025-2026年度）', category: '报告', path: '/reports', desc: '86页 · 区域宏观 · 2026-03-22', icon: FileText, color: '#5856d6' },
   // 政策法规
   { id: 'sl-01', title: 'CPSC CPC/eFiling：证书数据要求复核', category: '法规', path: '/industry/regulation', desc: '美国 · 2026-07-08 · 合规复核 · 影响高', icon: Shield, color: '#ff3b30' },
-  { id: 'sl-02', title: 'EU MDR 2017/745 过渡期截止', category: '法规', path: '/industry/regulation', desc: '欧盟 · 2027-01-01截止 · 医疗器械 · 影响极高', icon: Shield, color: '#5856d6' },
-  { id: 'sl-03', title: '日本新《消费品安全法》：PSC标志强制认证', category: '法规', path: '/industry/regulation', desc: '日本 · 2025-12 · 强制认证 · 影响极高', icon: Shield, color: '#0077b6' },
+  { id: 'sl-02', title: 'EU MDR 2017/745 过渡安排复核', category: '法规', path: '/industry/regulation', desc: '欧盟 · 2027-2028 · 医疗器械 · 重点复核', icon: Shield, color: '#5856d6' },
+  { id: 'sl-03', title: '日本新《消费品安全法》：PSC标志适用性复核', category: '法规', path: '/industry/regulation', desc: '日本 · 2025-12 · 认证路径 · 重点复核', icon: Shield, color: '#0077b6' },
   { id: 'sl-04', title: 'GB 46523-2025儿童用品通用安全要求', category: '法规', path: '/industry/regulation', desc: '中国 · 2026-11-01实施 · 国标实施', icon: Shield, color: '#ff3b30' },
   // 市场数据
   { id: 'sm-01', title: '全球吸奶器市场规模 TAM/SAM/SOM', category: '市场', path: '/market', desc: '$38.1B SAM · CAGR 8.52% · Precedence Research', icon: BarChart3, color: '#C25B6E' },

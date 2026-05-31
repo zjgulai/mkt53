@@ -6,7 +6,7 @@ const newsItems = [
   { id: 1, title: 'Momcozy Wearable Breast Pump获得FDA 510(k)许可，涵盖7个型号', source: 'FDA.gov', date: '2025-10-29', category: '法规', tag: '重要', hot: true },
   { id: 2, title: '全球可穿戴吸奶器市场规模2025年预计达18.2亿美元，年增15.3%', source: 'MarketWatch', date: '2026-05-23', category: '市场', tag: null, hot: true },
   { id: 3, title: 'eufy Wearable Breast Pump S1获FDA 510(k)许可，赛道竞争加剧', source: 'FDA.gov', date: '2025-08-11', category: '竞品', tag: null, hot: false },
-  { id: 4, title: '中国GB 6675-2025玩具安全新标准发布，2026年11月正式实施', source: 'SAC China', date: '2025-10-05', category: '法规', tag: '重要', hot: true },
+  { id: 4, title: '中国GB 6675-2025玩具安全新标准发布，2026年11月计划生效', source: 'SAC China', date: '2025-10-05', category: '法规', tag: '重要', hot: true },
   { id: 5, title: '欧盟MDR过渡期延长至2027-2028年，吸奶器等Class IIa器械影响分析', source: 'EU Commission', date: '2024-12-18', category: '法规', tag: null, hot: false },
   { id: 6, title: 'Medela发布Sonata Pro智能吸奶器，集成AI泌乳分析功能', source: 'Medela', date: '2026-05-23', category: '竞品', tag: null, hot: false },
   { id: 7, title: '美国CPSC 16 CFR Part 1242哺乳枕安全标准正式生效', source: 'CPSC', date: '2026-05-23', category: '法规', tag: '重要', hot: true },

@@ -128,7 +128,7 @@ const pageGuides = [
       { title: '美国FDA/CPSC适用边界需复核', desc: '吸奶器FDA 510(k)路径与CPSC CPC/eFiling证书要求不能混同，需按SKU逐项确认', type: 'alert' },
       { title: '中国-东盟关税协定2026生效，税率从12%→5%', desc: '东南亚制造成本优势扩大，建议评估供应链转移可行性', type: 'opportunity' },
       { title: 'Willow申请2项核心泵体专利，2026-08授权', desc: '专利壁垒将加厚，需在授权前完成技术规避设计', type: 'risk' },
-      { title: 'ABC Kids Expo 2026-10拉斯维加斯，竞品确认参展', desc: '必须参展并安排竞品暗访团队，获取新品情报', type: 'action' }
+      { title: 'ABC Kids Expo 2026-10拉斯维加斯，竞品确认参展', desc: '需评估参展与竞品暗访投入，获取新品情报', type: 'action' }
     ],
     storyLine: '行业洞察是"望远镜"——当竞品还在关注季度销售时，你已经看到了18个月后的政策变化和技术壁垒。这就是战略纵深的来源。'
   },

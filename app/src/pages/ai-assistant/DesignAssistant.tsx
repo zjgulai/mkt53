@@ -8,7 +8,7 @@ const aiModels = [
   {
     id: 'kimi-image',
     name: 'Kimi Image Generation',
-    description: 'Kimi平台内置的AI图像生成能力。真实调用必须由服务端代理完成，前端仅负责提交生成参数',
+    description: 'Kimi平台内置的AI图像生成能力。真实调用需由服务端代理完成，前端仅负责提交生成参数',
     features: ['服务端代理', '多比例/分辨率', '参考图支持'],
     isDefault: true,
     icon: <Zap className="w-4 h-4" />,
@@ -410,7 +410,7 @@ export default function DesignAssistant() {
                 {/* Proxy Contract */}
                 <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                   <h3 className="text-sm font-semibold text-[#1d1d1f] mb-2 flex items-center gap-2"><Zap className="w-4 h-4 text-[#af52de]" />服务端代理接入契约</h3>
-                  <p className="text-xs text-[#86868b] mb-5">真实图像生成必须经由后端代理。供应商 API Key 只允许保存在服务端环境变量中，前端只提交业务参数。</p>
+                  <p className="text-xs text-[#86868b] mb-5">真实图像生成需经由后端代理。供应商 API Key 只允许保存在服务端环境变量中，前端只提交业务参数。</p>
                   
                   {/* Image generation proxy */}
                   <div className="mb-5">

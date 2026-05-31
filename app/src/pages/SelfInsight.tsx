@@ -650,7 +650,7 @@ export default function SelfInsight() {
                   { retailer: 'Walmart', type: '美国连锁', status: '已入驻', detail: 'S9 Pro+储奶袋 2023.12起售', penetration: '较高', color: '#ff9500' },
                   { retailer: 'Babylist', type: '母婴 registry', status: '核心渠道', detail: 'S9 Pro/S12 Pro/M5/YN08全系列', penetration: '高', color: '#34c759' },
                   { retailer: 'Boots', type: '英国药妆', status: '欧洲核心', detail: '英国+爱尔兰门店覆盖', penetration: '高', color: '#5856d6' },
-                  { retailer: 'MediaWorld', type: '意大利电子', status: '已入驻', detail: '占婴儿护理区80% SKU(24/30)', penetration: '极高', color: '#af52de' },
+                  { retailer: 'MediaWorld', type: '意大利电子', status: '已入驻', detail: '占婴儿护理区80% SKU(24/30)', penetration: '很高', color: '#af52de' },
                   { retailer: 'Currys', type: '英国电子', status: '已入驻', detail: '英国最大电子零售商线上', penetration: '中', color: '#86868b' },
                   { retailer: 'TikTok Shop', type: '社交电商', status: '高速增长', detail: '东南亚+北美同步扩张', penetration: '快速增长', color: '#ff3b30' },
                   { retailer: 'Shopee', type: '东南亚电商', status: '区域核心', detail: '新加坡/马来/印尼/泰国/菲', penetration: '高', color: '#ff9500' },

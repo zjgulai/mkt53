@@ -126,6 +126,8 @@ npm run build
 
 **目标:** 把分散在页面里的数据来源、可信度、待复核状态集中成可检索 registry，避免每页各写一套事实。
 
+**执行状态:** 已完成。`app/src/data/source-registry.ts` 已成为数据来源 registry，`DataSourcePage`、`HomePage` 和法规模块已接入条目级复核状态。
+
 **Files:**
 - Create: `app/src/data/source-registry.ts`
 - Create: `app/tests/data/source-registry.test.ts`
@@ -162,6 +164,8 @@ export interface SourceRegistryItem {
 
 **目标:** 清理法规模块中仍可能混用“事实、推断、示例”的内容。
 
+**执行状态:** 已完成。CPSC/eFiling、EU MDR 等高风险法规已降级为 `needs-review`；强判断关键词扫描在 `src/pages` 和 `src/components` 已无命中。
+
 **Files:**
 - Modify: `app/src/pages/IndustryPage.tsx`
 - Modify: `app/src/pages/industry/RegulationDetail.tsx`
@@ -170,10 +174,10 @@ export interface SourceRegistryItem {
 - Test: `app/tests/security/clientBundleGuard.test.ts`
 
 **执行清单:**
-- [ ] 搜索 `已验证原文`、`极高`、`已实施`、`正式实施`、`必须`。
-- [ ] 每条法规标记为 `verified`、`needs-review`、`example`。
-- [ ] 没有官方链接的强判断统一降级。
-- [ ] 将用户可见文案从“确定结论”改为“复核任务”。
+- [x] 搜索 `已验证原文`、`极高`、`已实施`、`正式实施`、`必须`。
+- [x] 每条法规标记为 `verified`、`needs-review`、`example`。
+- [x] 没有官方链接的强判断统一降级。
+- [x] 将用户可见文案从“确定结论”改为“复核任务”。
 
 **Required command:**
 

@@ -3,6 +3,10 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recha
 import { Shield, Globe, AlertTriangle, CheckCircle, Clock, FileText, ExternalLink, Download } from 'lucide-react';
 import { exportToCsv } from '@/utils/csvExport';
 import Sidebar from '@/components/Sidebar';
+import { getSourceRegistryItem, getVerificationStatusMeta, type VerificationStatus } from '@/data/source-registry';
+
+const cpscEfilingSource = getSourceRegistryItem('policy-cpsc-efiling');
+const euMdrSource = getSourceRegistryItem('policy-eu-mdr-transition');
 
 const regionPolicies = [
   { region: '美国', standards: 16, pending: 4, risk: '高', key: 'FDA 510(k) + CPSC CPC/eFiling复核 + ASTM F2088-25', compliance: 88 },
@@ -23,13 +27,25 @@ const riskDist = [
 
 // R11: 增强版法规变更 — 含原文链接+Momcozy状态
 const upcomingChanges = [
-  { date: '2026-07-25', region: '美国', regionCode: 'US', change: 'CPSC更新16 CFR 1223婴儿摇篮安全标准，ASTM F2088-25生效，新增前标签可见性测试和强化窒息警告', impact: '极高', action: '更新产品警告标签设计，通过可见性测试', source: { name: 'CPSC Federal Register', url: 'https://www.federalregister.gov' }, momcozyStatus: '已完成', verifiedBy: '郑法务', verifiedAt: '2026-05-20' },
-  { date: '2026-07-08', region: '美国', regionCode: 'US', change: 'CPSC CPC/eFiling：复核儿童产品证书数据、进口申报字段和适用SKU；官网实时声明强制要求未获官方证实', impact: '高', action: '按CPSC官方CPC/eFiling页面重审证书字段、测试报告和数据提交流程', source: { name: 'CPSC eFiling', url: 'https://www.cpsc.gov/eFiling' }, momcozyStatus: '进行中', verifiedBy: '郑法务', verifiedAt: '2026-05-31' },
-  { date: '2026-11-01', region: '中国', regionCode: 'CN', change: 'GB 46523-2025儿童用品通用安全+GB 46516婴幼儿护理用品安全正式实施', impact: '极高', action: '全面审核产品设计和材料，确保符合新国标', source: { name: 'SAMR 国家市场监管总局', url: 'https://www.samr.gov.cn' }, momcozyStatus: '进行中', verifiedBy: '王运营', verifiedAt: '2026-05-15' },
-  { date: '2026-05-01', region: '中国', regionCode: 'CN', change: 'GB/T 46491-2025婴儿食品加工器具标准生效，规范材料安全和性能要求', impact: '高', action: '评估温奶器、消毒器等产品的材料合规性', source: { name: '国家标准化管理委员会', url: 'https://www.sac.gov.cn' }, momcozyStatus: '已完成', verifiedBy: '王运营', verifiedAt: '2026-04-28' },
-  { date: '2027-01-01', region: '欧盟', regionCode: 'EU', change: 'MDR Class IIa医疗器械（含吸奶器）过渡期截止，需完成notified body合格评定', impact: '极高', action: '加速CE marking和UDI注册流程', source: { name: 'European Commission', url: 'https://health.ec.europa.eu' }, momcozyStatus: '进行中', verifiedBy: '郑法务', verifiedAt: '2026-05-18' },
-  { date: '2026-03-16', region: '美国', regionCode: 'US', change: 'CPSC 2026年婴儿睡衣新睡眠安全标准生效，加强可燃性要求和绳带限制', impact: '高', action: '审查孕妇护理和婴儿纺织品的材料合规性', source: { name: 'CPSC', url: 'https://www.cpsc.gov' }, momcozyStatus: '已跟踪', verifiedBy: '林产品', verifiedAt: '2026-03-10' },
-];
+  { date: '2026-07-25', region: '美国', regionCode: 'US', change: 'CPSC更新16 CFR 1223婴儿摇篮安全标准，ASTM F2088-25生效，新增前标签可见性测试和强化窒息警告', impact: '高', action: '更新产品警告标签设计，通过可见性测试', source: { name: 'CPSC Federal Register', url: 'https://www.federalregister.gov' }, momcozyStatus: '已完成', verifiedBy: '郑法务', verifiedAt: '2026-05-20', verificationStatus: 'needs-review' },
+  { date: '2026-07-08', region: '美国', regionCode: 'US', change: 'CPSC CPC/eFiling：复核儿童产品证书数据、进口申报字段和适用SKU；官网实时声明强制要求未获官方证实', impact: '高', action: cpscEfilingSource.action, source: { name: cpscEfilingSource.sourceName, url: cpscEfilingSource.sourceUrl ?? 'https://www.cpsc.gov/eFiling' }, momcozyStatus: '进行中', verifiedBy: '郑法务', verifiedAt: cpscEfilingSource.lastVerified, verificationStatus: 'needs-review' },
+  { date: '2026-11-01', region: '中国', regionCode: 'CN', change: 'GB 46523-2025儿童用品通用安全+GB 46516婴幼儿护理用品安全计划生效', impact: '高', action: '审核产品设计和材料，确保符合新国标', source: { name: 'SAMR 国家市场监管总局', url: 'https://www.samr.gov.cn' }, momcozyStatus: '进行中', verifiedBy: '王运营', verifiedAt: '2026-05-15', verificationStatus: 'verified' },
+  { date: '2026-05-01', region: '中国', regionCode: 'CN', change: 'GB/T 46491-2025婴儿食品加工器具标准生效，规范材料安全和性能要求', impact: '高', action: '评估温奶器、消毒器等产品的材料合规性', source: { name: '国家标准化管理委员会', url: 'https://www.sac.gov.cn' }, momcozyStatus: '已完成', verifiedBy: '王运营', verifiedAt: '2026-04-28', verificationStatus: 'verified' },
+  { date: '2027-01-01', region: '欧盟', regionCode: 'EU', change: 'MDR Class IIa医疗器械过渡安排需按产品分类、证书状态和notified body路径复核', impact: '高', action: euMdrSource.action, source: { name: euMdrSource.sourceName, url: euMdrSource.sourceUrl ?? 'https://health.ec.europa.eu' }, momcozyStatus: '进行中', verifiedBy: '郑法务', verifiedAt: euMdrSource.lastVerified, verificationStatus: 'needs-review' },
+  { date: '2026-03-16', region: '美国', regionCode: 'US', change: 'CPSC 2026年婴儿睡衣新睡眠安全标准生效，加强可燃性要求和绳带限制', impact: '高', action: '审查孕妇护理和婴儿纺织品的材料合规性', source: { name: 'CPSC', url: 'https://www.cpsc.gov' }, momcozyStatus: '已跟踪', verifiedBy: '林产品', verifiedAt: '2026-03-10', verificationStatus: 'needs-review' },
+] satisfies Array<{
+  date: string;
+  region: string;
+  regionCode: string;
+  change: string;
+  impact: '高' | '中' | '低';
+  action: string;
+  source: { name: string; url: string };
+  momcozyStatus: string;
+  verifiedBy: string;
+  verifiedAt: string;
+  verificationStatus: VerificationStatus;
+}>;
 
 const countryColors: Record<string, string> = { '美国': '#C25B6E', '欧盟': '#5856d6', '英国': '#34c759', '加拿大': '#ff9500', '中国': '#ff3b30', '澳大利亚': '#af52de', '日本': '#0077b6' };
 
@@ -79,7 +95,7 @@ export default function PolicyInsight() {
                   </div>
                   <div>
                     <h1 className="text-lg font-semibold text-[#1d1d1f]">区域标准洞察</h1>
-                    <p className="text-xs text-[#86868b]">覆盖全球7大市场区域，追踪 {regionPolicies.reduce((a, b) => a + b.standards, 0)} 项有效标准 · 全部来源已验证原文</p>
+                    <p className="text-xs text-[#86868b]">覆盖全球7大市场区域，追踪 {regionPolicies.reduce((a, b) => a + b.standards, 0)} 项有效标准 · 条目级复核状态已标注</p>
                   </div>
                 </div>
                 <button onClick={() => exportToCsv(regionPolicies.map(r => ({ region: r.region, standards: r.standards, pending: r.pending, risk: r.risk, key: r.key, compliance: r.compliance })), { region: '区域', standards: '有效标准', pending: '待更新', risk: '风险', key: '核心法规', compliance: '合规度%' }, '区域合规_' + new Date().toISOString().slice(0, 10))} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#FBF8F5] text-xs text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all border border-[#EDE6DF]">
@@ -87,9 +103,9 @@ export default function PolicyInsight() {
                 </button>
               </div>
               {/* R13: 信息审计横幅 */}
-              <div className="p-3 rounded-xl bg-[#34c759]/5 border border-[#34c759]/10 flex items-center gap-3">
-                <CheckCircle className="w-4 h-4 text-[#34c759] flex-shrink-0" />
-                <p className="text-xs text-[#1d1d1f]"><strong>信息审计：</strong>全部{regionPolicies.length}个区域数据来源已通过官方渠道验证（FDA/EC/SAMR/Health Canada/METI等），最近验证日期2026-05-23，由合规团队维护。</p>
+              <div className="p-3 rounded-xl bg-[#ff9500]/5 border border-[#ff9500]/10 flex items-center gap-3">
+                <AlertTriangle className="w-4 h-4 text-[#ff9500] flex-shrink-0" />
+                <p className="text-xs text-[#1d1d1f]"><strong>信息审计：</strong>区域数据按官方来源维护，但 CPSC CPC/eFiling、EU MDR 过渡安排和部分泛化法规仍为待复核项；页面不再展示“全部已验证”结论。</p>
               </div>
             </div>
 
@@ -132,13 +148,13 @@ export default function PolicyInsight() {
                         <td className="py-2.5 px-3 text-xs text-[#1d1d1f]">{r.standards}</td>
                         <td className="py-2.5 px-3 text-xs text-[#ff9500]">{r.pending}</td>
                         <td className="py-2.5 px-3">
-                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${r.risk === '高' || r.risk === '极高' ? 'bg-[#ff3b30]/10 text-[#ff3b30]' : r.risk === '中' ? 'bg-[#ff9500]/10 text-[#ff9500]' : 'bg-[#34c759]/10 text-[#34c759]'}`}>{r.risk}</span>
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${r.risk === '高' ? 'bg-[#ff3b30]/10 text-[#ff3b30]' : r.risk === '中' ? 'bg-[#ff9500]/10 text-[#ff9500]' : 'bg-[#34c759]/10 text-[#34c759]'}`}>{r.risk}</span>
                         </td>
                         <td className="py-2.5 px-3 text-xs text-[#86868b] max-w-[200px] truncate">{r.key}</td>
                         {/* R14: 原文来源链接 */}
                         <td className="py-2.5 px-3">
                           <span className="flex items-center gap-1 text-[10px] text-[#5856d6] bg-[#5856d6]/5 px-1.5 py-0.5 rounded">
-                            <CheckCircle className="w-2.5 h-2.5" />官方已验证
+                            <CheckCircle className="w-2.5 h-2.5" />逐条复核
                           </span>
                         </td>
                         <td className="py-2.5 px-3">
@@ -179,12 +195,14 @@ export default function PolicyInsight() {
                 <div className="space-y-3">
                   {upcomingChanges.map((c, i) => {
                     const msColor = c.momcozyStatus === '已完成' ? '#34c759' : c.momcozyStatus === '进行中' ? '#ff9500' : '#ff3b30';
+                    const verification = getVerificationStatusMeta(c.verificationStatus);
                     return (
                       <div key={i} className="p-3.5 rounded-xl border border-[#EDE6DF] hover:border-[#C25B6E]/30 transition-all">
                         <div className="flex items-center gap-2 mb-2 flex-wrap">
                           <span className="px-2 py-0.5 rounded-md text-[10px] font-medium text-white" style={{ backgroundColor: countryColors[c.region] || '#86868b' }}>{c.regionCode}</span>
                           <span className="px-2 py-0.5 rounded-md bg-[#C25B6E]/10 text-[10px] text-[#C25B6E] font-medium">{c.date}</span>
-                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${c.impact === '极高' ? 'bg-[#ff3b30]/10 text-[#ff3b30]' : c.impact === '高' ? 'bg-[#ff9500]/10 text-[#ff9500]' : 'bg-[#C25B6E]/10 text-[#C25B6E]'}`}>影响{c.impact}</span>
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${c.impact === '高' ? 'bg-[#ff9500]/10 text-[#ff9500]' : 'bg-[#C25B6E]/10 text-[#C25B6E]'}`}>影响{c.impact}</span>
+                          <span className="px-2 py-0.5 rounded-md text-[10px] font-medium" style={{ backgroundColor: `${verification.color}15`, color: verification.color }}>{verification.label}</span>
                           <span className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium text-white ml-auto" style={{ backgroundColor: msColor }}>{c.momcozyStatus}</span>
                         </div>
                         <p className="text-xs text-[#1d1d1f] leading-relaxed mb-2">{c.change}</p>
@@ -200,7 +218,7 @@ export default function PolicyInsight() {
                           <span>验证: {c.verifiedBy}</span>
                           <span>·</span>
                           <span>{c.verifiedAt}</span>
-                          <span className="text-[#34c759]">· 来源已验证</span>
+                          <span style={{ color: verification.color }}>· {verification.label}</span>
                         </div>
                       </div>
                     );

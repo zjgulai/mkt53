@@ -1,53 +1,17 @@
 import { useState } from 'react';
 import { Database, ExternalLink, AlertTriangle, CheckCircle, Info, Shield, TrendingUp, BarChart3, Globe, Users, Target } from 'lucide-react';
+import { getVerificationStatusMeta, sourceRegistry, type SourceRegistryItem } from '@/data/source-registry';
 
 // ═══════════════════════════════════════════════════════════════════
 // 数据来源管理页面 — 企业级数据溯源与质量管控
 // 10轮深度盘点产出：全站24条数据来源 · 4级可信度 · 8个缺口 · 5套测算模型
 // ═══════════════════════════════════════════════════════════════════
 
-interface DataSource {
-  id: string; module: string; page: string; metric: string;
-  source: string; sourceType: string; year: string;
-  reliability: 'A' | 'B' | 'C' | 'D'; gap: string; action: string;
-  url?: string;
-}
+type DataSource = SourceRegistryItem;
 
 type DataSourceTabId = 'sources' | 'divergence' | 'models';
 
-const dataSources: DataSource[] = [
-  // 看市场
-  { id: 'ds-001', module: '看市场', page: 'MarketPage', metric: 'TAM/SAM/SOM', source: 'Precedence Research', sourceType: '行业报告', year: '2026-04', reliability: 'A', gap: '', action: 'OK', url: 'https://www.precedenceresearch.com/breast-pump-market' },
-  { id: 'ds-002', module: '看市场', page: 'MarketPage', metric: '区域份额', source: 'Fortune Business Insights', sourceType: '行业报告', year: '2025', reliability: 'A', gap: '', action: 'OK', url: 'https://www.fortunebusinessinsights.com' },
-  { id: 'ds-003', module: '看市场', page: 'MarketTrend', metric: 'PEST分析', source: 'WHO/FDA/各国政府', sourceType: '官方数据', year: '2024-2026', reliability: 'A', gap: '', action: 'OK' },
-  { id: 'ds-004', module: '看市场', page: 'MarketTrend', metric: '波特五力定量评分', source: 'Mordor Intelligence框架', sourceType: '专家评估', year: '2026', reliability: 'C', gap: '⚠️缺乏定量原始数据', action: '建议采购IBISWorld完整报告', url: 'https://www.mordorintelligence.com' },
-  { id: 'ds-005', module: '看市场', page: 'BreastPump', metric: '品类拆分', source: 'Precedence/Technavio加权', sourceType: '推算', year: '2026', reliability: 'B', gap: '', action: 'OK（2家交叉验证）' },
-  { id: 'ds-006', module: '看市场', page: 'CustomsData', metric: 'HS编码进出口', source: '海关总署/Import Genius', sourceType: '官方数据', year: '2025-2026', reliability: 'D', gap: '❌当前为示例数据', action: '需接入Import Genius API或数仓', url: 'https://www.importgenius.com' },
-  // 看竞争
-  { id: 'ds-007', module: '看竞争', page: 'CompetitionPage', metric: '竞品概览', source: 'Amazon.com 实时采集', sourceType: '平台API', year: '2026-05', reliability: 'A', gap: '', action: 'OK（每周自动采集）' },
-  { id: 'ds-008', module: '看竞争', page: 'NewCompetition', metric: '新品追踪', source: '品牌官网/新闻稿', sourceType: '新闻', year: '2025-2026', reliability: 'B', gap: '', action: 'OK' },
-  { id: 'ds-009', module: '看竞争', page: 'ProductManage', metric: '产品参数/价格', source: 'Amazon.com 2026-05', sourceType: '实时采集', year: '2026', reliability: 'A', gap: '', action: 'OK' },
-  { id: 'ds-010', module: '看竞争', page: 'RegionCompetition', metric: '区域份额', source: 'Amazon Brand Analytics', sourceType: '平台数据', year: '2026', reliability: 'B', gap: '⚠️仅Amazon渠道', action: '建议叠加NPD/IRI线下数据', url: 'https://vendorcentral.amazon.com' },
-  // 看用户
-  { id: 'ds-011', module: '看用户', page: 'UsersPage', metric: '用户画像', source: 'QuestMobile 2025 / Mamava Survey', sourceType: '行业报告', year: '2025', reliability: 'A', gap: '', action: 'OK', url: 'https://www.questmobile.com' },
-  { id: 'ds-012', module: '看用户', page: 'UsersPage', metric: 'RFM分层', source: 'Momcozy CRM', sourceType: '内部系统', year: '2026 Q1', reliability: 'C', gap: '⚠️示例数据', action: '需对接真实CRM数据库' },
-  { id: 'ds-013', module: '看用户', page: 'OverseasSentiment', metric: '社交声量', source: 'TikTok/IG/FB API', sourceType: '社交媒体API', year: '2025-2026', reliability: 'B', gap: '', action: 'OK' },
-  { id: 'ds-014', module: '看用户', page: 'ConsumerInterviews', metric: '消费者访谈', source: '定性研究', sourceType: '定性', year: '2025', reliability: 'B', gap: '⚠️样本量未标注', action: '补充样本量说明' },
-  // 看行业
-  { id: 'ds-015', module: '看行业', page: 'IndustryPage', metric: '行业概况', source: 'Grand View Research / Fortune BI', sourceType: '行业报告', year: '2025', reliability: 'A', gap: '', action: 'OK' },
-  { id: 'ds-016', module: '看行业', page: 'PolicyInsight', metric: '政策法规', source: '各国政府官网', sourceType: '官方数据', year: '2025-2026', reliability: 'A', gap: '', action: 'OK' },
-  { id: 'ds-017', module: '看行业', page: 'IPAnalysis', metric: '专利数据', source: 'WIPO/USPTO', sourceType: '官方数据库', year: '2020-2024', reliability: 'B', gap: '⚠️2025数据缺失', action: '需更新WIPO 2025数据', url: 'https://www.wipo.int' },
-  { id: 'ds-018', module: '看行业', page: 'Exhibition', metric: '展会情报', source: '展会官网', sourceType: '官网', year: '2025-2026', reliability: 'B', gap: '', action: 'OK' },
-  // 看自己
-  { id: 'ds-019', module: '看自己', page: 'SelfInsight', metric: '营销4P', source: 'Momcozy内部/Amazon', sourceType: '混合', year: '2025-2026', reliability: 'B', gap: '', action: 'OK' },
-  { id: 'ds-020', module: '看自己', page: 'SelfInsight', metric: 'BCG矩阵', source: '内部测算', sourceType: '内部', year: '2026', reliability: 'C', gap: '⚠️主观评估', action: '建议引用外部份额数据校准' },
-  // AI助手
-  { id: 'ds-021', module: 'AI助手', page: 'CommentData', metric: '评论情感分析', source: 'Amazon API / NLP模型', sourceType: 'AI模型', year: '2026', reliability: 'B', gap: '⚠️准确率未标注', action: '补充模型准确率指标' },
-  { id: 'ds-022', module: 'AI助手', page: 'KnowledgeBase', metric: '知识库', source: '内部维护', sourceType: '内部', year: '2026', reliability: 'A', gap: '', action: 'OK' },
-  { id: 'ds-023', module: 'AI助手', page: 'WebReview', metric: '网页评论爬取', source: '爬虫采集', sourceType: '爬虫', year: '2026', reliability: 'B', gap: '⚠️合规风险', action: '需标注robots.txt合规性' },
-  // 报告中心
-  { id: 'ds-024', module: '报告中心', page: 'ReportsPage', metric: '报告元数据', source: '内部管理', sourceType: '内部', year: '2026', reliability: 'A', gap: '', action: 'OK' },
-];
+const dataSources: DataSource[] = [...sourceRegistry];
 
 // R46: 数据可信度趋势分析 (todo: 未来实现图表)
 /* const reliabilityTrend = [
@@ -95,10 +59,10 @@ export default function DataSourcePage() {
   };
   // R18: 数据缺口优先级分级
   const gapPriority = {
-    p0: dataSources.filter(d => d.gap.startsWith('❌')).length,
-    p1: dataSources.filter(d => d.gap.startsWith('⚠️')).length,
-    p2: dataSources.filter(d => d.gap !== '' && !d.gap.startsWith('❌') && !d.gap.startsWith('⚠️')).length,
-    ok: dataSources.filter(d => d.gap === '').length,
+    p0: dataSources.filter(d => d.verificationStatus === 'example').length,
+    p1: dataSources.filter(d => d.verificationStatus === 'needs-review').length,
+    p2: dataSources.filter(d => d.gap !== '' && d.verificationStatus === 'verified').length,
+    ok: dataSources.filter(d => d.gap === '' && d.verificationStatus === 'verified').length,
   };
 
   const stats = {
@@ -108,8 +72,8 @@ export default function DataSourcePage() {
     c: dataSources.filter(d => d.reliability === 'C').length,
     d: dataSources.filter(d => d.reliability === 'D').length,
     critical: gapPriority.p0,
-    medium: gapPriority.p1,
-    clean: gapPriority.ok,
+    needsReview: dataSources.filter(d => d.verificationStatus === 'needs-review').length,
+    verified: dataSources.filter(d => d.verificationStatus === 'verified').length,
   };
 
   return (
@@ -123,7 +87,7 @@ export default function DataSourcePage() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-[#1d1d1f]">数据来源管理</h1>
-              <p className="text-xs text-[#86868b]">{stats.total}条数据溯源 · {stats.a}A级 · {stats.critical}关键缺口 · 5套测算模型</p>
+              <p className="text-xs text-[#86868b]">{stats.total}条数据溯源 · {stats.a}A级 · {stats.needsReview}条待复核 · 5套测算模型</p>
             </div>
           </div>
         </div>
@@ -150,10 +114,10 @@ export default function DataSourcePage() {
         {/* R20: 数据缺口优先级看板 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {[
-            { label: 'P0 关键缺口', value: gapPriority.p0, color: '#ff3b30', desc: '需立即补充真实数据' },
-            { label: 'P1 关注缺口', value: gapPriority.p1, color: '#ff9500', desc: '建议近期改善' },
+            { label: 'P0 示例数据', value: gapPriority.p0, color: '#ff3b30', desc: '不可用于正式结论' },
+            { label: 'P1 待复核', value: gapPriority.p1, color: '#ff9500', desc: '需补来源或口径' },
             { label: 'P2 一般缺口', value: gapPriority.p2, color: '#5856d6', desc: '纳入计划' },
-            { label: '数据完整', value: gapPriority.ok, color: '#34c759', desc: '无需操作' },
+            { label: '已复核', value: gapPriority.ok, color: '#34c759', desc: '可作为当前依据' },
           ].map((s, i) => (
             <div key={i} className="bg-white rounded-2xl p-4 shadow-sm border border-[#EDE6DF]">
               <span className="text-xs text-[#86868b]">{s.label}</span>
@@ -204,8 +168,8 @@ export default function DataSourcePage() {
               <div className="bg-[#ff3b30]/5 border border-[#ff3b30]/15 rounded-2xl p-4 mb-6 flex items-start gap-4">
                 <AlertTriangle className="w-5 h-5 text-[#ff3b30] flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-[#ff3b30]">发现 {stats.critical} 个关键数据缺口</p>
-                  <p className="text-xs text-[#86868b] mt-1">{dataSources.filter(d => d.gap.startsWith('❌')).map(d => d.metric).join('、')} 需要立即补充真实数据</p>
+                  <p className="text-sm font-medium text-[#ff3b30]">发现 {stats.critical} 个示例数据源</p>
+                  <p className="text-xs text-[#86868b] mt-1">{dataSources.filter(d => d.verificationStatus === 'example').map(d => d.metric).join('、')} 不能作为正式结论，需要接入真实数据或明确标注示例。</p>
                 </div>
               </div>
             )}
@@ -224,7 +188,7 @@ export default function DataSourcePage() {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="border-b border-[#EDE6DF] bg-[#FAF8F6]">
-                      {['ID', '模块/页面', '数据指标', '来源机构', '类型', '年份', '可信度', '数据缺口', '补全动作'].map((h, i) => (
+                      {['ID', '模块/页面', '数据指标', '来源机构', '类型', '年份', '可信度', '复核状态', '数据缺口', '补全动作'].map((h, i) => (
                         <th key={i} className="py-3 px-3 text-[10px] text-[#86868b] font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
@@ -239,12 +203,12 @@ export default function DataSourcePage() {
                         </td>
                         <td className="py-2.5 px-3 text-xs text-[#1d1d1f]">{ds.metric}</td>
                         <td className="py-2.5 px-3">
-                          {ds.url ? (
-                            <a href={ds.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-[#5856d6] hover:underline">
-                              {ds.source} <ExternalLink className="w-3 h-3" />
+                          {ds.sourceUrl ? (
+                            <a href={ds.sourceUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-[#5856d6] hover:underline">
+                              {ds.sourceName} <ExternalLink className="w-3 h-3" />
                             </a>
                           ) : (
-                            <span className="text-xs text-[#86868b]">{ds.source}</span>
+                            <span className="text-xs text-[#86868b]">{ds.sourceName}</span>
                           )}
                         </td>
                         <td className="py-2.5 px-3"><span className="px-1.5 py-0.5 rounded text-[10px] bg-[#FBF8F5] text-[#86868b]">{ds.sourceType}</span></td>
@@ -256,8 +220,18 @@ export default function DataSourcePage() {
                           </span>
                         </td>
                         <td className="py-2.5 px-3">
+                          {(() => {
+                            const status = getVerificationStatusMeta(ds.verificationStatus);
+                            return (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-medium" style={{ backgroundColor: `${status.color}15`, color: status.color }}>
+                                {status.label}
+                              </span>
+                            );
+                          })()}
+                        </td>
+                        <td className="py-2.5 px-3">
                           {ds.gap ? (
-                            <span className={`text-[10px] ${ds.gap.startsWith('❌') ? 'text-[#ff3b30]' : ds.gap.startsWith('⚠️') ? 'text-[#ff9500]' : 'text-[#86868b]'}`}>{ds.gap}</span>
+                            <span className={`text-[10px] ${ds.verificationStatus === 'example' ? 'text-[#ff3b30]' : ds.verificationStatus === 'needs-review' ? 'text-[#ff9500]' : 'text-[#86868b]'}`}>{ds.gap}</span>
                           ) : (
                             <CheckCircle className="w-3.5 h-3.5 text-[#34c759]" />
                           )}

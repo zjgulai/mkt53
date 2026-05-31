@@ -27,7 +27,7 @@ const policyMarkers: MapMarker[] = [
 ];
 
 const policyTimeline = [
-  { date: '2026-07-08', events: ['美国CPSC CPC/eFiling要求进入重点复核期：进口受监管消费品需关注证书数据电子提交字段、适用产品范围和实施节奏', '未核实到“所有儿童产品官网必须嵌入实时生成合规声明页面”的官方强制要求；原Federal Register链接需从可信来源中移除'] },
+  { date: '2026-07-08', events: ['美国CPSC CPC/eFiling要求进入重点复核期：进口受监管消费品需关注证书数据电子提交字段、适用产品范围和实施节奏', '未核实到“所有儿童产品官网需嵌入实时生成合规声明页面”的官方强制要求；原Federal Register链接需从可信来源中移除'] },
   { date: '2026-04-20', events: ['美国CPSC发布直接最终规则，更新16 CFR Part 1223婴儿摇篮联邦安全标准，纳入ASTM F2088-25', '新标准新增前警告标签可见性测试（第7.17节），强化窒息风险警告语言， restraint警告从"ALWAYS use"升级为"ALWAYS USE RESTRAINTS"，2026年7月25日生效'] },
   { date: '2026-03-16', events: ['CPSC宣布2026年推出婴儿睡眠安全新标准，加强婴儿睡衣可燃性要求', '新标准限制睡衣材料类型，要求所有婴儿睡衣具备阻燃性，限制绳带长度防止缠绕风险'] },
   { date: '2025-12-25', events: ['日本新《消费品安全法》（CPSA）正式生效：36个月以下玩具强制PSC标志认证', 'ST2025标准同步实施，覆盖ISO 8124-1:2022、ISO 8124-2:2023、EN 71-1/2、ASTM F963-23', '婴儿床被列为儿童特定产品+特殊特定产品，需PSC标志+特定设计标签'] },
@@ -56,7 +56,7 @@ const newsData = [
   { title: '美国CPSC 16 CFR Part 1242哺乳枕安全标准正式生效，要求更严格的安全设计', date: '2026-05-23', source: 'CPSC', tag: '法规', image: true },
   { title: 'eufy Wearable Breast Pump S1获得FDA 510(k)许可（K250207号），穿戴式吸奶器赛道竞争加剧', date: '2025-08-11', source: 'FDA', tag: '竞品', image: true },
   { title: '欧盟MDR过渡期延长至2027-2028年，吸奶器等Class IIa医疗器械需加速合规', date: '2024-12-18', source: 'EU Commission', tag: '法规', image: true },
-  { title: '中国发布GB 6675-2025玩具安全系列新标准，2026年11月正式实施，新增多项化学物质限制', date: '2025-10-05', source: 'SAC China', tag: '法规', image: true },
+  { title: '中国发布GB 6675-2025玩具安全系列新标准，2026年11月计划生效，新增多项化学物质限制', date: '2025-10-05', source: 'SAC China', tag: '法规', image: true },
   { title: '全球可穿戴吸奶器市场2025年预计增长18.2%，APP智能控制成为核心差异化功能', date: '2026-05-23', source: 'MarketWatch', tag: '市场', image: true },
 ];
 

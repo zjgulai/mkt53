@@ -13,6 +13,7 @@ const SECRET_PATTERNS = [
   /2026-08452/,
   /官网必须嵌入实时可验证合规声明/,
   /官网须嵌入实时可验证合规声明/,
+  /已验证原文/,
 ];
 
 function collectFiles(dir: string): string[] {

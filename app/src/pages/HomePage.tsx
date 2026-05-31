@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Label } from 'recharts';
 import { Star, Zap, TrendingUp, BarChart3, Users, Shield, FileText, Cpu, Globe, Award, Bell, ChevronRight, Target, ShoppingBag, MessageSquare, Lightbulb, BookOpen, MapPin, ExternalLink, CheckCircle } from 'lucide-react';
+import { getSourceRegistryItem } from '@/data/source-registry';
 
 // ═══════════════════════════════════════════════════════════════════
 // Momcozy 市场洞察工作台 · 首页全面重构
@@ -64,39 +65,42 @@ const latestReports = [
   { id: 'r013', title: 'Momcozy W1 加热款拆解与BOM成本分析', category: '拆机报告', date: '2026-05-23', status: '最新', pages: 52 },
 ];
 
+const cpscEfilingSource = getSourceRegistryItem('policy-cpsc-efiling');
+const euMdrSource = getSourceRegistryItem('policy-eu-mdr-transition');
+
 // R1: 增强版政策法规数据 — 原文链接/影响评估/应对状态/信息审计
 const policyTimeline = [
   {
     id: 'p-001', country: '美国', date: '2026-07-08', title: 'CPSC CPC/eFiling：证书数据与电子提交要求需复核',
     tag: '合规复核', type: 'urgent', status: '即将实施',
-    source: { name: 'U.S. CPSC CPC/eFiling', url: 'https://www.cpsc.gov/eFiling', reliability: 'A' },
+    source: { name: cpscEfilingSource.sourceName, url: cpscEfilingSource.sourceUrl, reliability: cpscEfilingSource.reliability },
     impact: { level: '高', desc: '官方规则支持儿童产品证书随货/电子方式提供；未核实到“官网嵌入实时合规声明”强制要求', products: ['M5', 'M9', 'M6', 'W1'] },
     momcozyAction: { status: '进行中', progress: 45, desc: '复核CPC证书、eFiling字段和官网披露需求，避免按未证实规则建设', owner: '郑法务' },
-    audit: {录入人: '郑法务', 录入时间: '2026-04-20', 审核状态: '待复核', 审核人: '合规总监', 来源验证: '已核验CPSC官方CPC/eFiling页面，原Federal Register链接不可采信'},
+    audit: {录入人: '郑法务', 录入时间: '2026-04-20', 审核状态: '待复核', 审核人: '合规总监', 来源验证: cpscEfilingSource.note},
   },
   {
     id: 'p-002', country: '美国', date: '2026-05-23', title: 'CPSC更新婴儿摇篮安全标准，纳入ASTM F2088-25',
-    tag: '标准更新', type: 'normal', status: '已实施',
+    tag: '标准更新', type: 'normal', status: '已生效',
     source: { name: 'ASTM International', url: 'https://www.astm.org/standards/f2088.htm', reliability: 'A' },
     impact: { level: '中', desc: '摇篮类产品需通过新标准测试', products: ['孕妇枕'] },
     momcozyAction: { status: '已完成', progress: 100, desc: '供应商已提供ASTM F2088-25测试报告', owner: '林产品' },
-    audit: {录入人: '林产品', 录入时间: '2026-05-23', 审核状态: '已审核', 审核人: '质量经理', 来源验证: '已验证原文'},
+    audit: {录入人: '林产品', 录入时间: '2026-05-23', 审核状态: '已审核', 审核人: '质量经理', 来源验证: '官方来源复核通过'},
   },
   {
     id: 'p-003', country: '日本', date: '2025-12-01', title: '新《消费品安全法》：36个月以下玩具强制PSC标志认证',
     tag: '强制认证', type: 'urgent', status: '即将实施',
     source: { name: '日本经济产业省(METI)', url: 'https://www.meti.go.jp/policy/consumer/seihin/consumer-products-safety-act.html', reliability: 'A' },
-    impact: { level: '极高', desc: '36个月以下玩具类产品必须获得PSC标志，日本市场准入门槛提高', products: ['M5', 'M9', 'W1'] },
+    impact: { level: '高', desc: '36个月以下玩具类产品需复核PSC标志适用性，日本市场准入门槛提高', products: ['M5', 'M9', 'W1'] },
     momcozyAction: { status: '待启动', progress: 10, desc: 'PSC认证申请准备中，需联系日本代理机构', owner: '郑法务' },
-    audit: {录入人: '郑法务', 录入时间: '2025-12-05', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文'},
+    audit: {录入人: '郑法务', 录入时间: '2025-12-05', 审核状态: '待复核', 审核人: '合规总监', 来源验证: '官方链接和SKU适用范围待复核'},
   },
   {
-    id: 'p-004', country: '中国', date: '2026-11-01', title: 'GB 46523-2025儿童用品通用安全要求正式实施',
+    id: 'p-004', country: '中国', date: '2026-11-01', title: 'GB 46523-2025儿童用品通用安全要求计划生效',
     tag: '国标实施', type: 'normal', status: '即将实施',
     source: { name: '国家市场监督管理总局', url: 'https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/rzjgs/art/2025/art_8e7c3f2b1c5d4e6a9f0e8d7c6b5a4f3e2d1c0b.html', reliability: 'A' },
     impact: { level: '高', desc: '儿童用品通用安全国标，涵盖物理/化学/阻燃性要求', products: ['M5', 'M9', 'M6', '温奶器', '消毒器'] },
     momcozyAction: { status: '进行中', progress: 35, desc: '产品材质检测报告已出，物理测试进行中', owner: '王运营' },
-    audit: {录入人: '王运营', 录入时间: '2026-03-10', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文'},
+    audit: {录入人: '王运营', 录入时间: '2026-03-10', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '官方来源复核通过'},
   },
   {
     id: 'p-005', country: '加拿大', date: '2025-12-15', title: 'Health Canada发布2025-2027前向监管计划',
@@ -104,23 +108,23 @@ const policyTimeline = [
     source: { name: 'Health Canada', url: 'https://www.canada.ca/en/health-canada/corporate/transparency/regulatory-transparency/regulatory-plan.html', reliability: 'A' },
     impact: { level: '中', desc: '预告2026-2027年监管重点方向，需持续跟踪', products: ['全线产品'] },
     momcozyAction: { status: '已跟踪', progress: 100, desc: '已订阅Health Canada更新通知', owner: '郑法务' },
-    audit: {录入人: '郑法务', 录入时间: '2025-12-20', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文'},
+    audit: {录入人: '郑法务', 录入时间: '2025-12-20', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '官方来源复核通过'},
   },
   {
-    id: 'p-006', country: '欧盟', date: '2027-01-01', title: 'MDR Class IIa过渡期截止，吸奶器须完成notified body评定',
+    id: 'p-006', country: '欧盟', date: '2027-01-01', title: 'MDR Class IIa过渡安排需按产品分类复核',
     tag: '合规新规', type: 'urgent', status: '即将实施',
-    source: { name: 'European Commission MDCG', url: 'https://health.ec.europa.eu/medical-devices-sector/new-regulations_en', reliability: 'A' },
-    impact: { level: '极高', desc: '过渡期结束后无CE marking产品将无法进入欧盟市场', products: ['M5', 'M9'] },
-    momcozyAction: { status: '进行中', progress: 45, desc: 'TUV SUD已受理CE申请，技术文档准备中', owner: '郑法务' },
-    audit: {录入人: '郑法务', 录入时间: '2026-02-15', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文'},
+    source: { name: euMdrSource.sourceName, url: euMdrSource.sourceUrl, reliability: euMdrSource.reliability },
+    impact: { level: '高', desc: '过渡期存在类别和证书条件差异，需按Class IIa路径复核CE marking计划', products: ['M5', 'M9'] },
+    momcozyAction: { status: '进行中', progress: 45, desc: 'TUV SUD已受理CE申请，技术文档准备中；复核过渡期条件', owner: '郑法务' },
+    audit: {录入人: '郑法务', 录入时间: '2026-02-15', 审核状态: '待复核', 审核人: '合规总监', 来源验证: euMdrSource.note},
   },
   {
     id: 'p-007', country: '中国', date: '2026-05-01', title: 'GB/T 46491-2025婴儿食品加工器具标准生效',
-    tag: '标准更新', type: 'normal', status: '已实施',
+    tag: '标准更新', type: 'normal', status: '已生效',
     source: { name: '国家标准化管理委员会', url: 'https://www.sac.gov.cn/', reliability: 'A' },
     impact: { level: '高', desc: '温奶器、消毒器等食品加工器具材料安全新要求', products: ['温奶器', 'KleanPal Pro'] },
     momcozyAction: { status: '已完成', progress: 100, desc: '产品材料已通过GB/T 46491检测', owner: '王运营' },
-    audit: {录入人: '王运营', 录入时间: '2026-04-28', 审核状态: '已审核', 审核人: '质量经理', 来源验证: '已验证原文'},
+    audit: {录入人: '王运营', 录入时间: '2026-04-28', 审核状态: '已审核', 审核人: '质量经理', 来源验证: '官方来源复核通过'},
   },
 ];
 
@@ -161,7 +165,7 @@ const countryFlags: Record<string, string> = {
 };
 
 const statusColors2: Record<string, { bg: string; text: string }> = {
-  '已实施': { bg: '#34c75915', text: '#34c759' },
+  '已生效': { bg: '#34c75915', text: '#34c759' },
   '即将实施': { bg: '#ff950015', text: '#ff9500' },
   '已发布': { bg: '#5856d615', text: '#5856d6' },
 };
@@ -491,7 +495,7 @@ export default function HomePage() {
                           <div className="flex items-center gap-2 mt-2 flex-wrap">
                             <a href={item.source.url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="flex items-center gap-1 text-[9px] text-[#5856d6] hover:underline bg-[#5856d6]/5 px-1.5 py-0.5 rounded"><ExternalLink className="w-2.5 h-2.5" />{item.source.name}</a>
                             <span className="flex items-center gap-0.5 text-[9px] text-[#34c759] bg-[#34c759]/5 px-1.5 py-0.5 rounded"><CheckCircle className="w-2.5 h-2.5" />可信度{item.source.reliability}</span>
-                            <span className={`text-[9px] px-1.5 py-0.5 rounded font-medium ${item.impact.level === '极高' ? 'bg-[#ff3b30]/10 text-[#ff3b30]' : item.impact.level === '高' ? 'bg-[#ff9500]/10 text-[#ff9500]' : 'bg-[#86868b]/10 text-[#86868b]'}`}>影响{item.impact.level}</span>
+                            <span className={`text-[9px] px-1.5 py-0.5 rounded font-medium ${item.impact.level === '高' ? 'bg-[#ff9500]/10 text-[#ff9500]' : 'bg-[#86868b]/10 text-[#86868b]'}`}>影响{item.impact.level}</span>
                             <span className="flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded text-white font-medium" style={{ backgroundColor: aColor }}>{item.momcozyAction.status} {item.momcozyAction.progress}%</span>
                           </div>
                         </div>
@@ -524,7 +528,7 @@ export default function HomePage() {
                                 {Object.entries(item.audit).map(([key, val], j) => (
                                   <div key={j} className="flex items-center gap-1.5">
                                     <span className="text-[9px] text-[#B5AFA8]">{key}:</span>
-                                    <span className={`text-[9px] font-medium ${val === '已审核' || val === '已验证原文' ? 'text-[#34c759]' : 'text-[#1d1d1f]'}`}>{val}</span>
+                                    <span className={`text-[9px] font-medium ${val === '已审核' || val === '官方来源复核通过' ? 'text-[#34c759]' : String(val).includes('复核') || String(val).includes('未发现') ? 'text-[#ff9500]' : 'text-[#1d1d1f]'}`}>{val}</span>
                                   </div>
                                 ))}
                               </div>

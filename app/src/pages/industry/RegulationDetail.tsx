@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FileText, Gavel, ExternalLink, Shield, CheckCircle, ChevronRight, Download, Search } from 'lucide-react';
 import { exportToCsv } from '@/utils/csvExport';
 import Sidebar from '@/components/Sidebar';
+import { getSourceRegistryItem, getVerificationStatusMeta, type VerificationStatus } from '@/data/source-registry';
 
 const sidebarItems = [
   {
@@ -34,6 +35,9 @@ const sidebarItems = [
   { label: '区域宏观分析', path: '/industry/macro' },
 ];
 
+const cpscEfilingSource = getSourceRegistryItem('policy-cpsc-efiling');
+const euMdrSource = getSourceRegistryItem('policy-eu-mdr-transition');
+
 // 法规数据 — 按日期分组
 const regulationGroups = [
   {
@@ -48,13 +52,13 @@ const regulationGroups = [
         region: '美国',
         regionCode: 'US',
         category: '合规复核',
-        desc: 'CPSC官方规则要求制造商/进口商为儿童产品出具CPC，并关注eFiling证书数据提交要求；未找到“官网必须嵌入实时生成合规声明页面”的官方依据。',
+        desc: 'CPSC官方规则要求制造商/进口商为儿童产品出具CPC，并关注eFiling证书数据提交要求；未找到“官网需嵌入实时生成合规声明页面”的官方依据。',
         detail: '当前行动应从“建设官网实时声明页”改为复核CPC证书字段、测试报告、进口eFiling适用范围与实施日期。原Federal Register链接不可作为该规则依据。',
         fullText: 'https://www.cpsc.gov/eFiling',
-        source: { name: 'U.S. CPSC CPC/eFiling', url: 'https://www.cpsc.gov/eFiling', reliability: 'A', lastVerified: '2026-05-31' },
+        source: { name: cpscEfilingSource.sourceName, url: cpscEfilingSource.sourceUrl ?? 'https://www.cpsc.gov/eFiling', reliability: cpscEfilingSource.reliability, lastVerified: cpscEfilingSource.lastVerified },
         momcozyStatus: { status: '进行中', detail: '复核CPC/eFiling字段与SKU适用范围，暂停按未证实官网声明要求开发', progress: 45, owner: '郑法务' },
         impactProducts: ['M5', 'M9', 'M6', 'W1'],
-        audit: {录入人: '郑法务', 录入时间: '2026-04-20', 审核状态: '待复核', 审核人: '合规总监', 来源验证: '已核验CPSC官方CPC/eFiling页面，原链接不可采信', 下次复核: '2026-06-15'},
+        audit: {录入人: '郑法务', 录入时间: '2026-04-20', 审核状态: '待复核', 审核人: '合规总监', 来源验证: cpscEfilingSource.note, 下次复核: '2026-06-15'},
         color: '#ff3b30',
       },
       {
@@ -64,13 +68,13 @@ const regulationGroups = [
         region: '美国',
         regionCode: 'US',
         category: '医疗器械注册',
-        desc: '吸奶器作为Class II医疗器械的FDA监管要求，包括510(k)许可申请流程、生物相容性测试、电气安全标准。所有在美国销售的吸奶器必须通过此法规认证。',
+        desc: '吸奶器作为Class II医疗器械的FDA监管要求，包括510(k)许可申请流程、生物相容性测试、电气安全标准。在美国销售的吸奶器需按产品类别复核适用路径。',
         detail: 'FDA要求所有电动吸奶器提交510(k)上市前通知，证明与已合法上市的谓词器械实质等效。生物相容性测试需符合ISO 10993系列标准，电气安全需符合IEC 60601-1。',
         fullText: 'https://www.ecfr.gov/current/title-21/chapter-I/subchapter-H/part-884/subpart-E/section-884.5160',
         source: { name: 'U.S. Food and Drug Administration', url: 'https://www.fda.gov/medical-devices', reliability: 'A', lastVerified: '2026-05-20' },
         momcozyStatus: { status: '已合规', detail: 'M5/M9/M6均已获得FDA 510(k)许可 (K232847, K241156)', progress: 100, owner: '郑法务' },
         impactProducts: ['M5', 'M9', 'M6'],
-        audit: {录入人: '郑法务', 录入时间: '2024-03-15', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文', 下次复核: '2026-09-15'},
+        audit: {录入人: '郑法务', 录入时间: '2024-03-15', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '官方来源复核通过', 下次复核: '2026-09-15'},
         color: '#C25B6E',
       },
     ],
@@ -88,12 +92,12 @@ const regulationGroups = [
         regionCode: 'US',
         category: '标准更新',
         desc: '美国CPSC发布直接最终规则，更新16 CFR Part 1223婴儿摇篮联邦安全标准，纳入ASTM F2088-25。新增前标签可见性测试和强化窒息警告要求。',
-        detail: 'ASTM F2088-25更新了摇篮类产品的前向标签可见性测试方法，要求警告标签在正常使用位置必须清晰可见。同时强化了窒息风险警告文字，要求使用更大字号和对比色。',
+        detail: 'ASTM F2088-25更新了摇篮类产品的前向标签可见性测试方法，警告标签在正常使用位置需清晰可见。同时强化了窒息风险警告文字，要求使用更大字号和对比色。',
         fullText: 'https://www.ecfr.gov/current/title-16/chapter-II/part-1242',
         source: { name: 'U.S. Consumer Product Safety Commission', url: 'https://www.cpsc.gov', reliability: 'A', lastVerified: '2026-05-22' },
         momcozyStatus: { status: '已合规', detail: '孕妇枕产品已通过CPSC 16 CFR 1242测试', progress: 100, owner: '林产品' },
         impactProducts: ['孕妇枕'],
-        audit: {录入人: '林产品', 录入时间: '2026-04-18', 审核状态: '已审核', 审核人: '质量经理', 来源验证: '已验证原文', 下次复核: '2026-10-18'},
+        audit: {录入人: '林产品', 录入时间: '2026-04-18', 审核状态: '已审核', 审核人: '质量经理', 来源验证: '官方来源复核通过', 下次复核: '2026-10-18'},
         color: '#ff3b30',
       },
       {
@@ -104,12 +108,12 @@ const regulationGroups = [
         regionCode: 'US',
         category: '标准更新',
         desc: '2025年更新的婴儿摇篮安全标准，新增前标签可见性测试和强化窒息警告要求。适用于婴儿摇篮、摇椅等产品类别。',
-        detail: '标准更新涵盖三个核心变更：①前向标签在30cm距离内必须清晰可读；②窒息警告需使用不小于3mm字号；③新增稳定性测试的倾斜角度要求从10°提高到15°。',
+        detail: '标准更新涵盖三个核心变更：①前向标签在30cm距离内需清晰可读；②窒息警告需使用不小于3mm字号；③新增稳定性测试的倾斜角度要求从10°提高到15°。',
         fullText: 'https://www.astm.org/standards/f2088.htm',
         source: { name: 'ASTM International', url: 'https://www.astm.org', reliability: 'A', lastVerified: '2026-05-22' },
         momcozyStatus: { status: '已完成', detail: '供应商已提供ASTM F2088-25测试报告', progress: 100, owner: '林产品' },
         impactProducts: ['孕妇枕'],
-        audit: {录入人: '林产品', 录入时间: '2026-04-18', 审核状态: '已审核', 审核人: '质量经理', 来源验证: '已验证原文', 下次复核: '2026-10-18'},
+        audit: {录入人: '林产品', 录入时间: '2026-04-18', 审核状态: '已审核', 审核人: '质量经理', 来源验证: '官方来源复核通过', 下次复核: '2026-10-18'},
         color: '#C25B6E',
       },
     ],
@@ -126,13 +130,13 @@ const regulationGroups = [
         region: '欧盟',
         regionCode: 'EU',
         category: '医疗器械法规',
-        desc: '欧盟医疗器械法规将吸奶器归为Class IIa，需通过notified body合格评定。涵盖CE marking、临床评估、上市后监管、唯一器械标识(UDI)要求。',
-        detail: 'MDR要求Class IIa吸奶器通过notified body的合格评定程序，包括技术文档审核、质量管理体系审核（ISO 13485）、临床评估报告（CER）和上市后临床随访（PMCF）计划。',
+        desc: '欧盟医疗器械法规下，吸奶器分类、过渡安排和notified body路径需按具体产品复核。涵盖CE marking、临床评估、上市后监管、唯一器械标识(UDI)要求。',
+        detail: 'MDR对Class IIa路径、技术文档、质量管理体系审核（ISO 13485）、临床评估报告（CER）和上市后临床随访（PMCF）有要求；过渡期适用条件需逐SKU复核。',
         fullText: 'https://eur-lex.europa.eu/eli/reg/2017/745',
-        source: { name: 'European Commission', url: 'https://health.ec.europa.eu/medical-devices-sector_en', reliability: 'A', lastVerified: '2026-05-18' },
-        momcozyStatus: { status: '进行中', detail: 'TUV SUD已受理CE申请，技术文档准备中，预计2026Q4完成', progress: 45, owner: '郑法务' },
+        source: { name: euMdrSource.sourceName, url: euMdrSource.sourceUrl ?? 'https://health.ec.europa.eu/medical-devices-sector/new-regulations_en', reliability: euMdrSource.reliability, lastVerified: euMdrSource.lastVerified },
+        momcozyStatus: { status: '进行中', detail: 'TUV SUD已受理CE申请，技术文档准备中；同步复核过渡期适用条件', progress: 45, owner: '郑法务' },
         impactProducts: ['M5', 'M9'],
-        audit: {录入人: '郑法务', 录入时间: '2024-06-20', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文', 下次复核: '2026-08-20'},
+        audit: {录入人: '郑法务', 录入时间: '2024-06-20', 审核状态: '待复核', 审核人: '合规总监', 来源验证: euMdrSource.note, 下次复核: '2026-08-20'},
         color: '#5856d6',
       },
     ],
@@ -155,7 +159,7 @@ const regulationGroups = [
         source: { name: '国家市场监督管理总局', url: 'https://www.samr.gov.cn', reliability: 'A', lastVerified: '2026-05-15' },
         momcozyStatus: { status: '进行中', detail: '产品材质检测报告已出，物理测试进行中', progress: 35, owner: '王运营' },
         impactProducts: ['M5', 'M9', 'M6', '温奶器', '消毒器'],
-        audit: {录入人: '王运营', 录入时间: '2026-03-10', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文', 下次复核: '2026-08-10'},
+        audit: {录入人: '王运营', 录入时间: '2026-03-10', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '官方来源复核通过', 下次复核: '2026-08-10'},
         color: '#34c759',
       },
     ],
@@ -172,13 +176,13 @@ const regulationGroups = [
         region: '日本',
         regionCode: 'JP',
         category: '强制认证',
-        desc: '36个月以下玩具类产品必须获得PSC标志认证。新法扩大了PSC标志的适用范围，包括部分婴幼儿护理电器产品。',
-        detail: '根据日本《消费品安全法》修订案，36个月以下儿童用品必须通过PSC（Product Safety of Consumer products）标志认证。认证需由日本经济产业省(METI)指定的测试机构进行，测试周期通常为8-12周。',
+        desc: '36个月以下玩具类产品需复核PSC标志认证适用性。新法扩大了PSC标志的适用范围，部分婴幼儿护理电器产品需逐SKU确认。',
+        detail: '根据日本《消费品安全法》修订案，36个月以下儿童用品需复核PSC（Product Safety of Consumer products）标志认证路径。认证通常需由日本经济产业省(METI)指定的测试机构进行。',
         fullText: 'https://www.meti.go.jp/policy/consumer/seihin/consumer-products-safety-act.html',
         source: { name: '日本经济产业省(METI)', url: 'https://www.meti.go.jp', reliability: 'A', lastVerified: '2026-05-10' },
         momcozyStatus: { status: '待启动', detail: 'PSC认证申请准备中，需联系日本代理机构', progress: 10, owner: '郑法务' },
         impactProducts: ['M5', 'M9', 'W1'],
-        audit: {录入人: '郑法务', 录入时间: '2025-12-05', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文', 下次复核: '2026-08-05'},
+        audit: {录入人: '郑法务', 录入时间: '2025-12-05', 审核状态: '待复核', 审核人: '合规总监', 来源验证: '官方链接和SKU适用范围待复核', 下次复核: '2026-08-05'},
         color: '#0077b6',
       },
     ],
@@ -201,7 +205,7 @@ const regulationGroups = [
         source: { name: 'Health Canada', url: 'https://www.canada.ca', reliability: 'A', lastVerified: '2026-05-12' },
         momcozyStatus: { status: '已跟踪', detail: '已订阅Health Canada更新通知', progress: 100, owner: '郑法务' },
         impactProducts: ['全线产品'],
-        audit: {录入人: '郑法务', 录入时间: '2025-12-20', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文', 下次复核: '2026-11-15'},
+        audit: {录入人: '郑法务', 录入时间: '2025-12-20', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '官方来源复核通过', 下次复核: '2026-11-15'},
         color: '#ff9500',
       },
     ],
@@ -224,7 +228,7 @@ const regulationGroups = [
         source: { name: 'UK Government', url: 'https://www.gov.uk', reliability: 'A', lastVerified: '2026-05-12' },
         momcozyStatus: { status: '已合规', detail: 'M5/M9已通过UKCA认证', progress: 100, owner: '郑法务' },
         impactProducts: ['M5', 'M9'],
-        audit: {录入人: '郑法务', 录入时间: '2024-01-15', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '已验证原文', 下次复核: '2026-11-15'},
+        audit: {录入人: '郑法务', 录入时间: '2024-01-15', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '官方来源复核通过', 下次复核: '2026-11-15'},
         color: '#5856d6',
       },
     ],
@@ -236,6 +240,17 @@ const statusColors: Record<string, string> = {
 };
 
 const allRegulations = regulationGroups.flatMap(g => g.items);
+
+type RegulationItem = (typeof allRegulations)[number];
+
+function getRegulationVerificationStatus(card: RegulationItem): VerificationStatus {
+  const auditValues = Object.values(card.audit).join(' ');
+  if (auditValues.includes('待复核') || auditValues.includes('未发现') || auditValues.includes('待法务复核')) {
+    return 'needs-review';
+  }
+
+  return 'verified';
+}
 
 export default function RegulationDetail() {
   const [search, setSearch] = useState('');
@@ -322,6 +337,7 @@ export default function RegulationDetail() {
                       const IconComp = card.icon;
                       const isExpanded = expandedId === card.id;
                       const sc = statusColors[card.momcozyStatus.status] || '#86868b';
+                      const verification = getVerificationStatusMeta(getRegulationVerificationStatus(card));
                       return (
                         <div key={card.id} className={`bg-white rounded-2xl card-shadow-sm border transition-all ${isExpanded ? 'border-[#C25B6E]/30' : 'border-[#EDE6DF] hover:border-[#C25B6E]/20'}`}>
                           <div className="p-5 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : card.id)}>
@@ -335,6 +351,9 @@ export default function RegulationDetail() {
                                   <span className="px-2 py-0.5 rounded-md text-[10px] font-medium text-white" style={{ backgroundColor: card.color }}>{card.category}</span>
                                   <span className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium text-white ml-auto" style={{ backgroundColor: sc }}>
                                     {card.momcozyStatus.status} {card.momcozyStatus.progress}%
+                                  </span>
+                                  <span className="px-2 py-0.5 rounded text-[10px] font-medium" style={{ backgroundColor: `${verification.color}15`, color: verification.color }}>
+                                    {verification.label}
                                   </span>
                                 </div>
                                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-2">{card.title}</h3>
@@ -373,8 +392,8 @@ export default function RegulationDetail() {
                                   <a href={card.fullText} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-[#5856d6] hover:underline bg-white px-2 py-1 rounded border border-[#5856d6]/20">
                                     <FileText className="w-3 h-3" />查看全文
                                   </a>
-                                  <span className="flex items-center gap-1 text-[10px] text-[#34c759] bg-[#34c759]/5 px-2 py-1 rounded">
-                                    <CheckCircle className="w-3 h-3" />可信度{card.source.reliability} · {card.source.lastVerified}验证
+                                  <span className="flex items-center gap-1 text-[10px] px-2 py-1 rounded" style={{ color: verification.color, backgroundColor: `${verification.color}0d` }}>
+                                    <CheckCircle className="w-3 h-3" />{verification.label} · 可信度{card.source.reliability} · {card.source.lastVerified}
                                   </span>
                                 </div>
                               </div>
@@ -385,7 +404,7 @@ export default function RegulationDetail() {
                                   {Object.entries(card.audit).map(([key, val], i) => (
                                     <div key={i} className="flex items-center gap-1.5">
                                       <span className="text-[9px] text-[#B5AFA8]">{key}:</span>
-                                      <span className={`text-[9px] font-medium ${val === '已审核' || val === '已验证原文' ? 'text-[#34c759]' : val.includes('复核') ? 'text-[#ff9500]' : 'text-[#1d1d1f]'}`}>{val}</span>
+                                      <span className={`text-[9px] font-medium ${val === '已审核' || val === '官方来源复核通过' ? 'text-[#34c759]' : val.includes('复核') || val.includes('未发现') ? 'text-[#ff9500]' : 'text-[#1d1d1f]'}`}>{val}</span>
                                     </div>
                                   ))}
                                 </div>
