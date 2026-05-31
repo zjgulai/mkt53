@@ -67,6 +67,8 @@ npm run smoke:prod
 | `docs/workflows/workflow-quality-gate-stable.md` | 本地与 CI 质量门禁 |
 | `docs/workflows/workflow-static-deploy-stable.md` | 腾讯云轻量服务器静态部署 |
 | `docs/knowledge/knowledge-data-source-governance-stable.md` | 数据来源 registry 与复核规则 |
+| `docs/product/product-roadmap-market-insight-stable.md` | 产品能力收敛与 90 天路线图 |
+| `docs/architecture/architecture-data-and-ai-proxy-stable.md` | 数据接入与 AI 代理目标架构 |
 | `AGENTS.md` | 项目协作、目录治理、技术栈和部署上下文 |
 
 ## 应用结构
