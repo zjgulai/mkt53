@@ -231,10 +231,10 @@ export default function MarketTrend() {
                 <div className="w-8 h-8 rounded-xl bg-[#C25B6E]/10 flex items-center justify-center"><TrendingUp className="w-4 h-4 text-[#C25B6E]" strokeWidth={2} /></div>
                 <h3 className="text-sm font-semibold text-[#1d1d1f]">吸奶器市场生命周期</h3>
               </div>
-              <div className="flex items-center gap-0">
+              <div className="grid grid-cols-1 gap-3 sm:flex sm:items-center sm:gap-0">
                 {marketCycle.map((c, i) => (
-                  <div key={i} className={`flex-1 relative ${i > 0 ? 'pl-4' : ''}`}>
-                    {i > 0 && <div className="absolute left-0 top-1/2 w-4 h-[2px] bg-[#EDE6DF] -translate-y-1/2" />}
+                  <div key={i} className={`relative sm:flex-1 ${i > 0 ? 'sm:pl-4' : ''}`}>
+                    {i > 0 && <div className="hidden sm:block absolute left-0 top-1/2 w-4 h-[2px] bg-[#EDE6DF] -translate-y-1/2" />}
                     <div className={`p-3 rounded-xl border ${c.status === 'current' ? 'border-[#C25B6E] ring-1 ring-[#C25B6E]/20 bg-[#FBF8F5]' : 'border-[#EDE6DF] bg-white'}`}>
                       <div className="flex items-center gap-2 mb-1">
                         <div className={`w-2 h-2 rounded-full ${c.status === 'done' ? 'bg-[#34c759]' : c.status === 'current' ? 'bg-[#C25B6E] animate-pulse' : 'bg-[#86868b]/30'}`} />

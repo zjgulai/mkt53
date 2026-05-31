@@ -75,7 +75,7 @@ export default function ReportsPage() {
       <div className="max-w-[1600px] mx-auto">
         {/* Header */}
         <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF] mb-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-2xl bg-[#C25B6E] flex items-center justify-center">
                 <FileText className="w-5 h-5 text-white" strokeWidth={2} />
@@ -85,14 +85,14 @@ export default function ReportsPage() {
                 <p className="text-xs text-[#86868b]">{allReports.length}份报告 · 4大分类 · {totalDownloads.toLocaleString()}次下载</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="relative">
+            <div className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto">
+              <div className="relative w-full sm:w-64">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#86868b]" />
                 <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="搜索报告或标签..."
-                  className="pl-9 pr-4 py-2 rounded-xl bg-[#FBF8F5] text-sm text-[#1d1d1f] outline-none placeholder:text-[#86868b]/60 w-64 border border-[#EDE6DF] focus:border-[#C25B6E]" />
+                  className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#FBF8F5] text-sm text-[#1d1d1f] outline-none placeholder:text-[#86868b]/60 border border-[#EDE6DF] focus:border-[#C25B6E]" />
               </div>
               <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
-                className="px-3 py-2 rounded-xl bg-[#FBF8F5] text-sm text-[#1d1d1f] outline-none border border-[#EDE6DF] cursor-pointer">
+                className="w-full sm:w-auto px-3 py-2 rounded-xl bg-[#FBF8F5] text-sm text-[#1d1d1f] outline-none border border-[#EDE6DF] cursor-pointer">
                 <option value="date">按日期</option>
                 <option value="downloads">按下载量</option>
                 <option value="pages">按页数</option>
@@ -206,12 +206,12 @@ export default function ReportsPage() {
             return (
               <div key={report.id} onClick={() => navigate(`/report/${report.id}`)}
                 className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF] hover:border-[#C25B6E]/20 hover:shadow-md transition-all cursor-pointer group">
-                <div className="flex items-start gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${color}15`, color }}>
                     <IconComp className="w-6 h-6" />
                   </div>
                   <div className="flex-1 min-w-0 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
                       <h3 className="text-sm font-semibold text-[#1d1d1f] group-hover:text-[#C25B6E] transition-colors duration-200">{report.title}</h3>
                       {report.status === '最新' && <span className="px-1.5 py-0.5 rounded bg-[#ff3b30]/10 text-[#ff3b30] text-[10px] font-medium">NEW</span>}
                       {report.status === '热门' && <span className="px-1.5 py-0.5 rounded bg-[#ff9500]/10 text-[#ff9500] text-[10px] font-medium">HOT</span>}
@@ -229,7 +229,7 @@ export default function ReportsPage() {
                       ))}
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 flex-shrink-0 text-xs text-[#86868b]">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-[#86868b] sm:flex-shrink-0 sm:gap-4">
                     <div className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{report.date}</div>
                     <div className="flex items-center gap-1"><FileText className="w-3.5 h-3.5" />{report.pages}页</div>
                     <div className="flex items-center gap-1"><Download className="w-3.5 h-3.5" />{report.downloads}</div>
