@@ -64,6 +64,8 @@ mkt53/
 
 ## 路由结构
 
+当前生产使用 `HashRouter`。下列路径表达业务页面意图；真实浏览器地址需要加 `/#`，例如数据管理页是 `https://mkt.lute-tlz-dddd.top/#/data`。不要把 `https://mkt.lute-tlz-dddd.top/data` 当成数据页验证入口。
+
 ```
 /                    首页（HomePage）
 /market              看市场

@@ -2,6 +2,8 @@ import { expect, test, type Page } from '@playwright/test';
 
 const landingUrl = process.env.LUTE_LANDING_URL ?? 'https://lute-tlz-dddd.top/';
 const marketUrl = process.env.MKT_PROD_URL ?? 'https://mkt.lute-tlz-dddd.top';
+const dataUrl = `${marketUrl}/#/data`;
+const weeklyManifestUrl = `${marketUrl}/weekly-data/latest.json`;
 
 const expectedMarketCard = {
   href: 'https://mkt.lute-tlz-dddd.top',
@@ -78,5 +80,31 @@ test.describe('production landing service entry guard', () => {
     expect(runtimeErrors.consoleErrors).toEqual([]);
     expect(runtimeErrors.pageErrors).toEqual([]);
     expect(runtimeErrors.responseErrors).toEqual([]);
+  });
+
+  test('mkt53 production data page reads the weekly manifest without route collision', async ({ page }) => {
+    const runtimeErrors = await collectRuntimeErrors(page);
+
+    await page.goto(dataUrl, { waitUntil: 'networkidle' });
+
+    await expect(page.getByRole('heading', { name: '数据管理' })).toBeVisible();
+    await expect(page.getByText('周度数据采集刷新')).toBeVisible();
+    await expect(page.getByText('未绑定registry页面')).toBeVisible();
+    await expect(page.getByText('0').last()).toBeVisible();
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(1);
+    expect(runtimeErrors.consoleErrors).toEqual([]);
+    expect(runtimeErrors.pageErrors).toEqual([]);
+    expect(runtimeErrors.responseErrors).toEqual([]);
+  });
+
+  test('mkt53 production weekly manifest exposes the current data audit state', async ({ request }) => {
+    const response = await request.get(weeklyManifestUrl);
+    expect(response.ok()).toBe(true);
+
+    const manifest = await response.json();
+    expect(manifest.totals.total).toBe(44);
+    expect(manifest.auditSummary.sourceRegistryCount).toBe(44);
+    expect(manifest.auditSummary.pagesWithStaticDataWithoutRegistry).toBe(0);
+    expect(manifest.auditSummary.issueCount).toBe(0);
   });
 });
