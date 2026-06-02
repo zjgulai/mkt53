@@ -41,6 +41,8 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:amazon:mapping:template']).toContain('--print-mapping-template');
     expect(packageJson.scripts['data:connector:amazon:mapping:coverage']).toContain('--coverage-report');
     expect(packageJson.scripts['data:connector:amazon:mapping:archive']).toContain('--archive-coverage-report');
+    expect(packageJson.scripts['data:connector:amazon:readiness']).toContain('--readiness-gate');
+    expect(packageJson.scripts['data:connector:amazon:readiness:template']).toContain('--print-readiness-template');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
@@ -60,7 +62,9 @@ describe('production helper scripts', () => {
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-backlog.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-dry-run.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-mapping-partial-valid.json'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-readiness-partial-valid.json'), constants.R_OK)).not.toThrow();
     expect(readFileSync(join(process.cwd(), '..', '.gitignore'), 'utf8')).toContain('app/configs/private/');
   });
 
@@ -263,6 +267,32 @@ describe('production helper scripts', () => {
     expect(template.mappings.find((mapping) => mapping.sourceId === 'ds-009')?.minimumMappedItems).toBe(25);
   });
 
+  it('prints a private Amazon readiness template without credentials or business values', () => {
+    const output = execFileSync('node', ['scripts/data/connectors/amazon-commerce-dry-run.mjs', '--print-readiness-template'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const template = JSON.parse(output) as {
+      privateData: boolean;
+      publicBundleAllowed: boolean;
+      gitAllowed: boolean;
+      recommendedLocalPrivateReadinessPath: string;
+      recommendedServerPrivateReadinessPath: string;
+      expectedSnapshotTypes: string[];
+      readiness: { authorizationRecordId: string; allowedSnapshotTypes: string[]; note: string };
+    };
+
+    expect(output).not.toMatch(/clientSecret|refreshToken|accessToken|password/i);
+    expect(template.privateData).toBe(true);
+    expect(template.publicBundleAllowed).toBe(false);
+    expect(template.gitAllowed).toBe(false);
+    expect(template.recommendedLocalPrivateReadinessPath).toBe('configs/private/amazon-commerce-readiness.json');
+    expect(template.recommendedServerPrivateReadinessPath).toBe('/opt/mkt53/private/amazon-commerce-readiness.json');
+    expect(template.expectedSnapshotTypes).toEqual(['product_snapshot', 'review_snapshot', 'brand_share_snapshot', 'category_rank_snapshot']);
+    expect(template.readiness.authorizationRecordId).toBe('');
+    expect(template.readiness.allowedSnapshotTypes).toEqual(template.expectedSnapshotTypes);
+  });
+
   it('loads a private Amazon mapping path from MKT53_AMAZON_MAPPING_PATH', () => {
     const output = execFileSync('node', ['scripts/data/connectors/amazon-commerce-dry-run.mjs', '--json', '--no-write'], {
       cwd: process.cwd(),
@@ -330,6 +360,93 @@ describe('production helper scripts', () => {
     expect(output).toContain('missingItemCount: 66');
     expect(output).toContain('| ds-010 | RegionCompetition | brand_analytics_region_share | 1 | 1 | 0 | ready |');
     expect(output).toContain('| ds-007 | CompetitionPage | competitor_catalog | 15 | 0 | 15 | missing-mapping |');
+  });
+
+  it('keeps Amazon readiness blocked when the private readiness record is missing', () => {
+    const output = execFileSync('node', ['scripts/data/connectors/amazon-commerce-dry-run.mjs', '--readiness-gate', '--json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        AMAZON_SP_API_CLIENT_ID: 'fixture-client-id',
+        AMAZON_SP_API_CLIENT_SECRET: 'fixture-client-secret',
+        AMAZON_SP_API_REFRESH_TOKEN: 'fixture-refresh-token',
+        AMAZON_MARKETPLACE_IDS: 'ATVPDKIKX0DER',
+      },
+    });
+    const gate = JSON.parse(output) as {
+      status: string;
+      readinessPathSource: string;
+      checks: Array<{ id: string; status: string; blockers: Array<{ type: string }> }>;
+      privateInput: { readinessPathConfigured: boolean; publicBundleAllowed: boolean; gitAllowed: boolean };
+      safety: { networkCalls: number; businessDataWrites: number };
+    };
+
+    expect(output).not.toContain('fixture-client-secret');
+    expect(gate.status).toBe('blocked');
+    expect(gate.readinessPathSource).toBe('none');
+    expect(gate.privateInput).toMatchObject({
+      readinessPathConfigured: false,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    });
+    expect(gate.checks.find((check) => check.id === 'credentials')?.status).toBe('ready');
+    expect(gate.checks.find((check) => check.id === 'authorizationRecord')?.blockers[0]?.type).toBe('missing-readiness-record');
+    expect(gate.safety).toMatchObject({ networkCalls: 0, businessDataWrites: 0 });
+  });
+
+  it('keeps Amazon readiness blocked until mapping coverage is complete even with an approved private record', () => {
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/connectors/amazon-commerce-dry-run.mjs',
+        '--readiness-gate',
+        '--mapping',
+        'tests/fixtures/amazon-commerce-mapping-partial-valid.json',
+        '--readiness',
+        'tests/fixtures/amazon-commerce-readiness-partial-valid.json',
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          AMAZON_SP_API_CLIENT_ID: 'fixture-client-id',
+          AMAZON_SP_API_CLIENT_SECRET: 'fixture-client-secret',
+          AMAZON_SP_API_REFRESH_TOKEN: 'fixture-refresh-token',
+          AMAZON_MARKETPLACE_IDS: 'ATVPDKIKX0DER',
+        },
+      },
+    );
+    const gate = JSON.parse(output) as {
+      status: string;
+      readinessPathSource: string;
+      checks: Array<{ id: string; status: string; details: Record<string, unknown>; blockers: Array<{ type: string; missingItemCount?: number }> }>;
+      blockers: Array<{ type: string; missingItemCount?: number }>;
+      mappingCoverage: { totalRequiredItems: number; totalMappedItems: number; missingItemCount: number };
+      safety: { networkCalls: number; businessDataWrites: number };
+    };
+
+    expect(output).not.toContain('fixture-client-secret');
+    expect(gate.status).toBe('blocked');
+    expect(gate.readinessPathSource).toBe('cli');
+    expect(gate.checks.find((check) => check.id === 'authorizationRecord')?.status).toBe('ready');
+    expect(gate.checks.find((check) => check.id === 'collectionWindow')?.status).toBe('ready');
+    expect(gate.checks.find((check) => check.id === 'ownerReview')?.status).toBe('ready');
+    expect(gate.checks.find((check) => check.id === 'complianceReview')?.status).toBe('ready');
+    expect(gate.checks.find((check) => check.id === 'snapshotScope')?.status).toBe('ready');
+    expect(gate.checks.find((check) => check.id === 'privateBoundary')?.status).toBe('ready');
+    expect(gate.checks.find((check) => check.id === 'mappingCoverage')?.blockers[0]).toMatchObject({
+      type: 'mapping-coverage-blocked',
+      missingItemCount: 66,
+    });
+    expect(gate.blockers).toEqual(expect.arrayContaining([expect.objectContaining({ type: 'mapping-coverage-blocked', missingItemCount: 66 })]));
+    expect(gate.mappingCoverage).toMatchObject({
+      totalRequiredItems: 67,
+      totalMappedItems: 1,
+      missingItemCount: 66,
+    });
+    expect(gate.safety).toMatchObject({ networkCalls: 0, businessDataWrites: 0 });
   });
 
   it('archives Amazon mapping coverage reports with retention and private permissions', () => {

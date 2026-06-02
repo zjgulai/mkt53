@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "connectorId": "amazon-commerce",
+  "note": "Synthetic fixture for validating the Amazon readiness gate. Do not use as business evidence.",
+  "readiness": {
+    "authorizationRecordId": "fixture-auth-record-20260602",
+    "authorizationOwner": "fixture-commerce-owner",
+    "authorizationApprovedAt": "2026-06-02",
+    "collectionWindowStart": "2026-05-01",
+    "collectionWindowEnd": "2026-05-31",
+    "reviewOwner": "fixture-market-insight-owner",
+    "reviewApprovedAt": "2026-06-02",
+    "complianceReviewer": "fixture-compliance-owner",
+    "complianceReviewStatus": "approved",
+    "allowedSnapshotTypes": [
+      "product_snapshot",
+      "review_snapshot",
+      "brand_share_snapshot",
+      "category_rank_snapshot"
+    ]
+  }
+}

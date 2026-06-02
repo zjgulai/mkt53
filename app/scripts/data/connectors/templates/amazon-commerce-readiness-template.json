@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "connectorId": "amazon-commerce",
+  "privateData": true,
+  "publicBundleAllowed": false,
+  "gitAllowed": false,
+  "recommendedLocalPrivateReadinessPath": "configs/private/amazon-commerce-readiness.json",
+  "recommendedServerPrivateReadinessPath": "/opt/mkt53/private/amazon-commerce-readiness.json",
+  "recommendedServerCoverageReportDir": "/opt/mkt53/private/reports",
+  "requiredBeforeRealConnector": [
+    "authorizationRecordId",
+    "authorizationOwner",
+    "authorizationApprovedAt",
+    "collectionWindowStart",
+    "collectionWindowEnd",
+    "reviewOwner",
+    "reviewApprovedAt",
+    "complianceReviewStatus",
+    "allowedSnapshotTypes"
+  ],
+  "allowedComplianceReviewStatuses": [
+    "approved"
+  ],
+  "expectedSnapshotTypes": [
+    "product_snapshot",
+    "review_snapshot",
+    "brand_share_snapshot",
+    "category_rank_snapshot"
+  ],
+  "readiness": {
+    "authorizationRecordId": "",
+    "authorizationOwner": "",
+    "authorizationApprovedAt": "YYYY-MM-DD",
+    "collectionWindowStart": "YYYY-MM-DD",
+    "collectionWindowEnd": "YYYY-MM-DD",
+    "reviewOwner": "",
+    "reviewApprovedAt": "YYYY-MM-DD",
+    "complianceReviewer": "",
+    "complianceReviewStatus": "approved",
+    "allowedSnapshotTypes": [
+      "product_snapshot",
+      "review_snapshot",
+      "brand_share_snapshot",
+      "category_rank_snapshot"
+    ],
+    "note": "Fill this file only in private config paths. Do not include credential values, tokens, ASIN/SKU values, competitor details, or customer data."
+  }
+}

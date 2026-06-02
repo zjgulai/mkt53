@@ -35,6 +35,7 @@ npm run data:audit
 npm run data:refresh:weekly
 npm run data:connector:amazon:dry-run
 npm run data:connector:amazon:mapping:archive
+npm run data:connector:amazon:readiness
 ```
 
 输出文件：
@@ -130,6 +131,8 @@ npm run data:connector:amazon:mapping:validate -- --mapping <mapping-json-path>
 npm run data:connector:amazon:mapping:template
 npm run data:connector:amazon:mapping:coverage -- --mapping <mapping-json-path>
 npm run data:connector:amazon:mapping:archive -- --mapping <mapping-json-path>
+npm run data:connector:amazon:readiness:template
+npm run data:connector:amazon:readiness -- --mapping <mapping-json-path> --readiness <readiness-json-path>
 ```
 
 | 检查项 | 当前规则 |
@@ -140,21 +143,25 @@ npm run data:connector:amazon:mapping:archive -- --mapping <mapping-json-path>
 | 安全边界 | `networkCalls=0`、`businessDataWrites=0`、`dryRunOnly=true` |
 | 覆盖报告 | 输出总需映射数、已映射数、缺口数、ready source 数和逐 source 阈值表 |
 | 归档报告 | 写入 `amazon-commerce-mapping-coverage-*.md`、`amazon-commerce-mapping-coverage-latest.md` 和 `amazon-commerce-mapping-coverage-manifest.json`，默认保留最近 12 份 |
+| Readiness gate | 同时检查环境凭据、私有映射覆盖率、授权记录、采集窗口、业务 owner 复核、合规复核、快照范围和私有边界 |
 
 映射模板是正式资产：`app/scripts/data/connectors/templates/amazon-commerce-mapping-template.json`。该文件只包含空字段和字段规则，不包含真实 ASIN、SKU、竞品或负责人信息。
 
-真实映射文件必须放在私有路径：
+Readiness 模板是正式资产：`app/scripts/data/connectors/templates/amazon-commerce-readiness-template.json`。该文件只包含字段规则和空占位，不包含授权记录、负责人真实信息、ASIN、SKU 或密钥。
 
-| 环境 | 路径 |
-|---|---|
-| 本地开发 | `app/configs/private/amazon-commerce-mapping.json` |
-| 服务器 | `/opt/mkt53/private/amazon-commerce-mapping.json` |
+真实映射文件和 readiness record 必须放在私有路径：
+
+| 环境 | 映射路径 | Readiness record 路径 |
+|---|---|---|
+| 本地开发 | `app/configs/private/amazon-commerce-mapping.json` | `app/configs/private/amazon-commerce-readiness.json` |
+| 服务器 | `/opt/mkt53/private/amazon-commerce-mapping.json` | `/opt/mkt53/private/amazon-commerce-readiness.json` |
 
 通过环境变量读取私有映射：
 
 ```bash
 cd app
 MKT53_AMAZON_MAPPING_PATH=configs/private/amazon-commerce-mapping.json npm run data:connector:amazon:mapping:validate
+MKT53_AMAZON_MAPPING_PATH=configs/private/amazon-commerce-mapping.json MKT53_AMAZON_READINESS_PATH=configs/private/amazon-commerce-readiness.json npm run data:connector:amazon:readiness
 ```
 
 服务器自动化目录使用：
@@ -164,13 +171,30 @@ cd /opt/mkt53/automation/app
 MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json npm run data:connector:amazon:mapping:validate
 MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json npm run data:connector:amazon:mapping:coverage
 MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json MKT53_AMAZON_COVERAGE_REPORT_DIR=/opt/mkt53/private/reports npm run data:connector:amazon:mapping:archive
+MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json MKT53_AMAZON_READINESS_PATH=/opt/mkt53/private/amazon-commerce-readiness.json npm run data:connector:amazon:readiness
 ```
 
-禁止把真实映射放入 `app/public/`、`app/src/`、`app/tests/fixtures/` 或提交到 git。`app/configs/private/` 已被 `.gitignore` 排除。
+禁止把真实映射、readiness record、授权记录或覆盖率归档放入 `app/public/`、`app/src/`、`app/tests/fixtures/` 或提交到 git。`app/configs/private/` 已被 `.gitignore` 排除。
 
 覆盖率报告达到 `ready` 的条件：七个 Amazon source id 全部达到最低映射数量，且不存在无效映射行或重复 `sourceId + site + marketplaceId + asin`。该报告只证明映射输入满足采集前置条件，不代表 Amazon 平台数据已采集。
 
 服务器归档目录固定为 `/opt/mkt53/private/reports`。目录权限必须保持 `700`，报告和 manifest 文件权限必须保持 `600`。可通过 `MKT53_AMAZON_COVERAGE_REPORT_RETENTION` 或 `--retention <n>` 调整留存数量；归档 manifest 只记录覆盖率、缺口、安全边界和文件路径，不写入真实 ASIN、SKU、竞品名称或授权凭据。该归档是接入前后的审计对比材料，不是 Amazon 平台采集证据。
+
+Readiness gate 达到 `ready-for-authorized-connector-implementation` 的条件：
+
+| 检查项 | ready 条件 |
+|---|---|
+| `credentials` | 四个 Amazon 环境变量存在，且脚本不输出凭据值 |
+| `mappingCoverage` | 覆盖率状态为 `ready`，七个 Amazon source id 全部达到最低映射数量 |
+| `authorizationRecord` | readiness record 包含授权记录 ID、授权 owner 和授权日期 |
+| `collectionWindow` | readiness record 的采集窗口日期有效，并与本次 gate 的 `--window-start` / `--window-end` 一致 |
+| `ownerReview` | 业务 owner 已复核并写入复核日期 |
+| `complianceReview` | 合规状态为 `approved` |
+| `snapshotScope` | 允许的快照类型完整覆盖 `product_snapshot`、`review_snapshot`、`brand_share_snapshot`、`category_rank_snapshot` |
+| `privateBoundary` | readiness record 不含 secret、token、password、clientSecret、privateKey 等字段 |
+| `safetyBoundary` | `networkCalls=0`、`businessDataWrites=0`、`dryRunOnly=true` |
+
+只要任一检查为 `blocked`，不得进入真实 Amazon 连接器实现。Readiness gate 通过只代表“可以开始实现授权连接器”，仍不代表已经采集到 Amazon 业务数据。
 
 映射文件接受数组或 `{ "mappings": [] }` 两种形态。每行必须包含：
 

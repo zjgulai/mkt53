@@ -12,9 +12,13 @@ const defaultCoverageReportPath = 'tmp/data-collection/connectors/amazon-commerc
 const defaultArchiveDir = 'tmp/data-collection/connectors/reports';
 const defaultArchiveRetention = 12;
 const templatePath = 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json';
+const readinessTemplatePath = 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json';
 const recommendedLocalPrivateMappingPath = 'configs/private/amazon-commerce-mapping.json';
 const recommendedServerPrivateMappingPath = '/opt/mkt53/private/amazon-commerce-mapping.json';
+const recommendedLocalPrivateReadinessPath = 'configs/private/amazon-commerce-readiness.json';
+const recommendedServerPrivateReadinessPath = '/opt/mkt53/private/amazon-commerce-readiness.json';
 const recommendedServerCoverageReportDir = '/opt/mkt53/private/reports';
+const forbiddenReadinessKeyPattern = /secret|password|refreshToken|accessToken|clientSecret|privateKey|authorizationHeader/i;
 
 const requiredMappingFields = [
   'sourceId',
@@ -77,13 +81,16 @@ function parseArgs(argv) {
     force: argv.includes('--force'),
     coverageReport: argv.includes('--coverage-report'),
     archiveCoverageReport: argv.includes('--archive-coverage-report'),
+    readinessGate: argv.includes('--readiness-gate'),
     printMappingTemplate: argv.includes('--print-mapping-template'),
+    printReadinessTemplate: argv.includes('--print-readiness-template'),
     writePath: defaultWritePath,
     coverageReportPath: defaultCoverageReportPath,
     archiveDir: process.env.MKT53_AMAZON_COVERAGE_REPORT_DIR ?? defaultArchiveDir,
     archiveRetention: Number.parseInt(process.env.MKT53_AMAZON_COVERAGE_REPORT_RETENTION ?? `${defaultArchiveRetention}`, 10),
     writeMappingTemplatePath: undefined,
     mappingPath: undefined,
+    readinessPath: undefined,
     site: 'amazon.com',
     marketplaceId: 'ATVPDKIKX0DER',
     windowStart: '2026-05-01',
@@ -97,6 +104,7 @@ function parseArgs(argv) {
     if (argv[i] === '--retention') options.archiveRetention = Number.parseInt(argv[i + 1], 10);
     if (argv[i] === '--write-mapping-template') options.writeMappingTemplatePath = argv[i + 1];
     if (argv[i] === '--mapping') options.mappingPath = argv[i + 1];
+    if (argv[i] === '--readiness') options.readinessPath = argv[i + 1];
     if (argv[i] === '--site') options.site = argv[i + 1];
     if (argv[i] === '--marketplace-id') options.marketplaceId = argv[i + 1];
     if (argv[i] === '--window-start') options.windowStart = argv[i + 1];
@@ -112,6 +120,10 @@ function safeRetention(retention) {
 
 function readMappingTemplate() {
   return readFileSync(resolve(process.cwd(), templatePath), 'utf8');
+}
+
+function readReadinessTemplate() {
+  return readFileSync(resolve(process.cwd(), readinessTemplatePath), 'utf8');
 }
 
 function writeMappingTemplate(targetPath, force) {
@@ -132,6 +144,40 @@ function readMappings(mappingPath) {
   if (Array.isArray(payload.mappings)) return payload.mappings;
 
   throw new Error('Amazon mapping file must be an array or an object with a mappings array.');
+}
+
+function readReadinessRecord(readinessPath) {
+  if (!readinessPath) return undefined;
+
+  const payload = JSON.parse(readFileSync(resolve(process.cwd(), readinessPath), 'utf8'));
+  if (payload && typeof payload === 'object' && payload.readiness && typeof payload.readiness === 'object') return payload.readiness;
+  if (payload && typeof payload === 'object' && !Array.isArray(payload)) return payload;
+
+  throw new Error('Amazon readiness file must be an object or an object with a readiness object.');
+}
+
+function findForbiddenReadinessKeys(value, prefix = '') {
+  if (!value || typeof value !== 'object') return [];
+
+  return Object.entries(value).flatMap(([key, nestedValue]) => {
+    const path = prefix ? `${prefix}.${key}` : key;
+    const ownMatches = forbiddenReadinessKeyPattern.test(key) ? [path] : [];
+    return [...ownMatches, ...findForbiddenReadinessKeys(nestedValue, path)];
+  });
+}
+
+function isIsoDate(value) {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
+}
+
+function buildCheck(id, label, ready, details, blocker) {
+  return {
+    id,
+    label,
+    status: ready ? 'ready' : 'blocked',
+    details,
+    blockers: ready || !blocker ? [] : [blocker],
+  };
 }
 
 function validateMapping(mapping, context) {
@@ -368,6 +414,156 @@ function archiveMappingCoverageReport(dryRun, report, archiveDir, retention) {
   };
 }
 
+function buildAmazonCommerceReadinessGate(dryRun, options = {}, env = process.env) {
+  const readinessPath = options.readinessPath ?? env.MKT53_AMAZON_READINESS_PATH;
+  const readinessPathSource = options.readinessPath ? 'cli' : env.MKT53_AMAZON_READINESS_PATH ? 'env:MKT53_AMAZON_READINESS_PATH' : 'none';
+  const readiness = readReadinessRecord(readinessPath);
+  const expectedSnapshotTypes = snapshotContracts.map((contract) => contract.snapshotType);
+  const allowedSnapshotTypes = Array.isArray(readiness?.allowedSnapshotTypes) ? readiness.allowedSnapshotTypes : [];
+  const forbiddenReadinessKeys = readiness ? findForbiddenReadinessKeys(readiness) : [];
+  const collectionWindowStartValid = isIsoDate(readiness?.collectionWindowStart);
+  const collectionWindowEndValid = isIsoDate(readiness?.collectionWindowEnd);
+  const collectionWindowOrderValid =
+    collectionWindowStartValid && collectionWindowEndValid && readiness.collectionWindowStart <= readiness.collectionWindowEnd;
+  const collectionWindowMatchesDryRun =
+    readiness?.collectionWindowStart === dryRun.collectionWindow.start && readiness?.collectionWindowEnd === dryRun.collectionWindow.end;
+  const missingSnapshotTypes = expectedSnapshotTypes.filter((snapshotType) => !allowedSnapshotTypes.includes(snapshotType));
+
+  const checks = [
+    buildCheck(
+      'credentials',
+      'Amazon credentials are present in environment',
+      dryRun.credentials.every((item) => item.present),
+      {
+        requiredCredentialKeys,
+        missingCredentialKeys: dryRun.credentials.filter((item) => !item.present).map((item) => item.key),
+        credentialValuesRedacted: dryRun.safety.credentialValuesRedacted,
+      },
+      { type: 'missing-credentials' },
+    ),
+    buildCheck(
+      'mappingCoverage',
+      'ASIN/SKU mapping coverage is ready',
+      dryRun.mappingCoverage.status === 'ready',
+      dryRun.mappingCoverage,
+      { type: 'mapping-coverage-blocked', missingItemCount: dryRun.mappingCoverage.missingItemCount },
+    ),
+    buildCheck(
+      'authorizationRecord',
+      'Authorization record is approved and owned',
+      Boolean(readiness?.authorizationRecordId && readiness?.authorizationOwner && isIsoDate(readiness?.authorizationApprovedAt)),
+      {
+        readinessPathSource,
+        configured: Boolean(readinessPath),
+        authorizationRecordId: readiness?.authorizationRecordId ?? '',
+        authorizationOwner: readiness?.authorizationOwner ?? '',
+        authorizationApprovedAt: readiness?.authorizationApprovedAt ?? '',
+      },
+      { type: readinessPath ? 'invalid-authorization-record' : 'missing-readiness-record' },
+    ),
+    buildCheck(
+      'collectionWindow',
+      'Collection window is dated and matches this gate run',
+      collectionWindowOrderValid && collectionWindowMatchesDryRun,
+      {
+        expectedStart: dryRun.collectionWindow.start,
+        expectedEnd: dryRun.collectionWindow.end,
+        configuredStart: readiness?.collectionWindowStart ?? '',
+        configuredEnd: readiness?.collectionWindowEnd ?? '',
+        validDateOrder: collectionWindowOrderValid,
+      },
+      { type: 'invalid-collection-window' },
+    ),
+    buildCheck(
+      'ownerReview',
+      'Business owner review is approved',
+      Boolean(readiness?.reviewOwner && isIsoDate(readiness?.reviewApprovedAt)),
+      {
+        reviewOwner: readiness?.reviewOwner ?? '',
+        reviewApprovedAt: readiness?.reviewApprovedAt ?? '',
+      },
+      { type: 'missing-owner-review' },
+    ),
+    buildCheck(
+      'complianceReview',
+      'Compliance review is approved',
+      readiness?.complianceReviewStatus === 'approved',
+      {
+        complianceReviewStatus: readiness?.complianceReviewStatus ?? '',
+        complianceReviewer: readiness?.complianceReviewer ?? '',
+      },
+      { type: 'missing-compliance-approval' },
+    ),
+    buildCheck(
+      'snapshotScope',
+      'Allowed snapshot types cover the Amazon output contract',
+      missingSnapshotTypes.length === 0,
+      {
+        expectedSnapshotTypes,
+        allowedSnapshotTypes,
+        missingSnapshotTypes,
+      },
+      { type: 'snapshot-scope-incomplete', missingSnapshotTypes },
+    ),
+    buildCheck(
+      'privateBoundary',
+      'Readiness record contains no secret-like fields',
+      forbiddenReadinessKeys.length === 0,
+      {
+        publicBundleAllowed: false,
+        gitAllowed: false,
+        forbiddenReadinessKeys,
+      },
+      { type: 'secret-like-readiness-field', fields: forbiddenReadinessKeys },
+    ),
+    buildCheck(
+      'safetyBoundary',
+      'Gate does not call Amazon or write business data',
+      dryRun.safety.networkCalls === 0 && dryRun.safety.businessDataWrites === 0 && dryRun.safety.dryRunOnly,
+      {
+        networkCalls: dryRun.safety.networkCalls,
+        businessDataWrites: dryRun.safety.businessDataWrites,
+        dryRunOnly: dryRun.safety.dryRunOnly,
+      },
+      { type: 'safety-boundary-violated' },
+    ),
+  ];
+  const blockers = checks.flatMap((check) => check.blockers);
+
+  return {
+    schemaVersion: 1,
+    connectorId,
+    mode: 'readiness-gate',
+    generatedAt: dryRun.generatedAt,
+    requestId: dryRun.requestId.replace('amazon-commerce-dry-run-', 'amazon-commerce-readiness-'),
+    status: blockers.length === 0 ? 'ready-for-authorized-connector-implementation' : 'blocked',
+    readinessPathSource,
+    privateInput: {
+      mappingPathSource: dryRun.privateInput.mappingPathSource,
+      mappingPathConfigured: dryRun.privateInput.mappingPathConfigured,
+      readinessPathConfigured: Boolean(readinessPath),
+      recommendedLocalPrivateMappingPath,
+      recommendedServerPrivateMappingPath,
+      recommendedLocalPrivateReadinessPath,
+      recommendedServerPrivateReadinessPath,
+      recommendedServerCoverageReportDir,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    },
+    checks,
+    blockers,
+    mappingCoverage: dryRun.mappingCoverage,
+    safety: {
+      networkCalls: dryRun.safety.networkCalls,
+      businessDataWrites: dryRun.safety.businessDataWrites,
+      credentialValuesRedacted: dryRun.safety.credentialValuesRedacted,
+      dryRunOnly: dryRun.safety.dryRunOnly,
+    },
+    stopCondition:
+      'status=ready-for-authorized-connector-implementation only when credentials, private mapping coverage, authorization record, collection window, owner review, compliance review, snapshot scope and private boundary are all ready.',
+  };
+}
+
 export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
   const appRoot = options.appRoot ?? process.cwd();
   const mappingPath = options.mappingPath ?? env.MKT53_AMAZON_MAPPING_PATH;
@@ -422,8 +618,11 @@ export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
       mappingPath: mappingPath ?? '',
       recommendedLocalPrivateMappingPath,
       recommendedServerPrivateMappingPath,
+      recommendedLocalPrivateReadinessPath,
+      recommendedServerPrivateReadinessPath,
       recommendedServerCoverageReportDir,
       templatePath,
+      readinessTemplatePath,
       publicBundleAllowed: false,
       gitAllowed: false,
       rule: '真实 ASIN/SKU 映射只能放在私有路径或通过环境变量传入；不得放入 public、src、tests/fixtures 或提交到 git。',
@@ -460,7 +659,18 @@ async function main() {
     return;
   }
 
+  if (options.printReadinessTemplate) {
+    process.stdout.write(readReadinessTemplate());
+    return;
+  }
+
   const result = buildAmazonCommerceDryRun(options);
+
+  if (options.readinessGate) {
+    const gate = buildAmazonCommerceReadinessGate(result, options);
+    process.stdout.write(`${JSON.stringify(gate, null, 2)}\n`);
+    return;
+  }
 
   if (options.coverageReport) {
     const report = buildMappingCoverageReport(result);
