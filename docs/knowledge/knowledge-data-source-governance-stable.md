@@ -112,3 +112,5 @@ npm run test:e2e
 | `fetch-error` / `source-error` | 下次重试或人工复核 |
 | `connector-required` | 需要授权连接器，未接入前不得声称已采集 |
 | `manual-required` | 需要采购报告、人工上传或补充 URL |
+
+`connector-required` 会进入 `app/public/weekly-data/connectors.json`。该文件只代表授权连接器接入队列，包含 `requiredAccess`、`outputContract`、`stopCondition` 和 `blockedReason`；它不是业务数据快照，不能作为真实采集成功证据。

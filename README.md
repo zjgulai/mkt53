@@ -131,7 +131,9 @@ app/
 │  └─ utils/
 ├─ public/
 │  ├─ images/
-│  └─ weekly-data/latest.json
+│  └─ weekly-data/
+│     ├─ latest.json
+│     └─ connectors.json
 ├─ scripts/
 │  └─ data/
 ├─ playwright.config.ts

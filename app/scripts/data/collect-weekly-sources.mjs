@@ -4,6 +4,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { analyzeConsistency, classifyCollectionMethod, extractSourceRegistry, isoWeek } from './lib/project-analysis.mjs';
+import { buildConnectorBacklog } from './lib/connector-backlog.mjs';
 
 const defaultTimeoutMs = 8000;
 const previewLimitBytes = 4096;
@@ -126,6 +127,7 @@ export async function collectWeeklySources(options = {}) {
   const generatedAt = new Date().toISOString();
   const sourceRegistry = extractSourceRegistry(appRoot);
   const audit = analyzeConsistency(appRoot);
+  const connectorBacklog = buildConnectorBacklog(sourceRegistry);
   const sources = [];
 
   for (const source of sourceRegistry) {
@@ -154,6 +156,7 @@ export async function collectWeeklySources(options = {}) {
     generatedAt,
     refreshCadence: 'weekly',
     auditSummary: audit.summary,
+    connectorBacklog,
     totals,
     sources,
   };

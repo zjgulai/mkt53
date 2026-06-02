@@ -40,8 +40,10 @@ npm run data:refresh:weekly
 | 文件 | 用途 |
 |---|---|
 | `public/weekly-data/latest.json` | 前端可读取的最新周度采集 manifest |
+| `public/weekly-data/connectors.json` | 授权连接器接入 backlog，按连接器类型分组 |
 | `tmp/data-collection/audit-latest.json` | 本次一致性审计结果 |
 | `tmp/data-collection/runs/<week>.json` | 本地周度运行留痕 |
+| `tmp/data-collection/runs/<week>-connectors.json` | 本地连接器 backlog 留痕 |
 
 ## 采集状态
 
@@ -96,7 +98,20 @@ MKT53_WEEKLY_CRON="30 2 * * 1" bash scripts/data/install-weekly-cron.sh
 
 ## 当前连接器实现队列
 
-静态页面已全部绑定 `source-registry.ts`。下一阶段不再是补 source id，而是补真实连接器、采集窗口和复核证据：
+静态页面已全部绑定 `source-registry.ts`。`npm run data:refresh:weekly` 会根据 `connector-required` 来源生成 `connectorBacklog` 和 `connectors.json`。下一阶段不再是补 source id，而是补真实连接器、采集窗口和复核证据：
+
+| 连接器类型 | 主要来源 | 优先级 |
+|---|---|---|
+| Amazon Marketplace / Brand Analytics | Amazon、Brand Analytics、BSR、品类采集 | P0 |
+| Review / VOC NLP Pipeline | 评论分析、VOC功能趋势、NLP模型 | P0 |
+| TikTok / Instagram / Facebook Social Listening | 海外社交声量 | P0 |
+| Momcozy CRM | RFM 分层 | P0 |
+| YouTube Data API | YouTube 测评追踪 | P1 |
+| Import Genius / Customs Trade Data | 海关与进出口数据 | P1 |
+| Momcozy ERP / Supply Chain | 供应链、库存、供应商 | P1 |
+| AI Generation Audit Log | AI图库、设计助手生成日志 | P2 |
+| Compliant Web Review Crawler | 网页评论采集 | P2 |
+| Internal Knowledge / Reporting Assets | 知识库、报告元数据、内部定性资料 | P2 |
 
 | 页面 | 下一步 |
 |---|---|

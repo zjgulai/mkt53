@@ -38,6 +38,7 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/connectors.json');
 
     for (const script of [
       'scripts/data/audit-consistency.mjs',
@@ -49,6 +50,8 @@ describe('production helper scripts', () => {
     ]) {
       expect(() => accessSync(join(process.cwd(), script), constants.X_OK)).not.toThrow();
     }
+
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-backlog.mjs'), constants.R_OK)).not.toThrow();
   });
 
   it('audits data management and source registry consistency without network access', () => {
@@ -76,5 +79,30 @@ describe('production helper scripts', () => {
     expect(audit.summary.criticalIssueCount).toBe(0);
     expect(audit.summary.collectionMethods['connector-required']).toBeGreaterThan(0);
     expect(audit.summary.collectionMethods['public-url-check']).toBeGreaterThan(0);
+  });
+
+  it('builds a connector backlog without claiming restricted sources were collected', () => {
+    const output = execFileSync('node', ['scripts/data/collect-weekly-sources.mjs', '--json', '--no-network'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const manifest = JSON.parse(output) as {
+      connectorBacklog: {
+        total: number;
+        groupCount: number;
+        groups: Array<{ connectorId: string; sourceCount: number; sourceIds: string[] }>;
+        items: Array<{ id: string; connectorId: string; blockedReason: string }>;
+      };
+      totals: Record<string, number>;
+    };
+
+    expect(manifest.connectorBacklog.total).toBe(23);
+    expect(manifest.connectorBacklog.groupCount).toBeGreaterThanOrEqual(8);
+    expect(manifest.connectorBacklog.groups.find((group) => group.connectorId === 'amazon-commerce')?.sourceCount).toBeGreaterThan(0);
+    expect(manifest.connectorBacklog.groups.find((group) => group.connectorId === 'review-nlp')?.sourceIds).toEqual(
+      expect.arrayContaining(['ds-021', 'ds-030', 'ds-032', 'ds-033']),
+    );
+    expect(manifest.connectorBacklog.items.every((item) => item.blockedReason.includes('不得伪造'))).toBe(true);
+    expect(manifest.totals['connector-required']).toBe(23);
   });
 });

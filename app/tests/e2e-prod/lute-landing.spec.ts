@@ -4,6 +4,7 @@ const landingUrl = process.env.LUTE_LANDING_URL ?? 'https://lute-tlz-dddd.top/';
 const marketUrl = process.env.MKT_PROD_URL ?? 'https://mkt.lute-tlz-dddd.top';
 const dataUrl = `${marketUrl}/#/data`;
 const weeklyManifestUrl = `${marketUrl}/weekly-data/latest.json`;
+const connectorBacklogUrl = `${marketUrl}/weekly-data/connectors.json`;
 
 const expectedMarketCard = {
   href: 'https://mkt.lute-tlz-dddd.top',
@@ -106,5 +107,17 @@ test.describe('production landing service entry guard', () => {
     expect(manifest.auditSummary.sourceRegistryCount).toBe(45);
     expect(manifest.auditSummary.pagesWithStaticDataWithoutRegistry).toBe(0);
     expect(manifest.auditSummary.issueCount).toBe(0);
+    expect(manifest.connectorBacklog.total).toBe(23);
+  });
+
+  test('mkt53 production connector backlog keeps restricted sources blocked', async ({ request }) => {
+    const response = await request.get(connectorBacklogUrl);
+    expect(response.ok()).toBe(true);
+
+    const backlog = await response.json();
+    expect(backlog.total).toBe(23);
+    expect(backlog.groups.some((group: { connectorId: string }) => group.connectorId === 'amazon-commerce')).toBe(true);
+    expect(backlog.groups.some((group: { connectorId: string }) => group.connectorId === 'review-nlp')).toBe(true);
+    expect(backlog.items.every((item: { blockedReason: string }) => item.blockedReason.includes('不得伪造'))).toBe(true);
   });
 });

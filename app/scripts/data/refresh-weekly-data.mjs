@@ -20,12 +20,15 @@ const manifest = await collectWeeklySources({ noNetwork, timeoutMs });
 
 writeJson('tmp/data-collection/audit-latest.json', audit);
 writeJson('public/weekly-data/latest.json', manifest);
+writeJson('public/weekly-data/connectors.json', manifest.connectorBacklog);
 writeJson(`tmp/data-collection/runs/${manifest.week}.json`, manifest);
+writeJson(`tmp/data-collection/runs/${manifest.week}-connectors.json`, manifest.connectorBacklog);
 
 process.stdout.write([
   `mkt53 weekly data refresh completed`,
   `week=${manifest.week}`,
   `latest=public/weekly-data/latest.json`,
+  `connectors=public/weekly-data/connectors.json`,
   `audit=tmp/data-collection/audit-latest.json`,
   `run=tmp/data-collection/runs/${manifest.week}.json`,
   `total=${manifest.totals.total}`,
