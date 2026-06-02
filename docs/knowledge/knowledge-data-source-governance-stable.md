@@ -118,3 +118,5 @@ npm run test:e2e
 Amazon P0 当前交付物是 `npm run data:connector:amazon:dry-run`。该脚本输出授权前置条件、ASIN/SKU 映射缺口、七个 Amazon source id 覆盖情况和四类快照字段契约；`networkCalls=0`、`businessDataWrites=0`，不调用 Amazon，不提升任何来源复核状态。
 
 ASIN/SKU 映射必须通过 `npm run data:connector:amazon:mapping:validate -- --mapping <mapping-json-path>` 校验。只有字段完整、ASIN 格式有效、source id 属于 Amazon backlog、站点和 marketplace 匹配、`mappingStatus=ready` 且无重复 `sourceId + site + marketplaceId + asin` 的行，才计入映射覆盖率。
+
+映射模板位于 `app/scripts/data/connectors/templates/amazon-commerce-mapping-template.json`，可以提交和同步。填入真实 ASIN/SKU 后的映射文件属于私有数据输入，只能放在 `app/configs/private/amazon-commerce-mapping.json` 或服务器 `/opt/mkt53/private/amazon-commerce-mapping.json`，并通过 `MKT53_AMAZON_MAPPING_PATH` 读取；不得进入 `public`、`src`、测试夹具或 git 历史。

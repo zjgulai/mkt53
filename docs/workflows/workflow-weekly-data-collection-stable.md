@@ -124,6 +124,7 @@ cd app
 npm run data:connector:amazon:dry-run
 npm run data:connector:amazon:dry-run -- --json --no-write
 npm run data:connector:amazon:mapping:validate -- --mapping <mapping-json-path>
+npm run data:connector:amazon:mapping:template
 ```
 
 | 检查项 | 当前规则 |
@@ -132,6 +133,31 @@ npm run data:connector:amazon:mapping:validate -- --mapping <mapping-json-path>
 | ASIN/SKU 映射 | 覆盖 `ds-007`、`ds-009`、`ds-010`、`ds-019`、`ds-037`、`ds-038`、`ds-039` 七个 Amazon 来源；按 `sourceId + site + marketplaceId + asin` 去重 |
 | 输出契约 | `product_snapshot`、`review_snapshot`、`brand_share_snapshot`、`category_rank_snapshot` |
 | 安全边界 | `networkCalls=0`、`businessDataWrites=0`、`dryRunOnly=true` |
+
+映射模板是正式资产：`app/scripts/data/connectors/templates/amazon-commerce-mapping-template.json`。该文件只包含空字段和字段规则，不包含真实 ASIN、SKU、竞品或负责人信息。
+
+真实映射文件必须放在私有路径：
+
+| 环境 | 路径 |
+|---|---|
+| 本地开发 | `app/configs/private/amazon-commerce-mapping.json` |
+| 服务器 | `/opt/mkt53/private/amazon-commerce-mapping.json` |
+
+通过环境变量读取私有映射：
+
+```bash
+cd app
+MKT53_AMAZON_MAPPING_PATH=configs/private/amazon-commerce-mapping.json npm run data:connector:amazon:mapping:validate
+```
+
+服务器自动化目录使用：
+
+```bash
+cd /opt/mkt53/automation/app
+MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json npm run data:connector:amazon:mapping:validate
+```
+
+禁止把真实映射放入 `app/public/`、`app/src/`、`app/tests/fixtures/` 或提交到 git。`app/configs/private/` 已被 `.gitignore` 排除。
 
 映射文件接受数组或 `{ "mappings": [] }` 两种形态。每行必须包含：
 

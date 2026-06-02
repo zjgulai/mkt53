@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { randomUUID } from 'node:crypto';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { buildConnectorBacklog } from '../lib/connector-backlog.mjs';
@@ -8,6 +8,9 @@ import { extractSourceRegistry, isoWeek } from '../lib/project-analysis.mjs';
 
 const connectorId = 'amazon-commerce';
 const defaultWritePath = 'tmp/data-collection/connectors/amazon-commerce-dry-run.json';
+const templatePath = 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json';
+const recommendedLocalPrivateMappingPath = 'configs/private/amazon-commerce-mapping.json';
+const recommendedServerPrivateMappingPath = '/opt/mkt53/private/amazon-commerce-mapping.json';
 
 const requiredMappingFields = [
   'sourceId',
@@ -67,7 +70,10 @@ function parseArgs(argv) {
   const options = {
     json: argv.includes('--json'),
     noWrite: argv.includes('--no-write'),
+    force: argv.includes('--force'),
+    printMappingTemplate: argv.includes('--print-mapping-template'),
     writePath: defaultWritePath,
+    writeMappingTemplatePath: undefined,
     mappingPath: undefined,
     site: 'amazon.com',
     marketplaceId: 'ATVPDKIKX0DER',
@@ -77,6 +83,7 @@ function parseArgs(argv) {
 
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === '--write') options.writePath = argv[i + 1];
+    if (argv[i] === '--write-mapping-template') options.writeMappingTemplatePath = argv[i + 1];
     if (argv[i] === '--mapping') options.mappingPath = argv[i + 1];
     if (argv[i] === '--site') options.site = argv[i + 1];
     if (argv[i] === '--marketplace-id') options.marketplaceId = argv[i + 1];
@@ -85,6 +92,20 @@ function parseArgs(argv) {
   }
 
   return options;
+}
+
+function readMappingTemplate() {
+  return readFileSync(resolve(process.cwd(), templatePath), 'utf8');
+}
+
+function writeMappingTemplate(targetPath, force) {
+  const target = resolve(process.cwd(), targetPath);
+  if (existsSync(target) && !force) {
+    throw new Error(`Refusing to overwrite existing mapping template: ${targetPath}. Pass --force to replace it.`);
+  }
+
+  mkdirSync(dirname(target), { recursive: true });
+  writeFileSync(target, readMappingTemplate());
 }
 
 function readMappings(mappingPath) {
@@ -185,12 +206,14 @@ function mappingPreflight(mappings, context) {
 
 export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
   const appRoot = options.appRoot ?? process.cwd();
+  const mappingPath = options.mappingPath ?? env.MKT53_AMAZON_MAPPING_PATH;
+  const mappingPathSource = options.mappingPath ? 'cli' : env.MKT53_AMAZON_MAPPING_PATH ? 'env:MKT53_AMAZON_MAPPING_PATH' : 'none';
   const generatedAt = new Date().toISOString();
   const sourceRegistry = extractSourceRegistry(appRoot);
   const connectorBacklog = buildConnectorBacklog(sourceRegistry);
   const amazonBacklog = connectorBacklog.groups.find((group) => group.connectorId === connectorId);
   const amazonItems = connectorBacklog.items.filter((item) => item.connectorId === connectorId);
-  const mappings = readMappings(options.mappingPath);
+  const mappings = readMappings(mappingPath);
   const credentials = credentialPreflight(env);
   const mapping = mappingPreflight(mappings, { site: options.site, marketplaceId: options.marketplaceId });
   const missingCredentialKeys = credentials.filter((item) => !item.present).map((item) => item.key);
@@ -228,6 +251,17 @@ export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
     backlogItems: amazonItems,
     requiredCredentialKeys,
     credentials,
+    privateInput: {
+      mappingPathSource,
+      mappingPathConfigured: Boolean(mappingPath),
+      mappingPath: mappingPath ?? '',
+      recommendedLocalPrivateMappingPath,
+      recommendedServerPrivateMappingPath,
+      templatePath,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+      rule: '真实 ASIN/SKU 映射只能放在私有路径或通过环境变量传入；不得放入 public、src、tests/fixtures 或提交到 git。',
+    },
     mappingContract: {
       schemaVersion: 1,
       acceptedPayloadShapes: ['Array<AmazonCommerceMapping>', '{ mappings: Array<AmazonCommerceMapping> }'],
@@ -252,6 +286,13 @@ export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
+
+  if (options.printMappingTemplate || options.writeMappingTemplatePath) {
+    if (options.writeMappingTemplatePath) writeMappingTemplate(options.writeMappingTemplatePath, options.force);
+    if (options.printMappingTemplate || !options.writeMappingTemplatePath) process.stdout.write(readMappingTemplate());
+    return;
+  }
+
   const result = buildAmazonCommerceDryRun(options);
 
   if (!options.noWrite) {

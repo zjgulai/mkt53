@@ -18,6 +18,12 @@ pnpm-debug.log*
 .env.local
 .env.*.local
 
+# 私有数据输入
+private/
+configs/private/
+app/private/
+app/configs/private/
+
 # IDE
 .vscode/*
 !.vscode/extensions.json

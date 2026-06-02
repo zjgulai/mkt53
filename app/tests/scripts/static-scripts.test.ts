@@ -37,6 +37,7 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:refresh:weekly']).toContain('scripts/data/refresh-weekly-data.mjs');
     expect(packageJson.scripts['data:connector:amazon:dry-run']).toContain('scripts/data/connectors/amazon-commerce-dry-run.mjs');
     expect(packageJson.scripts['data:connector:amazon:mapping:validate']).toContain('--json --no-write');
+    expect(packageJson.scripts['data:connector:amazon:mapping:template']).toContain('--print-mapping-template');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
@@ -55,7 +56,9 @@ describe('production helper scripts', () => {
 
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-backlog.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-dry-run.mjs'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-mapping-partial-valid.json'), constants.R_OK)).not.toThrow();
+    expect(readFileSync(join(process.cwd(), '..', '.gitignore'), 'utf8')).toContain('app/configs/private/');
   });
 
   it('audits data management and source registry consistency without network access', () => {
@@ -175,6 +178,7 @@ describe('production helper scripts', () => {
     );
     const dryRun = JSON.parse(output) as {
       status: string;
+      privateInput: { mappingPathSource: string; mappingPathConfigured: boolean; publicBundleAllowed: boolean; gitAllowed: boolean };
       mappingContract: { requiredFields: string[]; uniqueKey: string[] };
       mapping: {
         mappingCount: number;
@@ -190,6 +194,12 @@ describe('production helper scripts', () => {
 
     expect(output).not.toContain('fixture-client-secret');
     expect(dryRun.status).toBe('blocked');
+    expect(dryRun.privateInput).toMatchObject({
+      mappingPathSource: 'cli',
+      mappingPathConfigured: true,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    });
     expect(dryRun.mappingContract.requiredFields).toEqual(
       expect.arrayContaining(['sourceId', 'site', 'marketplaceId', 'asin', 'sku', 'brand', 'productName', 'mappingOwner']),
     );
@@ -208,5 +218,63 @@ describe('production helper scripts', () => {
     expect(dryRun.blockers.some((item) => item.type === 'missing-credential')).toBe(false);
     expect(dryRun.blockers.some((item) => item.type === 'invalid-asin-sku-mapping')).toBe(false);
     expect(dryRun.blockers.some((item) => item.type === 'missing-asin-sku-mapping' && item.sourceId === 'ds-007')).toBe(true);
+  });
+
+  it('prints a private Amazon mapping template without business ASIN/SKU values', () => {
+    const output = execFileSync('node', ['scripts/data/connectors/amazon-commerce-dry-run.mjs', '--print-mapping-template'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const template = JSON.parse(output) as {
+      privateData: boolean;
+      publicBundleAllowed: boolean;
+      gitAllowed: boolean;
+      recommendedLocalPrivateMappingPath: string;
+      recommendedServerPrivateMappingPath: string;
+      mappings: Array<{ sourceId: string; asin: string; sku: string; mappingOwner: string; minimumMappedItems: number }>;
+    };
+
+    expect(template.privateData).toBe(true);
+    expect(template.publicBundleAllowed).toBe(false);
+    expect(template.gitAllowed).toBe(false);
+    expect(template.recommendedLocalPrivateMappingPath).toBe('configs/private/amazon-commerce-mapping.json');
+    expect(template.recommendedServerPrivateMappingPath).toBe('/opt/mkt53/private/amazon-commerce-mapping.json');
+    expect(template.mappings.map((mapping) => mapping.sourceId)).toEqual(['ds-007', 'ds-009', 'ds-010', 'ds-019', 'ds-037', 'ds-038', 'ds-039']);
+    expect(template.mappings.every((mapping) => mapping.asin === '' && mapping.sku === '' && mapping.mappingOwner === '')).toBe(true);
+    expect(template.mappings.find((mapping) => mapping.sourceId === 'ds-009')?.minimumMappedItems).toBe(25);
+  });
+
+  it('loads a private Amazon mapping path from MKT53_AMAZON_MAPPING_PATH', () => {
+    const output = execFileSync('node', ['scripts/data/connectors/amazon-commerce-dry-run.mjs', '--json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        MKT53_AMAZON_MAPPING_PATH: 'tests/fixtures/amazon-commerce-mapping-partial-valid.json',
+        AMAZON_SP_API_CLIENT_ID: 'fixture-client-id',
+        AMAZON_SP_API_CLIENT_SECRET: 'fixture-client-secret',
+        AMAZON_SP_API_REFRESH_TOKEN: 'fixture-refresh-token',
+        AMAZON_MARKETPLACE_IDS: 'ATVPDKIKX0DER',
+      },
+    });
+    const dryRun = JSON.parse(output) as {
+      privateInput: { mappingPathSource: string; mappingPathConfigured: boolean; recommendedServerPrivateMappingPath: string };
+      mapping: {
+        validMappingCount: number;
+        sourceCoverage: Array<{ sourceId: string; mappedItems: number; status: string }>;
+      };
+    };
+
+    expect(output).not.toContain('fixture-client-secret');
+    expect(dryRun.privateInput).toMatchObject({
+      mappingPathSource: 'env:MKT53_AMAZON_MAPPING_PATH',
+      mappingPathConfigured: true,
+      recommendedServerPrivateMappingPath: '/opt/mkt53/private/amazon-commerce-mapping.json',
+    });
+    expect(dryRun.mapping.validMappingCount).toBe(1);
+    expect(dryRun.mapping.sourceCoverage.find((item) => item.sourceId === 'ds-010')).toMatchObject({
+      mappedItems: 1,
+      status: 'ready',
+    });
   });
 });

@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "templateName": "amazon-commerce-mapping-template",
+  "privateData": true,
+  "publicBundleAllowed": false,
+  "gitAllowed": false,
+  "recommendedLocalPrivateMappingPath": "configs/private/amazon-commerce-mapping.json",
+  "recommendedServerPrivateMappingPath": "/opt/mkt53/private/amazon-commerce-mapping.json",
+  "uniqueKey": [
+    "sourceId",
+    "site",
+    "marketplaceId",
+    "asin"
+  ],
+  "requiredFields": [
+    "sourceId",
+    "site",
+    "marketplaceId",
+    "asin",
+    "sku",
+    "brand",
+    "productName",
+    "category",
+    "mappingStatus",
+    "mappingUpdatedAt",
+    "mappingOwner"
+  ],
+  "allowedMappingStatuses": [
+    "ready"
+  ],
+  "mappings": [
+    {
+      "sourceId": "ds-007",
+      "site": "amazon.com",
+      "marketplaceId": "ATVPDKIKX0DER",
+      "asin": "",
+      "sku": "",
+      "brand": "",
+      "productName": "",
+      "category": "",
+      "mappingStatus": "ready",
+      "mappingUpdatedAt": "YYYY-MM-DD",
+      "mappingOwner": "",
+      "minimumMappedItems": 15
+    },
+    {
+      "sourceId": "ds-009",
+      "site": "amazon.com",
+      "marketplaceId": "ATVPDKIKX0DER",
+      "asin": "",
+      "sku": "",
+      "brand": "",
+      "productName": "",
+      "category": "",
+      "mappingStatus": "ready",
+      "mappingUpdatedAt": "YYYY-MM-DD",
+      "mappingOwner": "",
+      "minimumMappedItems": 25
+    },
+    {
+      "sourceId": "ds-010",
+      "site": "amazon.com",
+      "marketplaceId": "ATVPDKIKX0DER",
+      "asin": "",
+      "sku": "",
+      "brand": "",
+      "productName": "",
+      "category": "",
+      "mappingStatus": "ready",
+      "mappingUpdatedAt": "YYYY-MM-DD",
+      "mappingOwner": "",
+      "minimumMappedItems": 1
+    },
+    {
+      "sourceId": "ds-019",
+      "site": "amazon.com",
+      "marketplaceId": "ATVPDKIKX0DER",
+      "asin": "",
+      "sku": "",
+      "brand": "",
+      "productName": "",
+      "category": "",
+      "mappingStatus": "ready",
+      "mappingUpdatedAt": "YYYY-MM-DD",
+      "mappingOwner": "",
+      "minimumMappedItems": 8
+    },
+    {
+      "sourceId": "ds-037",
+      "site": "amazon.com",
+      "marketplaceId": "ATVPDKIKX0DER",
+      "asin": "",
+      "sku": "",
+      "brand": "",
+      "productName": "",
+      "category": "",
+      "mappingStatus": "ready",
+      "mappingUpdatedAt": "YYYY-MM-DD",
+      "mappingOwner": "",
+      "minimumMappedItems": 5
+    },
+    {
+      "sourceId": "ds-038",
+      "site": "amazon.com",
+      "marketplaceId": "ATVPDKIKX0DER",
+      "asin": "",
+      "sku": "",
+      "brand": "",
+      "productName": "",
+      "category": "",
+      "mappingStatus": "ready",
+      "mappingUpdatedAt": "YYYY-MM-DD",
+      "mappingOwner": "",
+      "minimumMappedItems": 8
+    },
+    {
+      "sourceId": "ds-039",
+      "site": "amazon.com",
+      "marketplaceId": "ATVPDKIKX0DER",
+      "asin": "",
+      "sku": "",
+      "brand": "",
+      "productName": "",
+      "category": "",
+      "mappingStatus": "ready",
+      "mappingUpdatedAt": "YYYY-MM-DD",
+      "mappingOwner": "",
+      "minimumMappedItems": 5
+    }
+  ]
+}
