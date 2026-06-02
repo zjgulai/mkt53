@@ -33,6 +33,19 @@ describe('source registry', () => {
     expect(needsReviewText).toContain('待复核');
   });
 
+  it('splits QuestMobile and Mamava user research sources instead of using a dead combined URL', () => {
+    const questMobile = getSourceRegistryItem('ds-011');
+    const mamava = getSourceRegistryItem('ds-043');
+
+    expect(questMobile.sourceName).toContain('QuestMobile');
+    expect(questMobile.sourceUrl).toContain('questmobile.com.cn');
+    expect(questMobile.sourceUrl).not.toContain('questmobile.com/');
+    expect(mamava.sourceName).toContain('Mamava');
+    expect(mamava.sourceUrl).toContain('mamava.com');
+    expect(questMobile.note).toContain('不能外推全球');
+    expect(mamava.note).toContain('不应与QuestMobile');
+  });
+
   it('binds every static-data page from the weekly audit backlog to a registry item', () => {
     const pages = [
       'AIAssistantPage',

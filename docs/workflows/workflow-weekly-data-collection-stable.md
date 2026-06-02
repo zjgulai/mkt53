@@ -20,7 +20,7 @@ source: human+ai
 |---|---:|
 | 页面组件 | 43 |
 | 数据管理表 | 27 |
-| source registry 来源 | 44 |
+| source registry 来源 | 45 |
 | 治理配置表 | 27 |
 | critical issue | 0 |
 | 静态数据但未绑定 registry 的页面 | 0 |

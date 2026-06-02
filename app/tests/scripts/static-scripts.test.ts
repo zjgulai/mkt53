@@ -69,7 +69,7 @@ describe('production helper scripts', () => {
     };
 
     expect(audit.summary.tableCount).toBe(27);
-    expect(audit.summary.sourceRegistryCount).toBe(44);
+    expect(audit.summary.sourceRegistryCount).toBe(45);
     expect(audit.summary.tableGovernanceCount).toBe(27);
     expect(audit.summary.pagesWithStaticDataWithoutRegistry).toBe(0);
     expect(audit.summary.issueCount).toBe(0);

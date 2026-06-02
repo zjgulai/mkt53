@@ -102,8 +102,8 @@ test.describe('production landing service entry guard', () => {
     expect(response.ok()).toBe(true);
 
     const manifest = await response.json();
-    expect(manifest.totals.total).toBe(44);
-    expect(manifest.auditSummary.sourceRegistryCount).toBe(44);
+    expect(manifest.totals.total).toBe(45);
+    expect(manifest.auditSummary.sourceRegistryCount).toBe(45);
     expect(manifest.auditSummary.pagesWithStaticDataWithoutRegistry).toBe(0);
     expect(manifest.auditSummary.issueCount).toBe(0);
   });
