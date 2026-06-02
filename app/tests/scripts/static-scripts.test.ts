@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { accessSync, constants, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { accessSync, chmodSync, constants, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -42,6 +42,7 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:amazon:mapping:coverage']).toContain('--coverage-report');
     expect(packageJson.scripts['data:connector:amazon:mapping:archive']).toContain('--archive-coverage-report');
     expect(packageJson.scripts['data:connector:amazon:private:bootstrap']).toContain('bootstrap-amazon-private-inputs.mjs');
+    expect(packageJson.scripts['data:connector:amazon:private:audit']).toContain('amazon-commerce-private-input-audit.mjs');
     expect(packageJson.scripts['data:connector:amazon:readiness']).toContain('--readiness-gate');
     expect(packageJson.scripts['data:connector:amazon:readiness:checklist']).toContain('amazon-commerce-readiness-checklist.mjs');
     expect(packageJson.scripts['data:connector:amazon:readiness:template']).toContain('--print-readiness-template');
@@ -64,6 +65,7 @@ describe('production helper scripts', () => {
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-backlog.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-dry-run.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/bootstrap-amazon-private-inputs.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-private-input-audit.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-readiness-checklist.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json'), constants.R_OK)).not.toThrow();
@@ -560,6 +562,116 @@ describe('production helper scripts', () => {
 
       expect(secondManifest.checklist).toMatchObject({ status: 'exists', overwritten: false });
       expect(readFileSync(targetPath, 'utf8')).toContain('preserve existing checklist');
+    } finally {
+      rmSync(targetDir, { recursive: true, force: true });
+    }
+  });
+
+  it('audits Amazon private inputs without exposing business or authorization values', () => {
+    const targetDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-private-audit-'));
+    const mappingPath = join(targetDir, 'amazon-commerce-mapping.json');
+    const readinessPath = join(targetDir, 'amazon-commerce-readiness.json');
+    const checklistPath = join(targetDir, 'amazon-commerce-readiness-checklist.md');
+    const auditPath = join(targetDir, 'amazon-commerce-private-input-audit.json');
+
+    try {
+      writeFileSync(mappingPath, readFileSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-mapping-partial-valid.json'), 'utf8'), { mode: 0o600 });
+      writeFileSync(readinessPath, readFileSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-readiness-partial-valid.json'), 'utf8'), { mode: 0o600 });
+      chmodSync(mappingPath, 0o600);
+      chmodSync(readinessPath, 0o600);
+      execFileSync('node', ['scripts/data/connectors/amazon-commerce-readiness-checklist.mjs', '--write', checklistPath], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+
+      const output = execFileSync('node', ['scripts/data/connectors/amazon-commerce-private-input-audit.mjs', '--private-dir', targetDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          AMAZON_SP_API_CLIENT_SECRET: 'fixture-client-secret',
+        },
+      });
+      const audit = JSON.parse(output) as {
+        status: string;
+        mapping: {
+          status: string;
+          coverage: { totalRequiredItems: number; totalMappedItems: number; missingItemCount: number };
+          sourceCoverage: Array<{ sourceId: string; mapped: number; missing: number; status: string }>;
+        };
+        readiness: { status: string };
+        checklist: { status: string };
+        blockers: Array<{ scope: string; type: string; missingItemCount?: number }>;
+        safety: {
+          credentialValuesRedacted: boolean;
+          businessValuesRedacted: boolean;
+          authorizationValuesRedacted: boolean;
+          networkCalls: number;
+          businessDataWrites: number;
+          publicBundleAllowed: boolean;
+          gitAllowed: boolean;
+        };
+      };
+
+      expect(output).not.toContain('B0TEST0001');
+      expect(output).not.toContain('FIXTURE-SKU-001');
+      expect(output).not.toContain('Fixture Brand');
+      expect(output).not.toContain('fixture-auth-record-20260602');
+      expect(output).not.toContain('fixture-commerce-owner');
+      expect(output).not.toContain('fixture-client-secret');
+      expect(audit.status).toBe('blocked');
+      expect(audit.mapping.status).toBe('blocked');
+      expect(audit.mapping.coverage).toMatchObject({
+        totalRequiredItems: 67,
+        totalMappedItems: 1,
+        missingItemCount: 66,
+      });
+      expect(audit.mapping.sourceCoverage.find((item) => item.sourceId === 'ds-010')).toMatchObject({
+        mapped: 1,
+        missing: 0,
+        status: 'ready',
+      });
+      expect(audit.readiness.status).toBe('ready');
+      expect(audit.checklist.status).toBe('ready');
+      expect(audit.blockers).toEqual(expect.arrayContaining([expect.objectContaining({ scope: 'mapping', type: 'mapping-coverage-blocked', missingItemCount: 66 })]));
+      expect(audit.safety).toMatchObject({
+        credentialValuesRedacted: true,
+        businessValuesRedacted: true,
+        authorizationValuesRedacted: true,
+        networkCalls: 0,
+        businessDataWrites: 0,
+        publicBundleAllowed: false,
+        gitAllowed: false,
+      });
+
+      const writeOutput = execFileSync(
+        'node',
+        ['scripts/data/connectors/amazon-commerce-private-input-audit.mjs', '--private-dir', targetDir, '--write', auditPath],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+        },
+      );
+      const writeManifest = JSON.parse(writeOutput) as { audit: { status: string; overwritten: boolean; mode: string; path: string }; status: string };
+
+      expect(writeManifest).toMatchObject({
+        status: 'blocked',
+        audit: { status: 'created', overwritten: false, mode: '600' },
+      });
+      expect(statSync(writeManifest.audit.path).mode & 0o777).toBe(0o600);
+      expect(readFileSync(writeManifest.audit.path, 'utf8')).not.toContain('B0TEST0001');
+
+      const secondWriteOutput = execFileSync(
+        'node',
+        ['scripts/data/connectors/amazon-commerce-private-input-audit.mjs', '--private-dir', targetDir, '--write', auditPath],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+        },
+      );
+      const secondWriteManifest = JSON.parse(secondWriteOutput) as typeof writeManifest;
+
+      expect(secondWriteManifest.audit).toMatchObject({ status: 'exists', overwritten: false, mode: '600' });
     } finally {
       rmSync(targetDir, { recursive: true, force: true });
     }

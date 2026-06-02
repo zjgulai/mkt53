@@ -35,6 +35,7 @@ npm run data:audit
 npm run data:refresh:weekly
 npm run data:connector:amazon:dry-run
 npm run data:connector:amazon:private:bootstrap
+npm run data:connector:amazon:private:audit
 npm run data:connector:amazon:mapping:archive
 npm run data:connector:amazon:readiness
 npm run data:connector:amazon:readiness:checklist
@@ -53,6 +54,7 @@ npm run data:connector:amazon:readiness:checklist
 | `tmp/data-collection/connectors/amazon-commerce-mapping-coverage.md` | Amazon ASIN/SKU 映射覆盖率验收报告 |
 | `tmp/data-collection/connectors/reports/` | 本地 Amazon 映射覆盖率归档目录，默认保留最近 12 份 |
 | `/opt/mkt53/private/amazon-commerce-readiness-checklist.md` | 服务器私有人工填报清单，不进入前端静态目录或 git |
+| `/opt/mkt53/private/amazon-commerce-private-input-audit.json` | 服务器私有输入交叉审计报告，只记录缺项、计数和 source id，不写真实 ASIN、SKU、授权记录、owner 或凭据值 |
 
 ## 采集状态
 
@@ -135,6 +137,7 @@ npm run data:connector:amazon:mapping:template
 npm run data:connector:amazon:mapping:coverage -- --mapping <mapping-json-path>
 npm run data:connector:amazon:mapping:archive -- --mapping <mapping-json-path>
 npm run data:connector:amazon:private:bootstrap -- --target-dir configs/private
+npm run data:connector:amazon:private:audit -- --private-dir configs/private
 npm run data:connector:amazon:readiness:checklist
 npm run data:connector:amazon:readiness:template
 npm run data:connector:amazon:readiness -- --mapping <mapping-json-path> --readiness <readiness-json-path>
@@ -150,6 +153,7 @@ npm run data:connector:amazon:readiness -- --mapping <mapping-json-path> --readi
 | 归档报告 | 写入 `amazon-commerce-mapping-coverage-*.md`、`amazon-commerce-mapping-coverage-latest.md` 和 `amazon-commerce-mapping-coverage-manifest.json`，默认保留最近 12 份 |
 | 私有占位初始化 | 创建私有映射占位、readiness 占位和 `reports/` 目录；默认不覆盖已有私有文件 |
 | 人工填报清单 | 输出每个 Amazon source id 的最低映射数、mapping 字段、readiness 字段、owner/合规复核项和安全边界 |
+| 私有输入交叉审计 | 同时审计映射、readiness record 和人工清单；只输出缺项、计数、source id 和字段名，不输出真实 ASIN、SKU、授权记录、owner 或凭据值 |
 | Readiness gate | 同时检查环境凭据、私有映射覆盖率、授权记录、采集窗口、业务 owner 复核、合规复核、快照范围和私有边界 |
 
 映射模板是正式资产：`app/scripts/data/connectors/templates/amazon-commerce-mapping-template.json`。该文件只包含空字段和字段规则，不包含真实 ASIN、SKU、竞品或负责人信息。
@@ -195,6 +199,22 @@ npm run data:connector:amazon:readiness:checklist -- --write /opt/mkt53/private/
 
 清单从公开 mapping/readiness 模板派生，不包含真实 ASIN、SKU、授权记录或凭据。写入文件时权限为 `600`，默认不覆盖已有清单。业务侧补齐真实私有文件时，按清单逐项确认七个 source id 最低映射数、required mapping fields、authorization record、collection window、owner review、compliance review、snapshot scope 和 safety boundary。
 
+生成私有输入交叉审计报告：
+
+```bash
+cd app
+npm run data:connector:amazon:private:audit -- --private-dir configs/private
+```
+
+服务器生成私有输入交叉审计报告：
+
+```bash
+cd /opt/mkt53/automation/app
+npm run data:connector:amazon:private:audit -- --private-dir /opt/mkt53/private --write /opt/mkt53/private/amazon-commerce-private-input-audit.json --force
+```
+
+交叉审计同时读取 `amazon-commerce-mapping.json`、`amazon-commerce-readiness.json` 和 `amazon-commerce-readiness-checklist.md`。报告状态为 `blocked` 时，只能继续补私有输入；状态为 `ready-for-readiness-gate` 时，才进入 `npm run data:connector:amazon:readiness`。报告文件权限必须保持 `600`，目录权限必须保持 `700`。报告不得进入 `/opt/mkt53/html`、`app/public/`、测试夹具或 git。
+
 通过环境变量读取私有映射：
 
 ```bash
@@ -210,10 +230,11 @@ cd /opt/mkt53/automation/app
 MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json npm run data:connector:amazon:mapping:validate
 MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json npm run data:connector:amazon:mapping:coverage
 MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json MKT53_AMAZON_COVERAGE_REPORT_DIR=/opt/mkt53/private/reports npm run data:connector:amazon:mapping:archive
+MKT53_AMAZON_PRIVATE_DIR=/opt/mkt53/private npm run data:connector:amazon:private:audit -- --write /opt/mkt53/private/amazon-commerce-private-input-audit.json --force
 MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json MKT53_AMAZON_READINESS_PATH=/opt/mkt53/private/amazon-commerce-readiness.json npm run data:connector:amazon:readiness
 ```
 
-禁止把真实映射、readiness record、授权记录或覆盖率归档放入 `app/public/`、`app/src/`、`app/tests/fixtures/` 或提交到 git。`app/configs/private/` 已被 `.gitignore` 排除。
+禁止把真实映射、readiness record、授权记录、私有输入审计报告或覆盖率归档放入 `app/public/`、`app/src/`、`app/tests/fixtures/` 或提交到 git。`app/configs/private/` 已被 `.gitignore` 排除。
 
 覆盖率报告达到 `ready` 的条件：七个 Amazon source id 全部达到最低映射数量，且不存在无效映射行或重复 `sourceId + site + marketplaceId + asin`。该报告只证明映射输入满足采集前置条件，不代表 Amazon 平台数据已采集。
 
