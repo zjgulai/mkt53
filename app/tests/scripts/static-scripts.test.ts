@@ -75,7 +75,7 @@ describe('production helper scripts', () => {
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-mapping-partial-valid.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-readiness-partial-valid.json'), constants.R_OK)).not.toThrow();
-    expect(readFileSync(join(process.cwd(), '..', '.gitignore'), 'utf8')).toContain('app/configs/private/');
+    expect(readFileSync(join(process.cwd(), '.gitignore'), 'utf8')).toContain('configs/private/');
   });
 
   it('audits data management and source registry consistency without network access', () => {

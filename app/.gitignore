@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Private data inputs
+private/
+configs/private/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
