@@ -34,6 +34,7 @@ cd app
 npm run data:audit
 npm run data:refresh:weekly
 npm run data:connector:amazon:dry-run
+npm run data:connector:amazon:mapping:archive
 ```
 
 输出文件：
@@ -47,6 +48,7 @@ npm run data:connector:amazon:dry-run
 | `tmp/data-collection/runs/<week>-connectors.json` | 本地连接器 backlog 留痕 |
 | `tmp/data-collection/connectors/amazon-commerce-dry-run.json` | Amazon 授权连接器 dry-run 前置检查和输出契约 |
 | `tmp/data-collection/connectors/amazon-commerce-mapping-coverage.md` | Amazon ASIN/SKU 映射覆盖率验收报告 |
+| `tmp/data-collection/connectors/reports/` | 本地 Amazon 映射覆盖率归档目录，默认保留最近 12 份 |
 
 ## 采集状态
 
@@ -127,6 +129,7 @@ npm run data:connector:amazon:dry-run -- --json --no-write
 npm run data:connector:amazon:mapping:validate -- --mapping <mapping-json-path>
 npm run data:connector:amazon:mapping:template
 npm run data:connector:amazon:mapping:coverage -- --mapping <mapping-json-path>
+npm run data:connector:amazon:mapping:archive -- --mapping <mapping-json-path>
 ```
 
 | 检查项 | 当前规则 |
@@ -136,6 +139,7 @@ npm run data:connector:amazon:mapping:coverage -- --mapping <mapping-json-path>
 | 输出契约 | `product_snapshot`、`review_snapshot`、`brand_share_snapshot`、`category_rank_snapshot` |
 | 安全边界 | `networkCalls=0`、`businessDataWrites=0`、`dryRunOnly=true` |
 | 覆盖报告 | 输出总需映射数、已映射数、缺口数、ready source 数和逐 source 阈值表 |
+| 归档报告 | 写入 `amazon-commerce-mapping-coverage-*.md`、`amazon-commerce-mapping-coverage-latest.md` 和 `amazon-commerce-mapping-coverage-manifest.json`，默认保留最近 12 份 |
 
 映射模板是正式资产：`app/scripts/data/connectors/templates/amazon-commerce-mapping-template.json`。该文件只包含空字段和字段规则，不包含真实 ASIN、SKU、竞品或负责人信息。
 
@@ -159,11 +163,14 @@ MKT53_AMAZON_MAPPING_PATH=configs/private/amazon-commerce-mapping.json npm run d
 cd /opt/mkt53/automation/app
 MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json npm run data:connector:amazon:mapping:validate
 MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json npm run data:connector:amazon:mapping:coverage
+MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json MKT53_AMAZON_COVERAGE_REPORT_DIR=/opt/mkt53/private/reports npm run data:connector:amazon:mapping:archive
 ```
 
 禁止把真实映射放入 `app/public/`、`app/src/`、`app/tests/fixtures/` 或提交到 git。`app/configs/private/` 已被 `.gitignore` 排除。
 
 覆盖率报告达到 `ready` 的条件：七个 Amazon source id 全部达到最低映射数量，且不存在无效映射行或重复 `sourceId + site + marketplaceId + asin`。该报告只证明映射输入满足采集前置条件，不代表 Amazon 平台数据已采集。
+
+服务器归档目录固定为 `/opt/mkt53/private/reports`。目录权限必须保持 `700`，报告和 manifest 文件权限必须保持 `600`。可通过 `MKT53_AMAZON_COVERAGE_REPORT_RETENTION` 或 `--retention <n>` 调整留存数量；归档 manifest 只记录覆盖率、缺口、安全边界和文件路径，不写入真实 ASIN、SKU、竞品名称或授权凭据。该归档是接入前后的审计对比材料，不是 Amazon 平台采集证据。
 
 映射文件接受数组或 `{ "mappings": [] }` 两种形态。每行必须包含：
 

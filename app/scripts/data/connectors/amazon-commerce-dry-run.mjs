@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { randomUUID } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { chmodSync, existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { basename, dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { buildConnectorBacklog } from '../lib/connector-backlog.mjs';
 import { extractSourceRegistry, isoWeek } from '../lib/project-analysis.mjs';
@@ -9,9 +9,12 @@ import { extractSourceRegistry, isoWeek } from '../lib/project-analysis.mjs';
 const connectorId = 'amazon-commerce';
 const defaultWritePath = 'tmp/data-collection/connectors/amazon-commerce-dry-run.json';
 const defaultCoverageReportPath = 'tmp/data-collection/connectors/amazon-commerce-mapping-coverage.md';
+const defaultArchiveDir = 'tmp/data-collection/connectors/reports';
+const defaultArchiveRetention = 12;
 const templatePath = 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json';
 const recommendedLocalPrivateMappingPath = 'configs/private/amazon-commerce-mapping.json';
 const recommendedServerPrivateMappingPath = '/opt/mkt53/private/amazon-commerce-mapping.json';
+const recommendedServerCoverageReportDir = '/opt/mkt53/private/reports';
 
 const requiredMappingFields = [
   'sourceId',
@@ -73,9 +76,12 @@ function parseArgs(argv) {
     noWrite: argv.includes('--no-write'),
     force: argv.includes('--force'),
     coverageReport: argv.includes('--coverage-report'),
+    archiveCoverageReport: argv.includes('--archive-coverage-report'),
     printMappingTemplate: argv.includes('--print-mapping-template'),
     writePath: defaultWritePath,
     coverageReportPath: defaultCoverageReportPath,
+    archiveDir: process.env.MKT53_AMAZON_COVERAGE_REPORT_DIR ?? defaultArchiveDir,
+    archiveRetention: Number.parseInt(process.env.MKT53_AMAZON_COVERAGE_REPORT_RETENTION ?? `${defaultArchiveRetention}`, 10),
     writeMappingTemplatePath: undefined,
     mappingPath: undefined,
     site: 'amazon.com',
@@ -87,6 +93,8 @@ function parseArgs(argv) {
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === '--write') options.writePath = argv[i + 1];
     if (argv[i] === '--write-coverage-report') options.coverageReportPath = argv[i + 1];
+    if (argv[i] === '--archive-dir') options.archiveDir = argv[i + 1];
+    if (argv[i] === '--retention') options.archiveRetention = Number.parseInt(argv[i + 1], 10);
     if (argv[i] === '--write-mapping-template') options.writeMappingTemplatePath = argv[i + 1];
     if (argv[i] === '--mapping') options.mappingPath = argv[i + 1];
     if (argv[i] === '--site') options.site = argv[i + 1];
@@ -96,6 +104,10 @@ function parseArgs(argv) {
   }
 
   return options;
+}
+
+function safeRetention(retention) {
+  return Number.isInteger(retention) && retention > 0 ? retention : defaultArchiveRetention;
 }
 
 function readMappingTemplate() {
@@ -281,6 +293,81 @@ function buildMappingCoverageReport(dryRun) {
   ].join('\n');
 }
 
+function archiveMappingCoverageReport(dryRun, report, archiveDir, retention) {
+  const targetDir = resolve(process.cwd(), archiveDir);
+  const normalizedRetention = safeRetention(retention);
+  const timestamp = dryRun.generatedAt.replace(/[:.]/g, '-');
+  const reportFileName = `amazon-commerce-mapping-coverage-${timestamp}-${dryRun.requestId.replace('amazon-commerce-dry-run-', '')}.md`;
+  const latestFileName = 'amazon-commerce-mapping-coverage-latest.md';
+  const manifestFileName = 'amazon-commerce-mapping-coverage-manifest.json';
+
+  mkdirSync(targetDir, { recursive: true, mode: 0o700 });
+  chmodSync(targetDir, 0o700);
+
+  const reportPath = join(targetDir, reportFileName);
+  const latestPath = join(targetDir, latestFileName);
+  const manifestPath = join(targetDir, manifestFileName);
+
+  writeFileSync(reportPath, report, { mode: 0o600 });
+  chmodSync(reportPath, 0o600);
+  writeFileSync(latestPath, report, { mode: 0o600 });
+  chmodSync(latestPath, 0o600);
+
+  const archivedReportsBeforeRetention = readdirSync(targetDir)
+    .filter((fileName) => /^amazon-commerce-mapping-coverage-.*\.md$/.test(fileName) && fileName !== latestFileName)
+    .sort();
+  const reportsToDelete = archivedReportsBeforeRetention.slice(0, Math.max(archivedReportsBeforeRetention.length - normalizedRetention, 0));
+
+  for (const fileName of reportsToDelete) {
+    unlinkSync(join(targetDir, fileName));
+  }
+
+  const retainedReports = readdirSync(targetDir)
+    .filter((fileName) => /^amazon-commerce-mapping-coverage-.*\.md$/.test(fileName) && fileName !== latestFileName)
+    .sort();
+  const manifest = {
+    schemaVersion: 1,
+    connectorId,
+    generatedAt: dryRun.generatedAt,
+    requestId: dryRun.requestId,
+    archiveDir: targetDir,
+    latestReport: latestFileName,
+    currentReport: reportFileName,
+    retentionLimit: normalizedRetention,
+    reportCount: retainedReports.length,
+    retainedReports,
+    deletedReports: reportsToDelete,
+    safety: {
+      networkCalls: dryRun.safety.networkCalls,
+      businessDataWrites: dryRun.safety.businessDataWrites,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    },
+    mappingCoverage: {
+      status: dryRun.mappingCoverage.status,
+      totalRequiredItems: dryRun.mappingCoverage.totalRequiredItems,
+      totalMappedItems: dryRun.mappingCoverage.totalMappedItems,
+      missingItemCount: dryRun.mappingCoverage.missingItemCount,
+      readySourceCount: dryRun.mappingCoverage.readySourceCount,
+      missingSourceCount: dryRun.mappingCoverage.missingSourceCount,
+      invalidMappingCount: dryRun.mappingCoverage.invalidMappingCount,
+      duplicateMappingCount: dryRun.mappingCoverage.duplicateMappingCount,
+    },
+  };
+
+  writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, { mode: 0o600 });
+  chmodSync(manifestPath, 0o600);
+
+  return {
+    ...manifest,
+    archiveDir: targetDir,
+    latestReportPath: join(targetDir, latestFileName),
+    currentReportPath: join(targetDir, reportFileName),
+    manifestPath: join(targetDir, manifestFileName),
+    currentReportBasename: basename(reportPath),
+  };
+}
+
 export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
   const appRoot = options.appRoot ?? process.cwd();
   const mappingPath = options.mappingPath ?? env.MKT53_AMAZON_MAPPING_PATH;
@@ -335,6 +422,7 @@ export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
       mappingPath: mappingPath ?? '',
       recommendedLocalPrivateMappingPath,
       recommendedServerPrivateMappingPath,
+      recommendedServerCoverageReportDir,
       templatePath,
       publicBundleAllowed: false,
       gitAllowed: false,
@@ -382,6 +470,13 @@ async function main() {
       writeFileSync(target, report);
     }
     process.stdout.write(report);
+    return;
+  }
+
+  if (options.archiveCoverageReport) {
+    const report = buildMappingCoverageReport(result);
+    const archive = archiveMappingCoverageReport(result, report, options.archiveDir, options.archiveRetention);
+    process.stdout.write(`${JSON.stringify(archive, null, 2)}\n`);
     return;
   }
 

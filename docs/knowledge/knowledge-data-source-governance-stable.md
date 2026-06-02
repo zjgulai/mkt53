@@ -122,3 +122,5 @@ ASIN/SKU 映射必须通过 `npm run data:connector:amazon:mapping:validate -- -
 映射模板位于 `app/scripts/data/connectors/templates/amazon-commerce-mapping-template.json`，可以提交和同步。填入真实 ASIN/SKU 后的映射文件属于私有数据输入，只能放在 `app/configs/private/amazon-commerce-mapping.json` 或服务器 `/opt/mkt53/private/amazon-commerce-mapping.json`，并通过 `MKT53_AMAZON_MAPPING_PATH` 读取；不得进入 `public`、`src`、测试夹具或 git 历史。
 
 Amazon 映射覆盖率必须用 `npm run data:connector:amazon:mapping:coverage -- --mapping <mapping-json-path>` 生成验收报告。报告输出逐 source id 的最低映射数、当前有效映射数、缺口数和 ready 状态；只有覆盖率 ready、无无效行、无重复行时，才能进入真实连接器实现。该报告不构成业务数据采集证据。
+
+服务器侧覆盖率留痕必须用 `npm run data:connector:amazon:mapping:archive` 写入 `/opt/mkt53/private/reports`。该目录只允许私有审计材料，权限保持 `700`；`amazon-commerce-mapping-coverage-latest.md` 和 `amazon-commerce-mapping-coverage-manifest.json` 权限保持 `600`。归档 manifest 可用于比较每次映射覆盖率变化，但不得被展示到前端、不得提交到 git，也不得作为 Amazon 平台数据已采集的证据。

@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process';
-import { accessSync, constants, readFileSync } from 'node:fs';
+import { accessSync, constants, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -39,6 +40,7 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:amazon:mapping:validate']).toContain('--json --no-write');
     expect(packageJson.scripts['data:connector:amazon:mapping:template']).toContain('--print-mapping-template');
     expect(packageJson.scripts['data:connector:amazon:mapping:coverage']).toContain('--coverage-report');
+    expect(packageJson.scripts['data:connector:amazon:mapping:archive']).toContain('--archive-coverage-report');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
@@ -328,5 +330,81 @@ describe('production helper scripts', () => {
     expect(output).toContain('missingItemCount: 66');
     expect(output).toContain('| ds-010 | RegionCompetition | brand_analytics_region_share | 1 | 1 | 0 | ready |');
     expect(output).toContain('| ds-007 | CompetitionPage | competitor_catalog | 15 | 0 | 15 | missing-mapping |');
+  });
+
+  it('archives Amazon mapping coverage reports with retention and private permissions', () => {
+    const archiveDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-coverage-'));
+
+    try {
+      let manifest = {
+        reportCount: 0,
+        retainedReports: [] as string[],
+        deletedReports: [] as string[],
+        currentReportPath: '',
+        latestReportPath: '',
+        manifestPath: '',
+        safety: { networkCalls: -1, businessDataWrites: -1, publicBundleAllowed: true, gitAllowed: true },
+        mappingCoverage: { totalRequiredItems: 0, totalMappedItems: 0, missingItemCount: 0 },
+      };
+
+      for (let i = 0; i < 3; i += 1) {
+        const output = execFileSync(
+          'node',
+          [
+            'scripts/data/connectors/amazon-commerce-dry-run.mjs',
+            '--archive-coverage-report',
+            '--archive-dir',
+            archiveDir,
+            '--retention',
+            '2',
+            '--mapping',
+            'tests/fixtures/amazon-commerce-mapping-partial-valid.json',
+          ],
+          {
+            cwd: process.cwd(),
+            encoding: 'utf8',
+            env: {
+              ...process.env,
+              AMAZON_SP_API_CLIENT_ID: 'fixture-client-id',
+              AMAZON_SP_API_CLIENT_SECRET: 'fixture-client-secret',
+              AMAZON_SP_API_REFRESH_TOKEN: 'fixture-refresh-token',
+              AMAZON_MARKETPLACE_IDS: 'ATVPDKIKX0DER',
+            },
+          },
+        );
+
+        expect(output).not.toContain('fixture-client-secret');
+        manifest = JSON.parse(output) as typeof manifest;
+      }
+
+      const files = readdirSync(archiveDir);
+      const retainedMarkdownReports = files.filter(
+        (fileName) => fileName.startsWith('amazon-commerce-mapping-coverage-') && fileName.endsWith('.md') && !fileName.endsWith('-latest.md'),
+      );
+
+      expect(manifest.reportCount).toBe(2);
+      expect(manifest.retainedReports).toHaveLength(2);
+      expect(manifest.deletedReports).toHaveLength(1);
+      expect(retainedMarkdownReports).toHaveLength(2);
+      expect(files).toEqual(expect.arrayContaining(['amazon-commerce-mapping-coverage-latest.md', 'amazon-commerce-mapping-coverage-manifest.json']));
+      expect(readFileSync(manifest.latestReportPath, 'utf8')).toContain('missingItemCount: 66');
+      expect(readFileSync(manifest.manifestPath, 'utf8')).toContain('"reportCount": 2');
+      expect(statSync(archiveDir).mode & 0o777).toBe(0o700);
+      expect(statSync(manifest.latestReportPath).mode & 0o777).toBe(0o600);
+      expect(statSync(manifest.manifestPath).mode & 0o777).toBe(0o600);
+      expect(manifest.safety).toMatchObject({
+        networkCalls: 0,
+        businessDataWrites: 0,
+        publicBundleAllowed: false,
+        gitAllowed: false,
+      });
+      expect(manifest.mappingCoverage).toMatchObject({
+        totalRequiredItems: 67,
+        totalMappedItems: 1,
+        missingItemCount: 66,
+      });
+    } finally {
+      rmSync(archiveDir, { recursive: true, force: true });
+    }
   });
 });
