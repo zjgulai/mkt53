@@ -5,7 +5,7 @@ module: architecture
 topic: data-and-ai-proxy
 status: stable
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-02
 owner: self
 source: human+ai
 ---
@@ -96,7 +96,14 @@ flowchart LR
 
 ## 部署形态
 
-腾讯云轻量服务器上保留 nginx 静态托管。新增后端后，nginx 增加 `/api/` 反向代理到后端容器。
+腾讯云轻量服务器上保留 nginx 静态托管。当前存在两个与本项目相关的静态入口：宿主 landing page 和 mkt53 看板本体。新增后端后，nginx 增加 `/api/` 反向代理到后端容器。
+
+| 当前入口 | nginx root | 宿主路径 | 说明 |
+|---|---|---|---|
+| `https://lute-tlz-dddd.top` | `/var/www/landing` | `/opt/ai-video/deploy/lighthouse/landing/index.html` | 宿主导航页，多服务卡片网格，其中 `card mkt` 进入本项目 |
+| `https://mkt.lute-tlz-dddd.top` | `/var/www/mkt53` | `/opt/mkt53/html/` | mkt53 Vite 静态看板 |
+
+两者共享 `ai_video_nginx` 容器，但发布路径不同。`npm run deploy:prod` 只同步 `/opt/mkt53/html/`；宿主 landing 卡片需要单独备份并替换 `index.html`。
 
 | 组件 | 推荐实现 |
 |---|---|

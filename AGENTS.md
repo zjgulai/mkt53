@@ -5,6 +5,7 @@
 Momcozy 母婴品牌全球市场分析看板，面向内部团队的数据洞察平台。
 
 - **线上地址**：https://mkt.lute-tlz-dddd.top
+- **宿主入口**：https://lute-tlz-dddd.top 首页卡片「市场洞察工作台」
 - **GitHub**：https://github.com/zjgulai/mkt53
 - **服务器**：101.34.52.232 (VM-0-16-ubuntu)，部署路径 `/opt/mkt53/html/`
 
@@ -139,6 +140,7 @@ npm run build   # 构建生产产物到 dist/
 | OS | Ubuntu 22.04 LTS |
 | SSH Key | `ai_video.pem`（仓库根目录，已 gitignore）|
 | 静态文件路径 | `/opt/mkt53/html/` |
+| 宿主 landing 文件 | `/opt/ai-video/deploy/lighthouse/landing/index.html` |
 | nginx 容器 | `ai_video_nginx`（与其他应用共用）|
 | nginx 配置 | `/opt/ai-video/deploy/lighthouse/nginx.conf` |
 | compose 文件 | `/opt/ai-video/deploy/lighthouse/docker-compose.prod.yml` |
@@ -153,6 +155,21 @@ npm run smoke:prod
 ```
 
 `deploy:prod` 会依次执行 `test`、`lint`、`npm audit`、`build`，然后通过 `rsync --delete` 替换 `/opt/mkt53/html/` 静态文件；nginx 无需重启。
+
+### 宿主导航页入口卡片
+
+`https://lute-tlz-dddd.top` 是共享宿主导航页。2026-06-02 线上确认：宿主首页是多服务卡片网格，当前包含 12 个服务入口，其中 mkt 卡片进入本项目：
+
+| 字段 | 当前值 |
+|---|---|
+| subtitle | `Market Insight Platform` |
+| 标题 | `市场洞察工作台` |
+| 链接 | `https://mkt.lute-tlz-dddd.top` |
+| 描述 | `Momcozy 母婴品牌全球市场分析 · 竞品追踪 · 用户画像 · 行业趋势` |
+| chips | `竞品分析`、`用户画像`、`市场趋势` |
+| CTA | `打开市场看板` |
+
+该入口卡片不在 mkt53 的 Vite 构建产物里。卡片文案或链接需要变更时，维护远端 `/opt/ai-video/deploy/lighthouse/landing/index.html`，先备份，再替换单文件；通常不需要重启 `ai_video_nginx`。
 
 ### 首次/变更 nginx 配置后重建容器
 
@@ -183,7 +200,7 @@ server {
 
 | 域名 | 服务 |
 |---|---|
-| lute-tlz-dddd.top | 宿主导航页（landing），包含本项目入口卡片 |
+| lute-tlz-dddd.top | 宿主导航页（landing），多服务入口页，其中 mkt 卡片进入本项目 |
 | mkt.lute-tlz-dddd.top | **本项目** |
 | video.lute-tlz-dddd.top | AI 视频创作平台 |
 | voc.lute-tlz-dddd.top | Apache Superset VOC 分析 |
