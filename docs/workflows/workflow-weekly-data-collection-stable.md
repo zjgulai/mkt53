@@ -55,7 +55,7 @@ npm run data:refresh:weekly
 
 ## 周度部署
 
-人工触发：
+开发机人工触发远程部署：
 
 ```bash
 cd app
@@ -69,17 +69,26 @@ npm run data:deploy:weekly
 3. `npm run smoke:prod`
 4. `npm run test:e2e:prod`
 
-## 服务器 cron
-
-只在 mkt53 专属应用目录安装：
+服务器本地触发静态刷新：
 
 ```bash
-cd app
+cd /opt/mkt53/automation/app
+npm run data:publish:weekly:local
+```
+
+该命令只写入 `MKT53_STATIC_HTML_DIR`，默认是 `/opt/mkt53/html`，不需要 SSH key，不触碰宿主 landing 或其他应用。
+
+## 服务器 cron
+
+只在 mkt53 专属自动化目录安装：
+
+```bash
+cd /opt/mkt53/automation/app
 bash scripts/data/install-weekly-cron.sh --print
 bash scripts/data/install-weekly-cron.sh
 ```
 
-默认计划：每周一 03:15 执行 `npm run data:deploy:weekly`。如需调整：
+默认计划：每周一 03:15 执行 `npm run data:publish:weekly:local`。如需调整：
 
 ```bash
 MKT53_WEEKLY_CRON="30 2 * * 1" bash scripts/data/install-weekly-cron.sh

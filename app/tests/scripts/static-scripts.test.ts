@@ -36,12 +36,14 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:collect:weekly']).toContain('scripts/data/collect-weekly-sources.mjs');
     expect(packageJson.scripts['data:refresh:weekly']).toContain('scripts/data/refresh-weekly-data.mjs');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
+    expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
 
     for (const script of [
       'scripts/data/audit-consistency.mjs',
       'scripts/data/collect-weekly-sources.mjs',
       'scripts/data/refresh-weekly-data.mjs',
       'scripts/data/weekly-refresh-and-deploy.sh',
+      'scripts/data/weekly-refresh-local-static.sh',
       'scripts/data/install-weekly-cron.sh',
     ]) {
       expect(() => accessSync(join(process.cwd(), script), constants.X_OK)).not.toThrow();

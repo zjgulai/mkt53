@@ -60,6 +60,15 @@ npm run data:deploy:weekly
 
 该命令会先运行 `npm run data:refresh:weekly`，再执行 `deploy:prod`、`smoke:prod` 和 `test:e2e:prod`。受限来源会保留为 `connector-required` 或 `manual-required`，不能用脚本输出替代真实授权采集。
 
+服务器 cron 使用本地静态发布入口：
+
+```bash
+cd /opt/mkt53/automation/app
+npm run data:publish:weekly:local
+```
+
+该入口默认写入 `/opt/mkt53/html/`，不依赖 SSH key，不触碰 `ai_video_nginx`、宿主 landing 或其他应用目录。
+
 ## 宿主导航页入口
 
 宿主域名 `https://lute-tlz-dddd.top` 是共享静态 landing page，不属于 mkt53 的 Vite 构建产物。2026-06-02 线上确认：当前页面是多服务卡片网格，包含 12 个服务入口，其中 mkt 卡片进入本项目：
