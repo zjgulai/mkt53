@@ -37,6 +37,7 @@ npm run data:connector:amazon:dry-run
 npm run data:connector:amazon:private:bootstrap
 npm run data:connector:amazon:mapping:archive
 npm run data:connector:amazon:readiness
+npm run data:connector:amazon:readiness:checklist
 ```
 
 输出文件：
@@ -51,6 +52,7 @@ npm run data:connector:amazon:readiness
 | `tmp/data-collection/connectors/amazon-commerce-dry-run.json` | Amazon 授权连接器 dry-run 前置检查和输出契约 |
 | `tmp/data-collection/connectors/amazon-commerce-mapping-coverage.md` | Amazon ASIN/SKU 映射覆盖率验收报告 |
 | `tmp/data-collection/connectors/reports/` | 本地 Amazon 映射覆盖率归档目录，默认保留最近 12 份 |
+| `/opt/mkt53/private/amazon-commerce-readiness-checklist.md` | 服务器私有人工填报清单，不进入前端静态目录或 git |
 
 ## 采集状态
 
@@ -133,6 +135,7 @@ npm run data:connector:amazon:mapping:template
 npm run data:connector:amazon:mapping:coverage -- --mapping <mapping-json-path>
 npm run data:connector:amazon:mapping:archive -- --mapping <mapping-json-path>
 npm run data:connector:amazon:private:bootstrap -- --target-dir configs/private
+npm run data:connector:amazon:readiness:checklist
 npm run data:connector:amazon:readiness:template
 npm run data:connector:amazon:readiness -- --mapping <mapping-json-path> --readiness <readiness-json-path>
 ```
@@ -146,6 +149,7 @@ npm run data:connector:amazon:readiness -- --mapping <mapping-json-path> --readi
 | 覆盖报告 | 输出总需映射数、已映射数、缺口数、ready source 数和逐 source 阈值表 |
 | 归档报告 | 写入 `amazon-commerce-mapping-coverage-*.md`、`amazon-commerce-mapping-coverage-latest.md` 和 `amazon-commerce-mapping-coverage-manifest.json`，默认保留最近 12 份 |
 | 私有占位初始化 | 创建私有映射占位、readiness 占位和 `reports/` 目录；默认不覆盖已有私有文件 |
+| 人工填报清单 | 输出每个 Amazon source id 的最低映射数、mapping 字段、readiness 字段、owner/合规复核项和安全边界 |
 | Readiness gate | 同时检查环境凭据、私有映射覆盖率、授权记录、采集窗口、业务 owner 复核、合规复核、快照范围和私有边界 |
 
 映射模板是正式资产：`app/scripts/data/connectors/templates/amazon-commerce-mapping-template.json`。该文件只包含空字段和字段规则，不包含真实 ASIN、SKU、竞品或负责人信息。
@@ -174,6 +178,22 @@ npm run data:connector:amazon:private:bootstrap -- --target-dir /opt/mkt53/priva
 ```
 
 该命令只复制公开空模板，创建 `amazon-commerce-mapping.json`、`amazon-commerce-readiness.json` 和 `reports/`。目录权限为 `700`，文件权限为 `600`。如果目标文件已存在，默认返回 `status=exists` 并保留原文件；只有显式传入 `--force` 才允许覆盖。未收到业务 owner 和合规 owner 的材料前，不得把真实 ASIN、SKU、授权记录、负责人真实姓名、凭据或竞品明细写入占位文件。
+
+生成人工填报清单：
+
+```bash
+cd app
+npm run data:connector:amazon:readiness:checklist
+```
+
+服务器生成私有人工填报清单：
+
+```bash
+cd /opt/mkt53/automation/app
+npm run data:connector:amazon:readiness:checklist -- --write /opt/mkt53/private/amazon-commerce-readiness-checklist.md
+```
+
+清单从公开 mapping/readiness 模板派生，不包含真实 ASIN、SKU、授权记录或凭据。写入文件时权限为 `600`，默认不覆盖已有清单。业务侧补齐真实私有文件时，按清单逐项确认七个 source id 最低映射数、required mapping fields、authorization record、collection window、owner review、compliance review、snapshot scope 和 safety boundary。
 
 通过环境变量读取私有映射：
 

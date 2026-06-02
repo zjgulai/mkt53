@@ -43,6 +43,7 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:amazon:mapping:archive']).toContain('--archive-coverage-report');
     expect(packageJson.scripts['data:connector:amazon:private:bootstrap']).toContain('bootstrap-amazon-private-inputs.mjs');
     expect(packageJson.scripts['data:connector:amazon:readiness']).toContain('--readiness-gate');
+    expect(packageJson.scripts['data:connector:amazon:readiness:checklist']).toContain('amazon-commerce-readiness-checklist.mjs');
     expect(packageJson.scripts['data:connector:amazon:readiness:template']).toContain('--print-readiness-template');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
@@ -63,6 +64,7 @@ describe('production helper scripts', () => {
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-backlog.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-dry-run.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/bootstrap-amazon-private-inputs.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-readiness-checklist.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-mapping-partial-valid.json'), constants.R_OK)).not.toThrow();
@@ -513,6 +515,51 @@ describe('production helper scripts', () => {
       expect(secondManifest.files.mapping).toMatchObject({ status: 'exists', overwritten: false });
       expect(secondManifest.files.readiness).toMatchObject({ status: 'exists', overwritten: false });
       expect(readFileSync(manifest.files.readiness.path, 'utf8')).toContain('existing-readiness');
+    } finally {
+      rmSync(targetDir, { recursive: true, force: true });
+    }
+  });
+
+  it('prints and writes an Amazon manual readiness checklist without public or credential leakage', () => {
+    const output = execFileSync('node', ['scripts/data/connectors/amazon-commerce-readiness-checklist.mjs'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+
+    expect(output).toContain('# Amazon Commerce Private Input Readiness Checklist');
+    expect(output).toContain('totalMinimumMappedItems: 67');
+    expect(output).toContain('| [ ] | ds-007 | amazon.com | ATVPDKIKX0DER | 15 |');
+    expect(output).toContain('| [ ] | ds-009 | amazon.com | ATVPDKIKX0DER | 25 |');
+    expect(output).toContain('| [ ] | ds-010 | amazon.com | ATVPDKIKX0DER | 1 |');
+    expect(output).toContain('authorizationRecordId');
+    expect(output).toContain('complianceReviewStatus');
+    expect(output).toContain('expectedSnapshotTypes: product_snapshot, review_snapshot, brand_share_snapshot, category_rank_snapshot');
+    expect(output).not.toMatch(/clientSecret|refreshToken|accessToken|password|privateKey/i);
+
+    const targetDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-private-checklist-'));
+    const targetPath = join(targetDir, 'amazon-commerce-readiness-checklist.md');
+
+    try {
+      const writeOutput = execFileSync('node', ['scripts/data/connectors/amazon-commerce-readiness-checklist.mjs', '--write', targetPath], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const manifest = JSON.parse(writeOutput) as { checklist: { path: string; status: string; overwritten: boolean } };
+
+      expect(manifest.checklist).toMatchObject({ status: 'created', overwritten: false });
+      expect(readFileSync(manifest.checklist.path, 'utf8')).toContain('totalMinimumMappedItems: 67');
+      expect(statSync(targetDir).mode & 0o777).toBe(0o700);
+      expect(statSync(manifest.checklist.path).mode & 0o777).toBe(0o600);
+
+      writeFileSync(targetPath, 'preserve existing checklist\n');
+      const secondOutput = execFileSync('node', ['scripts/data/connectors/amazon-commerce-readiness-checklist.mjs', '--write', targetPath], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const secondManifest = JSON.parse(secondOutput) as typeof manifest;
+
+      expect(secondManifest.checklist).toMatchObject({ status: 'exists', overwritten: false });
+      expect(readFileSync(targetPath, 'utf8')).toContain('preserve existing checklist');
     } finally {
       rmSync(targetDir, { recursive: true, force: true });
     }
