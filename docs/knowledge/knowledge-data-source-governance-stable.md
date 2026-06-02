@@ -132,3 +132,5 @@ Amazon 真实连接器实现前必须通过 `npm run data:connector:amazon:readi
 人工填报清单通过 `npm run data:connector:amazon:readiness:checklist` 生成。清单只来自公开模板，列出七个 Amazon source id 的最低映射数、mapping 必填字段、readiness 必填字段、owner/合规复核和安全边界。服务器私有清单路径是 `/opt/mkt53/private/amazon-commerce-readiness-checklist.md`；该文件权限保持 `600`，不得进入 `/opt/mkt53/html`、git 或前端构建产物。
 
 私有输入交叉审计通过 `npm run data:connector:amazon:private:audit -- --private-dir <private-dir>` 执行。该审计只输出映射覆盖率、无效行计数、缺失 readiness 字段、清单缺项、source id 和字段名；不得输出真实 ASIN、SKU、授权记录、owner、竞品明细或凭据值。服务器审计报告路径是 `/opt/mkt53/private/amazon-commerce-private-input-audit.json`，权限保持 `600`。报告状态不是 `ready-for-readiness-gate` 时，不得运行真实 Amazon readiness gate，更不得实现或调度真实平台采集。
+
+服务器周度刷新会在公开静态包发布前尝试更新私有输入交叉审计报告。该 sidecar 只写 `/opt/mkt53/private`，不得写入 `/opt/mkt53/html`；默认不因私有输入缺项或审计脚本异常阻塞公开 manifest 刷新。只有显式设置 `MKT53_PRIVATE_AUDIT_REQUIRED=1` 时，周度任务才把私有审计失败升级为 hard gate。

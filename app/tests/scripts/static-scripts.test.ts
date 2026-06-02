@@ -50,6 +50,10 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/connectors.json');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('data:connector:amazon:private:audit');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_AMAZON_PRIVATE_DIR');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_PRIVATE_AUDIT_REQUIRED');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('Continuing public weekly refresh');
 
     for (const script of [
       'scripts/data/audit-consistency.mjs',

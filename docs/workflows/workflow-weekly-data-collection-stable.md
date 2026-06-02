@@ -89,7 +89,7 @@ cd /opt/mkt53/automation/app
 npm run data:publish:weekly:local
 ```
 
-该命令只写入 `MKT53_STATIC_HTML_DIR`，默认是 `/opt/mkt53/html`，不需要 SSH key，不触碰宿主 landing 或其他应用。
+该命令只写入 `MKT53_STATIC_HTML_DIR`，默认是 `/opt/mkt53/html`，不需要 SSH key，不触碰宿主 landing 或其他应用。服务器存在 `MKT53_AMAZON_PRIVATE_DIR` 时，会额外生成 Amazon 私有输入交叉审计报告；默认目录是 `/opt/mkt53/private`，默认报告路径是 `/opt/mkt53/private/amazon-commerce-private-input-audit.json`。私有审计失败默认只写入 cron 日志并继续公开静态刷新；只有设置 `MKT53_PRIVATE_AUDIT_REQUIRED=1` 时，才把私有审计失败作为周度任务硬失败。
 
 ## 服务器 cron
 
@@ -214,6 +214,20 @@ npm run data:connector:amazon:private:audit -- --private-dir /opt/mkt53/private 
 ```
 
 交叉审计同时读取 `amazon-commerce-mapping.json`、`amazon-commerce-readiness.json` 和 `amazon-commerce-readiness-checklist.md`。报告状态为 `blocked` 时，只能继续补私有输入；状态为 `ready-for-readiness-gate` 时，才进入 `npm run data:connector:amazon:readiness`。报告文件权限必须保持 `600`，目录权限必须保持 `700`。报告不得进入 `/opt/mkt53/html`、`app/public/`、测试夹具或 git。
+
+周度服务器刷新也会调用同一私有审计：
+
+```bash
+cd /opt/mkt53/automation/app
+MKT53_AMAZON_PRIVATE_DIR=/opt/mkt53/private npm run data:publish:weekly:local
+```
+
+如果业务要求周度任务在私有审计失败时停止：
+
+```bash
+cd /opt/mkt53/automation/app
+MKT53_PRIVATE_AUDIT_REQUIRED=1 npm run data:publish:weekly:local
+```
 
 通过环境变量读取私有映射：
 
