@@ -113,6 +113,8 @@ npm run test:e2e
 | `connector-required` | 需要授权连接器，未接入前不得声称已采集 |
 | `manual-required` | 需要采购报告、人工上传或补充 URL |
 
+`sourceType=代码资产` 的来源走 `local-file-check`，用当前 app 副本里的文件存在性、文件大小和 SHA-256 哈希作为可用性证据。此类来源可以保留 GitHub URL 作为人工阅读入口，但周度采集不得依赖 GitHub blob 网络请求；本地文件缺失时才应进入 `source-error`。
+
 `connector-required` 会进入 `app/public/weekly-data/connectors.json`。该文件只代表授权连接器接入队列，包含 `requiredAccess`、`outputContract`、`stopCondition` 和 `blockedReason`；它不是业务数据快照，不能作为真实采集成功证据。
 
 公开 URL 采集默认不是单次请求判定。脚本会记录 `collectionPolicy.publicUrl`、每条公开来源的 `checkAttemptCount`、`attempts` 和 `statusStability`；只有重试后仍失败时，才进入 `fetch-error` 或可重试 HTTP 的 `source-error`。`403`、`404` 等明确权限或链接错误仍直接保留为 `source-error`，避免用重试掩盖真实来源问题。

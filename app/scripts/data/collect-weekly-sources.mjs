@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { analyzeConsistency, classifyCollectionMethod, extractSourceRegistry, isoWeek } from './lib/project-analysis.mjs';
 import { buildConnectorBacklog } from './lib/connector-backlog.mjs';
@@ -40,6 +40,10 @@ function wait(ms) {
   return ms > 0 ? new Promise((resolveDelay) => setTimeout(resolveDelay, ms)) : Promise.resolve();
 }
 
+function hashBuffer(buffer) {
+  return createHash('sha256').update(buffer).digest('hex');
+}
+
 async function readPreviewHash(response) {
   if (!response.body) return undefined;
 
@@ -62,7 +66,75 @@ async function readPreviewHash(response) {
   if (total === 0) return undefined;
 
   const buffer = Buffer.concat(chunks.map((chunk) => Buffer.from(chunk)));
-  return createHash('sha256').update(buffer).digest('hex');
+  return hashBuffer(buffer);
+}
+
+function localPathFromSource(source, appRoot) {
+  const sourceName = typeof source.sourceName === 'string' ? source.sourceName : '';
+  const appRelativePath = sourceName.startsWith('app/') ? sourceName.slice('app/'.length) : sourceName;
+  const target = resolve(appRoot, appRelativePath);
+  const relativePath = relative(appRoot, target);
+
+  if (!relativePath || relativePath.startsWith('..') || relativePath.startsWith('/')) {
+    return { target, relativePath, safe: false };
+  }
+
+  return { target, relativePath, safe: true };
+}
+
+function checkLocalFile(source, appRoot) {
+  const checkedAt = new Date().toISOString();
+  const { target, relativePath, safe } = localPathFromSource(source, appRoot);
+
+  if (!safe) {
+    return {
+      id: source.id,
+      page: source.page,
+      metric: source.metric,
+      sourceName: source.sourceName,
+      sourceUrl: source.sourceUrl,
+      method: 'local-file-check',
+      status: 'source-error',
+      checkedAt,
+      localPath: relativePath,
+      error: 'Local code asset path escapes app root.',
+      note: '代码资产路径不在 app 根目录内，需要修正 source registry。',
+    };
+  }
+
+  try {
+    const file = readFileSync(target);
+    const stat = statSync(target);
+
+    return {
+      id: source.id,
+      page: source.page,
+      metric: source.metric,
+      sourceName: source.sourceName,
+      sourceUrl: source.sourceUrl,
+      method: 'local-file-check',
+      status: 'ok',
+      checkedAt,
+      localPath: relativePath,
+      fileSizeBytes: stat.size,
+      sampleHash: hashBuffer(file),
+      note: '代码资产已在当前构建副本中完成本地存在性和哈希校验。',
+    };
+  } catch (error) {
+    return {
+      id: source.id,
+      page: source.page,
+      metric: source.metric,
+      sourceName: source.sourceName,
+      sourceUrl: source.sourceUrl,
+      method: 'local-file-check',
+      status: 'source-error',
+      checkedAt,
+      localPath: relativePath,
+      error: error instanceof Error ? error.message : String(error),
+      note: '代码资产本地文件缺失或不可读取，需要修正 source registry 或同步自动化副本。',
+    };
+  }
 }
 
 async function checkPublicUrlAttempt(source, timeoutMs, attempt) {
@@ -167,6 +239,8 @@ function skippedSource(source, method) {
     note:
       method === 'public-url-check'
         ? '无网络 dry-run，仅确认该来源具备公开 URL 检查条件。'
+        : method === 'local-file-check'
+        ? '代码资产来源使用本地文件校验，不需要外部网络。'
         : method === 'connector-required'
         ? '该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。'
         : '该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。',
@@ -193,6 +267,11 @@ export async function collectWeeklySources(options = {}) {
 
   for (const source of sourceRegistry) {
     const method = classifyCollectionMethod(source);
+
+    if (method === 'local-file-check') {
+      sources.push(checkLocalFile(source, appRoot));
+      continue;
+    }
 
     if (method !== 'public-url-check' || noNetwork) {
       sources.push(noNetwork && method === 'public-url-check' ? skippedSource(source, 'public-url-check') : skippedSource(source, method));

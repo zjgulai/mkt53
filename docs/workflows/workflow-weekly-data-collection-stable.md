@@ -66,6 +66,8 @@ npm run data:connector:amazon:readiness:checklist
 | `connector-required` | 需要授权 API、内部系统或合规爬虫连接器 |
 | `manual-required` | 需要采购报告、人工上传或补充来源 URL |
 
+代码资产来源使用 `local-file-check` 方法，直接校验当前 app 副本中的文件路径、文件大小和 SHA-256 哈希，状态仍计入 `ok`。`DataManage.tsx`、`source-registry.ts` 这类来源不得再通过 GitHub blob URL 做公开网络检查；GitHub 网络状态不能替代本地构建副本的真实状态。
+
 公开 URL 默认采集策略：`timeoutMs=8000`、`maxAttempts=2`、`retryDelayMs=500`。脚本只对 `fetch-error` 和 `408/425/429/500/502/503/504` 等瞬态 HTTP 状态重试；`403`、`404` 等明确权限或链接问题不重复请求。manifest 的 `collectionPolicy.publicUrl` 会记录当次策略，每个公开 URL 结果会记录 `checkAttemptCount`、`attempts` 和 `statusStability`，用于区分一次成功、重试恢复和重试后仍失败。
 
 ## 周度部署

@@ -102,6 +102,7 @@ describe('production helper scripts', () => {
     expect(audit.summary.pagesWithStaticDataWithoutRegistry).toBe(0);
     expect(audit.summary.issueCount).toBe(0);
     expect(audit.summary.criticalIssueCount).toBe(0);
+    expect(audit.summary.collectionMethods['local-file-check']).toBe(2);
     expect(audit.summary.collectionMethods['connector-required']).toBeGreaterThan(0);
     expect(audit.summary.collectionMethods['public-url-check']).toBeGreaterThan(0);
   });
@@ -129,6 +130,26 @@ describe('production helper scripts', () => {
     );
     expect(manifest.connectorBacklog.items.every((item) => item.blockedReason.includes('不得伪造'))).toBe(true);
     expect(manifest.totals['connector-required']).toBe(23);
+  });
+
+  it('checks code asset sources from local files without external network access', () => {
+    const output = execFileSync('node', ['scripts/data/collect-weekly-sources.mjs', '--json', '--no-network'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const manifest = JSON.parse(output) as {
+      totals: Record<string, number>;
+      sources: Array<{ id: string; method: string; status: string; localPath?: string; sampleHash?: string; fileSizeBytes?: number }>;
+    };
+    const codeAssets = manifest.sources.filter((source) => ['ds-027', 'ds-028'].includes(source.id));
+
+    expect(codeAssets).toHaveLength(2);
+    expect(codeAssets.every((source) => source.method === 'local-file-check')).toBe(true);
+    expect(codeAssets.every((source) => source.status === 'ok')).toBe(true);
+    expect(codeAssets.map((source) => source.localPath)).toEqual(expect.arrayContaining(['src/pages/DataManage.tsx', 'src/data/source-registry.ts']));
+    expect(codeAssets.every((source) => typeof source.sampleHash === 'string' && source.sampleHash.length === 64)).toBe(true);
+    expect(codeAssets.every((source) => Number(source.fileSizeBytes) > 0)).toBe(true);
+    expect(manifest.totals.ok).toBeGreaterThanOrEqual(2);
   });
 
   it('retries transient public URL failures before marking weekly sources as failed', async () => {

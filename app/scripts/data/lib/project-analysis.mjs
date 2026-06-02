@@ -166,6 +166,11 @@ export function listPageComponents(appRoot = process.cwd()) {
 export function classifyCollectionMethod(source) {
   const text = `${source.sourceType ?? ''} ${source.sourceName ?? ''} ${source.note ?? ''}`.toLowerCase();
   const url = source.sourceUrl ? new URL(source.sourceUrl) : undefined;
+  const sourceName = source.sourceName ?? '';
+
+  if (/(代码资产|code asset)/i.test(text) && (/^(app\/|src\/)/.test(sourceName) || /github\.com\/[^/]+\/[^/]+\/blob\/.+\/app\//i.test(source.sourceUrl ?? ''))) {
+    return 'local-file-check';
+  }
 
   if (!source.sourceUrl) {
     return /(crm|erp|内部|amazon|api|社交|tiktok|ig|fb|ai模型|nlp|爬虫|import genius)/i.test(text)

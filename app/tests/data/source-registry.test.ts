@@ -46,6 +46,18 @@ describe('source registry', () => {
     expect(mamava.note).toContain('不应与QuestMobile');
   });
 
+  it('keeps public report URLs specific when automated access is blocked by challenge pages', () => {
+    const fortune = getSourceRegistryItem('ds-002');
+    const mordor = getSourceRegistryItem('ds-004');
+    const mamava = getSourceRegistryItem('ds-043');
+
+    expect(fortune.sourceUrl).toBe('https://www.fortunebusinessinsights.com/breast-pump-market-107054');
+    expect(fortune.action).toContain('人工复核凭证');
+    expect(mordor.sourceUrl).toBe('https://www.mordorintelligence.com/industry-reports/breast-pumps-market');
+    expect(mordor.verificationStatus).toBe('example');
+    expect([fortune, mordor, mamava].every((item) => item.note.includes('Cloudflare challenge'))).toBe(true);
+  });
+
   it('binds every static-data page from the weekly audit backlog to a registry item', () => {
     const pages = [
       'AIAssistantPage',
