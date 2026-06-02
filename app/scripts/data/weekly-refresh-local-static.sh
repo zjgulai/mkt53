@@ -14,7 +14,7 @@ fi
 
 cd "${APP_DIR}"
 
-npm run data:refresh:weekly
+npm run data:refresh:weekly -- "$@"
 
 publish_private_amazon_audit() {
   if [[ ! -d "${AMAZON_PRIVATE_DIR}" ]]; then

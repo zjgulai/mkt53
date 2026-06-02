@@ -7,7 +7,10 @@ import { analyzeConsistency, classifyCollectionMethod, extractSourceRegistry, is
 import { buildConnectorBacklog } from './lib/connector-backlog.mjs';
 
 const defaultTimeoutMs = 8000;
+const defaultMaxAttempts = 2;
+const defaultRetryDelayMs = 500;
 const previewLimitBytes = 4096;
+const retryableHttpStatuses = new Set([408, 425, 429, 500, 502, 503, 504]);
 
 function parseArgs(argv) {
   const options = {
@@ -15,14 +18,26 @@ function parseArgs(argv) {
     noNetwork: argv.includes('--no-network'),
     writePath: undefined,
     timeoutMs: defaultTimeoutMs,
+    maxAttempts: defaultMaxAttempts,
+    retryDelayMs: defaultRetryDelayMs,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === '--write') options.writePath = argv[i + 1];
     if (argv[i] === '--timeout-ms') options.timeoutMs = Number(argv[i + 1]);
+    if (argv[i] === '--max-attempts') options.maxAttempts = Number(argv[i + 1]);
+    if (argv[i] === '--retry-delay-ms') options.retryDelayMs = Number(argv[i + 1]);
   }
 
   return options;
+}
+
+function safePositiveInteger(value, fallback) {
+  return Number.isInteger(value) && value > 0 ? value : fallback;
+}
+
+function wait(ms) {
+  return ms > 0 ? new Promise((resolveDelay) => setTimeout(resolveDelay, ms)) : Promise.resolve();
 }
 
 async function readPreviewHash(response) {
@@ -50,7 +65,7 @@ async function readPreviewHash(response) {
   return createHash('sha256').update(buffer).digest('hex');
 }
 
-async function checkPublicUrl(source, timeoutMs) {
+async function checkPublicUrlAttempt(source, timeoutMs, attempt) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   const checkedAt = new Date().toISOString();
@@ -66,25 +81,29 @@ async function checkPublicUrl(source, timeoutMs) {
       },
     });
     const sampleHash = await readPreviewHash(response);
+    const status = response.ok ? 'ok' : 'source-error';
 
     return {
+      attempt,
       id: source.id,
       page: source.page,
       metric: source.metric,
       sourceName: source.sourceName,
       sourceUrl: source.sourceUrl,
       method: 'public-url-check',
-      status: response.ok ? 'ok' : 'source-error',
+      status,
       checkedAt,
       httpStatus: response.status,
       contentType: response.headers.get('content-type') ?? '',
       etag: response.headers.get('etag') ?? '',
       lastModified: response.headers.get('last-modified') ?? '',
       sampleHash,
+      retryable: status === 'source-error' && retryableHttpStatuses.has(response.status),
       note: response.ok ? '公开来源可达，已记录元数据和样本哈希。' : '公开来源返回非 2xx，需要人工确认链接或供应商权限。',
     };
   } catch (error) {
     return {
+      attempt,
       id: source.id,
       page: source.page,
       metric: source.metric,
@@ -94,11 +113,45 @@ async function checkPublicUrl(source, timeoutMs) {
       status: 'fetch-error',
       checkedAt,
       error: error instanceof Error ? error.message : String(error),
+      retryable: true,
       note: '公开来源请求失败，需要下次周度任务重试或人工复核。',
     };
   } finally {
     clearTimeout(timeout);
   }
+}
+
+function summarizeAttempt(attemptResult) {
+  return {
+    attempt: attemptResult.attempt,
+    status: attemptResult.status,
+    checkedAt: attemptResult.checkedAt,
+    httpStatus: attemptResult.httpStatus,
+    error: attemptResult.error,
+    retryable: Boolean(attemptResult.retryable),
+  };
+}
+
+async function checkPublicUrl(source, policy) {
+  const attempts = [];
+
+  for (let attempt = 1; attempt <= policy.maxAttempts; attempt += 1) {
+    const result = await checkPublicUrlAttempt(source, policy.timeoutMs, attempt);
+    attempts.push(result);
+
+    if (result.status === 'ok' || !result.retryable || attempt === policy.maxAttempts) {
+      return {
+        ...result,
+        checkAttemptCount: attempts.length,
+        attempts: attempts.map(summarizeAttempt),
+        statusStability: result.status === 'ok' && attempts.length > 1 ? 'recovered-after-retry' : result.status === 'ok' ? 'fresh-ok' : 'failed-after-retries',
+      };
+    }
+
+    await wait(policy.retryDelayMs);
+  }
+
+  throw new Error('Unexpected public URL retry loop fallthrough.');
 }
 
 function skippedSource(source, method) {
@@ -122,12 +175,20 @@ function skippedSource(source, method) {
 
 export async function collectWeeklySources(options = {}) {
   const appRoot = options.appRoot ?? process.cwd();
-  const timeoutMs = options.timeoutMs ?? defaultTimeoutMs;
+  const timeoutMs = safePositiveInteger(options.timeoutMs, defaultTimeoutMs);
+  const maxAttempts = safePositiveInteger(options.maxAttempts, defaultMaxAttempts);
+  const retryDelayMs = Number.isFinite(options.retryDelayMs) && options.retryDelayMs >= 0 ? options.retryDelayMs : defaultRetryDelayMs;
   const noNetwork = options.noNetwork ?? false;
   const generatedAt = new Date().toISOString();
   const sourceRegistry = extractSourceRegistry(appRoot);
   const audit = analyzeConsistency(appRoot);
   const connectorBacklog = buildConnectorBacklog(sourceRegistry);
+  const publicUrlPolicy = {
+    timeoutMs,
+    maxAttempts,
+    retryDelayMs,
+    retryableHttpStatuses: [...retryableHttpStatuses],
+  };
   const sources = [];
 
   for (const source of sourceRegistry) {
@@ -138,7 +199,7 @@ export async function collectWeeklySources(options = {}) {
       continue;
     }
 
-    sources.push(await checkPublicUrl(source, timeoutMs));
+    sources.push(await checkPublicUrl(source, publicUrlPolicy));
   }
 
   const totals = sources.reduce(
@@ -155,6 +216,9 @@ export async function collectWeeklySources(options = {}) {
     week: isoWeek(new Date(generatedAt)),
     generatedAt,
     refreshCadence: 'weekly',
+    collectionPolicy: {
+      publicUrl: publicUrlPolicy,
+    },
     auditSummary: audit.summary,
     connectorBacklog,
     totals,

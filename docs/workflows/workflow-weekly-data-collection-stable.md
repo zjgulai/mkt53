@@ -61,10 +61,12 @@ npm run data:connector:amazon:readiness:checklist
 | 状态 | 含义 |
 |---|---|
 | `ok` | 公开来源 URL 可达，已记录 HTTP 状态、content-type、etag/last-modified 和样本哈希 |
-| `fetch-error` | 公开来源请求失败，下次重试或人工复核 |
-| `source-error` | 公开来源返回非 2xx |
+| `fetch-error` | 公开来源多次尝试后仍请求失败，下次重试或人工复核 |
+| `source-error` | 公开来源多次尝试后仍返回非 2xx |
 | `connector-required` | 需要授权 API、内部系统或合规爬虫连接器 |
 | `manual-required` | 需要采购报告、人工上传或补充来源 URL |
+
+公开 URL 默认采集策略：`timeoutMs=8000`、`maxAttempts=2`、`retryDelayMs=500`。脚本只对 `fetch-error` 和 `408/425/429/500/502/503/504` 等瞬态 HTTP 状态重试；`403`、`404` 等明确权限或链接问题不重复请求。manifest 的 `collectionPolicy.publicUrl` 会记录当次策略，每个公开 URL 结果会记录 `checkAttemptCount`、`attempts` 和 `statusStability`，用于区分一次成功、重试恢复和重试后仍失败。
 
 ## 周度部署
 
@@ -90,6 +92,13 @@ npm run data:publish:weekly:local
 ```
 
 该命令只写入 `MKT53_STATIC_HTML_DIR`，默认是 `/opt/mkt53/html`，不需要 SSH key，不触碰宿主 landing 或其他应用。服务器存在 `MKT53_AMAZON_PRIVATE_DIR` 时，会额外生成 Amazon 私有输入交叉审计报告；默认目录是 `/opt/mkt53/private`，默认报告路径是 `/opt/mkt53/private/amazon-commerce-private-input-audit.json`。私有审计失败默认只写入 cron 日志并继续公开静态刷新；只有设置 `MKT53_PRIVATE_AUDIT_REQUIRED=1` 时，才把私有审计失败作为周度任务硬失败。
+
+需要调整公开 URL 稳定性策略时，直接把参数传给刷新命令：
+
+```bash
+cd /opt/mkt53/automation/app
+npm run data:publish:weekly:local -- --timeout-ms 12000 --max-attempts 3 --retry-delay-ms 1000
+```
 
 ## 服务器 cron
 

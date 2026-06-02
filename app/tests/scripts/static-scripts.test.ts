@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { accessSync, chmodSync, constants, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('production helper scripts', () => {
   it('keeps deploy-static executable and guarded by local quality gates', () => {
@@ -53,6 +53,7 @@ describe('production helper scripts', () => {
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('data:connector:amazon:private:audit');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_AMAZON_PRIVATE_DIR');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_PRIVATE_AUDIT_REQUIRED');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('data:refresh:weekly -- "$@"');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('Continuing public weekly refresh');
 
     for (const script of [
@@ -128,6 +129,56 @@ describe('production helper scripts', () => {
     );
     expect(manifest.connectorBacklog.items.every((item) => item.blockedReason.includes('不得伪造'))).toBe(true);
     expect(manifest.totals['connector-required']).toBe(23);
+  });
+
+  it('retries transient public URL failures before marking weekly sources as failed', async () => {
+    const originalFetch = globalThis.fetch;
+    let callCount = 0;
+
+    globalThis.fetch = vi.fn(async () => {
+      callCount += 1;
+      if (callCount % 2 === 1) {
+        throw new Error('temporary network timeout');
+      }
+
+      return new Response('fixture public source body', {
+        status: 200,
+        headers: {
+          'content-type': 'text/html; charset=utf-8',
+          etag: 'fixture-etag',
+          'last-modified': 'Tue, 02 Jun 2026 00:00:00 GMT',
+        },
+      });
+    }) as typeof fetch;
+
+    try {
+      const { collectWeeklySources } = (await import('../../scripts/data/collect-weekly-sources.mjs')) as {
+        collectWeeklySources: (options: { appRoot: string; timeoutMs: number; maxAttempts: number; retryDelayMs: number }) => Promise<{
+          collectionPolicy: { publicUrl: { maxAttempts: number; retryDelayMs: number } };
+          sources: Array<{ method: string; status: string; checkAttemptCount?: number; statusStability?: string; attempts?: Array<{ status: string; retryable: boolean }> }>;
+          totals: Record<string, number>;
+        }>;
+      };
+      const manifest = await collectWeeklySources({
+        appRoot: process.cwd(),
+        timeoutMs: 100,
+        maxAttempts: 2,
+        retryDelayMs: 0,
+      });
+      const publicSources = manifest.sources.filter((source) => source.method === 'public-url-check');
+
+      expect(manifest.collectionPolicy.publicUrl).toMatchObject({ maxAttempts: 2, retryDelayMs: 0 });
+      expect(publicSources.length).toBeGreaterThan(0);
+      expect(publicSources.every((source) => source.status === 'ok')).toBe(true);
+      expect(publicSources.every((source) => source.checkAttemptCount === 2)).toBe(true);
+      expect(publicSources.every((source) => source.statusStability === 'recovered-after-retry')).toBe(true);
+      expect(publicSources.every((source) => source.attempts?.[0]?.status === 'fetch-error' && source.attempts?.[0]?.retryable === true)).toBe(true);
+      expect(manifest.totals['fetch-error'] ?? 0).toBe(0);
+      expect(callCount).toBe(publicSources.length * 2);
+    } finally {
+      globalThis.fetch = originalFetch;
+      vi.restoreAllMocks();
+    }
   });
 
   it('runs the Amazon commerce connector in blocked dry-run mode without leaking credentials', () => {

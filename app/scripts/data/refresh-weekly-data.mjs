@@ -8,6 +8,10 @@ const args = process.argv.slice(2);
 const noNetwork = args.includes('--no-network');
 const timeoutIndex = args.indexOf('--timeout-ms');
 const timeoutMs = timeoutIndex >= 0 ? Number(args[timeoutIndex + 1]) : undefined;
+const maxAttemptsIndex = args.indexOf('--max-attempts');
+const maxAttempts = maxAttemptsIndex >= 0 ? Number(args[maxAttemptsIndex + 1]) : undefined;
+const retryDelayIndex = args.indexOf('--retry-delay-ms');
+const retryDelayMs = retryDelayIndex >= 0 ? Number(args[retryDelayIndex + 1]) : undefined;
 
 function writeJson(path, data) {
   const target = resolve(process.cwd(), path);
@@ -16,7 +20,7 @@ function writeJson(path, data) {
 }
 
 const audit = analyzeConsistency(process.cwd());
-const manifest = await collectWeeklySources({ noNetwork, timeoutMs });
+const manifest = await collectWeeklySources({ noNetwork, timeoutMs, maxAttempts, retryDelayMs });
 
 writeJson('tmp/data-collection/audit-latest.json', audit);
 writeJson('public/weekly-data/latest.json', manifest);

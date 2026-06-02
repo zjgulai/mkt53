@@ -109,11 +109,13 @@ npm run test:e2e
 | 状态 | 处理规则 |
 |---|---|
 | `ok` | 公开来源可达，可作为来源可用性证据，不等于业务数值已复核 |
-| `fetch-error` / `source-error` | 下次重试或人工复核 |
+| `fetch-error` / `source-error` | 公开来源按当次 `collectionPolicy.publicUrl` 多次尝试后仍失败，下次重试或人工复核 |
 | `connector-required` | 需要授权连接器，未接入前不得声称已采集 |
 | `manual-required` | 需要采购报告、人工上传或补充 URL |
 
 `connector-required` 会进入 `app/public/weekly-data/connectors.json`。该文件只代表授权连接器接入队列，包含 `requiredAccess`、`outputContract`、`stopCondition` 和 `blockedReason`；它不是业务数据快照，不能作为真实采集成功证据。
+
+公开 URL 采集默认不是单次请求判定。脚本会记录 `collectionPolicy.publicUrl`、每条公开来源的 `checkAttemptCount`、`attempts` 和 `statusStability`；只有重试后仍失败时，才进入 `fetch-error` 或可重试 HTTP 的 `source-error`。`403`、`404` 等明确权限或链接错误仍直接保留为 `source-error`，避免用重试掩盖真实来源问题。
 
 Amazon P0 当前交付物是 `npm run data:connector:amazon:dry-run`。该脚本输出授权前置条件、ASIN/SKU 映射缺口、七个 Amazon source id 覆盖情况和四类快照字段契约；`networkCalls=0`、`businessDataWrites=0`，不调用 Amazon，不提升任何来源复核状态。
 
