@@ -34,6 +34,7 @@ cd app
 npm run data:audit
 npm run data:refresh:weekly
 npm run data:connector:amazon:dry-run
+npm run data:connector:amazon:private:bootstrap
 npm run data:connector:amazon:mapping:archive
 npm run data:connector:amazon:readiness
 ```
@@ -131,6 +132,7 @@ npm run data:connector:amazon:mapping:validate -- --mapping <mapping-json-path>
 npm run data:connector:amazon:mapping:template
 npm run data:connector:amazon:mapping:coverage -- --mapping <mapping-json-path>
 npm run data:connector:amazon:mapping:archive -- --mapping <mapping-json-path>
+npm run data:connector:amazon:private:bootstrap -- --target-dir configs/private
 npm run data:connector:amazon:readiness:template
 npm run data:connector:amazon:readiness -- --mapping <mapping-json-path> --readiness <readiness-json-path>
 ```
@@ -143,6 +145,7 @@ npm run data:connector:amazon:readiness -- --mapping <mapping-json-path> --readi
 | 安全边界 | `networkCalls=0`、`businessDataWrites=0`、`dryRunOnly=true` |
 | 覆盖报告 | 输出总需映射数、已映射数、缺口数、ready source 数和逐 source 阈值表 |
 | 归档报告 | 写入 `amazon-commerce-mapping-coverage-*.md`、`amazon-commerce-mapping-coverage-latest.md` 和 `amazon-commerce-mapping-coverage-manifest.json`，默认保留最近 12 份 |
+| 私有占位初始化 | 创建私有映射占位、readiness 占位和 `reports/` 目录；默认不覆盖已有私有文件 |
 | Readiness gate | 同时检查环境凭据、私有映射覆盖率、授权记录、采集窗口、业务 owner 复核、合规复核、快照范围和私有边界 |
 
 映射模板是正式资产：`app/scripts/data/connectors/templates/amazon-commerce-mapping-template.json`。该文件只包含空字段和字段规则，不包含真实 ASIN、SKU、竞品或负责人信息。
@@ -155,6 +158,22 @@ Readiness 模板是正式资产：`app/scripts/data/connectors/templates/amazon-
 |---|---|---|
 | 本地开发 | `app/configs/private/amazon-commerce-mapping.json` | `app/configs/private/amazon-commerce-readiness.json` |
 | 服务器 | `/opt/mkt53/private/amazon-commerce-mapping.json` | `/opt/mkt53/private/amazon-commerce-readiness.json` |
+
+首次创建私有占位文件：
+
+```bash
+cd app
+npm run data:connector:amazon:private:bootstrap -- --target-dir configs/private
+```
+
+服务器创建私有占位文件：
+
+```bash
+cd /opt/mkt53/automation/app
+npm run data:connector:amazon:private:bootstrap -- --target-dir /opt/mkt53/private
+```
+
+该命令只复制公开空模板，创建 `amazon-commerce-mapping.json`、`amazon-commerce-readiness.json` 和 `reports/`。目录权限为 `700`，文件权限为 `600`。如果目标文件已存在，默认返回 `status=exists` 并保留原文件；只有显式传入 `--force` 才允许覆盖。未收到业务 owner 和合规 owner 的材料前，不得把真实 ASIN、SKU、授权记录、负责人真实姓名、凭据或竞品明细写入占位文件。
 
 通过环境变量读取私有映射：
 

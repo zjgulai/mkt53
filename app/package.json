@@ -20,6 +20,7 @@
     "data:connector:amazon:mapping:template": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --print-mapping-template",
     "data:connector:amazon:mapping:coverage": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --coverage-report",
     "data:connector:amazon:mapping:archive": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --archive-coverage-report",
+    "data:connector:amazon:private:bootstrap": "node scripts/data/connectors/bootstrap-amazon-private-inputs.mjs",
     "data:connector:amazon:readiness": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --readiness-gate",
     "data:connector:amazon:readiness:template": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --print-readiness-template",
     "data:deploy:weekly": "bash scripts/data/weekly-refresh-and-deploy.sh",

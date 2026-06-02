@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { accessSync, constants, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { accessSync, constants, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -41,6 +41,7 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:amazon:mapping:template']).toContain('--print-mapping-template');
     expect(packageJson.scripts['data:connector:amazon:mapping:coverage']).toContain('--coverage-report');
     expect(packageJson.scripts['data:connector:amazon:mapping:archive']).toContain('--archive-coverage-report');
+    expect(packageJson.scripts['data:connector:amazon:private:bootstrap']).toContain('bootstrap-amazon-private-inputs.mjs');
     expect(packageJson.scripts['data:connector:amazon:readiness']).toContain('--readiness-gate');
     expect(packageJson.scripts['data:connector:amazon:readiness:template']).toContain('--print-readiness-template');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
@@ -61,6 +62,7 @@ describe('production helper scripts', () => {
 
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-backlog.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-dry-run.mjs'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/bootstrap-amazon-private-inputs.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-mapping-partial-valid.json'), constants.R_OK)).not.toThrow();
@@ -447,6 +449,73 @@ describe('production helper scripts', () => {
       missingItemCount: 66,
     });
     expect(gate.safety).toMatchObject({ networkCalls: 0, businessDataWrites: 0 });
+  });
+
+  it('bootstraps Amazon private placeholder inputs without overwriting existing files', () => {
+    const targetDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-private-'));
+
+    try {
+      const output = execFileSync('node', ['scripts/data/connectors/bootstrap-amazon-private-inputs.mjs', '--target-dir', targetDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const manifest = JSON.parse(output) as {
+        targetDir: string;
+        reportsDir: string;
+        files: {
+          mapping: { path: string; status: string; overwritten: boolean };
+          readiness: { path: string; status: string; overwritten: boolean };
+        };
+        safety: {
+          containsCredentialValues: boolean;
+          containsBusinessAsinSkuValues: boolean;
+          publicBundleAllowed: boolean;
+          gitAllowed: boolean;
+          overwritesExistingFilesByDefault: boolean;
+        };
+      };
+      const mapping = JSON.parse(readFileSync(manifest.files.mapping.path, 'utf8')) as {
+        privateData: boolean;
+        mappings: Array<{ asin: string; sku: string; mappingOwner: string }>;
+      };
+      const readiness = JSON.parse(readFileSync(manifest.files.readiness.path, 'utf8')) as {
+        privateData: boolean;
+        readiness: { authorizationRecordId: string; authorizationOwner: string; reviewOwner: string };
+      };
+
+      expect(manifest.files.mapping).toMatchObject({ status: 'created', overwritten: false });
+      expect(manifest.files.readiness).toMatchObject({ status: 'created', overwritten: false });
+      expect(manifest.safety).toMatchObject({
+        containsCredentialValues: false,
+        containsBusinessAsinSkuValues: false,
+        publicBundleAllowed: false,
+        gitAllowed: false,
+        overwritesExistingFilesByDefault: false,
+      });
+      expect(mapping.privateData).toBe(true);
+      expect(mapping.mappings.every((item) => item.asin === '' && item.sku === '' && item.mappingOwner === '')).toBe(true);
+      expect(readiness.privateData).toBe(true);
+      expect(readiness.readiness.authorizationRecordId).toBe('');
+      expect(readiness.readiness.authorizationOwner).toBe('');
+      expect(readiness.readiness.reviewOwner).toBe('');
+      expect(statSync(manifest.targetDir).mode & 0o777).toBe(0o700);
+      expect(statSync(manifest.reportsDir).mode & 0o777).toBe(0o700);
+      expect(statSync(manifest.files.mapping.path).mode & 0o777).toBe(0o600);
+      expect(statSync(manifest.files.readiness.path).mode & 0o777).toBe(0o600);
+
+      writeFileSync(manifest.files.readiness.path, '{"preserve":"existing-readiness"}\n');
+      const secondOutput = execFileSync('node', ['scripts/data/connectors/bootstrap-amazon-private-inputs.mjs', '--target-dir', targetDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const secondManifest = JSON.parse(secondOutput) as typeof manifest;
+
+      expect(secondManifest.files.mapping).toMatchObject({ status: 'exists', overwritten: false });
+      expect(secondManifest.files.readiness).toMatchObject({ status: 'exists', overwritten: false });
+      expect(readFileSync(manifest.files.readiness.path, 'utf8')).toContain('existing-readiness');
+    } finally {
+      rmSync(targetDir, { recursive: true, force: true });
+    }
   });
 
   it('archives Amazon mapping coverage reports with retention and private permissions', () => {
