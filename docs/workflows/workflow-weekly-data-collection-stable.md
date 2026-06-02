@@ -39,7 +39,7 @@ npm run data:refresh:weekly
 
 | 文件 | 用途 |
 |---|---|
-| `public/data/weekly/latest.json` | 前端可读取的最新周度采集 manifest |
+| `public/weekly-data/latest.json` | 前端可读取的最新周度采集 manifest |
 | `tmp/data-collection/audit-latest.json` | 本次一致性审计结果 |
 | `tmp/data-collection/runs/<week>.json` | 本地周度运行留痕 |
 

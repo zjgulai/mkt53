@@ -633,7 +633,7 @@ export default function DataManage() {
   useEffect(() => {
     let active = true;
 
-    fetch('/data/weekly/latest.json', { cache: 'no-store' })
+    fetch('/weekly-data/latest.json', { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) throw new Error(`Weekly manifest unavailable: ${response.status}`);
         return response.json() as Promise<WeeklyCollectionManifest>;
@@ -720,7 +720,7 @@ export default function DataManage() {
             <div className="min-w-[180px]">
               <p className="text-xs font-semibold text-[#1d1d1f]">周度数据采集刷新</p>
               <p className="text-[10px] text-[#86868b]">
-                {weeklyManifestStatus === 'ready' ? `${weeklyManifest?.week} · ${weeklyGeneratedAt}` : weeklyManifestStatus === 'loading' ? '正在读取 manifest' : '未生成 public/data/weekly/latest.json'}
+                {weeklyManifestStatus === 'ready' ? `${weeklyManifest?.week} · ${weeklyGeneratedAt}` : weeklyManifestStatus === 'loading' ? '正在读取 manifest' : '未生成 public/weekly-data/latest.json'}
               </p>
             </div>
             {[
@@ -735,7 +735,7 @@ export default function DataManage() {
                 <p className="text-lg font-bold" style={{ color: item.color }}>{item.value}</p>
               </div>
             ))}
-            <a href="/data/weekly/latest.json" className="ml-auto text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E] transition-colors">
+            <a href="/weekly-data/latest.json" className="ml-auto text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E] transition-colors">
               查看manifest
             </a>
           </div>

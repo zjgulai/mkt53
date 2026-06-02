@@ -103,7 +103,7 @@ npm run test:e2e
 
 ## 周度采集 manifest
 
-`npm run data:refresh:weekly` 会生成 `app/public/data/weekly/latest.json`。该文件用于 `/data` 页面展示本周采集状态。
+`npm run data:refresh:weekly` 会生成 `app/public/weekly-data/latest.json`。该文件用于 `/data` 页面展示本周采集状态。禁止回退到 `app/public/data/`，否则会与 React Router 的 `/data` 页面冲突，并在生产 nginx 下触发目录 403。
 
 | 状态 | 处理规则 |
 |---|---|

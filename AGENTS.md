@@ -175,7 +175,7 @@ npm run data:refresh:weekly
 npm run data:deploy:weekly
 ```
 
-服务器 cron 使用 `/opt/mkt53/automation/app` 内的 `npm run data:publish:weekly:local`，默认只写入 `/opt/mkt53/html/`。`data:refresh:weekly` 生成 `public/data/weekly/latest.json`，供 `/data` 页面展示本周采集状态。Amazon、CRM、ERP、社交媒体 API、Import Genius 和 AI/NLP 模型来源必须保持 `connector-required`，直到授权连接器接入；不得把缺失采集伪装成真实数据。
+服务器 cron 使用 `/opt/mkt53/automation/app` 内的 `npm run data:publish:weekly:local`，默认只写入 `/opt/mkt53/html/`。`data:refresh:weekly` 生成 `public/weekly-data/latest.json`，供 `/data` 页面展示本周采集状态；不要使用 `public/data/`，该路径会与前端 `/data` 路由冲突。Amazon、CRM、ERP、社交媒体 API、Import Genius 和 AI/NLP 模型来源必须保持 `connector-required`，直到授权连接器接入；不得把缺失采集伪装成真实数据。
 
 ### 宿主导航页入口卡片
 

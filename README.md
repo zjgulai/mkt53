@@ -128,7 +128,7 @@ app/
 │  └─ utils/
 ├─ public/
 │  ├─ images/
-│  └─ data/weekly/latest.json
+│  └─ weekly-data/latest.json
 ├─ scripts/
 │  └─ data/
 ├─ playwright.config.ts

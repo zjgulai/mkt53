@@ -19,13 +19,13 @@ const audit = analyzeConsistency(process.cwd());
 const manifest = await collectWeeklySources({ noNetwork, timeoutMs });
 
 writeJson('tmp/data-collection/audit-latest.json', audit);
-writeJson('public/data/weekly/latest.json', manifest);
+writeJson('public/weekly-data/latest.json', manifest);
 writeJson(`tmp/data-collection/runs/${manifest.week}.json`, manifest);
 
 process.stdout.write([
   `mkt53 weekly data refresh completed`,
   `week=${manifest.week}`,
-  `latest=public/data/weekly/latest.json`,
+  `latest=public/weekly-data/latest.json`,
   `audit=tmp/data-collection/audit-latest.json`,
   `run=tmp/data-collection/runs/${manifest.week}.json`,
   `total=${manifest.totals.total}`,

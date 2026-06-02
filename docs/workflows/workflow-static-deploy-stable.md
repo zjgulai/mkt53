@@ -51,7 +51,7 @@ rsync -az --delete dist/ ubuntu@101.34.52.232:/opt/mkt53/html/
 
 ## 周度数据刷新部署
 
-周度数据刷新不改 nginx，不改宿主 landing，只刷新 mkt53 静态构建中的 `public/data/weekly/latest.json`：
+周度数据刷新不改 nginx，不改宿主 landing，只刷新 mkt53 静态构建中的 `public/weekly-data/latest.json`：
 
 ```bash
 cd app
