@@ -123,14 +123,28 @@ Amazon P0 当前只建立授权前置检查和输出契约，不调用 Amazon，
 cd app
 npm run data:connector:amazon:dry-run
 npm run data:connector:amazon:dry-run -- --json --no-write
+npm run data:connector:amazon:mapping:validate -- --mapping <mapping-json-path>
 ```
 
 | 检查项 | 当前规则 |
 |---|---|
 | 授权 | 只检查 `AMAZON_SP_API_CLIENT_ID`、`AMAZON_SP_API_CLIENT_SECRET`、`AMAZON_SP_API_REFRESH_TOKEN`、`AMAZON_MARKETPLACE_IDS` 是否存在，不输出凭据值 |
-| ASIN/SKU 映射 | 覆盖 `ds-007`、`ds-009`、`ds-010`、`ds-019`、`ds-037`、`ds-038`、`ds-039` 七个 Amazon 来源 |
+| ASIN/SKU 映射 | 覆盖 `ds-007`、`ds-009`、`ds-010`、`ds-019`、`ds-037`、`ds-038`、`ds-039` 七个 Amazon 来源；按 `sourceId + site + marketplaceId + asin` 去重 |
 | 输出契约 | `product_snapshot`、`review_snapshot`、`brand_share_snapshot`、`category_rank_snapshot` |
 | 安全边界 | `networkCalls=0`、`businessDataWrites=0`、`dryRunOnly=true` |
+
+映射文件接受数组或 `{ "mappings": [] }` 两种形态。每行必须包含：
+
+| 字段 | 规则 |
+|---|---|
+| `sourceId` | 必须属于七个 Amazon source id |
+| `site` | 必须匹配本次 dry-run 站点，默认 `amazon.com` |
+| `marketplaceId` | 必须匹配本次 dry-run marketplace，默认 `ATVPDKIKX0DER` |
+| `asin` | 10 位大写字母或数字 |
+| `sku`、`brand`、`productName`、`category` | 不允许为空 |
+| `mappingStatus` | 当前只接受 `ready`，待复核行不得计入覆盖率 |
+| `mappingUpdatedAt` | `YYYY-MM-DD` |
+| `mappingOwner` | 映射负责人或来源责任方 |
 
 即使本地或服务器存在 Amazon 环境变量，dry-run 脚本也只做前置校验，不发起平台请求。只有授权、ASIN/SKU 映射、采集窗口和合规边界全部满足后，才能进入真实连接器实现。
 

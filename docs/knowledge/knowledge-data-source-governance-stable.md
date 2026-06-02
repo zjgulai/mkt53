@@ -116,3 +116,5 @@ npm run test:e2e
 `connector-required` 会进入 `app/public/weekly-data/connectors.json`。该文件只代表授权连接器接入队列，包含 `requiredAccess`、`outputContract`、`stopCondition` 和 `blockedReason`；它不是业务数据快照，不能作为真实采集成功证据。
 
 Amazon P0 当前交付物是 `npm run data:connector:amazon:dry-run`。该脚本输出授权前置条件、ASIN/SKU 映射缺口、七个 Amazon source id 覆盖情况和四类快照字段契约；`networkCalls=0`、`businessDataWrites=0`，不调用 Amazon，不提升任何来源复核状态。
+
+ASIN/SKU 映射必须通过 `npm run data:connector:amazon:mapping:validate -- --mapping <mapping-json-path>` 校验。只有字段完整、ASIN 格式有效、source id 属于 Amazon backlog、站点和 marketplace 匹配、`mappingStatus=ready` 且无重复 `sourceId + site + marketplaceId + asin` 的行，才计入映射覆盖率。

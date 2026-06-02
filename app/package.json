@@ -16,6 +16,7 @@
     "data:collect:weekly": "node scripts/data/collect-weekly-sources.mjs",
     "data:refresh:weekly": "node scripts/data/refresh-weekly-data.mjs",
     "data:connector:amazon:dry-run": "node scripts/data/connectors/amazon-commerce-dry-run.mjs",
+    "data:connector:amazon:mapping:validate": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --json --no-write",
     "data:deploy:weekly": "bash scripts/data/weekly-refresh-and-deploy.sh",
     "data:publish:weekly:local": "bash scripts/data/weekly-refresh-local-static.sh",
     "preview": "vite preview",

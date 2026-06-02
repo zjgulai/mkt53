@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "fixtureOnly": true,
+  "note": "Synthetic fixture for validating the Amazon mapping contract. Do not use as business evidence.",
+  "mappings": [
+    {
+      "sourceId": "ds-010",
+      "site": "amazon.com",
+      "marketplaceId": "ATVPDKIKX0DER",
+      "asin": "B0TEST0001",
+      "sku": "FIXTURE-SKU-001",
+      "brand": "Fixture Brand",
+      "productName": "Fixture Product For Mapping Contract",
+      "category": "fixture-category",
+      "mappingStatus": "ready",
+      "mappingUpdatedAt": "2026-06-02",
+      "mappingOwner": "test-fixture"
+    }
+  ]
+}

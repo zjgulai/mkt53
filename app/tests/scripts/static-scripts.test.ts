@@ -36,6 +36,7 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:collect:weekly']).toContain('scripts/data/collect-weekly-sources.mjs');
     expect(packageJson.scripts['data:refresh:weekly']).toContain('scripts/data/refresh-weekly-data.mjs');
     expect(packageJson.scripts['data:connector:amazon:dry-run']).toContain('scripts/data/connectors/amazon-commerce-dry-run.mjs');
+    expect(packageJson.scripts['data:connector:amazon:mapping:validate']).toContain('--json --no-write');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
@@ -54,6 +55,7 @@ describe('production helper scripts', () => {
 
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-backlog.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-dry-run.mjs'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-mapping-partial-valid.json'), constants.R_OK)).not.toThrow();
   });
 
   it('audits data management and source registry consistency without network access', () => {
@@ -147,5 +149,64 @@ describe('production helper scripts', () => {
       'brand_share_snapshot',
       'category_rank_snapshot',
     ]);
+  });
+
+  it('validates a partial Amazon ASIN/SKU mapping without treating it as full coverage', () => {
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/connectors/amazon-commerce-dry-run.mjs',
+        '--json',
+        '--no-write',
+        '--mapping',
+        'tests/fixtures/amazon-commerce-mapping-partial-valid.json',
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          AMAZON_SP_API_CLIENT_ID: 'fixture-client-id',
+          AMAZON_SP_API_CLIENT_SECRET: 'fixture-client-secret',
+          AMAZON_SP_API_REFRESH_TOKEN: 'fixture-refresh-token',
+          AMAZON_MARKETPLACE_IDS: 'ATVPDKIKX0DER',
+        },
+      },
+    );
+    const dryRun = JSON.parse(output) as {
+      status: string;
+      mappingContract: { requiredFields: string[]; uniqueKey: string[] };
+      mapping: {
+        mappingCount: number;
+        validMappingCount: number;
+        uniqueValidMappingCount: number;
+        invalidMappingCount: number;
+        duplicateMappingCount: number;
+        missingSourceIds: string[];
+        sourceCoverage: Array<{ sourceId: string; mappedItems: number; status: string }>;
+      };
+      blockers: Array<{ type: string; key?: string; sourceId?: string; count?: number }>;
+    };
+
+    expect(output).not.toContain('fixture-client-secret');
+    expect(dryRun.status).toBe('blocked');
+    expect(dryRun.mappingContract.requiredFields).toEqual(
+      expect.arrayContaining(['sourceId', 'site', 'marketplaceId', 'asin', 'sku', 'brand', 'productName', 'mappingOwner']),
+    );
+    expect(dryRun.mappingContract.uniqueKey).toEqual(['sourceId', 'site', 'marketplaceId', 'asin']);
+    expect(dryRun.mapping.mappingCount).toBe(1);
+    expect(dryRun.mapping.validMappingCount).toBe(1);
+    expect(dryRun.mapping.uniqueValidMappingCount).toBe(1);
+    expect(dryRun.mapping.invalidMappingCount).toBe(0);
+    expect(dryRun.mapping.duplicateMappingCount).toBe(0);
+    expect(dryRun.mapping.sourceCoverage.find((item) => item.sourceId === 'ds-010')).toMatchObject({
+      mappedItems: 1,
+      status: 'ready',
+    });
+    expect(dryRun.mapping.missingSourceIds).not.toContain('ds-010');
+    expect(dryRun.mapping.missingSourceIds).toEqual(expect.arrayContaining(['ds-007', 'ds-009', 'ds-019', 'ds-037', 'ds-038', 'ds-039']));
+    expect(dryRun.blockers.some((item) => item.type === 'missing-credential')).toBe(false);
+    expect(dryRun.blockers.some((item) => item.type === 'invalid-asin-sku-mapping')).toBe(false);
+    expect(dryRun.blockers.some((item) => item.type === 'missing-asin-sku-mapping' && item.sourceId === 'ds-007')).toBe(true);
   });
 });

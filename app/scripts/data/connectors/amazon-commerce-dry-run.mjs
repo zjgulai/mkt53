@@ -9,6 +9,22 @@ import { extractSourceRegistry, isoWeek } from '../lib/project-analysis.mjs';
 const connectorId = 'amazon-commerce';
 const defaultWritePath = 'tmp/data-collection/connectors/amazon-commerce-dry-run.json';
 
+const requiredMappingFields = [
+  'sourceId',
+  'site',
+  'marketplaceId',
+  'asin',
+  'sku',
+  'brand',
+  'productName',
+  'category',
+  'mappingStatus',
+  'mappingUpdatedAt',
+  'mappingOwner',
+];
+
+const allowedMappingStatuses = ['ready'];
+
 const requiredCredentialKeys = [
   'AMAZON_SP_API_CLIENT_ID',
   'AMAZON_SP_API_CLIENT_SECRET',
@@ -25,6 +41,8 @@ const requiredMappingScopes = [
   { sourceId: 'ds-038', page: 'CategoryAnalysis', scope: 'category_lifecycle_bsr', minimumMappedItems: 8 },
   { sourceId: 'ds-039', page: 'NursingProducts', scope: 'nursing_products_category_rank', minimumMappedItems: 5 },
 ];
+
+const requiredSourceIds = new Set(requiredMappingScopes.map((scope) => scope.sourceId));
 
 const snapshotContracts = [
   {
@@ -79,15 +97,25 @@ function readMappings(mappingPath) {
   throw new Error('Amazon mapping file must be an array or an object with a mappings array.');
 }
 
-function validateMapping(mapping) {
-  const missingFields = ['sourceId', 'site', 'marketplaceId', 'asin', 'sku', 'brand', 'productName'].filter((field) => !mapping[field]);
+function validateMapping(mapping, context) {
+  const missingFields = requiredMappingFields.filter((field) => !mapping[field]);
   const asinValid = typeof mapping.asin === 'string' && /^[A-Z0-9]{10}$/.test(mapping.asin);
+  const sourceIdAllowed = typeof mapping.sourceId === 'string' && requiredSourceIds.has(mapping.sourceId);
+  const siteMatches = mapping.site === context.site;
+  const marketplaceMatches = mapping.marketplaceId === context.marketplaceId;
+  const statusAllowed = allowedMappingStatuses.includes(mapping.mappingStatus);
+  const mappingUpdatedAtValid = typeof mapping.mappingUpdatedAt === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(mapping.mappingUpdatedAt);
 
   return {
     mapping,
-    valid: missingFields.length === 0 && asinValid,
+    valid: missingFields.length === 0 && asinValid && sourceIdAllowed && siteMatches && marketplaceMatches && statusAllowed && mappingUpdatedAtValid,
     missingFields,
     asinValid,
+    sourceIdAllowed,
+    siteMatches,
+    marketplaceMatches,
+    statusAllowed,
+    mappingUpdatedAtValid,
   };
 }
 
@@ -98,11 +126,25 @@ function credentialPreflight(env) {
   }));
 }
 
-function mappingPreflight(mappings) {
-  const validations = mappings.map(validateMapping);
+function mappingPreflight(mappings, context) {
+  const validations = mappings.map((mapping) => validateMapping(mapping, context));
   const validMappings = validations.filter((item) => item.valid).map((item) => item.mapping);
   const invalidMappings = validations.filter((item) => !item.valid);
-  const countsBySource = validMappings.reduce((acc, mapping) => {
+  const seenKeys = new Set();
+  const duplicateMappings = [];
+  const uniqueValidMappings = [];
+
+  for (const mapping of validMappings) {
+    const mappingKey = [mapping.sourceId, mapping.site, mapping.marketplaceId, mapping.asin].join('|');
+    if (seenKeys.has(mappingKey)) {
+      duplicateMappings.push({ sourceId: mapping.sourceId, site: mapping.site, marketplaceId: mapping.marketplaceId, asin: mapping.asin });
+    } else {
+      seenKeys.add(mappingKey);
+      uniqueValidMappings.push(mapping);
+    }
+  }
+
+  const countsBySource = uniqueValidMappings.reduce((acc, mapping) => {
     acc[mapping.sourceId] = (acc[mapping.sourceId] ?? 0) + 1;
     return acc;
   }, {});
@@ -120,6 +162,7 @@ function mappingPreflight(mappings) {
   return {
     mappingCount: mappings.length,
     validMappingCount: validMappings.length,
+    uniqueValidMappingCount: uniqueValidMappings.length,
     invalidMappingCount: invalidMappings.length,
     invalidMappings: invalidMappings.map((item) => ({
       sourceId: item.mapping.sourceId ?? '',
@@ -127,7 +170,14 @@ function mappingPreflight(mappings) {
       asin: item.mapping.asin ?? '',
       missingFields: item.missingFields,
       asinValid: item.asinValid,
+      sourceIdAllowed: item.sourceIdAllowed,
+      siteMatches: item.siteMatches,
+      marketplaceMatches: item.marketplaceMatches,
+      statusAllowed: item.statusAllowed,
+      mappingUpdatedAtValid: item.mappingUpdatedAtValid,
     })),
+    duplicateMappingCount: duplicateMappings.length,
+    duplicateMappings,
     sourceCoverage,
     missingSourceIds: sourceCoverage.filter((item) => item.status !== 'ready').map((item) => item.sourceId),
   };
@@ -142,10 +192,12 @@ export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
   const amazonItems = connectorBacklog.items.filter((item) => item.connectorId === connectorId);
   const mappings = readMappings(options.mappingPath);
   const credentials = credentialPreflight(env);
-  const mapping = mappingPreflight(mappings);
+  const mapping = mappingPreflight(mappings, { site: options.site, marketplaceId: options.marketplaceId });
   const missingCredentialKeys = credentials.filter((item) => !item.present).map((item) => item.key);
   const blockers = [
     ...missingCredentialKeys.map((key) => ({ type: 'missing-credential', key })),
+    ...(mapping.invalidMappingCount > 0 ? [{ type: 'invalid-asin-sku-mapping', count: mapping.invalidMappingCount }] : []),
+    ...(mapping.duplicateMappingCount > 0 ? [{ type: 'duplicate-asin-sku-mapping', count: mapping.duplicateMappingCount }] : []),
     ...mapping.missingSourceIds.map((sourceId) => ({ type: 'missing-asin-sku-mapping', sourceId })),
   ];
 
@@ -176,6 +228,15 @@ export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
     backlogItems: amazonItems,
     requiredCredentialKeys,
     credentials,
+    mappingContract: {
+      schemaVersion: 1,
+      acceptedPayloadShapes: ['Array<AmazonCommerceMapping>', '{ mappings: Array<AmazonCommerceMapping> }'],
+      requiredFields: requiredMappingFields,
+      allowedMappingStatuses,
+      allowedSourceIds: requiredMappingScopes,
+      uniqueKey: ['sourceId', 'site', 'marketplaceId', 'asin'],
+      rowCountsOnlyWhen: '字段完整、ASIN 格式有效、sourceId 属于 Amazon backlog、site/marketplaceId 与本次 dry-run 一致、mappingStatus=ready。',
+    },
     mapping,
     snapshotContracts,
     plannedSnapshots: snapshotContracts.map((contract) => ({
