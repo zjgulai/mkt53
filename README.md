@@ -24,6 +24,7 @@ Momcozy 母婴品牌全球市场分析看板，面向内部团队的数据洞察
 | 质量门禁 | `.github/workflows/quality-gate.yml` |
 | 部署脚本 | `app/scripts/deploy-static.sh` |
 | 生产 smoke | `app/scripts/smoke-prod.sh` |
+| 生产 E2E | `npm run test:e2e:prod` |
 
 ## 当前产品形态
 
@@ -64,6 +65,13 @@ cd app
 npm run test:e2e
 ```
 
+宿主入口或生产导航状态发生变化时，额外执行：
+
+```bash
+cd app
+npm run test:e2e:prod
+```
+
 ## 生产部署
 
 ```bash
@@ -101,10 +109,14 @@ app/
 │  ├─ components/
 │  ├─ data/
 │  ├─ e2e/
+│  ├─ e2e-prod/
+│  ├─ pages/
 │  ├─ routes/
 │  ├─ scripts/
-│  └─ security/
+│  ├─ security/
+│  └─ utils/
 ├─ public/images/
 ├─ scripts/
-└─ playwright.config.ts
+├─ playwright.config.ts
+└─ playwright.prod.config.ts
 ```

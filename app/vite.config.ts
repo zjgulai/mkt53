@@ -61,7 +61,7 @@ export default defineConfig(({ mode }) => {
       environment: 'jsdom',
       setupFiles: ['./tests/setup.ts'],
       include: ['tests/**/*.{test,spec}.{ts,tsx}'],
-      exclude: ['tests/e2e/**', 'node_modules/**', 'dist/**'],
+      exclude: ['tests/e2e/**', 'tests/e2e-prod/**', 'node_modules/**', 'dist/**'],
     },
   }
 });

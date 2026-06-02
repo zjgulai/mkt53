@@ -156,6 +156,15 @@ npm run smoke:prod
 
 `deploy:prod` 会依次执行 `test`、`lint`、`npm audit`、`build`，然后通过 `rsync --delete` 替换 `/opt/mkt53/html/` 静态文件；nginx 无需重启。
 
+生产入口回归：
+
+```bash
+cd app
+npm run test:e2e:prod
+```
+
+`test:e2e:prod` 不启动本地 dev server，直接验证宿主 landing 的 `card mkt`、12 个服务卡片数量、mkt 目标页标题和桌面/移动端无水平溢出。
+
 ### 宿主导航页入口卡片
 
 `https://lute-tlz-dddd.top` 是共享宿主导航页。2026-06-02 线上确认：宿主首页是多服务卡片网格，当前包含 12 个服务入口，其中 mkt 卡片进入本项目：

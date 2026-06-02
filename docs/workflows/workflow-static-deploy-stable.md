@@ -69,6 +69,7 @@ rsync -az --delete dist/ ubuntu@101.34.52.232:/opt/mkt53/html/
 2. 修改宿主卡片前，先备份 `/opt/ai-video/deploy/lighthouse/landing/index.html`。
 3. 只替换 landing 的 `index.html`；不改 `docker-compose.prod.yml`，不改 `nginx.conf`，不重启容器。
 4. 修改后验证 `https://lute-tlz-dddd.top/` 桌面和移动端无水平溢出，并确认 mkt 卡片链接可打开。
+5. 修改后执行 `cd app && npm run test:e2e:prod`，把宿主入口和 mkt 目标页一起回归。
 
 备份与回滚模板：
 

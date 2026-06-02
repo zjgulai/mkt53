@@ -5,7 +5,7 @@ module: app
 topic: readme
 status: stable
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-02
 owner: self
 source: human+ai
 ---
@@ -29,6 +29,7 @@ npm run lint
 npm audit
 npm run build
 npm run test:e2e
+npm run test:e2e:prod
 ```
 
 生产部署：

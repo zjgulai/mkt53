@@ -5,7 +5,7 @@ module: engineering
 topic: quality-gate
 status: stable
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-02
 owner: self
 source: human+ai
 ---
@@ -38,6 +38,15 @@ npm run test:e2e
 
 `npm run test:e2e` 使用 Playwright 启动本地 Vite 服务，覆盖桌面 `1440x900` 与移动端 `390x844`，断言核心页面标题可见、无水平滚动、无控制台 error。
 
+改动宿主导航页入口、生产域名、landing 卡片文案或发布验收规则时，额外执行：
+
+```bash
+cd app
+npm run test:e2e:prod
+```
+
+`npm run test:e2e:prod` 使用独立的 `playwright.prod.config.ts`，不启动本地 dev server。它直接检查 `https://lute-tlz-dddd.top/` 和 `https://mkt.lute-tlz-dddd.top`，覆盖桌面 `1440x900` 与移动端 `390x844`。
+
 ## CI 门禁
 
 GitHub Actions 工作流位于 `.github/workflows/quality-gate.yml`，在 `main` 的 push 和 pull request 上运行：
@@ -62,12 +71,14 @@ CI 使用 Node.js 22，并按 `app/package-lock.json` 缓存 npm 依赖。
 | `npm audit` | npm 依赖漏洞检查 |
 | `npm run build` | TypeScript 编译与 Vite 生产构建 |
 | `npm run test:e2e` | Playwright 核心页面视觉与移动端回归 |
+| `npm run test:e2e:prod` | Playwright 生产入口回归，检查宿主 landing 的 `card mkt`、12 卡片数量和 mkt 目标页 |
 
-Vitest 只发现 `tests/**/*.{test,spec}.{ts,tsx}`，并排除 `tests/e2e/**`。Playwright 只发现 `tests/e2e/**`。两类测试不得互相执行。
+Vitest 只发现 `tests/**/*.{test,spec}.{ts,tsx}`，并排除 `tests/e2e/**` 与 `tests/e2e-prod/**`。本地 Playwright 只发现 `tests/e2e/**`，生产 Playwright 只发现 `tests/e2e-prod/**`。三类测试不得互相执行。
 
 ## 失败处理
 
 1. `npm audit` 非零退出时，先判断是否能通过升级直接消除漏洞。
 2. `npm run build` 失败时，先修复 TypeScript 或 Vite 构建错误，再处理视觉问题。
 3. `npm run test:e2e` 失败时，优先区分测试选择器误判、控制台错误、水平滚动和路由渲染错误。
-4. 生产部署前不得跳过 `deploy-static.sh` 内置门禁。
+4. `npm run test:e2e:prod` 失败时，先确认线上 landing 是否被其他服务更新，再判断是页面漂移还是测试期望需要同步。
+5. 生产部署前不得跳过 `deploy-static.sh` 内置门禁。
