@@ -30,6 +30,8 @@ npm audit
 npm run build
 npm run test:e2e
 npm run test:e2e:prod
+npm run data:audit
+npm run data:refresh:weekly
 ```
 
 生产部署：

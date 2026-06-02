@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Database, Table, ChevronRight, ChevronDown, BarChart3, Target, Users, Shield, Eye, Sparkles, Link2, AlertCircle, CheckCircle, Info, ShieldCheck, Download, Lock, Globe, HardDrive, Search, Layers, RefreshCw, FileText, BookOpen } from 'lucide-react';
 import OperationsManual from '@/components/OperationsManual';
@@ -7,7 +7,7 @@ import { exportToCsv } from '@/utils/csvExport';
 // ═══════════════════════════════════════════════════════════════════
 // 数据管理页面 — Momcozy市场洞察工作台全站数据资产目录
 // 原则：MECE（Mutually Exclusive, Collectively Exhaustive）
-// 六大模块 · 48张数据表 · 完整字段说明 · 数据血缘关系
+// 六大模块 · 全站数据表 · 完整字段说明 · 数据血缘关系
 // ═══════════════════════════════════════════════════════════════════
 
 interface DataField {
@@ -22,6 +22,17 @@ interface DataTable {
 interface DataModule {
   id: string; name: string; icon: typeof Table; color: string; page: string;
   desc: string; tables: DataTable[];
+}
+
+interface WeeklyCollectionManifest {
+  week: string;
+  generatedAt: string;
+  refreshCadence: string;
+  auditSummary: {
+    pagesWithStaticDataWithoutRegistry: number;
+    issueCount: number;
+  };
+  totals: Record<string, number>;
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -616,6 +627,32 @@ export default function DataManage() {
   const [governanceView, setGovernanceView] = useState<'tables' | 'layers' | 'governance' | 'manual'>('tables');
   const [scopeFilter, setScopeFilter] = useState<SourceScope | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [weeklyManifest, setWeeklyManifest] = useState<WeeklyCollectionManifest | null>(null);
+  const [weeklyManifestStatus, setWeeklyManifestStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
+
+  useEffect(() => {
+    let active = true;
+
+    fetch('/data/weekly/latest.json', { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Weekly manifest unavailable: ${response.status}`);
+        return response.json() as Promise<WeeklyCollectionManifest>;
+      })
+      .then((manifest) => {
+        if (!active) return;
+        setWeeklyManifest(manifest);
+        setWeeklyManifestStatus('ready');
+      })
+      .catch(() => {
+        if (!active) return;
+        setWeeklyManifest(null);
+        setWeeklyManifestStatus('missing');
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const toggleTable = (id: string) => {
     setExpandedTables(prev => {
@@ -629,6 +666,8 @@ export default function DataManage() {
   const currentModule = dataModules.find(m => m.id === activeModule)!;
   const totalTables = dataModules.reduce((s, m) => s + m.tables.length, 0);
   const totalFields = dataModules.reduce((s, m) => s + m.tables.reduce((ts, t) => ts + t.fields.length, 0), 0);
+  const weeklyTotals = weeklyManifest?.totals ?? {};
+  const weeklyGeneratedAt = weeklyManifest ? new Date(weeklyManifest.generatedAt).toLocaleString('zh-CN', { hour12: false }) : '-';
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -670,6 +709,36 @@ export default function DataManage() {
             { tableId: '表ID', tableName: '表名', layer: '分层', scope: '范围', sensitivity: '敏感度', qualityScore: '质量分', status: '状态', owner: 'Owner', steward: 'Steward', freshness: '新鲜度', pii: 'PII', retention: '保留', upstream: '上游', downstream: '下游' },
             '数据治理报告_' + new Date().toISOString().slice(0, 10)
           )} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FBF8F5] text-xs text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all border border-[#EDE6DF]"><Download className="w-3.5 h-3.5" />治理报告</button>
+        </div>
+
+        {/* 周度采集刷新状态 */}
+        <div className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF] mb-6">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="w-9 h-9 rounded-xl bg-[#34c759]/10 flex items-center justify-center">
+              {weeklyManifestStatus === 'ready' ? <CheckCircle className="w-4 h-4 text-[#34c759]" /> : <AlertCircle className="w-4 h-4 text-[#ff9500]" />}
+            </div>
+            <div className="min-w-[180px]">
+              <p className="text-xs font-semibold text-[#1d1d1f]">周度数据采集刷新</p>
+              <p className="text-[10px] text-[#86868b]">
+                {weeklyManifestStatus === 'ready' ? `${weeklyManifest?.week} · ${weeklyGeneratedAt}` : weeklyManifestStatus === 'loading' ? '正在读取 manifest' : '未生成 public/data/weekly/latest.json'}
+              </p>
+            </div>
+            {[
+              { label: '公开来源成功', value: weeklyTotals.ok ?? 0, color: '#34c759' },
+              { label: '连接器待接入', value: weeklyTotals['connector-required'] ?? 0, color: '#ff9500' },
+              { label: '人工补录', value: weeklyTotals['manual-required'] ?? 0, color: '#5856d6' },
+              { label: '请求异常', value: (weeklyTotals['source-error'] ?? 0) + (weeklyTotals['fetch-error'] ?? 0), color: '#ff3b30' },
+              { label: '未绑定registry页面', value: weeklyManifest?.auditSummary.pagesWithStaticDataWithoutRegistry ?? 0, color: '#C25B6E' },
+            ].map((item) => (
+              <div key={item.label} className="px-3 py-2 rounded-xl bg-[#FBF8F5] border border-[#EDE6DF] min-w-[112px]">
+                <p className="text-[10px] text-[#86868b]">{item.label}</p>
+                <p className="text-lg font-bold" style={{ color: item.color }}>{item.value}</p>
+              </div>
+            ))}
+            <a href="/data/weekly/latest.json" className="ml-auto text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E] transition-colors">
+              查看manifest
+            </a>
+          </div>
         </div>
 
         {/* Overview Cards */}
@@ -1079,17 +1148,19 @@ export default function DataManage() {
                 return (
                   <div key={table.id} className="border border-[#EDE6DF] rounded-xl overflow-hidden">
                     {/* R25: 表头部 + 导出 */}
-                    <button onClick={() => toggleTable(table.id)} className="w-full flex items-center gap-4 p-4 bg-[#FBF8F5] hover:bg-[#F5EDE8] transition-colors duration-200 text-left">
-                      {isExpanded ? <ChevronDown className="w-4 h-4 text-[#86868b] flex-shrink-0" /> : <ChevronRight className="w-4 h-4 text-[#86868b] flex-shrink-0" />}
-                      <Table className="w-4 h-4 text-[#C25B6E] flex-shrink-0" />
-                      <div className="flex-1 min-w-0 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-[#1d1d1f]">{table.name}</span>
-                          <span className="text-[10px] text-[#86868b] bg-white px-1.5 py-0.5 rounded">{table.fields.length}字段</span>
-                          <span className="text-[10px] text-[#C25B6E] bg-[#C25B6E]/10 px-1.5 py-0.5 rounded">{table.updateFreq}更新</span>
+                    <div className="w-full flex items-center gap-4 p-4 bg-[#FBF8F5] hover:bg-[#F5EDE8] transition-colors duration-200 text-left">
+                      <button onClick={() => toggleTable(table.id)} className="flex flex-1 min-w-0 items-center gap-4 text-left">
+                        {isExpanded ? <ChevronDown className="w-4 h-4 text-[#86868b] flex-shrink-0" /> : <ChevronRight className="w-4 h-4 text-[#86868b] flex-shrink-0" />}
+                        <Table className="w-4 h-4 text-[#C25B6E] flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold text-[#1d1d1f]">{table.name}</span>
+                            <span className="text-[10px] text-[#86868b] bg-white px-1.5 py-0.5 rounded">{table.fields.length}字段</span>
+                            <span className="text-[10px] text-[#C25B6E] bg-[#C25B6E]/10 px-1.5 py-0.5 rounded">{table.updateFreq}更新</span>
+                          </div>
+                          <p className="text-xs text-[#86868b] mt-0.5">{table.desc}</p>
                         </div>
-                        <p className="text-xs text-[#86868b] mt-0.5">{table.desc}</p>
-                      </div>
+                      </button>
                       <button onClick={e => { e.stopPropagation(); exportToCsv(table.fields.map(f => ({ name: f.name, type: f.type, desc: f.desc, source: f.source, required: f.required ? '是' : '否' })), { name: '字段名', type: '数据类型', desc: '说明', source: '数据来源', required: '必填' }, table.name + '_' + new Date().toISOString().slice(0, 10)); }} className="flex items-center gap-1 px-2 py-1 rounded bg-white text-[9px] text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all flex-shrink-0"><Download className="w-3 h-3" />导出</button>
                       {table.upstream && table.upstream.length > 0 && (
                         <div className="hidden md:flex items-center gap-1 text-[10px] text-[#86868b]">
@@ -1097,7 +1168,7 @@ export default function DataManage() {
                           上游：{table.upstream.slice(0, 2).join(', ')}
                         </div>
                       )}
-                    </button>
+                    </div>
 
                     {/* Table Fields */}
                     {isExpanded && (
@@ -1167,7 +1238,7 @@ export default function DataManage() {
             </div>
             <div className="p-3 rounded-xl bg-[#FBF8F5]">
               <p className="font-medium text-[#1d1d1f] truncate mb-1">Collectively Exhaustive（完全穷尽）</p>
-              <p>48张数据表覆盖当前网站所有25个页面（含主页面和子页面）的数据需求。从市场规模TAM测算到单条评论的情感分析，从全球政策追踪到AI设计助手的Prompt记录，确保工作台数据无遗漏。</p>
+              <p>{totalTables}张数据表覆盖当前网站核心页面的数据需求。从市场规模TAM测算到单条评论的情感分析，从全球政策追踪到AI设计助手的Prompt记录，确保工作台数据持续按当前资产目录校准。</p>
             </div>
           </div>
           <div className="mt-3 p-3 rounded-xl bg-[#34c759]/5 border border-[#34c759]/10">

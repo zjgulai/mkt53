@@ -49,6 +49,17 @@ rsync -az --delete dist/ ubuntu@101.34.52.232:/opt/mkt53/html/
 
 `rsync --delete` 会让远端静态目录与本地 `dist/` 保持一致。执行前必须确认当前构建产物来自已通过门禁的代码。
 
+## 周度数据刷新部署
+
+周度数据刷新不改 nginx，不改宿主 landing，只刷新 mkt53 静态构建中的 `public/data/weekly/latest.json`：
+
+```bash
+cd app
+npm run data:deploy:weekly
+```
+
+该命令会先运行 `npm run data:refresh:weekly`，再执行 `deploy:prod`、`smoke:prod` 和 `test:e2e:prod`。受限来源会保留为 `connector-required` 或 `manual-required`，不能用脚本输出替代真实授权采集。
+
 ## 宿主导航页入口
 
 宿主域名 `https://lute-tlz-dddd.top` 是共享静态 landing page，不属于 mkt53 的 Vite 构建产物。2026-06-02 线上确认：当前页面是多服务卡片网格，包含 12 个服务入口，其中 mkt 卡片进入本项目：

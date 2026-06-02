@@ -128,6 +128,8 @@ npm run dev     # 启动开发服务器 http://localhost:3000
 npm run test    # 运行 Vitest 测试
 npm run lint    # 运行 ESLint
 npm run build   # 构建生产产物到 dist/
+npm run data:audit          # 审计页面、数据管理表和 source registry 一致性
+npm run data:refresh:weekly # 生成周度数据采集 manifest
 ```
 
 ## 部署
@@ -164,6 +166,16 @@ npm run test:e2e:prod
 ```
 
 `test:e2e:prod` 不启动本地 dev server，直接验证宿主 landing 的 `card mkt`、12 个服务卡片数量、mkt 目标页标题和桌面/移动端无水平溢出。
+
+周度数据刷新：
+
+```bash
+cd app
+npm run data:refresh:weekly
+npm run data:deploy:weekly
+```
+
+`data:refresh:weekly` 生成 `public/data/weekly/latest.json`，供 `/data` 页面展示本周采集状态。Amazon、CRM、ERP、社交媒体 API、Import Genius 和 AI/NLP 模型来源必须保持 `connector-required`，直到授权连接器接入；不得把缺失采集伪装成真实数据。
 
 ### 宿主导航页入口卡片
 

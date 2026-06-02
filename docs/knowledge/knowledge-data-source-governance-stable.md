@@ -5,7 +5,7 @@ module: data-governance
 topic: source-registry
 status: stable
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-02
 owner: self
 source: human+ai
 ---
@@ -65,6 +65,7 @@ source: human+ai
 3. 海关、CRM、社媒、Amazon、AI 模型数据缺少真实接入记录时，不得从 `example` 或 `needs-review` 升级为 `verified`。
 4. 页面文案不得把 `needs-review` 显示为“已验证原文”。
 5. 新增来源必须补测试，至少覆盖 id 唯一性和关键风险状态。
+6. 周度采集脚本只能记录公开 URL 元数据和样本哈希；受限平台、内部系统、AI/NLP 输出必须标记为 `connector-required` 或 `manual-required`。
 
 ## 修改流程
 
@@ -79,6 +80,7 @@ npm run test
 npm run lint
 npm audit
 npm run build
+npm run data:audit
 ```
 
 涉及页面展示时额外执行：
@@ -97,3 +99,14 @@ npm run test:e2e
 | 示例模型评分 | 明确标注为解释性模型或示例数据 |
 | 平台采集数据 | 显示采集时间、渠道范围、授权或合规前提 |
 | 内部系统数据 | 显示系统名、时间窗口、版本或快照 |
+
+## 周度采集 manifest
+
+`npm run data:refresh:weekly` 会生成 `app/public/data/weekly/latest.json`。该文件用于 `/data` 页面展示本周采集状态。
+
+| 状态 | 处理规则 |
+|---|---|
+| `ok` | 公开来源可达，可作为来源可用性证据，不等于业务数值已复核 |
+| `fetch-error` / `source-error` | 下次重试或人工复核 |
+| `connector-required` | 需要授权连接器，未接入前不得声称已采集 |
+| `manual-required` | 需要采购报告、人工上传或补充 URL |

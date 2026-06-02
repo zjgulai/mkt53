@@ -25,6 +25,7 @@ Momcozy 母婴品牌全球市场分析看板，面向内部团队的数据洞察
 | 部署脚本 | `app/scripts/deploy-static.sh` |
 | 生产 smoke | `app/scripts/smoke-prod.sh` |
 | 生产 E2E | `npm run test:e2e:prod` |
+| 周度数据刷新 | `npm run data:refresh:weekly` |
 
 ## 当前产品形态
 
@@ -56,6 +57,7 @@ npm run test
 npm run lint
 npm audit
 npm run build
+npm run data:audit
 ```
 
 页面布局、核心路由或移动端体验发生变化时，额外执行：
@@ -70,6 +72,14 @@ npm run test:e2e
 ```bash
 cd app
 npm run test:e2e:prod
+```
+
+数据来源、数据管理表或页面静态数据发生变化时，额外执行：
+
+```bash
+cd app
+npm run data:audit
+npm run data:refresh:weekly
 ```
 
 ## 生产部署
@@ -90,6 +100,7 @@ npm run smoke:prod
 |---|---|
 | `docs/workflows/workflow-quality-gate-stable.md` | 本地与 CI 质量门禁 |
 | `docs/workflows/workflow-static-deploy-stable.md` | 腾讯云轻量服务器静态部署 |
+| `docs/workflows/workflow-weekly-data-collection-stable.md` | 周度数据采集与刷新 |
 | `docs/knowledge/knowledge-data-source-governance-stable.md` | 数据来源 registry 与复核规则 |
 | `docs/product/product-roadmap-market-insight-stable.md` | 产品能力收敛与 90 天路线图 |
 | `docs/architecture/architecture-data-and-ai-proxy-stable.md` | 数据接入与 AI 代理目标架构 |
@@ -115,8 +126,11 @@ app/
 │  ├─ scripts/
 │  ├─ security/
 │  └─ utils/
-├─ public/images/
+├─ public/
+│  ├─ images/
+│  └─ data/weekly/latest.json
 ├─ scripts/
+│  └─ data/
 ├─ playwright.config.ts
 └─ playwright.prod.config.ts
 ```

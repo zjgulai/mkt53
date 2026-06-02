@@ -11,6 +11,11 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:prod": "playwright test -c playwright.prod.config.ts",
+    "data:audit": "node scripts/data/audit-consistency.mjs",
+    "data:audit:json": "node scripts/data/audit-consistency.mjs --json",
+    "data:collect:weekly": "node scripts/data/collect-weekly-sources.mjs",
+    "data:refresh:weekly": "node scripts/data/refresh-weekly-data.mjs",
+    "data:deploy:weekly": "bash scripts/data/weekly-refresh-and-deploy.sh",
     "preview": "vite preview",
     "deploy:prod": "bash scripts/deploy-static.sh",
     "smoke:prod": "bash scripts/smoke-prod.sh"

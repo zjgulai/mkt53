@@ -4,6 +4,7 @@ const pages = [
   { path: '/', title: /Momcozy 市场洞察工作台/ },
   { path: '/#/industry', title: /全球母婴标准与法规地图/ },
   { path: '/#/industry/regulation', title: /行业法规与标准解读/ },
+  { path: '/#/data', title: /数据管理/ },
   { path: '/#/data-source', title: /数据来源管理/ },
   { path: '/#/ai-assistant/design', title: /产品设计助手/ },
 ];
