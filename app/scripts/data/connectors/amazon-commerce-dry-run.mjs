@@ -8,6 +8,7 @@ import { extractSourceRegistry, isoWeek } from '../lib/project-analysis.mjs';
 
 const connectorId = 'amazon-commerce';
 const defaultWritePath = 'tmp/data-collection/connectors/amazon-commerce-dry-run.json';
+const defaultCoverageReportPath = 'tmp/data-collection/connectors/amazon-commerce-mapping-coverage.md';
 const templatePath = 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json';
 const recommendedLocalPrivateMappingPath = 'configs/private/amazon-commerce-mapping.json';
 const recommendedServerPrivateMappingPath = '/opt/mkt53/private/amazon-commerce-mapping.json';
@@ -71,8 +72,10 @@ function parseArgs(argv) {
     json: argv.includes('--json'),
     noWrite: argv.includes('--no-write'),
     force: argv.includes('--force'),
+    coverageReport: argv.includes('--coverage-report'),
     printMappingTemplate: argv.includes('--print-mapping-template'),
     writePath: defaultWritePath,
+    coverageReportPath: defaultCoverageReportPath,
     writeMappingTemplatePath: undefined,
     mappingPath: undefined,
     site: 'amazon.com',
@@ -83,6 +86,7 @@ function parseArgs(argv) {
 
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === '--write') options.writePath = argv[i + 1];
+    if (argv[i] === '--write-coverage-report') options.coverageReportPath = argv[i + 1];
     if (argv[i] === '--write-mapping-template') options.writeMappingTemplatePath = argv[i + 1];
     if (argv[i] === '--mapping') options.mappingPath = argv[i + 1];
     if (argv[i] === '--site') options.site = argv[i + 1];
@@ -204,6 +208,79 @@ function mappingPreflight(mappings, context) {
   };
 }
 
+function buildMappingCoverage(mapping) {
+  const rows = mapping.sourceCoverage.map((item) => ({
+    ...item,
+    missingItems: Math.max(item.minimumMappedItems - item.mappedItems, 0),
+  }));
+  const totalRequiredItems = rows.reduce((sum, item) => sum + item.minimumMappedItems, 0);
+  const totalMappedItems = rows.reduce((sum, item) => sum + item.mappedItems, 0);
+  const missingItemCount = rows.reduce((sum, item) => sum + item.missingItems, 0);
+  const readySourceCount = rows.filter((item) => item.status === 'ready').length;
+  const missingSourceCount = rows.length - readySourceCount;
+  const status = missingSourceCount === 0 && mapping.invalidMappingCount === 0 && mapping.duplicateMappingCount === 0 ? 'ready' : 'blocked';
+
+  return {
+    status,
+    totalRequiredItems,
+    totalMappedItems,
+    missingItemCount,
+    readySourceCount,
+    missingSourceCount,
+    invalidMappingCount: mapping.invalidMappingCount,
+    duplicateMappingCount: mapping.duplicateMappingCount,
+    rows,
+  };
+}
+
+function markdownTable(rows) {
+  return [
+    '| sourceId | page | scope | required | mapped | missing | status |',
+    '|---|---|---|---:|---:|---:|---|',
+    ...rows.map((item) =>
+      `| ${item.sourceId} | ${item.page} | ${item.scope} | ${item.minimumMappedItems} | ${item.mappedItems} | ${item.missingItems} | ${item.status} |`,
+    ),
+  ].join('\n');
+}
+
+function buildMappingCoverageReport(dryRun) {
+  const coverage = dryRun.mappingCoverage;
+
+  return [
+    '# Amazon Commerce Mapping Coverage Report',
+    '',
+    `generatedAt: ${dryRun.generatedAt}`,
+    `requestId: ${dryRun.requestId}`,
+    `connectorStatus: ${dryRun.status}`,
+    `mappingCoverageStatus: ${coverage.status}`,
+    `mappingPathSource: ${dryRun.privateInput.mappingPathSource}`,
+    `mappingPathConfigured: ${dryRun.privateInput.mappingPathConfigured}`,
+    `site: ${dryRun.site}`,
+    `marketplaceId: ${dryRun.marketplaceId}`,
+    `networkCalls: ${dryRun.safety.networkCalls}`,
+    `businessDataWrites: ${dryRun.safety.businessDataWrites}`,
+    '',
+    '## Summary',
+    '',
+    `totalRequiredItems: ${coverage.totalRequiredItems}`,
+    `totalMappedItems: ${coverage.totalMappedItems}`,
+    `missingItemCount: ${coverage.missingItemCount}`,
+    `readySourceCount: ${coverage.readySourceCount}`,
+    `missingSourceCount: ${coverage.missingSourceCount}`,
+    `invalidMappingCount: ${coverage.invalidMappingCount}`,
+    `duplicateMappingCount: ${coverage.duplicateMappingCount}`,
+    '',
+    '## Source Coverage',
+    '',
+    markdownTable(coverage.rows),
+    '',
+    '## Stop Condition',
+    '',
+    'Mapping coverage reaches `ready` only when every Amazon source meets its minimum mapped item count and there are no invalid or duplicate mapping rows. Connector execution still requires authorized credentials and a real connector implementation.',
+    '',
+  ].join('\n');
+}
+
 export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
   const appRoot = options.appRoot ?? process.cwd();
   const mappingPath = options.mappingPath ?? env.MKT53_AMAZON_MAPPING_PATH;
@@ -216,6 +293,7 @@ export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
   const mappings = readMappings(mappingPath);
   const credentials = credentialPreflight(env);
   const mapping = mappingPreflight(mappings, { site: options.site, marketplaceId: options.marketplaceId });
+  const mappingCoverage = buildMappingCoverage(mapping);
   const missingCredentialKeys = credentials.filter((item) => !item.present).map((item) => item.key);
   const blockers = [
     ...missingCredentialKeys.map((key) => ({ type: 'missing-credential', key })),
@@ -272,6 +350,7 @@ export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
       rowCountsOnlyWhen: '字段完整、ASIN 格式有效、sourceId 属于 Amazon backlog、site/marketplaceId 与本次 dry-run 一致、mappingStatus=ready。',
     },
     mapping,
+    mappingCoverage,
     snapshotContracts,
     plannedSnapshots: snapshotContracts.map((contract) => ({
       snapshotType: contract.snapshotType,
@@ -294,6 +373,17 @@ async function main() {
   }
 
   const result = buildAmazonCommerceDryRun(options);
+
+  if (options.coverageReport) {
+    const report = buildMappingCoverageReport(result);
+    if (!options.noWrite) {
+      const target = resolve(process.cwd(), options.coverageReportPath);
+      mkdirSync(dirname(target), { recursive: true });
+      writeFileSync(target, report);
+    }
+    process.stdout.write(report);
+    return;
+  }
 
   if (!options.noWrite) {
     const target = resolve(process.cwd(), options.writePath);

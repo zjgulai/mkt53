@@ -120,3 +120,5 @@ Amazon P0 当前交付物是 `npm run data:connector:amazon:dry-run`。该脚本
 ASIN/SKU 映射必须通过 `npm run data:connector:amazon:mapping:validate -- --mapping <mapping-json-path>` 校验。只有字段完整、ASIN 格式有效、source id 属于 Amazon backlog、站点和 marketplace 匹配、`mappingStatus=ready` 且无重复 `sourceId + site + marketplaceId + asin` 的行，才计入映射覆盖率。
 
 映射模板位于 `app/scripts/data/connectors/templates/amazon-commerce-mapping-template.json`，可以提交和同步。填入真实 ASIN/SKU 后的映射文件属于私有数据输入，只能放在 `app/configs/private/amazon-commerce-mapping.json` 或服务器 `/opt/mkt53/private/amazon-commerce-mapping.json`，并通过 `MKT53_AMAZON_MAPPING_PATH` 读取；不得进入 `public`、`src`、测试夹具或 git 历史。
+
+Amazon 映射覆盖率必须用 `npm run data:connector:amazon:mapping:coverage -- --mapping <mapping-json-path>` 生成验收报告。报告输出逐 source id 的最低映射数、当前有效映射数、缺口数和 ready 状态；只有覆盖率 ready、无无效行、无重复行时，才能进入真实连接器实现。该报告不构成业务数据采集证据。

@@ -38,6 +38,7 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:amazon:dry-run']).toContain('scripts/data/connectors/amazon-commerce-dry-run.mjs');
     expect(packageJson.scripts['data:connector:amazon:mapping:validate']).toContain('--json --no-write');
     expect(packageJson.scripts['data:connector:amazon:mapping:template']).toContain('--print-mapping-template');
+    expect(packageJson.scripts['data:connector:amazon:mapping:coverage']).toContain('--coverage-report');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
@@ -189,6 +190,14 @@ describe('production helper scripts', () => {
         missingSourceIds: string[];
         sourceCoverage: Array<{ sourceId: string; mappedItems: number; status: string }>;
       };
+      mappingCoverage: {
+        status: string;
+        totalRequiredItems: number;
+        totalMappedItems: number;
+        missingItemCount: number;
+        readySourceCount: number;
+        missingSourceCount: number;
+      };
       blockers: Array<{ type: string; key?: string; sourceId?: string; count?: number }>;
     };
 
@@ -212,6 +221,14 @@ describe('production helper scripts', () => {
     expect(dryRun.mapping.sourceCoverage.find((item) => item.sourceId === 'ds-010')).toMatchObject({
       mappedItems: 1,
       status: 'ready',
+    });
+    expect(dryRun.mappingCoverage).toMatchObject({
+      status: 'blocked',
+      totalRequiredItems: 67,
+      totalMappedItems: 1,
+      missingItemCount: 66,
+      readySourceCount: 1,
+      missingSourceCount: 6,
     });
     expect(dryRun.mapping.missingSourceIds).not.toContain('ds-010');
     expect(dryRun.mapping.missingSourceIds).toEqual(expect.arrayContaining(['ds-007', 'ds-009', 'ds-019', 'ds-037', 'ds-038', 'ds-039']));
@@ -276,5 +293,40 @@ describe('production helper scripts', () => {
       mappedItems: 1,
       status: 'ready',
     });
+  });
+
+  it('prints an auditable Amazon mapping coverage report', () => {
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/connectors/amazon-commerce-dry-run.mjs',
+        '--coverage-report',
+        '--no-write',
+        '--mapping',
+        'tests/fixtures/amazon-commerce-mapping-partial-valid.json',
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          AMAZON_SP_API_CLIENT_ID: 'fixture-client-id',
+          AMAZON_SP_API_CLIENT_SECRET: 'fixture-client-secret',
+          AMAZON_SP_API_REFRESH_TOKEN: 'fixture-refresh-token',
+          AMAZON_MARKETPLACE_IDS: 'ATVPDKIKX0DER',
+        },
+      },
+    );
+
+    expect(output).not.toContain('fixture-client-secret');
+    expect(output).toContain('# Amazon Commerce Mapping Coverage Report');
+    expect(output).toContain('mappingCoverageStatus: blocked');
+    expect(output).toContain('networkCalls: 0');
+    expect(output).toContain('businessDataWrites: 0');
+    expect(output).toContain('totalRequiredItems: 67');
+    expect(output).toContain('totalMappedItems: 1');
+    expect(output).toContain('missingItemCount: 66');
+    expect(output).toContain('| ds-010 | RegionCompetition | brand_analytics_region_share | 1 | 1 | 0 | ready |');
+    expect(output).toContain('| ds-007 | CompetitionPage | competitor_catalog | 15 | 0 | 15 | missing-mapping |');
   });
 });

@@ -18,6 +18,7 @@
     "data:connector:amazon:dry-run": "node scripts/data/connectors/amazon-commerce-dry-run.mjs",
     "data:connector:amazon:mapping:validate": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --json --no-write",
     "data:connector:amazon:mapping:template": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --print-mapping-template",
+    "data:connector:amazon:mapping:coverage": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --coverage-report",
     "data:deploy:weekly": "bash scripts/data/weekly-refresh-and-deploy.sh",
     "data:publish:weekly:local": "bash scripts/data/weekly-refresh-local-static.sh",
     "preview": "vite preview",
