@@ -35,6 +35,7 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:audit']).toContain('scripts/data/audit-consistency.mjs');
     expect(packageJson.scripts['data:collect:weekly']).toContain('scripts/data/collect-weekly-sources.mjs');
     expect(packageJson.scripts['data:refresh:weekly']).toContain('scripts/data/refresh-weekly-data.mjs');
+    expect(packageJson.scripts['data:connector:amazon:dry-run']).toContain('scripts/data/connectors/amazon-commerce-dry-run.mjs');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
@@ -52,6 +53,7 @@ describe('production helper scripts', () => {
     }
 
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-backlog.mjs'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-dry-run.mjs'), constants.R_OK)).not.toThrow();
   });
 
   it('audits data management and source registry consistency without network access', () => {
@@ -104,5 +106,46 @@ describe('production helper scripts', () => {
     );
     expect(manifest.connectorBacklog.items.every((item) => item.blockedReason.includes('不得伪造'))).toBe(true);
     expect(manifest.totals['connector-required']).toBe(23);
+  });
+
+  it('runs the Amazon commerce connector in blocked dry-run mode without leaking credentials', () => {
+    const output = execFileSync('node', ['scripts/data/connectors/amazon-commerce-dry-run.mjs', '--json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        AMAZON_SP_API_CLIENT_SECRET: 'SHOULD_NOT_LEAK_IN_DRY_RUN',
+      },
+    });
+    const dryRun = JSON.parse(output) as {
+      connectorId: string;
+      mode: string;
+      status: string;
+      sourceCount: number;
+      sourceIds: string[];
+      safety: { networkCalls: number; businessDataWrites: number; credentialValuesRedacted: boolean };
+      mapping: { missingSourceIds: string[] };
+      blockers: Array<{ type: string; key?: string; sourceId?: string }>;
+      snapshotContracts: Array<{ snapshotType: string; requiredFields: string[] }>;
+    };
+
+    expect(output).not.toContain('SHOULD_NOT_LEAK_IN_DRY_RUN');
+    expect(dryRun.connectorId).toBe('amazon-commerce');
+    expect(dryRun.mode).toBe('dry-run');
+    expect(dryRun.status).toBe('blocked');
+    expect(dryRun.sourceCount).toBe(7);
+    expect(dryRun.sourceIds).toEqual(expect.arrayContaining(['ds-007', 'ds-009', 'ds-010', 'ds-019', 'ds-037', 'ds-038', 'ds-039']));
+    expect(dryRun.safety.networkCalls).toBe(0);
+    expect(dryRun.safety.businessDataWrites).toBe(0);
+    expect(dryRun.safety.credentialValuesRedacted).toBe(true);
+    expect(dryRun.mapping.missingSourceIds).toEqual(expect.arrayContaining(dryRun.sourceIds));
+    expect(dryRun.blockers.some((item) => item.type === 'missing-credential')).toBe(true);
+    expect(dryRun.blockers.some((item) => item.type === 'missing-asin-sku-mapping')).toBe(true);
+    expect(dryRun.snapshotContracts.map((contract) => contract.snapshotType)).toEqual([
+      'product_snapshot',
+      'review_snapshot',
+      'brand_share_snapshot',
+      'category_rank_snapshot',
+    ]);
   });
 });

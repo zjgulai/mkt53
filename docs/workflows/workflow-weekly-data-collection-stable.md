@@ -33,6 +33,7 @@ source: human+ai
 cd app
 npm run data:audit
 npm run data:refresh:weekly
+npm run data:connector:amazon:dry-run
 ```
 
 输出文件：
@@ -44,6 +45,7 @@ npm run data:refresh:weekly
 | `tmp/data-collection/audit-latest.json` | 本次一致性审计结果 |
 | `tmp/data-collection/runs/<week>.json` | 本地周度运行留痕 |
 | `tmp/data-collection/runs/<week>-connectors.json` | 本地连接器 backlog 留痕 |
+| `tmp/data-collection/connectors/amazon-commerce-dry-run.json` | Amazon 授权连接器 dry-run 前置检查和输出契约 |
 
 ## 采集状态
 
@@ -112,6 +114,25 @@ MKT53_WEEKLY_CRON="30 2 * * 1" bash scripts/data/install-weekly-cron.sh
 | AI Generation Audit Log | AI图库、设计助手生成日志 | P2 |
 | Compliant Web Review Crawler | 网页评论采集 | P2 |
 | Internal Knowledge / Reporting Assets | 知识库、报告元数据、内部定性资料 | P2 |
+
+### Amazon P0 dry-run
+
+Amazon P0 当前只建立授权前置检查和输出契约，不调用 Amazon，不生成真实业务快照。
+
+```bash
+cd app
+npm run data:connector:amazon:dry-run
+npm run data:connector:amazon:dry-run -- --json --no-write
+```
+
+| 检查项 | 当前规则 |
+|---|---|
+| 授权 | 只检查 `AMAZON_SP_API_CLIENT_ID`、`AMAZON_SP_API_CLIENT_SECRET`、`AMAZON_SP_API_REFRESH_TOKEN`、`AMAZON_MARKETPLACE_IDS` 是否存在，不输出凭据值 |
+| ASIN/SKU 映射 | 覆盖 `ds-007`、`ds-009`、`ds-010`、`ds-019`、`ds-037`、`ds-038`、`ds-039` 七个 Amazon 来源 |
+| 输出契约 | `product_snapshot`、`review_snapshot`、`brand_share_snapshot`、`category_rank_snapshot` |
+| 安全边界 | `networkCalls=0`、`businessDataWrites=0`、`dryRunOnly=true` |
+
+即使本地或服务器存在 Amazon 环境变量，dry-run 脚本也只做前置校验，不发起平台请求。只有授权、ASIN/SKU 映射、采集窗口和合规边界全部满足后，才能进入真实连接器实现。
 
 | 页面 | 下一步 |
 |---|---|
