@@ -20,10 +20,10 @@ source: human+ai
 |---|---:|
 | 页面组件 | 43 |
 | 数据管理表 | 27 |
-| source registry 来源 | 26 |
+| source registry 来源 | 44 |
 | 治理配置表 | 27 |
 | critical issue | 0 |
-| 静态数据但未绑定 registry 的页面 | 18 |
+| 静态数据但未绑定 registry 的页面 | 0 |
 
 当前没有后端数据库或常驻任务。周度刷新采用“脚本采集 → 生成静态 manifest → 构建部署”的方式，不把受限来源伪装成已采集数据。
 
@@ -94,17 +94,17 @@ bash scripts/data/install-weekly-cron.sh
 MKT53_WEEKLY_CRON="30 2 * * 1" bash scripts/data/install-weekly-cron.sh
 ```
 
-## 当前补齐队列
+## 当前连接器实现队列
 
-下列页面有静态数组数据，但尚未与 `source-registry.ts` 建立明确绑定。下一阶段按业务优先级补 source id、来源口径和采集状态：
+静态页面已全部绑定 `source-registry.ts`。下一阶段不再是补 source id，而是补真实连接器、采集窗口和复核证据：
 
-| 页面 | 当前处理 |
+| 页面 | 下一步 |
 |---|---|
-| `AIAssistantPage`、`AIGallery`、`DesignAssistant`、`ReviewAnalysis`、`YoutubeReview` | 标记 AI/内容资产来源 |
-| `FlavorMap`、`FlavorReport`、`IndustryNews`、`SupplyChain`、`TechNews` | 补行业来源 URL 或手工采集规则 |
-| `BabyCare`、`CategoryAnalysis`、`NursingProducts` | 补品类数据来源和采集窗口 |
-| `Aesthetics`、`ChannelInterviews`、`StoreInterviews` | 补用户研究样本口径 |
-| `DataManage`、`DataSourcePage` | 作为治理页面，不直接作为业务事实来源 |
+| `ReviewAnalysis`、`YoutubeReview`、`FlavorMap`、`FlavorReport` | 接入评论、YouTube 和 VOC NLP 采集任务 |
+| `SupplyChain`、`ChannelInterviews`、`StoreInterviews` | 接入 ERP、销售快照、访谈样本和脱敏记录 |
+| `BabyCare`、`CategoryAnalysis`、`NursingProducts` | 接入行业报告、Amazon 类目采集和测算公式 |
+| `IndustryNews`、`TechNews` | 拆成条目级 URL、发布日期和复核状态 |
+| `AIAssistantPage`、`AIGallery`、`DesignAssistant` | 接入 AI 代理请求日志、模型版本、成本和审核状态 |
 
 ## 边界
 

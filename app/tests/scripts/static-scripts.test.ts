@@ -60,14 +60,18 @@ describe('production helper scripts', () => {
         tableCount: number;
         sourceRegistryCount: number;
         tableGovernanceCount: number;
+        pagesWithStaticDataWithoutRegistry: number;
+        issueCount: number;
         criticalIssueCount: number;
         collectionMethods: Record<string, number>;
       };
     };
 
     expect(audit.summary.tableCount).toBe(27);
-    expect(audit.summary.sourceRegistryCount).toBe(26);
+    expect(audit.summary.sourceRegistryCount).toBe(44);
     expect(audit.summary.tableGovernanceCount).toBe(27);
+    expect(audit.summary.pagesWithStaticDataWithoutRegistry).toBe(0);
+    expect(audit.summary.issueCount).toBe(0);
     expect(audit.summary.criticalIssueCount).toBe(0);
     expect(audit.summary.collectionMethods['connector-required']).toBeGreaterThan(0);
     expect(audit.summary.collectionMethods['public-url-check']).toBeGreaterThan(0);

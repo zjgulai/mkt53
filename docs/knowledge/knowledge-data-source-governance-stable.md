@@ -66,6 +66,7 @@ source: human+ai
 4. 页面文案不得把 `needs-review` 显示为“已验证原文”。
 5. 新增来源必须补测试，至少覆盖 id 唯一性和关键风险状态。
 6. 周度采集脚本只能记录公开 URL 元数据和样本哈希；受限平台、内部系统、AI/NLP 输出必须标记为 `connector-required` 或 `manual-required`。
+7. 含静态数组数据的页面必须至少有一条 `sourceRegistry.page` 绑定；新增页面不得重新制造未绑定静态数据。
 
 ## 修改流程
 

@@ -32,4 +32,58 @@ describe('source registry', () => {
     expect(needsReviewText).not.toContain('已验证原文');
     expect(needsReviewText).toContain('待复核');
   });
+
+  it('binds every static-data page from the weekly audit backlog to a registry item', () => {
+    const pages = [
+      'AIAssistantPage',
+      'AIGallery',
+      'DataManage',
+      'DataSourcePage',
+      'DesignAssistant',
+      'ReviewAnalysis',
+      'YoutubeReview',
+      'FlavorMap',
+      'FlavorReport',
+      'IndustryNews',
+      'SupplyChain',
+      'TechNews',
+      'BabyCare',
+      'CategoryAnalysis',
+      'NursingProducts',
+      'Aesthetics',
+      'ChannelInterviews',
+      'StoreInterviews',
+    ];
+    const registeredPages = new Set(sourceRegistry.map((item) => item.page));
+
+    for (const page of pages) {
+      expect(registeredPages.has(page)).toBe(true);
+    }
+  });
+
+  it('keeps newly bound static or model-driven pages below verified until real collection evidence exists', () => {
+    const evidenceGatedPages = [
+      'AIAssistantPage',
+      'AIGallery',
+      'DesignAssistant',
+      'ReviewAnalysis',
+      'YoutubeReview',
+      'FlavorMap',
+      'FlavorReport',
+      'IndustryNews',
+      'SupplyChain',
+      'TechNews',
+      'BabyCare',
+      'CategoryAnalysis',
+      'NursingProducts',
+      'Aesthetics',
+      'ChannelInterviews',
+      'StoreInterviews',
+    ];
+
+    const gatedItems = sourceRegistry.filter((item) => evidenceGatedPages.includes(item.page));
+
+    expect(gatedItems.length).toBe(evidenceGatedPages.length);
+    expect(gatedItems.every((item) => item.verificationStatus !== 'verified')).toBe(true);
+  });
 });
