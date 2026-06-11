@@ -44,6 +44,7 @@ docs/architecture/**/renders/*.png
 # 本地工具缓存与执行计划草稿
 .codegraph/
 .kiro/
+drafts/analysis/git-atomic-commit-plan-draft-*.md
 
 # SSH 密钥（部署用，不进仓库）
 *.pem
