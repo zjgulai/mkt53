@@ -14,6 +14,7 @@
     "data:audit": "node scripts/data/audit-consistency.mjs",
     "data:audit:json": "node scripts/data/audit-consistency.mjs --json",
     "data:collect:weekly": "node scripts/data/collect-weekly-sources.mjs",
+    "data:source-tasks": "node scripts/data/build-source-tasks.mjs --write public/periodic-data/source-tasks.json --write public/weekly-data/source-tasks.json",
     "data:refresh:weekly": "node scripts/data/refresh-weekly-data.mjs",
     "data:refresh:semi-monthly": "node scripts/data/refresh-semi-monthly-data.mjs",
     "data:connector:amazon:dry-run": "node scripts/data/connectors/amazon-commerce-dry-run.mjs",

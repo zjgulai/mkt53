@@ -159,10 +159,12 @@ app/
 │  ├─ images/
 │  ├─ periodic-data/
 │  │  ├─ latest.json
-│  │  └─ connectors.json
+│  │  ├─ connectors.json
+│  │  └─ source-tasks.json
 │  └─ weekly-data/      # 兼容旧路径
 │     ├─ latest.json
-│     └─ connectors.json
+│     ├─ connectors.json
+│     └─ source-tasks.json
 ├─ scripts/
 │  └─ data/
 ├─ playwright.config.ts

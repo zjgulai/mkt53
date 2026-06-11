@@ -3,6 +3,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { analyzeConsistency } from './lib/project-analysis.mjs';
 import { collectWeeklySources } from './collect-weekly-sources.mjs';
+import { summarizeSourceTaskQueue } from './lib/source-tasks.mjs';
 
 const args = process.argv.slice(2);
 const noNetwork = args.includes('--no-network');
@@ -21,18 +22,25 @@ function writeJson(path, data) {
 
 const audit = analyzeConsistency(process.cwd());
 const manifest = await collectWeeklySources({ noNetwork, timeoutMs, maxAttempts, retryDelayMs });
+const publicManifest = {
+  ...manifest,
+  sourceTaskQueue: summarizeSourceTaskQueue(manifest.sourceTaskQueue),
+};
 
 writeJson('tmp/data-collection/audit-latest.json', audit);
-writeJson('public/weekly-data/latest.json', manifest);
+writeJson('public/weekly-data/latest.json', publicManifest);
 writeJson('public/weekly-data/connectors.json', manifest.connectorBacklog);
+writeJson('public/weekly-data/source-tasks.json', manifest.sourceTaskQueue);
 writeJson(`tmp/data-collection/runs/${manifest.week}.json`, manifest);
 writeJson(`tmp/data-collection/runs/${manifest.week}-connectors.json`, manifest.connectorBacklog);
+writeJson(`tmp/data-collection/runs/${manifest.week}-source-tasks.json`, manifest.sourceTaskQueue);
 
 process.stdout.write([
   `mkt53 weekly data refresh completed`,
   `week=${manifest.week}`,
   `latest=public/weekly-data/latest.json`,
   `connectors=public/weekly-data/connectors.json`,
+  `sourceTasks=public/weekly-data/source-tasks.json`,
   `audit=tmp/data-collection/audit-latest.json`,
   `run=tmp/data-collection/runs/${manifest.week}.json`,
   `total=${manifest.totals.total}`,

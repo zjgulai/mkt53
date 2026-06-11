@@ -8,7 +8,7 @@
   "timezone": "Asia/Shanghai",
   "nextScheduledAt": "2026-06-16T09:00:00+08:00",
   "scheduleCron": "0 9 1,16 * *",
-  "generatedAt": "2026-06-11T07:30:40.503Z",
+  "generatedAt": "2026-06-11T09:03:31.528Z",
   "refreshCadence": "semi-monthly",
   "collectionPolicy": {
     "publicUrl": {
@@ -82,7 +82,7 @@
           "category_rank_snapshot"
         ],
         "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
       },
       {
         "connectorId": "review-nlp",
@@ -113,7 +113,7 @@
           "human_review_sample"
         ],
         "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
       },
       {
         "connectorId": "internal-crm",
@@ -136,7 +136,7 @@
           "retention_segment_snapshot"
         ],
         "stopCondition": "dry-run 输出脱敏字段清单、rowCount、window 和 owner。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
       },
       {
         "connectorId": "social-listening",
@@ -160,7 +160,7 @@
           "topic_keyword_snapshot"
         ],
         "stopCondition": "dry-run 输出 querySet、countrySet、window、sampleCount 和去重策略。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
       },
       {
         "connectorId": "internal-erp",
@@ -184,7 +184,7 @@
           "supply_cost_snapshot"
         ],
         "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
       },
       {
         "connectorId": "trade-import",
@@ -207,7 +207,7 @@
           "hs_code_market_snapshot"
         ],
         "stopCondition": "dry-run 输出 hsCodes、countrySet、window、sampleCount 和授权状态。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
       },
       {
         "connectorId": "youtube-data",
@@ -231,7 +231,7 @@
           "creator_profile_snapshot"
         ],
         "stopCondition": "dry-run 输出 videoCount、commentSampleCount、quotaCost 和 sourceIds。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
       },
       {
         "connectorId": "internal-knowledge-reporting",
@@ -261,7 +261,7 @@
           "qualitative_source_manifest"
         ],
         "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
       },
       {
         "connectorId": "ai-generation",
@@ -286,7 +286,7 @@
           "asset_review_snapshot"
         ],
         "stopCondition": "dry-run 输出 requestCount、modelSet、costFieldsPresent 和审核状态分布。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
       },
       {
         "connectorId": "crawler-compliance",
@@ -309,7 +309,7 @@
           "robots_compliance_record"
         ],
         "stopCondition": "dry-run 输出 allowedUrlPatterns、robotsStatus、rateLimit 和 sourceIds。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
       }
     ],
     "items": [
@@ -332,7 +332,7 @@
           "asset_review_snapshot"
         ],
         "stopCondition": "dry-run 输出 requestCount、modelSet、costFieldsPresent 和审核状态分布。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "接入生成服务端日志与素材审核状态"
       },
       {
@@ -354,7 +354,7 @@
           "asset_review_snapshot"
         ],
         "stopCondition": "dry-run 输出 requestCount、modelSet、costFieldsPresent 和审核状态分布。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "接入服务端代理后记录requestId、model、cost和status"
       },
       {
@@ -378,7 +378,7 @@
           "category_rank_snapshot"
         ],
         "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "补采集任务记录"
       },
       {
@@ -402,7 +402,7 @@
           "category_rank_snapshot"
         ],
         "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "补采集时间戳"
       },
       {
@@ -427,7 +427,7 @@
           "category_rank_snapshot"
         ],
         "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "建议叠加NPD/IRI线下数据"
       },
       {
@@ -451,7 +451,7 @@
           "category_rank_snapshot"
         ],
         "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "补数据快照"
       },
       {
@@ -475,7 +475,7 @@
           "category_rank_snapshot"
         ],
         "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "补品类报告来源、采集窗口和测算公式"
       },
       {
@@ -499,7 +499,7 @@
           "category_rank_snapshot"
         ],
         "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "补测算说明、BSR快照和外部报告来源"
       },
       {
@@ -523,7 +523,7 @@
           "category_rank_snapshot"
         ],
         "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "接入Amazon类目采集并保存SKU/品牌映射"
       },
       {
@@ -545,7 +545,7 @@
           "robots_compliance_record"
         ],
         "stopCondition": "dry-run 输出 allowedUrlPatterns、robotsStatus、rateLimit 和 sourceIds。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "需标注robots.txt合规性"
       },
       {
@@ -567,7 +567,7 @@
           "retention_segment_snapshot"
         ],
         "stopCondition": "dry-run 输出脱敏字段清单、rowCount、window 和 owner。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "需对接真实CRM数据库"
       },
       {
@@ -590,7 +590,7 @@
           "supply_cost_snapshot"
         ],
         "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "接入ERP导出、供应商主数据和库存快照"
       },
       {
@@ -613,7 +613,7 @@
           "qualitative_source_manifest"
         ],
         "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "建议引用外部份额数据校准"
       },
       {
@@ -636,7 +636,7 @@
           "qualitative_source_manifest"
         ],
         "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "OK"
       },
       {
@@ -659,7 +659,7 @@
           "qualitative_source_manifest"
         ],
         "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "OK"
       },
       {
@@ -682,7 +682,7 @@
           "qualitative_source_manifest"
         ],
         "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "补访谈样本、脱敏记录和销售数据版本"
       },
       {
@@ -706,7 +706,7 @@
           "human_review_sample"
         ],
         "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "补充模型准确率指标"
       },
       {
@@ -730,7 +730,7 @@
           "human_review_sample"
         ],
         "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "接入评论数据集与NLP评估报告"
       },
       {
@@ -754,7 +754,7 @@
           "human_review_sample"
         ],
         "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "补充评论来源、关键词词典和NLP运行记录"
       },
       {
@@ -778,7 +778,7 @@
           "human_review_sample"
         ],
         "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "绑定VOC快照、模型版本和人工复核人"
       },
       {
@@ -801,7 +801,7 @@
           "topic_keyword_snapshot"
         ],
         "stopCondition": "dry-run 输出 querySet、countrySet、window、sampleCount 和去重策略。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "补采集配置"
       },
       {
@@ -824,7 +824,7 @@
           "hs_code_market_snapshot"
         ],
         "stopCondition": "dry-run 输出 hsCodes、countrySet、window、sampleCount 和授权状态。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "需接入Import Genius API或数仓"
       },
       {
@@ -847,10 +847,35 @@
           "creator_profile_snapshot"
         ],
         "stopCondition": "dry-run 输出 videoCount、commentSampleCount、quotaCost 和 sourceIds。",
-        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+        "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
         "nextAction": "接入YouTube Data API并保存采集manifest"
       }
     ]
+  },
+  "sourceTaskQueue": {
+    "schemaVersion": 1,
+    "generatedAt": "2026-06-11T09:03:31.528Z",
+    "generatedRule": "source task queue 只表达待补证和接入任务，不代表业务数据已采集。",
+    "total": 42,
+    "queueTypeCounts": {
+      "connector-readiness": 23,
+      "manual-evidence": 12,
+      "public-source-review": 7
+    },
+    "priorityCounts": {
+      "P0": 16,
+      "P1": 15,
+      "P2": 11
+    },
+    "ownerTeamCounts": {
+      "brand-strategy": 2,
+      "competitive-intelligence": 4,
+      "data-ai": 8,
+      "industry-regulatory": 11,
+      "market-research": 8,
+      "user-research": 8,
+      "insight-ops": 1
+    }
   },
   "totals": {
     "total": 45,
@@ -868,7 +893,7 @@
       "sourceUrl": "https://www.precedenceresearch.com/breast-pump-market",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-06-11T07:30:40.538Z",
+      "checkedAt": "2026-06-11T09:03:31.615Z",
       "httpStatus": 200,
       "contentType": "text/html; charset=UTF-8",
       "etag": "",
@@ -881,7 +906,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-06-11T07:30:40.538Z",
+          "checkedAt": "2026-06-11T09:03:31.615Z",
           "httpStatus": 200,
           "retryable": false
         }
@@ -897,12 +922,12 @@
       "sourceUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-06-11T07:30:41.199Z",
+      "checkedAt": "2026-06-11T09:03:32.590Z",
       "httpStatus": 200,
       "contentType": "text/html; charset=UTF-8",
       "etag": "",
       "lastModified": "",
-      "sampleHash": "df3b38d1dd24f772308651a6a6cbc6466f5915d0f96bf8030fc46e63a73fcce3",
+      "sampleHash": "11a88c978e35fc07efeb54601b05914016222fd0de91c552954a6c10cc23afcc",
       "retryable": false,
       "note": "公开来源可达，已记录元数据和样本哈希。",
       "checkAttemptCount": 1,
@@ -910,7 +935,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-06-11T07:30:41.199Z",
+          "checkedAt": "2026-06-11T09:03:32.590Z",
           "httpStatus": 200,
           "retryable": false
         }
@@ -924,7 +949,7 @@
       "sourceName": "WHO/FDA/各国政府",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:41.474Z",
+      "checkedAt": "2026-06-11T09:03:33.050Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -936,7 +961,7 @@
       "sourceUrl": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-06-11T07:30:41.474Z",
+      "checkedAt": "2026-06-11T09:03:33.050Z",
       "httpStatus": 206,
       "contentType": "text/html; charset=utf-8",
       "etag": "",
@@ -949,7 +974,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-06-11T07:30:41.474Z",
+          "checkedAt": "2026-06-11T09:03:33.050Z",
           "httpStatus": 206,
           "retryable": false
         }
@@ -963,7 +988,7 @@
       "sourceName": "Precedence/Technavio加权",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:41.805Z",
+      "checkedAt": "2026-06-11T09:03:33.567Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -974,7 +999,7 @@
       "sourceUrl": "https://www.importgenius.com",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:41.805Z",
+      "checkedAt": "2026-06-11T09:03:33.567Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -984,7 +1009,7 @@
       "sourceName": "Amazon.com 实时采集",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:41.805Z",
+      "checkedAt": "2026-06-11T09:03:33.567Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -994,7 +1019,7 @@
       "sourceName": "品牌官网/新闻稿",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:41.805Z",
+      "checkedAt": "2026-06-11T09:03:33.567Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1004,7 +1029,7 @@
       "sourceName": "Amazon.com 2026-05",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:41.805Z",
+      "checkedAt": "2026-06-11T09:03:33.567Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1015,7 +1040,7 @@
       "sourceUrl": "https://vendorcentral.amazon.com",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:41.805Z",
+      "checkedAt": "2026-06-11T09:03:33.567Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1027,7 +1052,7 @@
       "sourceUrl": "https://www.questmobile.com.cn/research/report/1927204984337829890",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-06-11T07:30:41.805Z",
+      "checkedAt": "2026-06-11T09:03:33.567Z",
       "httpStatus": 206,
       "contentType": "text/html",
       "etag": "\"6a27aec1-1b91a\"",
@@ -1040,7 +1065,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-06-11T07:30:41.805Z",
+          "checkedAt": "2026-06-11T09:03:33.567Z",
           "httpStatus": 206,
           "retryable": false
         }
@@ -1056,7 +1081,7 @@
       "sourceUrl": "https://www.mamava.com/why-buy-blog/2025-state-of-breastfeeding-survey",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-06-11T07:30:42.284Z",
+      "checkedAt": "2026-06-11T09:03:34.105Z",
       "httpStatus": 206,
       "contentType": "text/html;charset=utf-8",
       "etag": "W/\"fa58d82f2eb5681e82e66643ce512e9a\"",
@@ -1069,7 +1094,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-06-11T07:30:42.284Z",
+          "checkedAt": "2026-06-11T09:03:34.105Z",
           "httpStatus": 206,
           "retryable": false
         }
@@ -1083,7 +1108,7 @@
       "sourceName": "Momcozy CRM",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.501Z",
+      "checkedAt": "2026-06-11T09:03:34.381Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1093,7 +1118,7 @@
       "sourceName": "TikTok/IG/FB API",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.501Z",
+      "checkedAt": "2026-06-11T09:03:34.381Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1103,7 +1128,7 @@
       "sourceName": "定性研究",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:42.501Z",
+      "checkedAt": "2026-06-11T09:03:34.381Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1113,7 +1138,7 @@
       "sourceName": "Grand View Research / Fortune BI",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:42.501Z",
+      "checkedAt": "2026-06-11T09:03:34.381Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1123,7 +1148,7 @@
       "sourceName": "各国政府官网",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:42.501Z",
+      "checkedAt": "2026-06-11T09:03:34.381Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1135,11 +1160,11 @@
       "sourceUrl": "https://www.wipo.int",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-06-11T07:30:42.501Z",
+      "checkedAt": "2026-06-11T09:03:34.381Z",
       "httpStatus": 206,
       "contentType": "text/html;charset=UTF-8",
       "etag": "",
-      "lastModified": "Thu, 11 Jun 2026 07:24:59 GMT",
+      "lastModified": "Thu, 11 Jun 2026 09:00:38 GMT",
       "sampleHash": "db68d2d126106c8148a55d2dd9f4dec1f814e357bb65544f4f7e57867c463235",
       "retryable": false,
       "note": "公开来源可达，已记录元数据和样本哈希。",
@@ -1148,7 +1173,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-06-11T07:30:42.501Z",
+          "checkedAt": "2026-06-11T09:03:34.381Z",
           "httpStatus": 206,
           "retryable": false
         }
@@ -1162,7 +1187,7 @@
       "sourceName": "展会官网",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:42.648Z",
+      "checkedAt": "2026-06-11T09:03:34.654Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1172,7 +1197,7 @@
       "sourceName": "Momcozy内部/Amazon",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.648Z",
+      "checkedAt": "2026-06-11T09:03:34.654Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1182,7 +1207,7 @@
       "sourceName": "内部测算",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.648Z",
+      "checkedAt": "2026-06-11T09:03:34.654Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1192,7 +1217,7 @@
       "sourceName": "Amazon API / NLP模型",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.648Z",
+      "checkedAt": "2026-06-11T09:03:34.654Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1202,7 +1227,7 @@
       "sourceName": "内部维护",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.648Z",
+      "checkedAt": "2026-06-11T09:03:34.654Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1212,7 +1237,7 @@
       "sourceName": "爬虫采集",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.648Z",
+      "checkedAt": "2026-06-11T09:03:34.654Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1222,7 +1247,7 @@
       "sourceName": "内部管理",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.648Z",
+      "checkedAt": "2026-06-11T09:03:34.654Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1232,7 +1257,7 @@
       "sourceName": "mkt53静态功能清单",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:42.648Z",
+      "checkedAt": "2026-06-11T09:03:34.654Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1242,7 +1267,7 @@
       "sourceName": "Kimi Image Generation / 本地图片资产",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.648Z",
+      "checkedAt": "2026-06-11T09:03:34.654Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1253,7 +1278,7 @@
       "sourceUrl": "https://github.com/zjgulai/mkt53/blob/main/app/src/pages/DataManage.tsx",
       "method": "local-file-check",
       "status": "ok",
-      "checkedAt": "2026-06-11T07:30:42.648Z",
+      "checkedAt": "2026-06-11T09:03:34.654Z",
       "localPath": "src/pages/DataManage.tsx",
       "fileSizeBytes": 96525,
       "sampleHash": "e7ecb210be3c40c1e32519e5d27584c1d1c88dcd970b24746db926e96d4d56b7",
@@ -1267,7 +1292,7 @@
       "sourceUrl": "https://github.com/zjgulai/mkt53/blob/main/app/src/data/source-registry.ts",
       "method": "local-file-check",
       "status": "ok",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.654Z",
       "localPath": "src/data/source-registry.ts",
       "fileSizeBytes": 21392,
       "sampleHash": "a2a824d0ba7d06662f570af1b24dc8ee8c31250f9b400e6dc1312a9617030cb7",
@@ -1280,7 +1305,7 @@
       "sourceName": "AI模型配置 / 官网采集图",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1290,7 +1315,7 @@
       "sourceName": "Amazon API / NLP模型占位",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1300,7 +1325,7 @@
       "sourceName": "YouTube Data API / 达人研究占位",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1310,7 +1335,7 @@
       "sourceName": "用户评论/VOC NLP汇总",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1320,7 +1345,7 @@
       "sourceName": "VOC NLP汇总 / 人工分析",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1330,7 +1355,7 @@
       "sourceName": "FDA/CPSC/EU/品牌官网/新闻源手工汇编",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1340,7 +1365,7 @@
       "sourceName": "Momcozy ERP / 供应商访谈",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1350,7 +1375,7 @@
       "sourceName": "品牌官网/技术新闻/产品规格",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1360,7 +1385,7 @@
       "sourceName": "行业报告 / Amazon品类采集",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1370,7 +1395,7 @@
       "sourceName": "行业报告加权 / Amazon BSR",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1380,7 +1405,7 @@
       "sourceName": "Amazon品类采集 / 行业报告",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1390,7 +1415,7 @@
       "sourceName": "用户调研 / AI图像资产标签",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1400,7 +1425,7 @@
       "sourceName": "渠道访谈 / 内部销售口径",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1410,7 +1435,7 @@
       "sourceName": "门店访谈 / 运营数据审计",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1422,7 +1447,7 @@
       "sourceUrl": "https://www.cpsc.gov/eFiling",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-06-11T07:30:42.649Z",
+      "checkedAt": "2026-06-11T09:03:34.655Z",
       "httpStatus": 200,
       "contentType": "text/html; charset=UTF-8",
       "etag": "\"1781089382\"",
@@ -1435,7 +1460,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-06-11T07:30:42.649Z",
+          "checkedAt": "2026-06-11T09:03:34.655Z",
           "httpStatus": 200,
           "retryable": false
         }
@@ -1451,7 +1476,7 @@
       "sourceUrl": "https://health.ec.europa.eu/medical-devices-sector/new-regulations_en",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-06-11T07:30:42.763Z",
+      "checkedAt": "2026-06-11T09:03:34.745Z",
       "httpStatus": 206,
       "contentType": "text/html; charset=UTF-8",
       "etag": "",
@@ -1464,7 +1489,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-06-11T07:30:42.763Z",
+          "checkedAt": "2026-06-11T09:03:34.745Z",
           "httpStatus": 206,
           "retryable": false
         }

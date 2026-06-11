@@ -3,6 +3,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { analyzeConsistency } from './lib/project-analysis.mjs';
 import { collectSemiMonthlySources } from './collect-weekly-sources.mjs';
+import { summarizeSourceTaskQueue } from './lib/source-tasks.mjs';
 
 const args = process.argv.slice(2);
 const noNetwork = args.includes('--no-network');
@@ -21,14 +22,21 @@ function writeJson(path, data) {
 
 const audit = analyzeConsistency(process.cwd());
 const manifest = await collectSemiMonthlySources({ noNetwork, timeoutMs, maxAttempts, retryDelayMs });
+const publicManifest = {
+  ...manifest,
+  sourceTaskQueue: summarizeSourceTaskQueue(manifest.sourceTaskQueue),
+};
 
 writeJson('tmp/data-collection/audit-latest.json', audit);
-writeJson('public/periodic-data/latest.json', manifest);
+writeJson('public/periodic-data/latest.json', publicManifest);
 writeJson('public/periodic-data/connectors.json', manifest.connectorBacklog);
-writeJson('public/weekly-data/latest.json', manifest);
+writeJson('public/periodic-data/source-tasks.json', manifest.sourceTaskQueue);
+writeJson('public/weekly-data/latest.json', publicManifest);
 writeJson('public/weekly-data/connectors.json', manifest.connectorBacklog);
+writeJson('public/weekly-data/source-tasks.json', manifest.sourceTaskQueue);
 writeJson(`tmp/data-collection/runs/${manifest.period}.json`, manifest);
 writeJson(`tmp/data-collection/runs/${manifest.period}-connectors.json`, manifest.connectorBacklog);
+writeJson(`tmp/data-collection/runs/${manifest.period}-source-tasks.json`, manifest.sourceTaskQueue);
 
 process.stdout.write([
   `mkt53 semi-monthly data refresh completed`,
@@ -39,7 +47,9 @@ process.stdout.write([
   `latest=public/periodic-data/latest.json`,
   `compatLatest=public/weekly-data/latest.json`,
   `connectors=public/periodic-data/connectors.json`,
+  `sourceTasks=public/periodic-data/source-tasks.json`,
   `compatConnectors=public/weekly-data/connectors.json`,
+  `compatSourceTasks=public/weekly-data/source-tasks.json`,
   `audit=tmp/data-collection/audit-latest.json`,
   `run=tmp/data-collection/runs/${manifest.period}.json`,
   `total=${manifest.totals.total}`,

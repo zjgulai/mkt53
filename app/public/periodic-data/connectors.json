@@ -38,7 +38,7 @@
         "category_rank_snapshot"
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
     },
     {
       "connectorId": "review-nlp",
@@ -69,7 +69,7 @@
         "human_review_sample"
       ],
       "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
     },
     {
       "connectorId": "internal-crm",
@@ -92,7 +92,7 @@
         "retention_segment_snapshot"
       ],
       "stopCondition": "dry-run 输出脱敏字段清单、rowCount、window 和 owner。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
     },
     {
       "connectorId": "social-listening",
@@ -116,7 +116,7 @@
         "topic_keyword_snapshot"
       ],
       "stopCondition": "dry-run 输出 querySet、countrySet、window、sampleCount 和去重策略。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
     },
     {
       "connectorId": "internal-erp",
@@ -140,7 +140,7 @@
         "supply_cost_snapshot"
       ],
       "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
     },
     {
       "connectorId": "trade-import",
@@ -163,7 +163,7 @@
         "hs_code_market_snapshot"
       ],
       "stopCondition": "dry-run 输出 hsCodes、countrySet、window、sampleCount 和授权状态。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
     },
     {
       "connectorId": "youtube-data",
@@ -187,7 +187,7 @@
         "creator_profile_snapshot"
       ],
       "stopCondition": "dry-run 输出 videoCount、commentSampleCount、quotaCost 和 sourceIds。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
     },
     {
       "connectorId": "internal-knowledge-reporting",
@@ -217,7 +217,7 @@
         "qualitative_source_manifest"
       ],
       "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
     },
     {
       "connectorId": "ai-generation",
@@ -242,7 +242,7 @@
         "asset_review_snapshot"
       ],
       "stopCondition": "dry-run 输出 requestCount、modelSet、costFieldsPresent 和审核状态分布。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
     },
     {
       "connectorId": "crawler-compliance",
@@ -265,7 +265,7 @@
         "robots_compliance_record"
       ],
       "stopCondition": "dry-run 输出 allowedUrlPatterns、robotsStatus、rateLimit 和 sourceIds。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。"
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。"
     }
   ],
   "items": [
@@ -288,7 +288,7 @@
         "asset_review_snapshot"
       ],
       "stopCondition": "dry-run 输出 requestCount、modelSet、costFieldsPresent 和审核状态分布。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "接入生成服务端日志与素材审核状态"
     },
     {
@@ -310,7 +310,7 @@
         "asset_review_snapshot"
       ],
       "stopCondition": "dry-run 输出 requestCount、modelSet、costFieldsPresent 和审核状态分布。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "接入服务端代理后记录requestId、model、cost和status"
     },
     {
@@ -334,7 +334,7 @@
         "category_rank_snapshot"
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "补采集任务记录"
     },
     {
@@ -358,7 +358,7 @@
         "category_rank_snapshot"
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "补采集时间戳"
     },
     {
@@ -383,7 +383,7 @@
         "category_rank_snapshot"
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "建议叠加NPD/IRI线下数据"
     },
     {
@@ -407,7 +407,7 @@
         "category_rank_snapshot"
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "补数据快照"
     },
     {
@@ -431,7 +431,7 @@
         "category_rank_snapshot"
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "补品类报告来源、采集窗口和测算公式"
     },
     {
@@ -455,7 +455,7 @@
         "category_rank_snapshot"
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "补测算说明、BSR快照和外部报告来源"
     },
     {
@@ -479,7 +479,7 @@
         "category_rank_snapshot"
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "接入Amazon类目采集并保存SKU/品牌映射"
     },
     {
@@ -501,7 +501,7 @@
         "robots_compliance_record"
       ],
       "stopCondition": "dry-run 输出 allowedUrlPatterns、robotsStatus、rateLimit 和 sourceIds。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "需标注robots.txt合规性"
     },
     {
@@ -523,7 +523,7 @@
         "retention_segment_snapshot"
       ],
       "stopCondition": "dry-run 输出脱敏字段清单、rowCount、window 和 owner。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "需对接真实CRM数据库"
     },
     {
@@ -546,7 +546,7 @@
         "supply_cost_snapshot"
       ],
       "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "接入ERP导出、供应商主数据和库存快照"
     },
     {
@@ -569,7 +569,7 @@
         "qualitative_source_manifest"
       ],
       "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "建议引用外部份额数据校准"
     },
     {
@@ -592,7 +592,7 @@
         "qualitative_source_manifest"
       ],
       "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "OK"
     },
     {
@@ -615,7 +615,7 @@
         "qualitative_source_manifest"
       ],
       "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "OK"
     },
     {
@@ -638,7 +638,7 @@
         "qualitative_source_manifest"
       ],
       "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "补访谈样本、脱敏记录和销售数据版本"
     },
     {
@@ -662,7 +662,7 @@
         "human_review_sample"
       ],
       "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "补充模型准确率指标"
     },
     {
@@ -686,7 +686,7 @@
         "human_review_sample"
       ],
       "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "接入评论数据集与NLP评估报告"
     },
     {
@@ -710,7 +710,7 @@
         "human_review_sample"
       ],
       "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "补充评论来源、关键词词典和NLP运行记录"
     },
     {
@@ -734,7 +734,7 @@
         "human_review_sample"
       ],
       "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "绑定VOC快照、模型版本和人工复核人"
     },
     {
@@ -757,7 +757,7 @@
         "topic_keyword_snapshot"
       ],
       "stopCondition": "dry-run 输出 querySet、countrySet、window、sampleCount 和去重策略。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "补采集配置"
     },
     {
@@ -780,7 +780,7 @@
         "hs_code_market_snapshot"
       ],
       "stopCondition": "dry-run 输出 hsCodes、countrySet、window、sampleCount 和授权状态。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "需接入Import Genius API或数仓"
     },
     {
@@ -803,7 +803,7 @@
         "creator_profile_snapshot"
       ],
       "stopCondition": "dry-run 输出 videoCount、commentSampleCount、quotaCost 和 sourceIds。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "接入YouTube Data API并保存采集manifest"
     }
   ]

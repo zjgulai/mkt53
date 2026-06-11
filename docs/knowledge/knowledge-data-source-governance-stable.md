@@ -119,6 +119,16 @@ npm run test:e2e
 
 `connector-required` 会进入 `app/public/periodic-data/connectors.json`，并同步进入 `app/public/weekly-data/connectors.json` 兼容路径。该文件只代表授权连接器接入队列，包含 `requiredAccess`、`outputContract`、`stopCondition` 和 `blockedReason`；它不是业务数据快照，不能作为真实采集成功证据。
 
+`sourceTaskQueue` 会进入 manifest，并同步写入 `app/public/periodic-data/source-tasks.json` 与 `app/public/weekly-data/source-tasks.json`。该队列把待办拆成三类：
+
+| 队列 | 含义 | 使用限制 |
+|---|---|---|
+| `connector-readiness` | 需要授权连接器、采集窗口、脱敏/合规复核后才能进入真实采集 | 只能作为接入任务，不代表已经获取平台或内部系统数据 |
+| `manual-evidence` | 需要采购报告、人工上传、访谈样本或条目级凭证 | 只能作为补证任务，不得用待补材料升级页面结论 |
+| `public-source-review` | 公开 URL 存在但仍需核验口径、时间、适用范围或访问凭证 | 只能作为复核任务，不等于业务数值已复核 |
+
+`source-tasks.json` 可以公开，因为它只包含 source id、页面、指标、证据清单和验收条件；不得加入真实凭据、私有 ASIN/SKU、客户明细、内部 owner、供应商报价或原始访谈内容。
+
 公开 URL 采集默认不是单次请求判定。脚本会记录 `collectionPolicy.publicUrl`、每条公开来源的 `checkAttemptCount`、`attempts` 和 `statusStability`；只有重试后仍失败时，才进入 `fetch-error` 或可重试 HTTP 的 `source-error`。`403`、`404` 等明确权限或链接错误仍直接保留为 `source-error`，避免用重试掩盖真实来源问题。
 
 Amazon P0 当前交付物是 `npm run data:connector:amazon:dry-run`。该脚本输出授权前置条件、ASIN/SKU 映射缺口、七个 Amazon source id 覆盖情况和四类快照字段契约；`networkCalls=0`、`businessDataWrites=0`，不调用 Amazon，不提升任何来源复核状态。
