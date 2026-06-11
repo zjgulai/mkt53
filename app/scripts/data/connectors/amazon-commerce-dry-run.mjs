@@ -93,8 +93,8 @@ function parseArgs(argv) {
     readinessPath: undefined,
     site: 'amazon.com',
     marketplaceId: 'ATVPDKIKX0DER',
-    windowStart: '2026-05-01',
-    windowEnd: '2026-05-31',
+    windowStart: '2026-06-01',
+    windowEnd: '2026-06-15',
   };
 
   for (let i = 0; i < argv.length; i += 1) {
