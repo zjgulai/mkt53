@@ -52,6 +52,10 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:voc-nlp:readiness']).toContain('--readiness-gate');
     expect(packageJson.scripts['data:connector:voc-nlp:readiness:template']).toContain('--print-readiness-template');
     expect(packageJson.scripts['data:connector:voc-nlp:sample:template']).toContain('--print-sample-manifest-template');
+    expect(packageJson.scripts['data:connector:crm:dry-run']).toContain('scripts/data/connectors/internal-crm-dry-run.mjs');
+    expect(packageJson.scripts['data:connector:crm:readiness']).toContain('--readiness-gate');
+    expect(packageJson.scripts['data:connector:crm:readiness:template']).toContain('--print-readiness-template');
+    expect(packageJson.scripts['data:connector:crm:snapshot:template']).toContain('--print-snapshot-manifest-template');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(packageJson.scripts['data:deploy:semi-monthly']).toContain('scripts/data/semi-monthly-refresh-and-deploy.sh');
@@ -98,13 +102,17 @@ describe('production helper scripts', () => {
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-private-input-audit.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-readiness-checklist.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/voc-nlp-dry-run.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/internal-crm-dry-run.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/voc-nlp-readiness-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/voc-nlp-sample-manifest-template.json'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/internal-crm-readiness-template.json'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/internal-crm-snapshot-manifest-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-mapping-partial-valid.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-readiness-partial-valid.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/voc-nlp-readiness-valid.json'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'tests/fixtures/internal-crm-readiness-valid.json'), constants.R_OK)).not.toThrow();
     expect(readFileSync(join(process.cwd(), '.gitignore'), 'utf8')).toContain('configs/private/');
   });
 
@@ -519,6 +527,187 @@ describe('production helper scripts', () => {
     });
     expect(gate.blockers).toHaveLength(0);
     expect(gate.safety).toMatchObject({ networkCalls: 0, modelCalls: 0, businessDataWrites: 0 });
+  });
+
+  it('runs the internal CRM connector in blocked dry-run mode without reading CRM rows', () => {
+    const output = execFileSync('node', ['scripts/data/connectors/internal-crm-dry-run.mjs', '--json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        MKT53_CRM_CONNECTION_SECRET: 'SHOULD_NOT_LEAK_IN_DRY_RUN',
+      },
+    });
+    const dryRun = JSON.parse(output) as {
+      connectorId: string;
+      mode: string;
+      status: string;
+      sourceCount: number;
+      sourceIds: string[];
+      safety: { networkCalls: number; databaseReads: number; businessDataWrites: number; privateValuesRedacted: boolean };
+      thresholds: { minimumAnonymizedCustomerRows: number; minimumSegmentCount: number; requiredSegments: string[] };
+      privateInput: { publicBundleAllowed: boolean; gitAllowed: boolean };
+      blockers: Array<{ type: string }>;
+      snapshotContracts: Array<{ snapshotType: string; requiredFields: string[] }>;
+    };
+
+    expect(output).not.toContain('SHOULD_NOT_LEAK_IN_DRY_RUN');
+    expect(dryRun.connectorId).toBe('internal-crm');
+    expect(dryRun.mode).toBe('dry-run');
+    expect(dryRun.status).toBe('blocked');
+    expect(dryRun.sourceCount).toBe(1);
+    expect(dryRun.sourceIds).toEqual(['ds-012']);
+    expect(dryRun.safety).toMatchObject({
+      networkCalls: 0,
+      databaseReads: 0,
+      businessDataWrites: 0,
+      privateValuesRedacted: true,
+    });
+    expect(dryRun.thresholds).toMatchObject({
+      minimumAnonymizedCustomerRows: 1000,
+      minimumSegmentCount: 7,
+    });
+    expect(dryRun.thresholds.requiredSegments).toEqual([
+      'champions',
+      'loyal-customers',
+      'potential-loyalists',
+      'new-customers',
+      'at-risk',
+      'hibernating',
+      'lost',
+    ]);
+    expect(dryRun.privateInput).toMatchObject({ publicBundleAllowed: false, gitAllowed: false });
+    expect(dryRun.blockers).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: 'missing-private-crm-readiness-record' }),
+        expect.objectContaining({ type: 'missing-private-crm-snapshot-manifest' }),
+        expect.objectContaining({ type: 'missing-rfm-scoring-rule-version' }),
+        expect.objectContaining({ type: 'missing-anonymization-approval' }),
+      ]),
+    );
+    expect(dryRun.snapshotContracts.map((contract) => contract.snapshotType)).toEqual(['customer_rfm_snapshot', 'retention_segment_snapshot']);
+  });
+
+  it('prints private CRM readiness templates without credentials or customer identifiers', () => {
+    const readinessOutput = execFileSync('node', ['scripts/data/connectors/internal-crm-dry-run.mjs', '--print-readiness-template'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const snapshotOutput = execFileSync('node', ['scripts/data/connectors/internal-crm-dry-run.mjs', '--print-snapshot-manifest-template'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const readinessTemplate = JSON.parse(readinessOutput) as {
+      privateData: boolean;
+      publicBundleAllowed: boolean;
+      gitAllowed: boolean;
+      expectedSnapshotTypes: string[];
+      readiness: {
+        sourceIds: string[];
+        allowedExportFields: string[];
+        anonymizedCustomerRowCount: number;
+        containsRawPii: boolean;
+      };
+    };
+    const snapshotTemplate = JSON.parse(snapshotOutput) as {
+      privateData: boolean;
+      publicBundleAllowed: boolean;
+      gitAllowed: boolean;
+      snapshotManifest: {
+        sourceIds: string[];
+        allowedExportFields: string[];
+        anonymizedCustomerRowCount: number;
+        containsRawPii: boolean;
+      };
+    };
+
+    expect(`${readinessOutput}\n${snapshotOutput}`).not.toMatch(
+      /clientSecret|refreshToken|accessToken|password|privateKey|authorizationHeader|connectionString|rawCustomerId|crmCustomerId|email|phone|address/i,
+    );
+    expect(readinessTemplate).toMatchObject({
+      privateData: true,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    });
+    expect(readinessTemplate.expectedSnapshotTypes).toEqual(['customer_rfm_snapshot', 'retention_segment_snapshot']);
+    expect(readinessTemplate.readiness.sourceIds).toEqual(['ds-012']);
+    expect(readinessTemplate.readiness.anonymizedCustomerRowCount).toBe(0);
+    expect(readinessTemplate.readiness.containsRawPii).toBe(false);
+    expect(readinessTemplate.readiness.allowedExportFields).toEqual(
+      expect.arrayContaining(['anonymizedCustomerId', 'segment', 'recencyDays', 'frequency', 'monetaryUsd']),
+    );
+    expect(snapshotTemplate).toMatchObject({
+      privateData: true,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    });
+    expect(snapshotTemplate.snapshotManifest.sourceIds).toEqual(readinessTemplate.readiness.sourceIds);
+    expect(snapshotTemplate.snapshotManifest.anonymizedCustomerRowCount).toBe(0);
+    expect(snapshotTemplate.snapshotManifest.containsRawPii).toBe(false);
+  });
+
+  it('passes CRM readiness only with anonymized rows, RFM rules, owner review, and compliance evidence', () => {
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/connectors/internal-crm-dry-run.mjs',
+        '--readiness-gate',
+        '--readiness',
+        'tests/fixtures/internal-crm-readiness-valid.json',
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          MKT53_CRM_CONNECTION_SECRET: 'fixture-crm-secret',
+        },
+      },
+    );
+    const gate = JSON.parse(output) as {
+      status: string;
+      readinessPathSource: string;
+      privateInput: { readinessPathConfigured: boolean; publicBundleAllowed: boolean; gitAllowed: boolean };
+      thresholds: { minimumAnonymizedCustomerRows: number; minimumSegmentCount: number; requiredSegments: string[] };
+      checks: Array<{ id: string; status: string; details: Record<string, unknown>; blockers: Array<{ type: string }> }>;
+      blockers: Array<{ type: string }>;
+      safety: { networkCalls: number; databaseReads: number; businessDataWrites: number };
+    };
+
+    expect(output).not.toContain('fixture-crm-secret');
+    expect(gate.status).toBe('ready-for-authorized-crm-rfm-pipeline-implementation');
+    expect(gate.readinessPathSource).toBe('cli');
+    expect(gate.privateInput).toMatchObject({
+      readinessPathConfigured: true,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    });
+    expect(gate.thresholds).toMatchObject({
+      minimumAnonymizedCustomerRows: 1000,
+      minimumSegmentCount: 7,
+    });
+    expect(gate.checks.every((check) => check.status === 'ready')).toBe(true);
+    expect(gate.checks.find((check) => check.id === 'sourceCoverage')?.details).toMatchObject({
+      missingSourceIds: [],
+    });
+    expect(gate.checks.find((check) => check.id === 'snapshotVolume')?.details).toMatchObject({
+      anonymizedCustomerRowCount: 1200,
+      segmentCount: 7,
+      segmentCountsCovered: true,
+    });
+    expect(gate.checks.find((check) => check.id === 'rfmDefinition')?.details).toMatchObject({
+      rfmModelVersion: 'fixture-rfm-2026-06-h1',
+      scoringRuleVersion: 'fixture-rfm-rules-v1',
+      monetaryCurrency: 'USD',
+    });
+    expect(gate.checks.find((check) => check.id === 'privacyBoundary')?.details).toMatchObject({
+      anonymizationStatus: 'approved',
+      piiHandlingStatus: 'approved',
+      containsRawPii: false,
+      forbiddenKeys: [],
+    });
+    expect(gate.blockers).toHaveLength(0);
+    expect(gate.safety).toMatchObject({ networkCalls: 0, databaseReads: 0, businessDataWrites: 0 });
   });
 
   it('validates a partial Amazon ASIN/SKU mapping without treating it as full coverage', () => {

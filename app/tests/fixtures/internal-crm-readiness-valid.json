@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "connectorId": "internal-crm",
+  "fixtureOnly": true,
+  "note": "Synthetic fixture for validating the CRM readiness gate. Do not use as business evidence.",
+  "readiness": {
+    "authorizationRecordId": "fixture-crm-auth-record-20260611",
+    "authorizationOwner": "fixture-crm-owner",
+    "authorizationApprovedAt": "2026-06-11",
+    "collectionWindowStart": "2026-06-01",
+    "collectionWindowEnd": "2026-06-15",
+    "snapshotId": "fixture-crm-rfm-snapshot-2026-06-h1",
+    "sourceIds": [
+      "ds-012"
+    ],
+    "anonymizedCustomerRowCount": 1200,
+    "segmentCount": 7,
+    "segmentCustomerCounts": {
+      "champions": 160,
+      "loyal-customers": 210,
+      "potential-loyalists": 180,
+      "new-customers": 140,
+      "at-risk": 190,
+      "hibernating": 170,
+      "lost": 150
+    },
+    "rfmModelVersion": "fixture-rfm-2026-06-h1",
+    "scoringRuleVersion": "fixture-rfm-rules-v1",
+    "recencyWindowDays": 365,
+    "frequencyWindowDays": 365,
+    "monetaryCurrency": "USD",
+    "allowedExportFields": [
+      "anonymizedCustomerId",
+      "segment",
+      "recencyDays",
+      "frequency",
+      "monetaryUsd",
+      "recommendedAction"
+    ],
+    "anonymizationStatus": "approved",
+    "piiHandlingStatus": "approved",
+    "containsRawPii": false,
+    "reviewOwner": "fixture-user-research-owner",
+    "reviewApprovedAt": "2026-06-11",
+    "complianceReviewer": "fixture-compliance-owner",
+    "complianceReviewStatus": "approved",
+    "allowedSnapshotTypes": [
+      "customer_rfm_snapshot",
+      "retention_segment_snapshot"
+    ]
+  }
+}
