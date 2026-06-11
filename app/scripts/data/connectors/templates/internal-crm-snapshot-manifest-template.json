@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "connectorId": "internal-crm",
+  "templateName": "internal-crm-snapshot-manifest-template",
+  "privateData": true,
+  "publicBundleAllowed": false,
+  "gitAllowed": false,
+  "recommendedLocalPrivateSnapshotManifestPath": "configs/private/internal-crm-snapshot-manifest.json",
+  "recommendedServerPrivateSnapshotManifestPath": "/opt/mkt53/private/internal-crm-snapshot-manifest.json",
+  "snapshotManifest": {
+    "snapshotId": "",
+    "collectionWindowStart": "YYYY-MM-DD",
+    "collectionWindowEnd": "YYYY-MM-DD",
+    "sourceIds": [
+      "ds-012"
+    ],
+    "anonymizedCustomerRowCount": 0,
+    "segmentCount": 7,
+    "segmentCustomerCounts": {
+      "champions": 0,
+      "loyal-customers": 0,
+      "potential-loyalists": 0,
+      "new-customers": 0,
+      "at-risk": 0,
+      "hibernating": 0,
+      "lost": 0
+    },
+    "rfmModelVersion": "",
+    "scoringRuleVersion": "",
+    "recencyWindowDays": 365,
+    "frequencyWindowDays": 365,
+    "monetaryCurrency": "USD",
+    "allowedExportFields": [
+      "anonymizedCustomerId",
+      "segment",
+      "recencyDays",
+      "frequency",
+      "monetaryUsd",
+      "recommendedAction"
+    ],
+    "anonymizationStatus": "approved",
+    "piiHandlingStatus": "approved",
+    "containsRawPii": false,
+    "privateStorage": {
+      "locationType": "private-data-warehouse-or-private-directory",
+      "redactedPath": "",
+      "gitAllowed": false,
+      "publicBundleAllowed": false
+    },
+    "note": "This manifest records counts, windows, versions, safe field names, and private storage references only. Do not paste customer identifiers or CRM rows here."
+  }
+}

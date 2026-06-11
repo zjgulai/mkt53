@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "connectorId": "internal-crm",
+  "templateName": "internal-crm-readiness-template",
+  "privateData": true,
+  "publicBundleAllowed": false,
+  "gitAllowed": false,
+  "recommendedLocalPrivateReadinessPath": "configs/private/internal-crm-readiness.json",
+  "recommendedServerPrivateReadinessPath": "/opt/mkt53/private/internal-crm-readiness.json",
+  "recommendedLocalPrivateSnapshotManifestPath": "configs/private/internal-crm-snapshot-manifest.json",
+  "recommendedServerPrivateSnapshotManifestPath": "/opt/mkt53/private/internal-crm-snapshot-manifest.json",
+  "requiredBeforeRealConnector": [
+    "authorizationRecordId",
+    "authorizationOwner",
+    "authorizationApprovedAt",
+    "collectionWindowStart",
+    "collectionWindowEnd",
+    "snapshotId",
+    "sourceIds",
+    "anonymizedCustomerRowCount",
+    "segmentCount",
+    "segmentCustomerCounts",
+    "rfmModelVersion",
+    "scoringRuleVersion",
+    "recencyWindowDays",
+    "frequencyWindowDays",
+    "monetaryCurrency",
+    "allowedExportFields",
+    "anonymizationStatus",
+    "piiHandlingStatus",
+    "reviewOwner",
+    "reviewApprovedAt",
+    "complianceReviewStatus",
+    "allowedSnapshotTypes"
+  ],
+  "thresholds": {
+    "minimumAnonymizedCustomerRows": 1000,
+    "minimumSegmentCount": 7,
+    "requiredSegments": [
+      "champions",
+      "loyal-customers",
+      "potential-loyalists",
+      "new-customers",
+      "at-risk",
+      "hibernating",
+      "lost"
+    ]
+  },
+  "expectedSnapshotTypes": [
+    "customer_rfm_snapshot",
+    "retention_segment_snapshot"
+  ],
+  "readiness": {
+    "authorizationRecordId": "",
+    "authorizationOwner": "",
+    "authorizationApprovedAt": "YYYY-MM-DD",
+    "collectionWindowStart": "YYYY-MM-DD",
+    "collectionWindowEnd": "YYYY-MM-DD",
+    "snapshotId": "",
+    "sourceIds": [
+      "ds-012"
+    ],
+    "anonymizedCustomerRowCount": 0,
+    "segmentCount": 7,
+    "segmentCustomerCounts": {
+      "champions": 0,
+      "loyal-customers": 0,
+      "potential-loyalists": 0,
+      "new-customers": 0,
+      "at-risk": 0,
+      "hibernating": 0,
+      "lost": 0
+    },
+    "rfmModelVersion": "",
+    "scoringRuleVersion": "",
+    "recencyWindowDays": 365,
+    "frequencyWindowDays": 365,
+    "monetaryCurrency": "USD",
+    "allowedExportFields": [
+      "anonymizedCustomerId",
+      "segment",
+      "recencyDays",
+      "frequency",
+      "monetaryUsd",
+      "recommendedAction"
+    ],
+    "anonymizationStatus": "approved",
+    "piiHandlingStatus": "approved",
+    "containsRawPii": false,
+    "reviewOwner": "",
+    "reviewApprovedAt": "YYYY-MM-DD",
+    "complianceReviewer": "",
+    "complianceReviewStatus": "approved",
+    "allowedSnapshotTypes": [
+      "customer_rfm_snapshot",
+      "retention_segment_snapshot"
+    ],
+    "note": "Fill this file only in private config paths. Do not include CRM credentials, raw PII fields, order identifiers, or internal owner private contacts."
+  }
+}
