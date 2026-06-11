@@ -1,0 +1,1470 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-06-11T09:03:31.528Z",
+  "generatedRule": "source task queue 只表达待补证和接入任务，不代表业务数据已采集。",
+  "total": 42,
+  "queueTypeCounts": {
+    "connector-readiness": 23,
+    "manual-evidence": 12,
+    "public-source-review": 7
+  },
+  "priorityCounts": {
+    "P0": 16,
+    "P1": 15,
+    "P2": 11
+  },
+  "ownerTeamCounts": {
+    "brand-strategy": 2,
+    "competitive-intelligence": 4,
+    "data-ai": 8,
+    "industry-regulatory": 11,
+    "market-research": 8,
+    "user-research": 8,
+    "insight-ops": 1
+  },
+  "groups": {
+    "byQueueType": [
+      {
+        "queueType": "connector-readiness",
+        "count": 23,
+        "taskIds": [
+          "connector-readiness:ds-019",
+          "connector-readiness:ds-007",
+          "connector-readiness:ds-009",
+          "connector-readiness:ds-010",
+          "connector-readiness:ds-021",
+          "connector-readiness:ds-030",
+          "connector-readiness:ds-032",
+          "connector-readiness:ds-033",
+          "connector-readiness:ds-037",
+          "connector-readiness:ds-038",
+          "connector-readiness:ds-039",
+          "connector-readiness:ds-012",
+          "connector-readiness:ds-013",
+          "connector-readiness:ds-031",
+          "connector-readiness:ds-035",
+          "connector-readiness:ds-006",
+          "connector-readiness:ds-020",
+          "connector-readiness:ds-022",
+          "connector-readiness:ds-023",
+          "connector-readiness:ds-026",
+          "connector-readiness:ds-029",
+          "connector-readiness:ds-024",
+          "connector-readiness:ds-041"
+        ]
+      },
+      {
+        "queueType": "manual-evidence",
+        "count": 12,
+        "taskIds": [
+          "manual-evidence:ds-025",
+          "manual-evidence:ds-040",
+          "manual-evidence:ds-016",
+          "manual-evidence:ds-034",
+          "manual-evidence:ds-036",
+          "manual-evidence:ds-003",
+          "manual-evidence:ds-005",
+          "manual-evidence:ds-014",
+          "manual-evidence:ds-042",
+          "manual-evidence:ds-008",
+          "manual-evidence:ds-015",
+          "manual-evidence:ds-018"
+        ]
+      },
+      {
+        "queueType": "public-source-review",
+        "count": 7,
+        "taskIds": [
+          "public-source-review:ds-004",
+          "public-source-review:ds-017",
+          "public-source-review:policy-cpsc-efiling",
+          "public-source-review:policy-eu-mdr-transition",
+          "public-source-review:ds-011",
+          "public-source-review:ds-043",
+          "public-source-review:ds-002"
+        ]
+      }
+    ],
+    "byPriority": [
+      {
+        "priority": "P0",
+        "count": 16,
+        "taskIds": [
+          "connector-readiness:ds-019",
+          "connector-readiness:ds-007",
+          "connector-readiness:ds-009",
+          "connector-readiness:ds-010",
+          "connector-readiness:ds-021",
+          "connector-readiness:ds-030",
+          "connector-readiness:ds-032",
+          "connector-readiness:ds-033",
+          "connector-readiness:ds-037",
+          "connector-readiness:ds-038",
+          "connector-readiness:ds-039",
+          "connector-readiness:ds-012",
+          "connector-readiness:ds-013",
+          "manual-evidence:ds-025",
+          "manual-evidence:ds-040",
+          "public-source-review:ds-004"
+        ]
+      },
+      {
+        "priority": "P1",
+        "count": 15,
+        "taskIds": [
+          "connector-readiness:ds-031",
+          "connector-readiness:ds-035",
+          "connector-readiness:ds-006",
+          "manual-evidence:ds-016",
+          "manual-evidence:ds-034",
+          "manual-evidence:ds-036",
+          "manual-evidence:ds-003",
+          "manual-evidence:ds-005",
+          "manual-evidence:ds-014",
+          "manual-evidence:ds-042",
+          "public-source-review:ds-017",
+          "public-source-review:policy-cpsc-efiling",
+          "public-source-review:policy-eu-mdr-transition",
+          "public-source-review:ds-011",
+          "public-source-review:ds-043"
+        ]
+      },
+      {
+        "priority": "P2",
+        "count": 11,
+        "taskIds": [
+          "connector-readiness:ds-020",
+          "connector-readiness:ds-022",
+          "connector-readiness:ds-023",
+          "connector-readiness:ds-026",
+          "connector-readiness:ds-029",
+          "connector-readiness:ds-024",
+          "connector-readiness:ds-041",
+          "manual-evidence:ds-008",
+          "manual-evidence:ds-015",
+          "manual-evidence:ds-018",
+          "public-source-review:ds-002"
+        ]
+      }
+    ],
+    "byOwnerTeam": [
+      {
+        "ownerTeam": "brand-strategy",
+        "count": 2,
+        "taskIds": [
+          "connector-readiness:ds-019",
+          "connector-readiness:ds-020"
+        ]
+      },
+      {
+        "ownerTeam": "competitive-intelligence",
+        "count": 4,
+        "taskIds": [
+          "connector-readiness:ds-007",
+          "connector-readiness:ds-009",
+          "connector-readiness:ds-010",
+          "manual-evidence:ds-008"
+        ]
+      },
+      {
+        "ownerTeam": "data-ai",
+        "count": 8,
+        "taskIds": [
+          "connector-readiness:ds-021",
+          "connector-readiness:ds-030",
+          "manual-evidence:ds-025",
+          "connector-readiness:ds-031",
+          "connector-readiness:ds-022",
+          "connector-readiness:ds-023",
+          "connector-readiness:ds-026",
+          "connector-readiness:ds-029"
+        ]
+      },
+      {
+        "ownerTeam": "industry-regulatory",
+        "count": 11,
+        "taskIds": [
+          "connector-readiness:ds-032",
+          "connector-readiness:ds-033",
+          "connector-readiness:ds-035",
+          "manual-evidence:ds-016",
+          "manual-evidence:ds-034",
+          "manual-evidence:ds-036",
+          "public-source-review:ds-017",
+          "public-source-review:policy-cpsc-efiling",
+          "public-source-review:policy-eu-mdr-transition",
+          "manual-evidence:ds-015",
+          "manual-evidence:ds-018"
+        ]
+      },
+      {
+        "ownerTeam": "insight-ops",
+        "count": 1,
+        "taskIds": [
+          "connector-readiness:ds-024"
+        ]
+      },
+      {
+        "ownerTeam": "market-research",
+        "count": 8,
+        "taskIds": [
+          "connector-readiness:ds-037",
+          "connector-readiness:ds-038",
+          "connector-readiness:ds-039",
+          "public-source-review:ds-004",
+          "connector-readiness:ds-006",
+          "manual-evidence:ds-003",
+          "manual-evidence:ds-005",
+          "public-source-review:ds-002"
+        ]
+      },
+      {
+        "ownerTeam": "user-research",
+        "count": 8,
+        "taskIds": [
+          "connector-readiness:ds-012",
+          "connector-readiness:ds-013",
+          "manual-evidence:ds-040",
+          "manual-evidence:ds-014",
+          "manual-evidence:ds-042",
+          "public-source-review:ds-011",
+          "public-source-review:ds-043",
+          "connector-readiness:ds-041"
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "taskId": "connector-readiness:ds-019",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "brand-strategy",
+      "sourceId": "ds-019",
+      "module": "看自己",
+      "page": "SelfInsight",
+      "metric": "营销4P",
+      "sourceName": "Momcozy内部/Amazon",
+      "sourceType": "混合",
+      "reliability": "B",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "Amazon SP-API 或 Vendor Central Brand Analytics 授权",
+        "ASIN/SKU/品牌映射表",
+        "采集窗口和站点范围",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补数据快照"
+    },
+    {
+      "taskId": "connector-readiness:ds-007",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "competitive-intelligence",
+      "sourceId": "ds-007",
+      "module": "看竞争",
+      "page": "CompetitionPage",
+      "metric": "竞品概览",
+      "sourceName": "Amazon.com 实时采集",
+      "sourceType": "平台API",
+      "reliability": "A",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "Amazon SP-API 或 Vendor Central Brand Analytics 授权",
+        "ASIN/SKU/品牌映射表",
+        "采集窗口和站点范围",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补采集任务记录"
+    },
+    {
+      "taskId": "connector-readiness:ds-009",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "competitive-intelligence",
+      "sourceId": "ds-009",
+      "module": "看竞争",
+      "page": "ProductManage",
+      "metric": "产品参数/价格",
+      "sourceName": "Amazon.com 2026-05",
+      "sourceType": "实时采集",
+      "reliability": "A",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "Amazon SP-API 或 Vendor Central Brand Analytics 授权",
+        "ASIN/SKU/品牌映射表",
+        "采集窗口和站点范围",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补采集时间戳"
+    },
+    {
+      "taskId": "connector-readiness:ds-010",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "competitive-intelligence",
+      "sourceId": "ds-010",
+      "module": "看竞争",
+      "page": "RegionCompetition",
+      "metric": "区域份额",
+      "sourceName": "Amazon Brand Analytics",
+      "sourceUrl": "https://vendorcentral.amazon.com",
+      "sourceType": "平台数据",
+      "reliability": "B",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "Amazon SP-API 或 Vendor Central Brand Analytics 授权",
+        "ASIN/SKU/品牌映射表",
+        "采集窗口和站点范围",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "建议叠加NPD/IRI线下数据"
+    },
+    {
+      "taskId": "connector-readiness:ds-021",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "data-ai",
+      "sourceId": "ds-021",
+      "module": "AI助手",
+      "page": "CommentData",
+      "metric": "评论情感分析",
+      "sourceName": "Amazon API / NLP模型",
+      "sourceType": "AI模型",
+      "reliability": "B",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "评论原文数据集或平台 API 授权",
+        "关键词词典和产品映射",
+        "模型版本与人工复核样本",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补充模型准确率指标"
+    },
+    {
+      "taskId": "connector-readiness:ds-030",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "data-ai",
+      "sourceId": "ds-030",
+      "module": "AI助手",
+      "page": "ReviewAnalysis",
+      "metric": "评论分析功能占位数据",
+      "sourceName": "Amazon API / NLP模型占位",
+      "sourceType": "AI模型",
+      "reliability": "D",
+      "verificationStatus": "example",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "评论原文数据集或平台 API 授权",
+        "关键词词典和产品映射",
+        "模型版本与人工复核样本",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "接入评论数据集与NLP评估报告"
+    },
+    {
+      "taskId": "connector-readiness:ds-032",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "industry-regulatory",
+      "sourceId": "ds-032",
+      "module": "看行业",
+      "page": "FlavorMap",
+      "metric": "VOC功能趋势地图",
+      "sourceName": "用户评论/VOC NLP汇总",
+      "sourceType": "AI模型",
+      "reliability": "C",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "评论原文数据集或平台 API 授权",
+        "关键词词典和产品映射",
+        "模型版本与人工复核样本",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补充评论来源、关键词词典和NLP运行记录"
+    },
+    {
+      "taskId": "connector-readiness:ds-033",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "industry-regulatory",
+      "sourceId": "ds-033",
+      "module": "看行业",
+      "page": "FlavorReport",
+      "metric": "VOC趋势报告",
+      "sourceName": "VOC NLP汇总 / 人工分析",
+      "sourceType": "AI模型",
+      "reliability": "C",
+      "verificationStatus": "example",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "评论原文数据集或平台 API 授权",
+        "关键词词典和产品映射",
+        "模型版本与人工复核样本",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "绑定VOC快照、模型版本和人工复核人"
+    },
+    {
+      "taskId": "connector-readiness:ds-037",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-037",
+      "module": "看市场",
+      "page": "BabyCare",
+      "metric": "婴儿护理品类规模",
+      "sourceName": "行业报告 / Amazon品类采集",
+      "sourceType": "推算",
+      "reliability": "C",
+      "verificationStatus": "example",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "Amazon SP-API 或 Vendor Central Brand Analytics 授权",
+        "ASIN/SKU/品牌映射表",
+        "采集窗口和站点范围",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补品类报告来源、采集窗口和测算公式"
+    },
+    {
+      "taskId": "connector-readiness:ds-038",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-038",
+      "module": "看市场",
+      "page": "CategoryAnalysis",
+      "metric": "全品类对比/生命周期",
+      "sourceName": "行业报告加权 / Amazon BSR",
+      "sourceType": "推算",
+      "reliability": "C",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "Amazon SP-API 或 Vendor Central Brand Analytics 授权",
+        "ASIN/SKU/品牌映射表",
+        "采集窗口和站点范围",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补测算说明、BSR快照和外部报告来源"
+    },
+    {
+      "taskId": "connector-readiness:ds-039",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-039",
+      "module": "看市场",
+      "page": "NursingProducts",
+      "metric": "哺乳用品趋势/品牌份额",
+      "sourceName": "Amazon品类采集 / 行业报告",
+      "sourceType": "平台数据",
+      "reliability": "C",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "Amazon SP-API 或 Vendor Central Brand Analytics 授权",
+        "ASIN/SKU/品牌映射表",
+        "采集窗口和站点范围",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "接入Amazon类目采集并保存SKU/品牌映射"
+    },
+    {
+      "taskId": "connector-readiness:ds-012",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "user-research",
+      "sourceId": "ds-012",
+      "module": "看用户",
+      "page": "UsersPage",
+      "metric": "RFM分层",
+      "sourceName": "Momcozy CRM",
+      "sourceType": "内部系统",
+      "reliability": "C",
+      "verificationStatus": "example",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "CRM 只读导出或数仓视图",
+        "客户脱敏规则",
+        "RFM 计算口径和时间窗口",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出脱敏字段清单、rowCount、window 和 owner。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "需对接真实CRM数据库"
+    },
+    {
+      "taskId": "connector-readiness:ds-013",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P0",
+      "ownerTeam": "user-research",
+      "sourceId": "ds-013",
+      "module": "看用户",
+      "page": "OverseasSentiment",
+      "metric": "社交声量",
+      "sourceName": "TikTok/IG/FB API",
+      "sourceType": "社交媒体API",
+      "reliability": "B",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "Meta / TikTok API 授权或合规社媒监听供应商账号",
+        "查询词、国家和语言配置",
+        "采样频率与去重规则",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出 querySet、countrySet、window、sampleCount 和去重策略。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补采集配置"
+    },
+    {
+      "taskId": "manual-evidence:ds-025",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P0",
+      "ownerTeam": "data-ai",
+      "sourceId": "ds-025",
+      "module": "AI助手",
+      "page": "AIAssistantPage",
+      "metric": "AI助手功能入口配置",
+      "sourceName": "mkt53静态功能清单",
+      "sourceType": "代码资产",
+      "reliability": "C",
+      "verificationStatus": "example",
+      "collectionMethod": "manual-required",
+      "blockedReason": "缺少真实使用日志和服务端审计",
+      "requiredEvidence": [
+        "人工上传文件或来源入口",
+        "采集/复核时间窗口和 owner",
+        "脱敏说明和公开展示边界"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "接入AI代理调用日志后重算使用指标"
+    },
+    {
+      "taskId": "manual-evidence:ds-040",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P0",
+      "ownerTeam": "user-research",
+      "sourceId": "ds-040",
+      "module": "看用户",
+      "page": "Aesthetics",
+      "metric": "美学风格偏好",
+      "sourceName": "用户调研 / AI图像资产标签",
+      "sourceType": "定性",
+      "reliability": "C",
+      "verificationStatus": "example",
+      "collectionMethod": "manual-required",
+      "blockedReason": "缺少样本量、地区分布和调研题目",
+      "requiredEvidence": [
+        "样本量、招募条件、地域和时间窗口",
+        "受访者授权、脱敏规则和记录位置",
+        "人工复核人、复核日期和结论边界"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "接入用户调研样本和图片偏好实验结果"
+    },
+    {
+      "taskId": "public-source-review:ds-004",
+      "queueType": "public-source-review",
+      "queueLabel": "公开来源复核",
+      "priority": "P0",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-004",
+      "module": "看市场",
+      "page": "MarketTrend",
+      "metric": "波特五力定量评分",
+      "sourceName": "Mordor Intelligence框架",
+      "sourceUrl": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
+      "sourceType": "专家评估",
+      "reliability": "C",
+      "verificationStatus": "example",
+      "collectionMethod": "public-url-check",
+      "blockedReason": "缺乏定量原始数据，自动化访问受反爬限制",
+      "requiredEvidence": [
+        "报告页、采购凭证或人工访问记录",
+        "市场口径、样本范围、公式和权重说明",
+        "复核日期、复核人和可展示摘要"
+      ],
+      "acceptanceCriteria": [
+        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "采购完整报告或补人工复核凭证"
+    },
+    {
+      "taskId": "connector-readiness:ds-031",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P1",
+      "ownerTeam": "data-ai",
+      "sourceId": "ds-031",
+      "module": "AI助手",
+      "page": "YoutubeReview",
+      "metric": "YouTube测评追踪示例",
+      "sourceName": "YouTube Data API / 达人研究占位",
+      "sourceType": "平台API",
+      "reliability": "D",
+      "verificationStatus": "example",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "YouTube Data API key 或 OAuth client",
+        "视频 ID / 频道 ID / 查询词清单",
+        "配额和地区语言边界",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出 videoCount、commentSampleCount、quotaCost 和 sourceIds。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "接入YouTube Data API并保存采集manifest"
+    },
+    {
+      "taskId": "connector-readiness:ds-035",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P1",
+      "ownerTeam": "industry-regulatory",
+      "sourceId": "ds-035",
+      "module": "看行业",
+      "page": "SupplyChain",
+      "metric": "供应链节点与库存",
+      "sourceName": "Momcozy ERP / 供应商访谈",
+      "sourceType": "内部系统",
+      "reliability": "C",
+      "verificationStatus": "example",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "ERP 只读导出或库存快照",
+        "供应商主数据映射",
+        "脱敏和权限审批记录",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "接入ERP导出、供应商主数据和库存快照"
+    },
+    {
+      "taskId": "connector-readiness:ds-006",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P1",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-006",
+      "module": "看市场",
+      "page": "CustomsData",
+      "metric": "HS编码进出口",
+      "sourceName": "海关总署/Import Genius",
+      "sourceUrl": "https://www.importgenius.com",
+      "sourceType": "官方数据",
+      "reliability": "D",
+      "verificationStatus": "example",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "Import Genius 授权或海关数据导出",
+        "HS code 清单",
+        "国家、港口和时间窗口",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出 hsCodes、countrySet、window、sampleCount 和授权状态。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "需接入Import Genius API或数仓"
+    },
+    {
+      "taskId": "manual-evidence:ds-016",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P1",
+      "ownerTeam": "industry-regulatory",
+      "sourceId": "ds-016",
+      "module": "看行业",
+      "page": "PolicyInsight",
+      "metric": "政策法规总览",
+      "sourceName": "各国政府官网",
+      "sourceType": "官方数据",
+      "reliability": "A",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "manual-required",
+      "blockedReason": "法规来源需逐条状态化",
+      "requiredEvidence": [
+        "条目级原文 URL、发布日期和发布主体",
+        "截图或网页存档位置",
+        "适用 SKU/地区/时间边界和复核人"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "接入条目级复核状态"
+    },
+    {
+      "taskId": "manual-evidence:ds-034",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P1",
+      "ownerTeam": "industry-regulatory",
+      "sourceId": "ds-034",
+      "module": "看行业",
+      "page": "IndustryNews",
+      "metric": "母婴行业资讯",
+      "sourceName": "FDA/CPSC/EU/品牌官网/新闻源手工汇编",
+      "sourceType": "新闻",
+      "reliability": "B",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "manual-required",
+      "blockedReason": "缺少条目级sourceUrl和复核状态",
+      "requiredEvidence": [
+        "条目级原文 URL、发布日期和发布主体",
+        "截图或网页存档位置",
+        "适用 SKU/地区/时间边界和复核人"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "拆分为新闻条目级registry或采集manifest"
+    },
+    {
+      "taskId": "manual-evidence:ds-036",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P1",
+      "ownerTeam": "industry-regulatory",
+      "sourceId": "ds-036",
+      "module": "看行业",
+      "page": "TechNews",
+      "metric": "母婴科技资讯",
+      "sourceName": "品牌官网/技术新闻/产品规格",
+      "sourceType": "新闻",
+      "reliability": "C",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "manual-required",
+      "blockedReason": "缺少技术条目级来源URL",
+      "requiredEvidence": [
+        "条目级原文 URL、发布日期和发布主体",
+        "截图或网页存档位置",
+        "适用 SKU/地区/时间边界和复核人"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "按技术条目补来源URL、发布日期和适用产品"
+    },
+    {
+      "taskId": "manual-evidence:ds-003",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P1",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-003",
+      "module": "看市场",
+      "page": "MarketTrend",
+      "metric": "PEST分析",
+      "sourceName": "WHO/FDA/各国政府",
+      "sourceType": "官方数据",
+      "reliability": "A",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "manual-required",
+      "blockedReason": "来源组合需拆分",
+      "requiredEvidence": [
+        "条目级原文 URL、发布日期和发布主体",
+        "截图或网页存档位置",
+        "适用 SKU/地区/时间边界和复核人"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "拆分到具体来源URL"
+    },
+    {
+      "taskId": "manual-evidence:ds-005",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P1",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-005",
+      "module": "看市场",
+      "page": "BreastPump",
+      "metric": "品类拆分",
+      "sourceName": "Precedence/Technavio加权",
+      "sourceType": "推算",
+      "reliability": "B",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "manual-required",
+      "blockedReason": "",
+      "requiredEvidence": [
+        "报告页、采购凭证或人工访问记录",
+        "市场口径、样本范围、公式和权重说明",
+        "复核日期、复核人和可展示摘要"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补充测算说明"
+    },
+    {
+      "taskId": "manual-evidence:ds-014",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P1",
+      "ownerTeam": "user-research",
+      "sourceId": "ds-014",
+      "module": "看用户",
+      "page": "ConsumerInterviews",
+      "metric": "消费者访谈",
+      "sourceName": "定性研究",
+      "sourceType": "定性",
+      "reliability": "B",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "manual-required",
+      "blockedReason": "样本量未标注",
+      "requiredEvidence": [
+        "样本量、招募条件、地域和时间窗口",
+        "受访者授权、脱敏规则和记录位置",
+        "人工复核人、复核日期和结论边界"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补充样本量说明"
+    },
+    {
+      "taskId": "manual-evidence:ds-042",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P1",
+      "ownerTeam": "user-research",
+      "sourceId": "ds-042",
+      "module": "看用户",
+      "page": "StoreInterviews",
+      "metric": "门店运营深度访谈",
+      "sourceName": "门店访谈 / 运营数据审计",
+      "sourceType": "定性",
+      "reliability": "C",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "manual-required",
+      "blockedReason": "缺少门店运营数据源和访谈授权状态",
+      "requiredEvidence": [
+        "样本量、招募条件、地域和时间窗口",
+        "受访者授权、脱敏规则和记录位置",
+        "人工复核人、复核日期和结论边界"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补门店数据快照、访谈样本和计算口径"
+    },
+    {
+      "taskId": "public-source-review:ds-017",
+      "queueType": "public-source-review",
+      "queueLabel": "公开来源复核",
+      "priority": "P1",
+      "ownerTeam": "industry-regulatory",
+      "sourceId": "ds-017",
+      "module": "看行业",
+      "page": "IPAnalysis",
+      "metric": "专利数据",
+      "sourceName": "WIPO/USPTO",
+      "sourceUrl": "https://www.wipo.int",
+      "sourceType": "官方数据库",
+      "reliability": "B",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "public-url-check",
+      "blockedReason": "2025数据缺失",
+      "requiredEvidence": [
+        "条目级原文 URL、发布日期和发布主体",
+        "截图或网页存档位置",
+        "适用 SKU/地区/时间边界和复核人"
+      ],
+      "acceptanceCriteria": [
+        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "需更新WIPO 2025数据"
+    },
+    {
+      "taskId": "public-source-review:policy-cpsc-efiling",
+      "queueType": "public-source-review",
+      "queueLabel": "公开来源复核",
+      "priority": "P1",
+      "ownerTeam": "industry-regulatory",
+      "sourceId": "policy-cpsc-efiling",
+      "module": "看行业",
+      "page": "RegulationDetail",
+      "metric": "CPSC CPC/eFiling证书数据要求",
+      "sourceName": "U.S. CPSC CPC/eFiling",
+      "sourceUrl": "https://www.cpsc.gov/eFiling",
+      "sourceType": "官方数据",
+      "reliability": "A",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "public-url-check",
+      "blockedReason": "SKU适用范围和实施节奏待法务复核",
+      "requiredEvidence": [
+        "条目级原文 URL、发布日期和发布主体",
+        "截图或网页存档位置",
+        "适用 SKU/地区/时间边界和复核人"
+      ],
+      "acceptanceCriteria": [
+        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "按CPSC官方页面复核证书字段、测试报告和进口eFiling适用范围"
+    },
+    {
+      "taskId": "public-source-review:policy-eu-mdr-transition",
+      "queueType": "public-source-review",
+      "queueLabel": "公开来源复核",
+      "priority": "P1",
+      "ownerTeam": "industry-regulatory",
+      "sourceId": "policy-eu-mdr-transition",
+      "module": "看行业",
+      "page": "PolicyInsight",
+      "metric": "EU MDR Class IIa过渡期",
+      "sourceName": "European Commission Medical Devices",
+      "sourceUrl": "https://health.ec.europa.eu/medical-devices-sector/new-regulations_en",
+      "sourceType": "官方数据",
+      "reliability": "A",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "public-url-check",
+      "blockedReason": "产品分类和证书条件待法务复核",
+      "requiredEvidence": [
+        "条目级原文 URL、发布日期和发布主体",
+        "截图或网页存档位置",
+        "适用 SKU/地区/时间边界和复核人"
+      ],
+      "acceptanceCriteria": [
+        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "按Class IIa分类、证书状态和notified body路径复核"
+    },
+    {
+      "taskId": "public-source-review:ds-011",
+      "queueType": "public-source-review",
+      "queueLabel": "公开来源复核",
+      "priority": "P1",
+      "ownerTeam": "user-research",
+      "sourceId": "ds-011",
+      "module": "看用户",
+      "page": "UsersPage",
+      "metric": "中国有孩家庭用户画像",
+      "sourceName": "QuestMobile 2025有孩家庭人群消费洞察报告",
+      "sourceUrl": "https://www.questmobile.com.cn/research/report/1927204984337829890",
+      "sourceType": "行业报告",
+      "reliability": "A",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "public-url-check",
+      "blockedReason": "页面仍需拆分地域、样本和指标口径",
+      "requiredEvidence": [
+        "报告页、采购凭证或人工访问记录",
+        "市场口径、样本范围、公式和权重说明",
+        "复核日期、复核人和可展示摘要"
+      ],
+      "acceptanceCriteria": [
+        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "将中国有孩家庭画像与海外母乳喂养调研分开展示"
+    },
+    {
+      "taskId": "public-source-review:ds-043",
+      "queueType": "public-source-review",
+      "queueLabel": "公开来源复核",
+      "priority": "P1",
+      "ownerTeam": "user-research",
+      "sourceId": "ds-043",
+      "module": "看用户",
+      "page": "UsersPage",
+      "metric": "海外母乳喂养动机与场景",
+      "sourceName": "Mamava / Medela 2025 State of Breastfeeding Survey",
+      "sourceUrl": "https://www.mamava.com/why-buy-blog/2025-state-of-breastfeeding-survey",
+      "sourceType": "行业调研",
+      "reliability": "B",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "public-url-check",
+      "blockedReason": "需要补样本量、调查时间、地域、题目口径和人工访问凭证",
+      "requiredEvidence": [
+        "样本量、招募条件、地域和时间窗口",
+        "受访者授权、脱敏规则和记录位置",
+        "人工复核人、复核日期和结论边界"
+      ],
+      "acceptanceCriteria": [
+        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "拆分海外调研口径并补人工复核凭证"
+    },
+    {
+      "taskId": "connector-readiness:ds-020",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P2",
+      "ownerTeam": "brand-strategy",
+      "sourceId": "ds-020",
+      "module": "看自己",
+      "page": "SelfInsight",
+      "metric": "BCG矩阵",
+      "sourceName": "内部测算",
+      "sourceType": "内部",
+      "reliability": "C",
+      "verificationStatus": "example",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "内部资产目录或报告库只读导出",
+        "owner、版本号和更新时间字段",
+        "脱敏规则和审批记录",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "建议引用外部份额数据校准"
+    },
+    {
+      "taskId": "connector-readiness:ds-022",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P2",
+      "ownerTeam": "data-ai",
+      "sourceId": "ds-022",
+      "module": "AI助手",
+      "page": "KnowledgeBase",
+      "metric": "知识库",
+      "sourceName": "内部维护",
+      "sourceType": "内部",
+      "reliability": "A",
+      "verificationStatus": "verified",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "内部资产目录或报告库只读导出",
+        "owner、版本号和更新时间字段",
+        "脱敏规则和审批记录",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "OK"
+    },
+    {
+      "taskId": "connector-readiness:ds-023",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P2",
+      "ownerTeam": "data-ai",
+      "sourceId": "ds-023",
+      "module": "AI助手",
+      "page": "WebReview",
+      "metric": "网页评论爬取",
+      "sourceName": "爬虫采集",
+      "sourceType": "爬虫",
+      "reliability": "B",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "robots.txt 和平台条款复核",
+        "允许采集的 URL 模式",
+        "限速、去重和原文留存策略",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出 allowedUrlPatterns、robotsStatus、rateLimit 和 sourceIds。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "需标注robots.txt合规性"
+    },
+    {
+      "taskId": "connector-readiness:ds-026",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P2",
+      "ownerTeam": "data-ai",
+      "sourceId": "ds-026",
+      "module": "AI助手",
+      "page": "AIGallery",
+      "metric": "AI图库生成资产",
+      "sourceName": "Kimi Image Generation / 本地图片资产",
+      "sourceType": "AI模型",
+      "reliability": "C",
+      "verificationStatus": "example",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "AI 代理服务端调用日志",
+        "模型版本、成本和请求状态字段",
+        "素材审核结果",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出 requestCount、modelSet、costFieldsPresent 和审核状态分布。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "接入生成服务端日志与素材审核状态"
+    },
+    {
+      "taskId": "connector-readiness:ds-029",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P2",
+      "ownerTeam": "data-ai",
+      "sourceId": "ds-029",
+      "module": "AI助手",
+      "page": "DesignAssistant",
+      "metric": "设计助手模型与样例输出",
+      "sourceName": "AI模型配置 / 官网采集图",
+      "sourceType": "AI模型",
+      "reliability": "C",
+      "verificationStatus": "example",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "AI 代理服务端调用日志",
+        "模型版本、成本和请求状态字段",
+        "素材审核结果",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出 requestCount、modelSet、costFieldsPresent 和审核状态分布。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "接入服务端代理后记录requestId、model、cost和status"
+    },
+    {
+      "taskId": "connector-readiness:ds-024",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P2",
+      "ownerTeam": "insight-ops",
+      "sourceId": "ds-024",
+      "module": "报告中心",
+      "page": "ReportsPage",
+      "metric": "报告元数据",
+      "sourceName": "内部管理",
+      "sourceType": "内部",
+      "reliability": "A",
+      "verificationStatus": "verified",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "内部资产目录或报告库只读导出",
+        "owner、版本号和更新时间字段",
+        "脱敏规则和审批记录",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "OK"
+    },
+    {
+      "taskId": "connector-readiness:ds-041",
+      "queueType": "connector-readiness",
+      "queueLabel": "授权连接器接入",
+      "priority": "P2",
+      "ownerTeam": "user-research",
+      "sourceId": "ds-041",
+      "module": "看用户",
+      "page": "ChannelInterviews",
+      "metric": "渠道合作伙伴访谈",
+      "sourceName": "渠道访谈 / 内部销售口径",
+      "sourceType": "定性",
+      "reliability": "C",
+      "verificationStatus": "needs-review",
+      "collectionMethod": "connector-required",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "requiredEvidence": [
+        "内部资产目录或报告库只读导出",
+        "owner、版本号和更新时间字段",
+        "脱敏规则和审批记录",
+        "采集窗口、数据范围和站点/地区边界",
+        "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
+      ],
+      "acceptanceCriteria": [
+        "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "补访谈样本、脱敏记录和销售数据版本"
+    },
+    {
+      "taskId": "manual-evidence:ds-008",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P2",
+      "ownerTeam": "competitive-intelligence",
+      "sourceId": "ds-008",
+      "module": "看竞争",
+      "page": "NewCompetition",
+      "metric": "新品追踪",
+      "sourceName": "品牌官网/新闻稿",
+      "sourceType": "新闻",
+      "reliability": "B",
+      "verificationStatus": "verified",
+      "collectionMethod": "manual-required",
+      "blockedReason": "",
+      "requiredEvidence": [
+        "条目级原文 URL、发布日期和发布主体",
+        "截图或网页存档位置",
+        "适用 SKU/地区/时间边界和复核人"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "OK"
+    },
+    {
+      "taskId": "manual-evidence:ds-015",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P2",
+      "ownerTeam": "industry-regulatory",
+      "sourceId": "ds-015",
+      "module": "看行业",
+      "page": "IndustryPage",
+      "metric": "行业概况",
+      "sourceName": "Grand View Research / Fortune BI",
+      "sourceType": "行业报告",
+      "reliability": "A",
+      "verificationStatus": "verified",
+      "collectionMethod": "manual-required",
+      "blockedReason": "",
+      "requiredEvidence": [
+        "条目级原文 URL、发布日期和发布主体",
+        "截图或网页存档位置",
+        "适用 SKU/地区/时间边界和复核人"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "OK"
+    },
+    {
+      "taskId": "manual-evidence:ds-018",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P2",
+      "ownerTeam": "industry-regulatory",
+      "sourceId": "ds-018",
+      "module": "看行业",
+      "page": "Exhibition",
+      "metric": "展会情报",
+      "sourceName": "展会官网",
+      "sourceType": "官网",
+      "reliability": "B",
+      "verificationStatus": "verified",
+      "collectionMethod": "manual-required",
+      "blockedReason": "",
+      "requiredEvidence": [
+        "条目级原文 URL、发布日期和发布主体",
+        "截图或网页存档位置",
+        "适用 SKU/地区/时间边界和复核人"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "OK"
+    },
+    {
+      "taskId": "public-source-review:ds-002",
+      "queueType": "public-source-review",
+      "queueLabel": "公开来源复核",
+      "priority": "P2",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-002",
+      "module": "看市场",
+      "page": "MarketPage",
+      "metric": "区域份额",
+      "sourceName": "Fortune Business Insights",
+      "sourceUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "sourceType": "行业报告",
+      "reliability": "A",
+      "verificationStatus": "verified",
+      "collectionMethod": "public-url-check",
+      "blockedReason": "自动化访问受反爬限制",
+      "requiredEvidence": [
+        "报告页、采购凭证或人工访问记录",
+        "市场口径、样本范围、公式和权重说明",
+        "复核日期、复核人和可展示摘要"
+      ],
+      "acceptanceCriteria": [
+        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "保留具体报告页并补人工复核凭证"
+    }
+  ]
+}

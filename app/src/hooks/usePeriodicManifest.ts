@@ -20,6 +20,12 @@ export interface PeriodicCollectionManifest {
     total: number;
     groupCount?: number;
   };
+  sourceTaskQueue?: {
+    total: number;
+    queueTypeCounts?: Record<string, number>;
+    priorityCounts?: Record<string, number>;
+    ownerTeamCounts?: Record<string, number>;
+  };
   totals: Record<string, number>;
 }
 

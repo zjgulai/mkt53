@@ -35,6 +35,7 @@ describe('production helper scripts', () => {
 
     expect(packageJson.scripts['data:audit']).toContain('scripts/data/audit-consistency.mjs');
     expect(packageJson.scripts['data:collect:weekly']).toContain('scripts/data/collect-weekly-sources.mjs');
+    expect(packageJson.scripts['data:source-tasks']).toContain('scripts/data/build-source-tasks.mjs');
     expect(packageJson.scripts['data:refresh:weekly']).toContain('scripts/data/refresh-weekly-data.mjs');
     expect(packageJson.scripts['data:refresh:semi-monthly']).toContain('scripts/data/refresh-semi-monthly-data.mjs');
     expect(packageJson.scripts['data:connector:amazon:dry-run']).toContain('scripts/data/connectors/amazon-commerce-dry-run.mjs');
@@ -53,7 +54,9 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:publish:semi-monthly:local']).toContain('scripts/data/semi-monthly-refresh-local-static.sh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/connectors.json');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/source-tasks.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/periodic-data/latest.json');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/periodic-data/source-tasks.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('data:connector:amazon:private:audit');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_AMAZON_PRIVATE_DIR');
@@ -70,6 +73,7 @@ describe('production helper scripts', () => {
 
     for (const script of [
       'scripts/data/audit-consistency.mjs',
+      'scripts/data/build-source-tasks.mjs',
       'scripts/data/collect-weekly-sources.mjs',
       'scripts/data/refresh-weekly-data.mjs',
       'scripts/data/refresh-semi-monthly-data.mjs',
@@ -84,6 +88,7 @@ describe('production helper scripts', () => {
     }
 
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-backlog.mjs'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/source-tasks.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-dry-run.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/bootstrap-amazon-private-inputs.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-private-input-audit.mjs'), constants.X_OK)).not.toThrow();
@@ -146,6 +151,39 @@ describe('production helper scripts', () => {
     );
     expect(manifest.connectorBacklog.items.every((item) => item.blockedReason.includes('不得伪造'))).toBe(true);
     expect(manifest.totals['connector-required']).toBe(23);
+  });
+
+  it('builds a source task queue for connector, manual, and public review work', () => {
+    const output = execFileSync('node', ['scripts/data/collect-weekly-sources.mjs', '--json', '--no-network'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const manifest = JSON.parse(output) as {
+      sourceTaskQueue: {
+        total: number;
+        queueTypeCounts: Record<string, number>;
+        priorityCounts: Record<string, number>;
+        ownerTeamCounts: Record<string, number>;
+        tasks: Array<{
+          taskId: string;
+          sourceId: string;
+          queueType: string;
+          requiredEvidence: string[];
+          acceptanceCriteria: string[];
+        }>;
+      };
+    };
+
+    expect(manifest.sourceTaskQueue.total).toBe(42);
+    expect(manifest.sourceTaskQueue.queueTypeCounts['connector-readiness']).toBe(23);
+    expect(manifest.sourceTaskQueue.queueTypeCounts['manual-evidence']).toBe(12);
+    expect(manifest.sourceTaskQueue.queueTypeCounts['public-source-review']).toBe(7);
+    expect(manifest.sourceTaskQueue.priorityCounts.P0).toBeGreaterThan(0);
+    expect(manifest.sourceTaskQueue.ownerTeamCounts['market-research']).toBeGreaterThan(0);
+    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'manual-evidence:ds-003')).toBe(true);
+    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-002')).toBe(true);
+    expect(manifest.sourceTaskQueue.tasks.every((task) => task.requiredEvidence.length > 0)).toBe(true);
+    expect(manifest.sourceTaskQueue.tasks.every((task) => task.acceptanceCriteria.join(' ').includes('不得'))).toBe(true);
   });
 
   it('adds semi-monthly period metadata without dropping weekly compatibility', async () => {

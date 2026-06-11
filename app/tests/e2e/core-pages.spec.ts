@@ -56,6 +56,8 @@ test.describe('core pages visual guard', () => {
 
       if (pageConfig.path === '/#/data-source') {
         await expect(page.getByText('半月数据状态')).toBeVisible();
+        await expect(page.getByText('补证任务')).toBeVisible();
+        await expect(page.getByText('查看补证队列')).toBeVisible();
         await expect(page.getByText(/服务器出口边界/)).toBeVisible();
       }
 

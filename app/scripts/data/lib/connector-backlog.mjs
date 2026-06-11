@@ -165,7 +165,7 @@ export function buildConnectorBacklog(sourceRegistry) {
         requiredAccess: definition.requiredAccess,
         outputContract: definition.outputContract,
         stopCondition: definition.stopCondition,
-        blockedReason: '缺少授权连接器、采集窗口或脱敏复核记录；周度脚本不得伪造已采集数据。',
+        blockedReason: '缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。',
         nextAction: source.action,
       };
     })

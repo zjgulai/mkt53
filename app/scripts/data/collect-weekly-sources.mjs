@@ -5,6 +5,7 @@ import { dirname, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { analyzeConsistency, classifyCollectionMethod, extractSourceRegistry, isoWeek } from './lib/project-analysis.mjs';
 import { buildConnectorBacklog } from './lib/connector-backlog.mjs';
+import { buildSourceTaskQueue } from './lib/source-tasks.mjs';
 
 const defaultTimeoutMs = 8000;
 const defaultMaxAttempts = 2;
@@ -333,6 +334,7 @@ export async function collectWeeklySources(options = {}) {
   const sourceRegistry = extractSourceRegistry(appRoot);
   const audit = analyzeConsistency(appRoot);
   const connectorBacklog = buildConnectorBacklog(sourceRegistry);
+  const sourceTaskQueue = buildSourceTaskQueue(sourceRegistry, { connectorBacklog, generatedAt });
   const publicUrlPolicy = {
     timeoutMs,
     maxAttempts,
@@ -377,6 +379,7 @@ export async function collectWeeklySources(options = {}) {
     },
     auditSummary: audit.summary,
     connectorBacklog,
+    sourceTaskQueue,
     totals,
     sources,
   };

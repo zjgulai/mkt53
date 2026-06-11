@@ -38,6 +38,7 @@ mkt53 数据刷新节奏从周度调整为半月一次。正式计划为每月 1
 ```bash
 cd app
 npm run data:audit
+npm run data:source-tasks
 npm run data:refresh:semi-monthly
 ```
 
@@ -47,11 +48,14 @@ npm run data:refresh:semi-monthly
 |---|---|
 | `public/periodic-data/latest.json` | 前端读取的最新半月采集 manifest |
 | `public/periodic-data/connectors.json` | 最新授权连接器接入 backlog |
+| `public/periodic-data/source-tasks.json` | 最新补证任务队列，覆盖连接器接入、人工凭证和公开来源复核 |
 | `public/weekly-data/latest.json` | 兼容旧路径的同内容 manifest |
 | `public/weekly-data/connectors.json` | 兼容旧路径的同内容 connector backlog |
+| `public/weekly-data/source-tasks.json` | 兼容旧路径的同内容补证任务队列 |
 | `tmp/data-collection/audit-latest.json` | 本次一致性审计结果 |
 | `tmp/data-collection/runs/<period>.json` | 本地半月运行留痕 |
 | `tmp/data-collection/runs/<period>-connectors.json` | 本地连接器 backlog 留痕 |
+| `tmp/data-collection/runs/<period>-source-tasks.json` | 本地补证任务队列留痕 |
 
 manifest 必须包含：
 
@@ -62,6 +66,8 @@ manifest 必须包含：
 | `windowStart` / `windowEnd` | 当期采集窗口 |
 | `nextScheduledAt` | 下次计划执行时间，带 `+08:00` 时区 |
 | `week` | ISO week 兼容字段，供旧消费者平滑迁移 |
+| `connectorBacklog` | 授权连接器接入队列摘要 |
+| `sourceTaskQueue` | 补证任务队列摘要，包含 `connector-readiness`、`manual-evidence`、`public-source-review` |
 
 ## 部署入口
 

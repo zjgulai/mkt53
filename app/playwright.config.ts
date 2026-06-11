@@ -1,5 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const e2ePort = Number(process.env.MKT53_E2E_PORT ?? 3000);
+const baseURL = `http://127.0.0.1:${e2ePort}`;
+const reuseExistingServer =
+  process.env.MKT53_E2E_REUSE_EXISTING === '0' ? false : process.env.MKT53_E2E_REUSE_EXISTING === '1' ? true : !process.env.CI;
+
 export default defineConfig({
   testDir: './tests/e2e',
   outputDir: './tmp/playwright-test-results',
@@ -11,14 +16,14 @@ export default defineConfig({
     timeout: 8_000,
   },
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
   webServer: {
-    command: 'npm run dev -- --host 127.0.0.1 --port 3000',
-    url: 'http://127.0.0.1:3000',
-    reuseExistingServer: !process.env.CI,
+    command: `npm run dev -- --host 127.0.0.1 --port ${e2ePort} --strictPort`,
+    url: baseURL,
+    reuseExistingServer,
     timeout: 120_000,
   },
   projects: [

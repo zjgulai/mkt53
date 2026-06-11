@@ -106,6 +106,10 @@ export default function DataSourcePage() {
   };
   const requestErrorTotal = (collectionTotals['source-error'] ?? 0) + (collectionTotals['fetch-error'] ?? 0);
   const connectorRequiredTotal = collectionTotals['connector-required'] ?? collectionManifest?.connectorBacklog?.total ?? 0;
+  const sourceTaskQueue = collectionManifest?.sourceTaskQueue;
+  const sourceTaskCounts = sourceTaskQueue?.queueTypeCounts ?? {};
+  const sourceTaskTotal = sourceTaskQueue?.total ?? connectorRequiredTotal + (collectionTotals['manual-required'] ?? 0);
+  const sourceTaskQueuePath = collectionManifestPath.replace('latest.json', 'source-tasks.json');
   const collectionSummary =
     collectionStatus === 'ready'
       ? `${collectionPeriod} · ${collectionWindow} · 生成 ${collectionGeneratedAt}`
@@ -159,6 +163,22 @@ export default function DataSourcePage() {
           <p className="mt-3 text-[10px] text-[#86868b] leading-relaxed">
             服务器出口边界：Fortune BI、Mordor、Mamava/Medela 等外站请求可能返回 403，manifest 保留 source-error，不改写为已验证结论。
           </p>
+          <div className="mt-4 grid grid-cols-2 md:grid-cols-5 gap-3">
+            {[
+              { label: '补证任务', value: sourceTaskTotal, color: '#1d1d1f' },
+              { label: '连接器接入', value: sourceTaskCounts['connector-readiness'] ?? connectorRequiredTotal, color: '#ff9500' },
+              { label: '人工凭证', value: sourceTaskCounts['manual-evidence'] ?? collectionTotals['manual-required'] ?? 0, color: '#5856d6' },
+              { label: '公开复核', value: sourceTaskCounts['public-source-review'] ?? 0, color: '#C25B6E' },
+            ].map(item => (
+              <div key={item.label} className="px-3 py-2 rounded-xl bg-[#FBF8F5] border border-[#EDE6DF]">
+                <p className="text-[10px] text-[#86868b]">{item.label}</p>
+                <p className="text-lg font-bold" style={{ color: item.color }}>{item.value}</p>
+              </div>
+            ))}
+            <a href={sourceTaskQueuePath} className="px-3 py-2 rounded-xl border border-[#EDE6DF] bg-white text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E] transition-colors flex items-center justify-center">
+              查看补证队列
+            </a>
+          </div>
         </div>
 
         {/* R19: 内外部数据分布 */}
