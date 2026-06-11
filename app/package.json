@@ -15,6 +15,7 @@
     "data:audit:json": "node scripts/data/audit-consistency.mjs --json",
     "data:collect:weekly": "node scripts/data/collect-weekly-sources.mjs",
     "data:refresh:weekly": "node scripts/data/refresh-weekly-data.mjs",
+    "data:refresh:semi-monthly": "node scripts/data/refresh-semi-monthly-data.mjs",
     "data:connector:amazon:dry-run": "node scripts/data/connectors/amazon-commerce-dry-run.mjs",
     "data:connector:amazon:mapping:validate": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --json --no-write",
     "data:connector:amazon:mapping:template": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --print-mapping-template",
@@ -27,6 +28,8 @@
     "data:connector:amazon:readiness:template": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --print-readiness-template",
     "data:deploy:weekly": "bash scripts/data/weekly-refresh-and-deploy.sh",
     "data:publish:weekly:local": "bash scripts/data/weekly-refresh-local-static.sh",
+    "data:deploy:semi-monthly": "bash scripts/data/semi-monthly-refresh-and-deploy.sh",
+    "data:publish:semi-monthly:local": "bash scripts/data/semi-monthly-refresh-local-static.sh",
     "preview": "vite preview",
     "deploy:prod": "bash scripts/deploy-static.sh",
     "smoke:prod": "bash scripts/smoke-prod.sh"
