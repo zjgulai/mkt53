@@ -1,16 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import { BarChart3 } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import { aiAssistantSidebarItems } from './constants';
 
 const stats = [
-  { label: '分析评论数', value: '12,580' },
-  { label: '情感准确率', value: '94.2%' },
-  { label: '关键词提取', value: '2,340' },
-  { label: '洞察发现', value: '186' },
+  { label: '样例评论数', value: '12,580' },
+  { label: '准确率待评估', value: '94.2%' },
+  { label: '样例关键词', value: '2,340' },
+  { label: '样例洞察', value: '186' },
 ];
 
 const features = [
-  '自动情感分类（正/负/中）与情绪强度评分',
+  '情感分类（正/负/中）与情绪强度评分流程演示',
   '高频关键词与主题聚类分析',
   '竞品评论对比分析（Momcozy vs Medela vs Willow）',
   '产品改进建议自动生成',
@@ -31,7 +32,7 @@ export default function ReviewAnalysis() {
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex gap-8">
-          <aside className="w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
+          <aside className="hidden lg:block w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
             <nav className="space-y-0.5">
               {aiAssistantSidebarItems.map((item, i) => (
                 <button key={i} onClick={() => navigate(item.path)} className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-[#1d1d1f] hover:bg-[#FBF8F5] transition-all">{item.label}</button>
@@ -50,6 +51,12 @@ export default function ReviewAnalysis() {
                 </div>
               </div>
             </div>
+            <PageEvidenceNotice
+              sourceIds={['ds-030']}
+              title="评论分析示例口径"
+              description="统计卡、关键词和洞察为功能演示数据，缺少评论采集窗口、样本量、模型准确率和人工复核一致率。当前只适合验证页面能力，不输出真实评论情感结论。"
+              cadence="演示数据"
+            />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {stats.map((s, i) => (
                 <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { MapPin, Cpu, Droplets, VolumeX, Smartphone, Sun } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 const featureTrends = [
   { quarter: '2022 Q1', APP控制: 15, 静音设计: 28, 便携穿戴: 22, 医院级吸力: 18, UV消毒: 8, 智能恒温: 5, 无线充电: 4 },
@@ -105,6 +106,12 @@ export default function FlavorMap() {
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-032']}
+              title="VOC功能趋势复核口径"
+              description="功能热度和技术采用率需绑定评论样本、关键词词典和 NLP 模型版本；当前趋势地图只作为产品机会线索。"
+            />
 
             {/* Feature Tabs */}
             <div className="flex items-center gap-2 flex-wrap">

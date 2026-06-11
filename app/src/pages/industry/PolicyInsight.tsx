@@ -3,6 +3,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recha
 import { Shield, Globe, AlertTriangle, CheckCircle, Clock, FileText, ExternalLink, Download } from 'lucide-react';
 import { exportToCsv } from '@/utils/csvExport';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import { getSourceRegistryItem, getVerificationStatusMeta, type VerificationStatus } from '@/data/source-registry';
 
 const cpscEfilingSource = getSourceRegistryItem('policy-cpsc-efiling');
@@ -28,7 +29,7 @@ const riskDist = [
 // R11: 增强版法规变更 — 含原文链接+Momcozy状态
 const upcomingChanges = [
   { date: '2026-07-25', region: '美国', regionCode: 'US', change: 'CPSC更新16 CFR 1223婴儿摇篮安全标准，ASTM F2088-25生效，新增前标签可见性测试和强化窒息警告', impact: '高', action: '更新产品警告标签设计，通过可见性测试', source: { name: 'CPSC Federal Register', url: 'https://www.federalregister.gov' }, momcozyStatus: '已完成', verifiedBy: '郑法务', verifiedAt: '2026-05-20', verificationStatus: 'needs-review' },
-  { date: '2026-07-08', region: '美国', regionCode: 'US', change: 'CPSC CPC/eFiling：复核儿童产品证书数据、进口申报字段和适用SKU；官网实时声明强制要求未获官方证实', impact: '高', action: cpscEfilingSource.action, source: { name: cpscEfilingSource.sourceName, url: cpscEfilingSource.sourceUrl ?? 'https://www.cpsc.gov/eFiling' }, momcozyStatus: '进行中', verifiedBy: '郑法务', verifiedAt: cpscEfilingSource.lastVerified, verificationStatus: 'needs-review' },
+  { date: '2026-07-08', region: '美国', regionCode: 'US', change: 'CPSC CPC/eFiling：复核儿童产品证书数据、进口申报字段和适用SKU；官网即时声明强制要求未获官方证实', impact: '高', action: cpscEfilingSource.action, source: { name: cpscEfilingSource.sourceName, url: cpscEfilingSource.sourceUrl ?? 'https://www.cpsc.gov/eFiling' }, momcozyStatus: '进行中', verifiedBy: '郑法务', verifiedAt: cpscEfilingSource.lastVerified, verificationStatus: 'needs-review' },
   { date: '2026-11-01', region: '中国', regionCode: 'CN', change: 'GB 46523-2025儿童用品通用安全+GB 46516婴幼儿护理用品安全计划生效', impact: '高', action: '审核产品设计和材料，确保符合新国标', source: { name: 'SAMR 国家市场监管总局', url: 'https://www.samr.gov.cn' }, momcozyStatus: '进行中', verifiedBy: '王运营', verifiedAt: '2026-05-15', verificationStatus: 'verified' },
   { date: '2026-05-01', region: '中国', regionCode: 'CN', change: 'GB/T 46491-2025婴儿食品加工器具标准生效，规范材料安全和性能要求', impact: '高', action: '评估温奶器、消毒器等产品的材料合规性', source: { name: '国家标准化管理委员会', url: 'https://www.sac.gov.cn' }, momcozyStatus: '已完成', verifiedBy: '王运营', verifiedAt: '2026-04-28', verificationStatus: 'verified' },
   { date: '2027-01-01', region: '欧盟', regionCode: 'EU', change: 'MDR Class IIa医疗器械过渡安排需按产品分类、证书状态和notified body路径复核', impact: '高', action: euMdrSource.action, source: { name: euMdrSource.sourceName, url: euMdrSource.sourceUrl ?? 'https://health.ec.europa.eu' }, momcozyStatus: '进行中', verifiedBy: '郑法务', verifiedAt: euMdrSource.lastVerified, verificationStatus: 'needs-review' },
@@ -105,9 +106,15 @@ export default function PolicyInsight() {
               {/* R13: 信息审计横幅 */}
               <div className="p-3 rounded-xl bg-[#ff9500]/5 border border-[#ff9500]/10 flex items-center gap-3">
                 <AlertTriangle className="w-4 h-4 text-[#ff9500] flex-shrink-0" />
-                <p className="text-xs text-[#1d1d1f]"><strong>信息审计：</strong>区域数据按官方来源维护，但 CPSC CPC/eFiling、EU MDR 过渡安排和部分泛化法规仍为待复核项；页面不再展示“全部已验证”结论。</p>
+                <p className="text-xs text-[#1d1d1f]"><strong>信息审计：</strong>区域数据按官方来源维护，但 CPSC CPC/eFiling、EU MDR 过渡安排和部分泛化法规仍为待复核项；页面不再展示“全量已复核”结论。</p>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-016', 'policy-cpsc-efiling', 'policy-eu-mdr-transition']}
+              title="区域标准条目复核口径"
+              description="区域标准总览包含官方来源和待法务复核条目；CPSC CPC/eFiling、EU MDR 过渡安排和部分泛化法规不能写成全量已复核。"
+            />
 
             {/* Risk Summary */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

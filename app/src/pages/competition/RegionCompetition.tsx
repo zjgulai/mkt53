@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
 import { MapPin, Globe, Target, Award, LayoutGrid, FileBarChart, Map as MapIcon, Database } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 
 // ── 2026 REGIONAL DATA (Latest as of May 2026) ──
@@ -102,10 +103,16 @@ export default function RegionCompetition() {
                 </div>
                 <div>
                   <h1 className="text-lg font-semibold text-[#1d1d1f]">区域竞争分析</h1>
-                  <p className="text-xs text-[#B5AFA8]">2026年5月更新 · 五大区域 × 18国 · 市场份额 · 竞争格局</p>
+                  <p className="text-xs text-[#B5AFA8]">Amazon BA 口径待复核 · 五大区域 × 18国 · 不能外推全渠道份额</p>
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-010']}
+              title="区域竞争份额边界"
+              description="Amazon Brand Analytics 只覆盖 Amazon 渠道，区域份额和排名不能外推全渠道；需叠加线下与零售面板后再作为经营判断。"
+            />
 
             {/* Region Selector */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">

@@ -3,11 +3,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Cell, ScatterChart, Scatter, ZAxis, RadarChart, Radar, PolarGrid, PolarAngleAxis } from 'recharts';
 import { Users, Target, MapPin, Globe, Star, Zap, Palette, MessageCircle, Store, Heart, TrendingUp, Lightbulb, AlertTriangle, ThumbsUp, ChevronRight } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 // ═══════════════════════════════════════════════════════════════════
 // Momcozy 看用户 · 全面重构
 // 导航修复：侧边栏↔横向导航联动 · 6类完整画像 · 全球画像深度分析
-// 数据基于2025-2026年深度采集：QuestMobile/Mamava/艾媒咨询/秒针
+// 来源混合 QuestMobile、海外调研和CRM示例，展示层必须拆分口径。
 // ═══════════════════════════════════════════════════════════════════
 
 // ── 社交声量数据 ──
@@ -920,7 +921,7 @@ export default function UsersPage() {
 
               {/* 子导航 - 根据选中的父级动态显示 */}
               {currentChildren.length > 0 && (
-                <div className="flex items-center gap-1 mt-3">
+                <div className="flex items-center gap-1 mt-3 flex-wrap">
                   {currentChildren.map((child) => (
                     <button
                       key={child}
@@ -939,6 +940,12 @@ export default function UsersPage() {
                 </div>
               )}
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-011', 'ds-043', 'ds-012']}
+              title="用户洞察来源口径"
+              description="中国有孩家庭画像、海外母乳喂养调研和 CRM/RFM 示例不是同一数据口径；当前页面只作为分层线索，不能外推为全球哺乳用户事实。"
+            />
 
             {/* 内容区域 */}
             {activeParent === '社交声量' && renderSocialBoard()}

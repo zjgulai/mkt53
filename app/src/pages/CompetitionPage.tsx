@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Search, LayoutGrid, Target, FileBarChart, Map as MapIcon, Database, ChevronDown, X, Download } from 'lucide-react';
 import { exportToCsv } from '@/utils/csvExport';
 // Target imported via lucide-react
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 
 interface Product {
@@ -158,19 +159,19 @@ export default function CompetitionPage() {
           <div className="flex-1 min-w-0 space-y-6">
             {/* R11: 竞争态势总结头部 */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
+              <div className="flex items-start justify-between gap-3 flex-wrap mb-4">
+                <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-2xl bg-[#C25B6E] flex items-center justify-center">
                     <Target className="w-5 h-5 text-white" strokeWidth={2} />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h2 className="text-lg font-semibold text-[#1d1d1f]">竞品库</h2>
-                    <p className="text-xs text-[#86868b]">8大品牌 · 15款产品 · Amazon实时数据 · 2026-05-23</p>
+                    <p className="text-xs text-[#86868b]">8大品牌 · 15款产品 · Amazon连接器待接入 · 半月复核</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <button onClick={() => exportToCsv(filteredProducts, { name: "产品名称", brand: "品牌", type: "类型", price: "价格", category: "品类" }, "竞品产品数据_" + new Date().toISOString().slice(0, 10))} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FBF8F5] text-[10px] text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all"><Download className="w-3 h-3"/>导出CSV</button>
-                  <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">数据：</span><span className="text-[#B5AFA8]">Amazon.com</span> · 每周更新</span>
+                  <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">数据：</span><span className="text-[#B5AFA8]">Amazon.com</span> · 待采集任务</span>
                 </div>
               </div>
               {/* R12: Momcozy竞争优势快览 */}
@@ -189,6 +190,12 @@ export default function CompetitionPage() {
                 ))}
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-007']}
+              title="竞品库采集状态"
+              description="竞品概览仍需补 Amazon 授权采集任务、时间戳和平台合规记录；当前卡片和对比仅作为半月复核线索。"
+            />
 
             {/* Filters */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
@@ -225,7 +232,7 @@ export default function CompetitionPage() {
                     )}
                   </div>
                 </div>
-                <div className="ml-auto flex items-center gap-2">
+                <div className="flex items-center gap-2 sm:ml-auto">
                   <button className="flex items-center gap-1 px-4 py-2 rounded-lg bg-[#C25B6E] text-white text-sm font-medium hover:bg-[#D46B7E]"><Search className="w-4 h-4" /> 筛选</button>
                   <button onClick={handleReset} className={`px-4 py-2 rounded-lg border text-sm transition-all ${hasActiveFilters ? 'border-[#C25B6E] text-[#C25B6E] hover:bg-[#C25B6E]/5' : 'border-[#EDE6DF] text-[#86868b] hover:bg-[#FBF8F5] transition-colors duration-200 duration-200 duration-200'}`}>重置</button>
                 </div>
@@ -268,18 +275,20 @@ export default function CompetitionPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-1">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                 <span className="text-xs text-[#86868b] whitespace-nowrap">品牌首字母</span>
-                {letters.map((letter) => (
-                  <button
-                    key={letter}
-                    onClick={() => handleLetter(letter)}
-                    className={`w-6 h-6 rounded text-xs flex items-center justify-center transition-all ${activeLetter === letter ? 'bg-[#C25B6E] text-white font-bold' : 'text-[#86868b] hover:text-[#C25B6E] hover:bg-[#FBF8F5] transition-colors duration-200 duration-200 duration-200'}`}
-                  >
-                    {letter}
-                  </button>
-                ))}
-                <span className="text-xs text-[#86868b] ml-auto">共 {filteredProducts.length} 条</span>
+                <div className="flex flex-wrap gap-1 min-w-0">
+                  {letters.map((letter) => (
+                    <button
+                      key={letter}
+                      onClick={() => handleLetter(letter)}
+                      className={`w-6 h-6 rounded text-xs flex items-center justify-center transition-all ${activeLetter === letter ? 'bg-[#C25B6E] text-white font-bold' : 'text-[#86868b] hover:text-[#C25B6E] hover:bg-[#FBF8F5] transition-colors duration-200 duration-200 duration-200'}`}
+                    >
+                      {letter}
+                    </button>
+                  ))}
+                </div>
+                <span className="text-xs text-[#86868b] sm:ml-auto">共 {filteredProducts.length} 条</span>
               </div>
             </div>
 

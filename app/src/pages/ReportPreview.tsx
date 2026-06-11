@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { FileText, ArrowLeft, Download, Clock, User, FileDigit, Printer, Share2, ChevronRight } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 // ═══════════════════════════════════════════════════════════════════
 // 报告预览页面 — 行业标准报告结构
@@ -49,11 +50,11 @@ const reportDB: Record<string, ReportDetail> = {
   r009: {
     id: 'r009', title: '2026年Q1全球吸奶器市场竞争格局报告', category: '竞品情报',
     date: '2026-04-12', author: '竞争分析组', pages: 78, downloads: 623,
-    summary: '8大品牌25款产品Amazon实时数据采集，价格带竞争地图，BCG矩阵分析',
+    summary: '8大品牌25款产品公开页样例与待采集任务复核，价格带竞争地图，BCG矩阵分析',
     tags: ['竞争格局', '价格地图', 'BCG矩阵'],
     structure: [
-      { section: '1. 执行摘要', pages: 'p.1-4', content: '2026年Q1全球吸奶器市场8大品牌竞争格局分析，基于<span className="text-[#B5AFA8]">Amazon.com</span> 25款产品实时数据采集。Momcozy以22.2%美国份额领先，但Medela/Willow在高端市场（$300+）仍具优势。' },
-      { section: '2. 研究方法论', pages: 'p.5-7', content: '<span className="text-[#B5AFA8]">数据来源：</span><span className="text-[#B5AFA8]">Amazon.com</span>产品页面2026年5月采集，包含产品名称/价格/评分/评价数。分析框架：价格带竞争地图+BCG增长-份额矩阵+品牌竞争力雷达。' },
+      { section: '1. 执行摘要', pages: 'p.1-4', content: '2026年Q1全球吸奶器市场8大品牌竞争格局分析，基于 Amazon.com 25款产品公开页样例和待采集任务复核。Momcozy份额、价格和评分相关结论需补采集时间戳后再作为经营判断。' },
+      { section: '2. 研究方法论', pages: 'p.5-7', content: '数据来源：Amazon.com 产品页面样例和待补时间戳采集任务，包含产品名称/价格/评分/评价数。分析框架：价格带竞争地图+BCG增长-份额矩阵+品牌竞争力雷达。' },
       { section: '3. 竞争品牌概览', pages: 'p.8-18', content: 'Medela/Elvie/Willow/Spectra/Haakaa/Lansinoh/Philips Avent/Freemie 8大品牌产品线梳理。各品牌定位：Medela（医院级专业）/Elvie（高端设计）/Willow（防漏技术）/Haakaa（性价比爆款）。' },
       { section: '4. 产品价格带分析', pages: 'p.19-32', content: '超高端$400+（Elvie Pump $549）→ 高端$250-400（Willow 360 $349/Medela Melody $349）→ 中高端$150-250（Momcozy M5 $159/M9 $199/W1 $219）→ 入门<$150（Haakaa $16/Lansinoh $89）。' },
       { section: '5. BCG增长-份额矩阵', pages: 'p.33-42', content: '明星：M5（15.1%增长/2.8x份额）+ M9（18.2%/1.6x）；现金牛：哺乳文胸（8.5%/1.4x）+ 孕妇枕（6.2%/1.1x）；问题：W1（42%/0.2x）+ KleanPal（35.2%/0.4x）；瘦狗：传统配件（2.1%/0.6x）。' },
@@ -62,8 +63,8 @@ const reportDB: Record<string, ReportDetail> = {
       { section: '8. 结论与建议', pages: 'p.65-78', content: '①加速W1上市抢加热差异化窗口 ②开发$300+产品线挑战高端 ③强化保险渠道合作 ④亚太区本地化产品策略 ⑤监控eufy/Imani技术动向。' },
     ],
     highlights: [
-      { metric: '采集产品数', value: '25款', context: '<span className="text-[#B5AFA8]">Amazon.com</span> 8大品牌' },
-      { metric: 'Momcozy美国份额', value: '22.2%', context: 'Amazon Best Seller #1' },
+      { metric: '待复核产品数', value: '25款', context: 'Amazon.com 8大品牌公开页样例' },
+      { metric: 'Momcozy美国份额', value: '22.2%', context: 'Amazon渠道口径待补快照' },
       { metric: '价格带覆盖', value: '$16-$549', context: '从入门到超高端' },
       { metric: 'M5增长率', value: '+15.1%', context: 'BCG明星产品' },
       { metric: 'W1预期增长', value: '+42%', context: '加热差异化创新' },
@@ -85,7 +86,7 @@ const defaultReport: ReportDetail = {
   summary: 'Momcozy品牌市场洞察报告', tags: ['市场分析'],
   structure: [
     { section: '1. 执行摘要', pages: 'p.1-3', content: '本报告基于2025-2026年深度市场研究，涵盖竞争格局、消费者洞察、技术趋势和战略建议。' },
-    { section: '2. 研究方法论', pages: 'p.4-6', content: '采用定性与定量结合的研究方法，包括Amazon数据采集、用户访谈、行业专家咨询等。' },
+    { section: '2. 研究方法论', pages: 'p.4-6', content: '采用定性与定量结合的研究方法，包括 Amazon 公开页样例与待采集任务、用户访谈、行业专家咨询等。' },
     { section: '3. 市场概况', pages: 'p.7-18', content: '全球母婴护理市场2026年规模$1,267亿，吸奶器细分市场$11.6亿，Momcozy占据19.3%全球份额。' },
     { section: '4. 竞争分析', pages: 'p.19-30', content: '8大品牌竞争格局深度分析，价格带分布、BCG矩阵、品牌竞争力雷达图。' },
     { section: '5. 消费者洞察', pages: 'p.31-38', content: '6类核心用户画像分析，全球八大人群聚类，RFM用户价值分层。' },
@@ -119,11 +120,11 @@ export default function ReportPreview() {
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1000px] mx-auto">
         {/* 顶部工具栏 */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between">
           <button onClick={() => navigate('/reports')} className="flex items-center gap-2 text-sm text-[#86868b] hover:text-[#C25B6E] transition-colors duration-200">
             <ArrowLeft className="w-4 h-4" />返回报告中心
           </button>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#FBF8F5] text-xs text-[#86868b] hover:bg-[#EDE6DF] transition-colors duration-200">
               <Printer className="w-3.5 h-3.5" />打印
             </button>
@@ -144,7 +145,7 @@ export default function ReportPreview() {
           </div>
           <h1 className="text-2xl font-bold text-[#1d1d1f] mb-5">{report.title}</h1>
           <p className="text-sm text-[#86868b] mb-6 leading-relaxed">{report.summary}</p>
-          <div className="flex items-center gap-8 text-xs text-[#86868b]">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-[#86868b] sm:gap-8">
             <div className="flex items-center gap-1.5"><User className="w-3.5 h-3.5" />{report.author}</div>
             <div className="flex items-center gap-1.5"><FileDigit className="w-3.5 h-3.5" />{report.pages}页</div>
             <div className="flex items-center gap-1.5"><Download className="w-3.5 h-3.5" />{report.downloads}次下载</div>
@@ -156,6 +157,14 @@ export default function ReportPreview() {
             ))}
           </div>
         </div>
+
+        <PageEvidenceNotice
+          sourceIds={report.id === 'r009' ? ['ds-024', 'ds-009'] : ['ds-024']}
+          title="报告内容来源边界"
+          description="报告日期表示发布或入库日期，不等于当前半月数据刷新时间。涉及平台价格、份额、评分、采集类指标时，必须补采集窗口、SKU映射和复核状态后再作为经营结论。"
+          className="mb-6"
+          cadence="报告复核口径"
+        />
 
         {/* 核心数据亮点 */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">

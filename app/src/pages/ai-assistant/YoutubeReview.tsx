@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { aiAssistantSidebarItems } from './constants';
 import { Youtube } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
-const stats = [{"label":"追踪视频","value":"486"},{"label":"总观看量","value":"28.5M"},{"label":"合作达人","value":"72"},{"label":"平均评分","value":"4.6"}];
+const stats = [{"label":"样例视频","value":"486"},{"label":"样例观看量","value":"28.5M"},{"label":"样例达人","value":"72"},{"label":"评分待复核","value":"4.6"}];
 
-const features = ["YouTube母婴品类测评视频自动抓取与分类","达人影响力评估（订阅/互动/转化率）","竞品测评内容对比分析","品牌提及情感分析","最佳合作达人推荐"];
+const features = ["YouTube母婴品类测评视频采集配置待接入","达人影响力评估需补订阅、互动和转化口径","竞品测评内容对比分析","品牌提及情感分析","合作达人推荐候选清单"];
 
 const insights = [{"topic":"M5 Unboxing","sentiment":"正面","mentions":156,"trend":"上升"},{"topic":"Momcozy vs Medela","sentiment":"正面","mentions":89,"trend":"上升"},{"topic":"Nursing Bra Review","sentiment":"正面","mentions":134,"trend":"稳定"},{"topic":"KleanPal Demo","sentiment":"混合","mentions":45,"trend":"上升"},{"topic":"M9 Sound Test","sentiment":"混合","mentions":67,"trend":"下降"}];
 
@@ -14,7 +15,7 @@ export default function YoutubeReview() {
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex gap-8">
-          <aside className="w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
+          <aside className="hidden lg:block w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
             <nav className="space-y-0.5">
               {aiAssistantSidebarItems.map((item, i) => (
                 <button key={i} onClick={() => navigate(item.path)} className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-[#1d1d1f] hover:bg-[#FBF8F5] transition-all">{item.label}</button>
@@ -33,6 +34,12 @@ export default function YoutubeReview() {
                 </div>
               </div>
             </div>
+            <PageEvidenceNotice
+              sourceIds={['ds-031']}
+              title="YouTube测评示例口径"
+              description="视频、观看量、达人和评分指标为演示口径，尚未绑定 YouTube Data API 采集任务、查询词、视频 ID 清单、授权额度和采集时间。"
+              cadence="API待接入"
+            />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {stats.map((s, i) => (
                 <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">

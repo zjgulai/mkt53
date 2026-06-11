@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { Newspaper, Clock, TrendingUp, ExternalLink, Filter } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 const newsItems = [
   { id: 1, title: 'Momcozy Wearable Breast Pump获得FDA 510(k)许可，涵盖7个型号', source: 'FDA.gov', date: '2025-10-29', category: '法规', tag: '重要', hot: true },
-  { id: 2, title: '全球可穿戴吸奶器市场规模2025年预计达18.2亿美元，年增15.3%', source: 'MarketWatch', date: '2026-05-23', category: '市场', tag: null, hot: true },
+  { id: 2, title: '全球可穿戴吸奶器市场规模2025年预计达18.2亿美元，年增15.3%', source: 'MarketWatch', date: '待复核 2026-05-23', category: '市场', tag: null, hot: true },
   { id: 3, title: 'eufy Wearable Breast Pump S1获FDA 510(k)许可，赛道竞争加剧', source: 'FDA.gov', date: '2025-08-11', category: '竞品', tag: null, hot: false },
   { id: 4, title: '中国GB 6675-2025玩具安全新标准发布，2026年11月计划生效', source: 'SAC China', date: '2025-10-05', category: '法规', tag: '重要', hot: true },
   { id: 5, title: '欧盟MDR过渡期延长至2027-2028年，吸奶器等Class IIa器械影响分析', source: 'EU Commission', date: '2024-12-18', category: '法规', tag: null, hot: false },
-  { id: 6, title: 'Medela发布Sonata Pro智能吸奶器，集成AI泌乳分析功能', source: 'Medela', date: '2026-05-23', category: '竞品', tag: null, hot: false },
-  { id: 7, title: '美国CPSC 16 CFR Part 1242哺乳枕安全标准正式生效', source: 'CPSC', date: '2026-05-23', category: '法规', tag: '重要', hot: true },
+  { id: 6, title: 'Medela发布Sonata Pro智能吸奶器，集成AI泌乳分析功能', source: 'Medela', date: '待复核 2026-05-23', category: '竞品', tag: null, hot: false },
+  { id: 7, title: '美国CPSC 16 CFR Part 1242哺乳枕安全标准正式生效', source: 'CPSC', date: '待复核 2026-05-23', category: '法规', tag: '重要', hot: true },
   { id: 8, title: '母婴行业2025年Q2投融资报告：可穿戴设备赛道获投金额同比增长42%', source: '36氪', date: '2025-07-01', category: '资本', tag: null, hot: false },
-  { id: 9, title: 'Willow Go 3.0发布，续航提升至8小时，直接对标Momcozy M5', source: 'Willow', date: '2026-05-23', category: '竞品', tag: null, hot: true },
+  { id: 9, title: 'Willow Go 3.0发布，续航提升至8小时，直接对标Momcozy M5', source: 'Willow', date: '待复核 2026-05-23', category: '竞品', tag: null, hot: true },
   { id: 10, title: '中国工信部发布7项儿童用品强制性国标草案征求意见稿', source: 'MIIT', date: '2025-08-01', category: '法规', tag: null, hot: false },
 ];
 
@@ -79,6 +80,12 @@ export default function IndustryNews() {
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-034']}
+              title="行业资讯条目复核口径"
+              description="资讯列表为手工汇编，仍需逐条补原文 URL、发布日期和复核状态；不能把整页列表视为已验证新闻流。"
+            />
 
             <div className="space-y-4">
               {filtered.map((n) => (

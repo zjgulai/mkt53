@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FileText, Gavel, ExternalLink, Shield, CheckCircle, ChevronRight, Download, Search } from 'lucide-react';
 import { exportToCsv } from '@/utils/csvExport';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import { getSourceRegistryItem, getVerificationStatusMeta, type VerificationStatus } from '@/data/source-registry';
 
 const sidebarItems = [
@@ -52,8 +53,8 @@ const regulationGroups = [
         region: '美国',
         regionCode: 'US',
         category: '合规复核',
-        desc: 'CPSC官方规则要求制造商/进口商为儿童产品出具CPC，并关注eFiling证书数据提交要求；未找到“官网需嵌入实时生成合规声明页面”的官方依据。',
-        detail: '当前行动应从“建设官网实时声明页”改为复核CPC证书字段、测试报告、进口eFiling适用范围与实施日期。原Federal Register链接不可作为该规则依据。',
+        desc: 'CPSC官方规则要求制造商/进口商为儿童产品出具CPC，并关注eFiling证书数据提交要求；未找到“官网需嵌入即时生成合规声明页面”的官方依据。',
+        detail: '当前行动应从“建设官网即时声明页”改为复核CPC证书字段、测试报告、进口eFiling适用范围与实施日期。原Federal Register链接不可作为该规则依据。',
         fullText: 'https://www.cpsc.gov/eFiling',
         source: { name: cpscEfilingSource.sourceName, url: cpscEfilingSource.sourceUrl ?? 'https://www.cpsc.gov/eFiling', reliability: cpscEfilingSource.reliability, lastVerified: cpscEfilingSource.lastVerified },
         momcozyStatus: { status: '进行中', detail: '复核CPC/eFiling字段与SKU适用范围，暂停按未证实官网声明要求开发', progress: 45, owner: '郑法务' },
@@ -314,6 +315,12 @@ export default function RegulationDetail() {
               </div>
             </div>
 
+            <PageEvidenceNotice
+              sourceIds={['policy-cpsc-efiling', 'policy-eu-mdr-transition', 'ds-016']}
+              title="法规详情复核边界"
+              description="法规卡片保留条目日期和负责人，但 CPSC CPC/eFiling、EU MDR 及部分历史条目的 SKU 适用范围仍需法务逐条复核。"
+            />
+
             {/* 时间线布局 */}
             <div className="relative pl-8 space-y-8">
               <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-gradient-to-b from-[#ff3b30] via-[#ff9500] to-[#34c759] rounded-full opacity-20" />
@@ -337,7 +344,8 @@ export default function RegulationDetail() {
                       const IconComp = card.icon;
                       const isExpanded = expandedId === card.id;
                       const sc = statusColors[card.momcozyStatus.status] || '#86868b';
-                      const verification = getVerificationStatusMeta(getRegulationVerificationStatus(card));
+                      const cardVerificationStatus = getRegulationVerificationStatus(card);
+                      const verification = getVerificationStatusMeta(cardVerificationStatus);
                       return (
                         <div key={card.id} className={`bg-white rounded-2xl card-shadow-sm border transition-all ${isExpanded ? 'border-[#C25B6E]/30' : 'border-[#EDE6DF] hover:border-[#C25B6E]/20'}`}>
                           <div className="p-5 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : card.id)}>
@@ -404,7 +412,7 @@ export default function RegulationDetail() {
                                   {Object.entries(card.audit).map(([key, val], i) => (
                                     <div key={i} className="flex items-center gap-1.5">
                                       <span className="text-[9px] text-[#B5AFA8]">{key}:</span>
-                                      <span className={`text-[9px] font-medium ${val === '已审核' || val === '官方来源复核通过' ? 'text-[#34c759]' : val.includes('复核') || val.includes('未发现') ? 'text-[#ff9500]' : 'text-[#1d1d1f]'}`}>{val}</span>
+                                      <span className={`text-[9px] font-medium ${cardVerificationStatus === 'verified' && (val === '已审核' || val === '官方来源复核通过') ? 'text-[#34c759]' : val.includes('复核') || val.includes('未发现') || cardVerificationStatus === 'needs-review' ? 'text-[#ff9500]' : 'text-[#1d1d1f]'}`}>{val}</span>
                                     </div>
                                   ))}
                                 </div>

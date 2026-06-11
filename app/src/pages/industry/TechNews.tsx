@@ -1,5 +1,6 @@
 import { Cpu, Zap, Smartphone, Wifi, Battery, Mic } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 const techItems = [
   { icon: <Zap className="w-5 h-5" />, title: 'AI泌乳分析技术', desc: 'Medela Sonata Pro首次集成AI算法，通过机器学习分析妈妈泌乳模式，自动优化吸力曲线。预计2026年将有3-5个品牌跟进。', trend: '前沿', color: '#af52de' },
@@ -54,10 +55,15 @@ export default function TechNews() {
                 </div>
                 <div>
                   <h1 className="text-lg font-semibold text-[#1d1d1f]">母婴科技资讯</h1>
-                  <p className="text-xs text-[#86868b]">追踪吸奶器/母婴产品最新技术突破与创新方向</p>
+                  <p className="text-xs text-[#86868b]">追踪吸奶器/母婴产品技术突破与创新方向</p>
                 </div>
               </div>
             </div>
+            <PageEvidenceNotice
+              sourceIds={['ds-036']}
+              title="技术资讯复核口径"
+              description="技术趋势描述需要逐条绑定品牌官网、产品规格或新闻原文；当前内容作为技术观察线索。"
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {techItems.map((t, i) => (
                 <div key={i} className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF] hover:shadow-md transition-natural">

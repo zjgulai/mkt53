@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Globe, MessageCircle, ThumbsUp, ThumbsDown, AlertTriangle } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 const sentimentTrend = [
   { month: '2024-06', positive: 68, neutral: 22, negative: 10 },
@@ -35,12 +36,12 @@ const hotTopics = [
 ];
 
 const recentMentions = [
-  { platform: 'Reddit', user: 'WorkingMom2025', content: 'The M5 has been a game changer for my pumping sessions at work. Truly hands-free and discreet.', sentiment: 'positive', likes: 234, date: '2026-05-23' },
-  { platform: 'Twitter/X', user: '@NewMomLife', content: 'Momcozy nursing bra is the most comfortable I have tried. Worth every penny!', sentiment: 'positive', likes: 189, date: '2026-05-23' },
-  { platform: 'Instagram', user: '@mommyblogger_us', content: 'Love the new M9 design but wish the suction was a bit stronger for heavy producers.', sentiment: 'mixed', likes: 445, date: '2026-05-23' },
-  { platform: 'Facebook', user: 'Sarah Johnson', content: 'Had an issue with the KleanPal water reservoir leaking. Customer service was helpful though.', sentiment: 'mixed', likes: 67, date: '2026-05-23' },
-  { platform: 'TikTok', user: '@pumpreview', content: 'M5 vs Willow Go comparison - Momcozy wins on price and battery life!', sentiment: 'positive', likes: 1205, date: '2026-05-23' },
-  { platform: 'Reddit', user: 'FTDad_Parenting', content: 'Baby carrier ergonomics are great. My back doesnt hurt even after 2 hours of wearing.', sentiment: 'positive', likes: 156, date: '2026-05-23' },
+  { platform: 'Reddit', user: 'WorkingMom2025', content: 'The M5 has been a game changer for my pumping sessions at work. Truly hands-free and discreet.', sentiment: 'positive', likes: 234, date: '样例日期 2026-05-23' },
+  { platform: 'Twitter/X', user: '@NewMomLife', content: 'Momcozy nursing bra is the most comfortable I have tried. Worth every penny!', sentiment: 'positive', likes: 189, date: '样例日期 2026-05-23' },
+  { platform: 'Instagram', user: '@mommyblogger_us', content: 'Love the new M9 design but wish the suction was a bit stronger for heavy producers.', sentiment: 'mixed', likes: 445, date: '样例日期 2026-05-23' },
+  { platform: 'Facebook', user: 'Sarah Johnson', content: 'Had an issue with the KleanPal water reservoir leaking. Customer service was helpful though.', sentiment: 'mixed', likes: 67, date: '样例日期 2026-05-23' },
+  { platform: 'TikTok', user: '@pumpreview', content: 'M5 vs Willow Go comparison - Momcozy wins on price and battery life!', sentiment: 'positive', likes: 1205, date: '样例日期 2026-05-23' },
+  { platform: 'Reddit', user: 'FTDad_Parenting', content: 'Baby carrier ergonomics are great. My back doesnt hurt even after 2 hours of wearing.', sentiment: 'positive', likes: 156, date: '样例日期 2026-05-23' },
 ];
 
 const sidebarItems = [
@@ -62,7 +63,7 @@ export default function OverseasSentiment() {
           <div className="flex-1 min-w-0 space-y-6">
             {/* Header */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-              <div className="flex items-center justify-between mb-5">
+              <div className="flex items-start justify-between gap-3 flex-wrap mb-5">
                 <div className="flex items-center gap-4">
                   <div className="w-9 h-9 rounded-2xl bg-[#C25B6E] flex items-center justify-center shadow-sm" style={{ boxShadow: '0 2px 8px #C25B6E30' }}>
                     <Globe className="w-4 h-4 text-white" strokeWidth={2} />
@@ -72,7 +73,7 @@ export default function OverseasSentiment() {
                     <p className="text-xs text-[#86868b]">覆盖 Reddit / Twitter / Instagram / Facebook / TikTok 等海外主流社交平台</p>
                   </div>
                 </div>
-                <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">数据更新：</span>2026-05-23</span>
+                <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">采集状态：</span>社媒 API 待接入</span>
               </div>
               <div className="flex items-center gap-1">
                 {tabs.map((tab) => (
@@ -81,10 +82,16 @@ export default function OverseasSentiment() {
               </div>
             </div>
 
+            <PageEvidenceNotice
+              sourceIds={['ds-013']}
+              title="海外舆情采集状态"
+              description="TikTok、Instagram、Facebook、Reddit 等平台尚未补齐 API 授权、查询词和采样窗口；当前声量、情绪和提及列表只能作为舆情线索。"
+            />
+
             {/* Stats Row */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { label: '今日提及量', value: '2,847', change: '+12.3%', up: true, icon: <MessageCircle className="w-4 h-4" />, color: '#C25B6E' },
+                { label: '样例提及量', value: '2,847', change: '待采集复核', up: true, icon: <MessageCircle className="w-4 h-4" />, color: '#C25B6E' },
                 { label: '正面占比', value: '78%', change: '+3.2%', up: true, icon: <ThumbsUp className="w-4 h-4" />, color: '#34c759' },
                 { label: '负面占比', value: '6%', change: '-2.1%', up: true, icon: <ThumbsDown className="w-4 h-4" />, color: '#ff3b30' },
                 { label: '危机预警', value: '2', change: '需关注', up: false, icon: <AlertTriangle className="w-4 h-4" />, color: '#ff9500' },
@@ -167,7 +174,7 @@ export default function OverseasSentiment() {
 
             {/* Recent Mentions */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-              <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">最新海外提及</h3>
+              <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">海外提及样例</h3>
               <div className="space-y-4">
                 {recentMentions.map((m, i) => (
                   <div key={i} className="p-4 rounded-xl bg-[#FBF8F5] hover:bg-[#F5EDE8] transition-colors duration-200 border border-[#EDE6DF]/60">

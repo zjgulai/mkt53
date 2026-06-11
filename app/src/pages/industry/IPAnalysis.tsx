@@ -1,5 +1,6 @@
 import { Shield, FileText, Award, AlertTriangle, TrendingUp, Clock } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 const patents = [
   { name: '穿戴式吸奶器隐形结构', holder: 'Momcozy', date: '2023-08', status: '授权', type: '发明', country: '美国/中国/欧盟' },
@@ -66,6 +67,12 @@ export default function IPAnalysis() {
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-017']}
+              title="IP数据待复核口径"
+              description="当前专利与侵权风险缺少 2025 年 WIPO/USPTO 更新和诉讼状态复核；授权、审查中和风险标签需在外部数据库快照后确认。"
+            />
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

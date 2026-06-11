@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import InterviewAgents from '@/components/InterviewAgents';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import { exportToCsv } from '@/utils/csvExport';
 
 // ─── 渠道销售表现 ───
@@ -72,7 +73,7 @@ const interviews = [
     insights: ['M5在Amazon哺乳品类长期Top 3', '退货率仅3%，远低于品类平均8%', 'Subscribe & Save复购率达40%', 'A+内容转化率提升25%'],
     challenges: ['Amazon佣金费率持续上升(15%→17%)', '竞品价格战激烈，CPC成本+30%', 'FBA仓储限制影响旺季备货', '品牌注册2.0审核趋严'],
     strategies: ['优化Subscribe & Save折扣梯度', '加大品牌关键词防御性投放', '提前90天备货到FBA', '申请Amazon Live直播资源'],
-    rating: 5, date: '2026-05-23', duration: '55min', method: '视频会议+数据看板共享',
+    rating: 5, date: '样例访谈日 2026-05-23', duration: '55min', method: '视频会议+数据看板共享',
   },
   {
     id: 2, channel: 'Target', role: '采购总监', location: 'Minneapolis, US', years: 8, health: 78,
@@ -81,7 +82,7 @@ const interviews = [
     insights: ['首季度销售超目标40%', '可穿戴设计在Target用户中接受度高', '独家配色可提升差异化', '店内体验转化率达65%'],
     challenges: ['线下陈列空间有限，位置竞争激烈', '需持续教育消费者认识新品牌', '季节性销售波动大(Q4占45%)', '库存周转率要求<30天'],
     strategies: ['推进Target独家款开发', '增加店内体验台投入', 'Q3提前备货应对Q4高峰', '联合Target Circle会员营销'],
-    rating: 4, date: '2026-05-23', duration: '48min', method: '面对面访谈+门店走访',
+    rating: 4, date: '样例访谈日 2026-05-23', duration: '48min', method: '面对面访谈+门店走访',
   },
   {
     id: 3, channel: 'TikTok Shop', role: '运营总监', location: 'Los Angeles, US', years: 3, health: 88,
@@ -90,7 +91,7 @@ const interviews = [
     insights: ['达人合作转化率是传统广告3倍', 'M5开箱视频持续viral', 'TikTok Shop复购率达28%', '短视频完播率18%(行业平均12%)'],
     challenges: ['达人合作成本快速上升(+45% YoY)', '内容审核政策变化频繁', '退货率略高于其他渠道(6.2%)', '直播时段人力投入大'],
     strategies: ['建立自有达人矩阵降低依赖', '优化内容模板提升审核通过率', '加强产品描述减少退货', '培养内部直播团队'],
-    rating: 4, date: '2026-05-23', duration: '52min', method: '视频会议+后台数据演示',
+    rating: 4, date: '样例访谈日 2026-05-23', duration: '52min', method: '视频会议+后台数据演示',
   },
   {
     id: 4, channel: 'Momcozy官网DTC', role: '电商总监', location: 'Austin, US', years: 5, health: 95,
@@ -99,7 +100,7 @@ const interviews = [
     insights: ['DTC利润率48%，为全渠道最高', 'Klaviyo邮件流贡献35%收入', '用户数据完整度100%', ' bundles & cross-sell提升客单价28%'],
     challenges: ['CAC同比上升35%', '流量获取依赖Meta/Google', '支付欺诈率0.8%需控制', '独立站技术维护成本高'],
     strategies: ['加大SEO内容投入降低CAC', '测试Pinterest/Twitter新渠道', '引入欺诈检测工具', '迁移到Headless架构提升性能'],
-    rating: 5, date: '2026-05-23', duration: '60min', method: '面对面访谈+GA4数据分析',
+    rating: 5, date: '样例访谈日 2026-05-23', duration: '60min', method: '面对面访谈+GA4数据分析',
   },
   {
     id: 5, channel: 'Shopee Southeast Asia', role: '区域经理', location: 'Singapore', years: 4, health: 82,
@@ -108,7 +109,7 @@ const interviews = [
     insights: ['泰国/菲律宾为Top 2市场', '直播带货Q1增长300%', 'Shopee Mall品牌认证提升信任', '6.6和11.11大促占全年35%销售'],
     challenges: ['各国法规差异大(MDR/TFDA等)', '跨境物流时效不稳定', '本地化客服人力不足', '支付方式多样化需求'],
     strategies: ['各市场独立合规准备', '建立东南亚本地仓', '招聘本地客服团队', '接入 GrabPay/ShopeePay等本地支付'],
-    rating: 4, date: '2026-05-23', duration: '50min', method: '视频会议+区域数据报告',
+    rating: 4, date: '样例访谈日 2026-05-23', duration: '50min', method: '视频会议+区域数据报告',
   },
   {
     id: 6, channel: 'Boots UK', role: '品牌经理', location: 'Nottingham, UK', years: 7, health: 75,
@@ -117,7 +118,7 @@ const interviews = [
     insights: ['CE认证展示提升信任度+18%', '环保包装是UK差异化要素', '入门套装可提升新客转化', 'NHS合作可开辟B2B渠道'],
     challenges: ['Brexit后进口关税增加', 'UKCA认证过渡期复杂', '英国消费者对品牌认知度低', 'MDR合规要求严格'],
     strategies: ['申请UKCA认证', '强化可持续包装故事', '与NHS合作母婴包项目', '加大UK KOL合作投入'],
-    rating: 4, date: '2026-05-23', duration: '45min', method: '视频会议+竞品对比分析',
+    rating: 4, date: '样例访谈日 2026-05-23', duration: '45min', method: '视频会议+竞品对比分析',
   },
 ];
 
@@ -154,7 +155,7 @@ export default function ChannelInterviews() {
 
             {/* ═══ Header ═══ */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-              <div className="flex items-center justify-between mb-5">
+              <div className="flex items-start justify-between gap-3 flex-wrap mb-5">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-2xl bg-[#C25B6E] flex items-center justify-center shadow-sm" style={{ boxShadow: '0 2px 8px #C25B6E30' }}>
                     <Store className="w-5 h-5 text-white" strokeWidth={2} />
@@ -167,7 +168,7 @@ export default function ChannelInterviews() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">数据更新：</span>2026-05-23</span>
+                  <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">样本状态：</span>访谈与销售快照待复核</span>
                   <button
                     onClick={() => exportToCsv(
       interviews.map(i => ({ id: String(i.id), channel: i.channel, role: i.role, health: String(i.health), rating: String(i.rating) })),
@@ -191,12 +192,18 @@ export default function ChannelInterviews() {
               </div>
             </div>
 
+            <PageEvidenceNotice
+              sourceIds={['ds-041']}
+              title="渠道访谈复核口径"
+              description="渠道健康度、销售占比和访谈结论需要补访谈记录、脱敏授权和内部销售快照版本；当前结果作为渠道优先级线索。"
+            />
+
             {/* ═══ AI Agents ═══ */}
             <InterviewAgents
               interviewType="channel"
               sampleSize={interviews.length}
               regions={['美国', '英国', '新加坡']}
-              dateRange="2026-05-23 ~ 2026-05-23"
+              dateRange="样例访谈日：2026-05-23 · 待销售快照复核"
             />
 
             {/* ═══ KPI Cards ═══ */}

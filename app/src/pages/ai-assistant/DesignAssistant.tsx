@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Wand2, Image, Layers, Sparkles, Settings, CheckCircle, ArrowRight, Monitor, Zap, Palette, Maximize, Square, Info, Clock, Star, TrendingUp, ExternalLink } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import { aiAssistantSidebarItems } from './constants';
 
 // AI Image Generation Models - real calls must go through a server-side proxy.
@@ -82,7 +83,7 @@ const workflowSteps = [
   {
     step: 4,
     title: 'AI生成与迭代',
-    desc: '平均10-20秒完成生成。支持多次迭代优化prompt，每次生成4张备选图。',
+    desc: '真实生成耗时需以服务端代理日志为准。静态站仅展示本地演示图选择流程。',
     icon: <Sparkles className="w-5 h-5" />,
   },
   {
@@ -128,9 +129,9 @@ function pickDemoImage(prompt: string): string {
 
 // Design insights
 const designInsights = [
-  { topic: 'AI生成产品图节省成本', stat: '85%', detail: '相比传统摄影棚拍摄，AI生成可节省85%的产品图制作成本', trend: '上升' },
-  { topic: 'AI辅助设计迭代速度', stat: '10x', detail: 'AI将产品概念到视觉呈现的时间从2周缩短至2小时', trend: '上升' },
-  { topic: '团队采纳AI设计工具比例', stat: '78%', detail: 'Momcozy设计团队已全面采纳AI辅助设计流程', trend: '上升' },
+  { topic: 'AI生成产品图成本估算', stat: '待审计', detail: '需要补生成请求、供应商成本、人工审核和传统拍摄基准后再计算节省比例', trend: '上升' },
+  { topic: 'AI辅助设计迭代速度', stat: '待评估', detail: '需要用 requestId、生成轮次和设计审核记录验证从概念到成品的实际耗时', trend: '上升' },
+  { topic: '团队采纳AI设计工具比例', stat: '待接入', detail: '需要接入真实使用日志和团队权限数据后再展示采纳比例', trend: '上升' },
 ];
 
 export default function DesignAssistant() {
@@ -191,13 +192,20 @@ export default function DesignAssistant() {
               </div>
             </div>
 
+            <PageEvidenceNotice
+              sourceIds={['ds-029']}
+              title="设计助手代理与审核边界"
+              description="模型配置、生成历史和产品图为本地演示资产。真实生图必须经服务端代理，并记录 requestId、模型、成本、状态和人工审核结果；素材日期只代表生成或采集素材日期。"
+              cadence="演示模式"
+            />
+
             {/* KPI Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { label: '本月生成次数', value: '128', change: '+35%', icon: <Image className="w-4 h-4" />, color: '#C25B6E' },
-                { label: '平均生成时间', value: '12.3s', change: '-18%', icon: <Clock className="w-4 h-4" />, color: '#34c759' },
-                { label: '设计采纳率', value: '78%', change: '+12%', icon: <CheckCircle className="w-4 h-4" />, color: '#ff9500' },
-                { label: '节省设计成本', value: '$42K', change: '月度', icon: <TrendingUp className="w-4 h-4" />, color: '#af52de' },
+                { label: '样例生成次数', value: '128', change: '演示', icon: <Image className="w-4 h-4" />, color: '#C25B6E' },
+                { label: '样例生成时间', value: '12.3s', change: '待日志', icon: <Clock className="w-4 h-4" />, color: '#34c759' },
+                { label: '采纳率待审计', value: '78%', change: '待接入', icon: <CheckCircle className="w-4 h-4" />, color: '#ff9500' },
+                { label: '成本估算待审', value: '$42K', change: '样例', icon: <TrendingUp className="w-4 h-4" />, color: '#af52de' },
               ].map((s, i) => (
                 <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">
                   <div className="flex items-center gap-2 mb-2">

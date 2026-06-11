@@ -2,6 +2,7 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Palette, Globe, Star } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 const colorPreference = [
   { color: '#F5C6D0', name: '柔和粉', value: 32 },
@@ -61,6 +62,12 @@ export default function Aesthetics() {
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-040']}
+              title="美学偏好示例口径"
+              description="颜色、风格和区域审美偏好尚未绑定真实用户调研样本、地区分布和图片偏好实验；当前页面只作为设计方向探索。"
+            />
 
             {/* Color + Style Trends */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">

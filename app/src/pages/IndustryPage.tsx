@@ -2,12 +2,13 @@ import { useState, useCallback } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area, Legend, LineChart, Line } from 'recharts';
 import { Globe, Gavel, Beaker, Newspaper, Cpu, ScrollText, Shield, MapPin, Clock, FileText, TrendingUp, AlertTriangle, Package, Truck, Warehouse, DollarSign, Anchor, Award, Scale, Eye, FileSearch, Siren } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import type { SidebarItem } from '@/components/Sidebar';
 import WorldMap from '@/components/WorldMap';
 import type { MapMarker } from '@/components/WorldMap';
 
 const policyMapData = [
-  { country: '美国', status: '严格标准', color: '#ff3b30', details: 'FDA 21 CFR 884.5160将吸奶器列为Class II器械。CPSC CPC/eFiling要求需按官方证书与电子提交规则复核；未确认官网实时声明强制要求。ASTM F2088-25婴儿摇篮标准2026年7月生效。16 CFR 1242/1243哺乳枕/支撑垫标准已生效', tags: ['FDA 510(k)', 'CPSC CPSIA', 'ASTM F963-23', '16 CFR 1242'] },
+  { country: '美国', status: '严格标准', color: '#ff3b30', details: 'FDA 21 CFR 884.5160将吸奶器列为Class II器械。CPSC CPC/eFiling要求需按官方证书与电子提交规则复核；未确认官网即时合规声明强制要求。ASTM F2088-25婴儿摇篮标准2026年7月生效。16 CFR 1242/1243哺乳枕/支撑垫标准已生效', tags: ['FDA 510(k)', 'CPSC CPSIA', 'ASTM F963-23', '16 CFR 1242'] },
   { country: '欧盟', status: 'MDR监管', color: '#C25B6E', details: 'MDR 2017/745将吸奶器归为Class IIa医疗器械，需CE marking+notified body评定。过渡期延至2027-2028年。IEC 60601-1电气安全+ISO 10993生物相容性+REACH/RoHS化学品限制', tags: ['MDR 2017/745', 'CE marking', 'IEC 60601-1', 'REACH RoHS'] },
   { country: '英国', status: '标准领先', color: '#ff9500', details: 'UKCA marking替代CE marking。BS EN 14350儿童饮水器具安全标准。GPSR通用产品安全法规适用。美国CPSC规则不直接适用于英国渠道，跨境销售需按目的地市场单独判断', tags: ['UKCA', 'BS EN 14350', 'GPSR', '产品安全法'] },
   { country: '加拿大', status: '高标准', color: '#C25B6E', details: 'CCPSA《加拿大消费品安全法》严格执行。2025-2026财年禁止婴儿学步车、自喂养装置等6类产品在线销售。Health Canada 2025-2027监管计划延续配方奶粉进口豁免', tags: ['CCPSA', 'Health Canada', 'SOR/2018-83', '禁止清单'] },
@@ -27,7 +28,7 @@ const policyMarkers: MapMarker[] = [
 ];
 
 const policyTimeline = [
-  { date: '2026-07-08', events: ['美国CPSC CPC/eFiling要求进入重点复核期：进口受监管消费品需关注证书数据电子提交字段、适用产品范围和实施节奏', '未核实到“所有儿童产品官网需嵌入实时生成合规声明页面”的官方强制要求；原Federal Register链接需从可信来源中移除'] },
+  { date: '2026-07-08', events: ['美国CPSC CPC/eFiling要求进入重点复核期：进口受监管消费品需关注证书数据电子提交字段、适用产品范围和实施节奏', '未核实到“所有儿童产品官网需嵌入即时生成合规声明页面”的官方强制要求；原Federal Register链接需从可信来源中移除'] },
   { date: '2026-04-20', events: ['美国CPSC发布直接最终规则，更新16 CFR Part 1223婴儿摇篮联邦安全标准，纳入ASTM F2088-25', '新标准新增前警告标签可见性测试（第7.17节），强化窒息风险警告语言， restraint警告从"ALWAYS use"升级为"ALWAYS USE RESTRAINTS"，2026年7月25日生效'] },
   { date: '2026-03-16', events: ['CPSC宣布2026年推出婴儿睡眠安全新标准，加强婴儿睡衣可燃性要求', '新标准限制睡衣材料类型，要求所有婴儿睡衣具备阻燃性，限制绳带长度防止缠绕风险'] },
   { date: '2025-12-25', events: ['日本新《消费品安全法》（CPSA）正式生效：36个月以下玩具强制PSC标志认证', 'ST2025标准同步实施，覆盖ISO 8124-1:2022、ISO 8124-2:2023、EN 71-1/2、ASTM F963-23', '婴儿床被列为儿童特定产品+特殊特定产品，需PSC标志+特定设计标签'] },
@@ -35,7 +36,7 @@ const policyTimeline = [
   { date: '2025-10-05', events: ['中国发布GB 6675.1-4-2025玩具安全系列新标准，全面替代2014版', '新增GB/T 46509玩具VOC释放测定、GB/T 46510水性材料游离甲醛测定', 'GB 6675.10-2025新增嗅觉棋盘游戏、化妆品套装和味觉游戏安全要求'] },
   { date: '2025-09-08', events: ['Momcozy新型号电动吸奶器BP223获得FDA 510(k)许可（K251394号），申请人：深圳Root Innovation Technology', 'Fimilla(上海)母婴用品HL-3060/F5113电动吸奶器获FDA 510(k)许可（K252630号）'] },
   { date: '2025-07-05', events: ['澳大利亚ACCC紧急召回Ezone婴儿头部支撑带（Z1451/Z1758），警告车祸中脊柱损伤或死亡风险', 'ACCC同时召回婴儿自喂养枕（Z3007/Z3008），警告窒息和吸入性肺炎风险', 'ACCC记录多起相关事件，建议消费者立即停用并安全处置'] },
-  { date: '2026-05-23', events: ['美国CPSC向获批实验室通报儿童产品检测资质审批注意事项', '16 CFR 1242哺乳枕标准和16 CFR 1243支撑垫标准实验室认可范围须严格匹配ASTM F963-23章节编号', '多家实验室因认可范围列表不完整被要求整改'] },
+  { date: '待复核 2026-05-23', events: ['美国CPSC向获批实验室通报儿童产品检测资质审批注意事项', '16 CFR 1242哺乳枕标准和16 CFR 1243支撑垫标准实验室认可范围须严格匹配ASTM F963-23章节编号', '多家实验室因认可范围列表不完整被要求整改'] },
 ];
 
 const flavorData = [
@@ -53,11 +54,11 @@ const flavorTrendData = [
 
 const newsData = [
   { title: 'Momcozy Wearable Breast Pump获得FDA 510(k)许可（K253283号），涵盖7个型号', date: '2025-10-29', source: 'FDA', tag: '产品', image: true },
-  { title: '美国CPSC 16 CFR Part 1242哺乳枕安全标准正式生效，要求更严格的安全设计', date: '2026-05-23', source: 'CPSC', tag: '法规', image: true },
+  { title: '美国CPSC 16 CFR Part 1242哺乳枕安全标准正式生效，要求更严格的安全设计', date: '待复核 2026-05-23', source: 'CPSC', tag: '法规', image: true },
   { title: 'eufy Wearable Breast Pump S1获得FDA 510(k)许可（K250207号），穿戴式吸奶器赛道竞争加剧', date: '2025-08-11', source: 'FDA', tag: '竞品', image: true },
   { title: '欧盟MDR过渡期延长至2027-2028年，吸奶器等Class IIa医疗器械需加速合规', date: '2024-12-18', source: 'EU Commission', tag: '法规', image: true },
   { title: '中国发布GB 6675-2025玩具安全系列新标准，2026年11月计划生效，新增多项化学物质限制', date: '2025-10-05', source: 'SAC China', tag: '法规', image: true },
-  { title: '全球可穿戴吸奶器市场2025年预计增长18.2%，APP智能控制成为核心差异化功能', date: '2026-05-23', source: 'MarketWatch', tag: '市场', image: true },
+  { title: '全球可穿戴吸奶器市场2025年预计增长18.2%，APP智能控制成为核心差异化功能', date: '待复核 2026-05-23', source: 'MarketWatch', tag: '市场', image: true },
 ];
 
 // Section definitions: map tab ID <-> sidebar structure
@@ -147,6 +148,12 @@ export default function IndustryPage() {
               </div>
             </div>
 
+            <PageEvidenceNotice
+              sourceIds={['ds-015', 'ds-016']}
+              title="行业总览来源口径"
+              description="行业规模背景可引用外部报告，但法规、新闻、VOC、供应链和IP条目必须逐项复核；页面当前结论作为半月复核线索。"
+            />
+
             {/* ── 政策分析 Section ── */}
             {activeSection === 'policy' && (
               <div className="space-y-6">
@@ -160,7 +167,7 @@ export default function IndustryPage() {
                       <p className="text-sm font-semibold text-[#ff3b30]">Momcozy 合规风险总览</p>
                       <span className="px-1.5 py-0.5 rounded bg-[#ff3b30]/10 text-[#ff3b30] text-[9px] font-bold">P1</span>
                     </div>
-                    <p className="text-xs text-[#1d1d1f]">美国CPSC CPC/eFiling规则需复核证书字段、适用SKU和实施日期；“官网实时合规声明”尚未找到官方依据，不应作为P0已生效规则执行。日本PSC认证8月到期需续期。建议优先级：美国复核{'>'}日本{'>'}欧盟MDR。</p>
+                    <p className="text-xs text-[#1d1d1f]">美国CPSC CPC/eFiling规则需复核证书字段、适用SKU和实施日期；“官网即时合规声明”尚未找到官方依据，不应作为P0已生效规则执行。日本PSC认证8月到期需续期。建议优先级：美国复核{'>'}日本{'>'}欧盟MDR。</p>
                   </div>
                 </div>
                 <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
@@ -386,7 +393,7 @@ export default function IndustryPage() {
                   <span className="px-1.5 py-0.5 rounded bg-[#34c759]/10 text-[#34c759] text-[9px] font-medium">机会</span>
                   <span className="px-1.5 py-0.5 rounded bg-[#ff3b30]/10 text-[#ff3b30] text-[9px] font-medium">威胁</span>
                   <span className="px-1.5 py-0.5 rounded bg-[#ff9500]/10 text-[#ff9500] text-[9px] font-medium">中性</span>
-                  <span className="text-[9px] text-[#B5AFA8] ml-auto">6条最新行业动态</span>
+                  <span className="text-[9px] text-[#B5AFA8] ml-auto">6条行业动态待复核</span>
                 </div>
                 <div className="relative h-48 rounded-2xl overflow-hidden">
                   <img src="/images/hero-data.jpg" alt="Industry News" className="w-full h-full object-cover" />
@@ -430,10 +437,10 @@ export default function IndustryPage() {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
-                      { title: 'AI驱动的婴儿监视器：哭声识别准确率突破95%', date: '2026-05-23', tag: 'AI' },
-                      { title: '可穿戴式智能吸奶器：蓝牙连接+APP数据分析成标配', date: '2026-05-23', tag: '智能硬件' },
-                      { title: 'UV-C LED消毒技术成本下降40%，加速普及到中端产品线', date: '2026-05-23', tag: '材料科技' },
-                      { title: '母婴电商平台AR试穿功能上线，文胸尺码匹配率提升30%', date: '2026-05-23', tag: '电商科技' },
+                      { title: 'AI驱动的婴儿监视器：哭声识别准确率突破95%', date: '待复核 2026-05-23', tag: 'AI' },
+                      { title: '可穿戴式智能吸奶器：蓝牙连接+APP数据分析成标配', date: '待复核 2026-05-23', tag: '智能硬件' },
+                      { title: 'UV-C LED消毒技术成本下降40%，加速普及到中端产品线', date: '待复核 2026-05-23', tag: '材料科技' },
+                      { title: '母婴电商平台AR试穿功能上线，文胸尺码匹配率提升30%', date: '待复核 2026-05-23', tag: '电商科技' },
                     ].map((item, i) => (
                       <div key={i} className="p-4 rounded-xl bg-[#FBF8F5] hover:bg-[#F5EDE8] transition-colors duration-200 cursor-pointer">
                         <span className="px-1.5 py-0.5 rounded text-[10px] text-[#5856d6] bg-[#5856d6]/10 font-medium">{item.tag}</span>
@@ -1169,7 +1176,7 @@ function SupplyChainSection() {
         <div className="flex items-center gap-2 mb-5">
           <AlertTriangle className="w-4 h-4 text-[#ff3b30]" strokeWidth={2} />
           <h4 className="text-sm font-semibold text-[#1d1d1f]">供应链风险预警</h4>
-          <span className="text-[10px] text-[#86868B] bg-[#FBF8F5] px-2 py-1 rounded-lg ml-auto">实时监控</span>
+          <span className="text-[10px] text-[#86868B] bg-[#FBF8F5] px-2 py-1 rounded-lg ml-auto">ERP快照待接入</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[

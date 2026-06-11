@@ -2,6 +2,7 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Truck, Factory, Package, AlertTriangle, MapPin, Clock, Star } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 const costTrend = [
   { month: '2024-06', material: 100, labor: 100, logistics: 100 },
@@ -78,6 +79,12 @@ export default function SupplyChain() {
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-035']}
+              title="供应链数据示例口径"
+              description="供应商、库存、成本和风险预警尚未绑定 ERP 快照与供应商授权数据；当前页面不能作为真实供应链决策依据。"
+            />
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
