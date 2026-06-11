@@ -5,6 +5,7 @@ const pages = [
   { path: '/#/market', title: /市场总览/ },
   { path: '/#/market/customs', title: /海关数据/ },
   { path: '/#/competition', title: /竞品库/ },
+  { path: '/#/competition/new', title: /新品竞争监测/ },
   { path: '/#/competition/products', title: /竞品产品信息管理/ },
   { path: '/#/users', title: /用户洞察来源口径/ },
   { path: '/#/users/consumer', title: /消费者深度访谈/ },

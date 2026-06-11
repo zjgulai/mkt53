@@ -159,23 +159,23 @@ export default function NewCompetition() {
               </div>
               <div className="space-y-2">
                 {filtered.map((p, i) => (
-                  <div key={i} className={`flex items-center gap-4 p-3 rounded-xl ${p.brand === 'Momcozy' ? 'bg-[#C25B6E]/5 border border-[#C25B6E]/10' : 'bg-[#FBF8F5]'}`}>
-                    <div className="w-16 flex-shrink-0">
+                  <div key={i} className={`grid grid-cols-2 gap-2 p-3 rounded-xl sm:flex sm:items-center sm:gap-4 ${p.brand === 'Momcozy' ? 'bg-[#C25B6E]/5 border border-[#C25B6E]/10' : 'bg-[#FBF8F5]'}`}>
+                    <div className="sm:w-16 sm:flex-shrink-0">
                       <span className="text-[10px] text-[#86868b]">{p.date}</span>
                     </div>
-                    <div className="w-20 flex-shrink-0">
+                    <div className="text-right sm:w-20 sm:flex-shrink-0 sm:text-left">
                       <span className={`text-xs font-semibold ${p.brand === 'Momcozy' ? 'text-[#C25B6E]' : 'text-[#1d1d1f]'}`}>{p.brand}</span>
                     </div>
-                    <div className="w-32 flex-shrink-0">
-                      <span className="text-xs font-medium text-[#1d1d1f] truncate">{p.name}</span>
+                    <div className="min-w-0 sm:w-32 sm:flex-shrink-0">
+                      <span className="block truncate text-xs font-medium text-[#1d1d1f]">{p.name}</span>
                     </div>
-                    <div className="w-16 flex-shrink-0">
+                    <div className="text-right sm:w-16 sm:flex-shrink-0 sm:text-left">
                       <span className="text-xs text-[#C25B6E] font-medium">{p.price}</span>
                     </div>
-                    <div className="flex-1 min-w-0 min-w-0">
+                    <div className="col-span-2 min-w-0 sm:col-span-1 sm:flex-1">
                       <p className="text-[10px] text-[#86868b]">{p.highlight}</p>
                     </div>
-                    <div className="w-20 flex-shrink-0 text-right">
+                    <div className="col-span-2 justify-self-end sm:col-span-1 sm:w-20 sm:flex-shrink-0 sm:text-right">
                       <span className="text-[10px] text-[#34c759] font-medium flex items-center justify-end gap-0.5">
                         <ArrowUpRight className="w-3 h-3" />{p.trend || p.threat}
                       </span>
