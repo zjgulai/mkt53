@@ -350,6 +350,7 @@ describe('production helper scripts', () => {
       sourceCount: number;
       sourceIds: string[];
       safety: { networkCalls: number; businessDataWrites: number; credentialValuesRedacted: boolean };
+      collectionWindow: { start: string; end: string };
       mapping: { missingSourceIds: string[] };
       blockers: Array<{ type: string; key?: string; sourceId?: string }>;
       snapshotContracts: Array<{ snapshotType: string; requiredFields: string[] }>;
@@ -364,6 +365,7 @@ describe('production helper scripts', () => {
     expect(dryRun.safety.networkCalls).toBe(0);
     expect(dryRun.safety.businessDataWrites).toBe(0);
     expect(dryRun.safety.credentialValuesRedacted).toBe(true);
+    expect(dryRun.collectionWindow).toMatchObject({ start: '2026-06-01', end: '2026-06-15' });
     expect(dryRun.mapping.missingSourceIds).toEqual(expect.arrayContaining(dryRun.sourceIds));
     expect(dryRun.blockers.some((item) => item.type === 'missing-credential')).toBe(true);
     expect(dryRun.blockers.some((item) => item.type === 'missing-asin-sku-mapping')).toBe(true);
@@ -939,6 +941,7 @@ describe('production helper scripts', () => {
     const dryRun = JSON.parse(output) as {
       status: string;
       privateInput: { mappingPathSource: string; mappingPathConfigured: boolean; publicBundleAllowed: boolean; gitAllowed: boolean };
+      collectionWindow: { start: string; end: string };
       mappingContract: { requiredFields: string[]; uniqueKey: string[] };
       mapping: {
         mappingCount: number;
@@ -968,6 +971,7 @@ describe('production helper scripts', () => {
       publicBundleAllowed: false,
       gitAllowed: false,
     });
+    expect(dryRun.collectionWindow).toMatchObject({ start: '2026-06-01', end: '2026-06-15' });
     expect(dryRun.mappingContract.requiredFields).toEqual(
       expect.arrayContaining(['sourceId', 'site', 'marketplaceId', 'asin', 'sku', 'brand', 'productName', 'mappingOwner']),
     );
@@ -1185,6 +1189,12 @@ describe('production helper scripts', () => {
     expect(gate.readinessPathSource).toBe('cli');
     expect(gate.checks.find((check) => check.id === 'authorizationRecord')?.status).toBe('ready');
     expect(gate.checks.find((check) => check.id === 'collectionWindow')?.status).toBe('ready');
+    expect(gate.checks.find((check) => check.id === 'collectionWindow')?.details).toMatchObject({
+      expectedStart: '2026-06-01',
+      expectedEnd: '2026-06-15',
+      configuredStart: '2026-06-01',
+      configuredEnd: '2026-06-15',
+    });
     expect(gate.checks.find((check) => check.id === 'ownerReview')?.status).toBe('ready');
     expect(gate.checks.find((check) => check.id === 'complianceReview')?.status).toBe('ready');
     expect(gate.checks.find((check) => check.id === 'snapshotScope')?.status).toBe('ready');
