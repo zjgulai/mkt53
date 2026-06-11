@@ -56,6 +56,10 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:crm:readiness']).toContain('--readiness-gate');
     expect(packageJson.scripts['data:connector:crm:readiness:template']).toContain('--print-readiness-template');
     expect(packageJson.scripts['data:connector:crm:snapshot:template']).toContain('--print-snapshot-manifest-template');
+    expect(packageJson.scripts['data:connector:erp:dry-run']).toContain('scripts/data/connectors/internal-erp-dry-run.mjs');
+    expect(packageJson.scripts['data:connector:erp:readiness']).toContain('--readiness-gate');
+    expect(packageJson.scripts['data:connector:erp:readiness:template']).toContain('--print-readiness-template');
+    expect(packageJson.scripts['data:connector:erp:snapshot:template']).toContain('--print-snapshot-manifest-template');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(packageJson.scripts['data:deploy:semi-monthly']).toContain('scripts/data/semi-monthly-refresh-and-deploy.sh');
@@ -103,16 +107,20 @@ describe('production helper scripts', () => {
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-readiness-checklist.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/voc-nlp-dry-run.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/internal-crm-dry-run.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/internal-erp-dry-run.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/voc-nlp-readiness-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/voc-nlp-sample-manifest-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/internal-crm-readiness-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/internal-crm-snapshot-manifest-template.json'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/internal-erp-readiness-template.json'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/internal-erp-snapshot-manifest-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-mapping-partial-valid.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-readiness-partial-valid.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/voc-nlp-readiness-valid.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/internal-crm-readiness-valid.json'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'tests/fixtures/internal-erp-readiness-valid.json'), constants.R_OK)).not.toThrow();
     expect(readFileSync(join(process.cwd(), '.gitignore'), 'utf8')).toContain('configs/private/');
   });
 
@@ -704,6 +712,202 @@ describe('production helper scripts', () => {
       anonymizationStatus: 'approved',
       piiHandlingStatus: 'approved',
       containsRawPii: false,
+      forbiddenKeys: [],
+    });
+    expect(gate.blockers).toHaveLength(0);
+    expect(gate.safety).toMatchObject({ networkCalls: 0, databaseReads: 0, businessDataWrites: 0 });
+  });
+
+  it('runs the internal ERP connector in blocked dry-run mode without reading supply chain rows', () => {
+    const output = execFileSync('node', ['scripts/data/connectors/internal-erp-dry-run.mjs', '--json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        MKT53_ERP_CONNECTION_SECRET: 'SHOULD_NOT_LEAK_IN_DRY_RUN',
+      },
+    });
+    const dryRun = JSON.parse(output) as {
+      connectorId: string;
+      mode: string;
+      status: string;
+      sourceCount: number;
+      sourceIds: string[];
+      safety: { networkCalls: number; databaseReads: number; businessDataWrites: number; privateValuesRedacted: boolean };
+      thresholds: { minimumSkuCount: number; minimumSupplierCount: number; minimumWarehouseCount: number; minimumInventoryRecordCount: number };
+      privateInput: { publicBundleAllowed: boolean; gitAllowed: boolean };
+      blockers: Array<{ type: string }>;
+      snapshotContracts: Array<{ snapshotType: string; requiredFields: string[] }>;
+    };
+
+    expect(output).not.toContain('SHOULD_NOT_LEAK_IN_DRY_RUN');
+    expect(dryRun.connectorId).toBe('internal-erp');
+    expect(dryRun.mode).toBe('dry-run');
+    expect(dryRun.status).toBe('blocked');
+    expect(dryRun.sourceCount).toBe(1);
+    expect(dryRun.sourceIds).toEqual(['ds-035']);
+    expect(dryRun.safety).toMatchObject({
+      networkCalls: 0,
+      databaseReads: 0,
+      businessDataWrites: 0,
+      privateValuesRedacted: true,
+    });
+    expect(dryRun.thresholds).toMatchObject({
+      minimumSkuCount: 50,
+      minimumSupplierCount: 5,
+      minimumWarehouseCount: 2,
+      minimumInventoryRecordCount: 50,
+    });
+    expect(dryRun.privateInput).toMatchObject({ publicBundleAllowed: false, gitAllowed: false });
+    expect(dryRun.blockers).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: 'missing-private-erp-readiness-record' }),
+        expect.objectContaining({ type: 'missing-private-erp-snapshot-manifest' }),
+        expect.objectContaining({ type: 'missing-inventory-policy-version' }),
+        expect.objectContaining({ type: 'missing-commercial-data-approval' }),
+      ]),
+    );
+    expect(dryRun.snapshotContracts.map((contract) => contract.snapshotType)).toEqual([
+      'inventory_snapshot',
+      'supplier_master_snapshot',
+      'supply_cost_snapshot',
+    ]);
+  });
+
+  it('prints private ERP readiness templates without credentials or supplier commercial details', () => {
+    const readinessOutput = execFileSync('node', ['scripts/data/connectors/internal-erp-dry-run.mjs', '--print-readiness-template'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const snapshotOutput = execFileSync('node', ['scripts/data/connectors/internal-erp-dry-run.mjs', '--print-snapshot-manifest-template'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const readinessTemplate = JSON.parse(readinessOutput) as {
+      privateData: boolean;
+      publicBundleAllowed: boolean;
+      gitAllowed: boolean;
+      expectedSnapshotTypes: string[];
+      readiness: {
+        sourceIds: string[];
+        skuCount: number;
+        supplierCount: number;
+        warehouseCount: number;
+        allowedExportFields: string[];
+        containsRawSupplierNames: boolean;
+        containsPurchaseOrderLines: boolean;
+        containsUnitCostValues: boolean;
+      };
+    };
+    const snapshotTemplate = JSON.parse(snapshotOutput) as {
+      privateData: boolean;
+      publicBundleAllowed: boolean;
+      gitAllowed: boolean;
+      snapshotManifest: {
+        sourceIds: string[];
+        skuCount: number;
+        allowedExportFields: string[];
+        containsRawSupplierNames: boolean;
+        containsPurchaseOrderLines: boolean;
+        containsUnitCostValues: boolean;
+      };
+    };
+
+    expect(`${readinessOutput}\n${snapshotOutput}`).not.toMatch(
+      /clientSecret|refreshToken|accessToken|password|privateKey|authorizationHeader|connectionString|"supplierName"\s*:|"supplierEmail"\s*:|"supplierPhone"\s*:|"supplierAddress"\s*:|"purchaseOrderId"\s*:|"invoiceId"\s*:|"unitCost"\s*:|"purchasePrice"\s*:/i,
+    );
+    expect(readinessTemplate).toMatchObject({
+      privateData: true,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    });
+    expect(readinessTemplate.expectedSnapshotTypes).toEqual(['inventory_snapshot', 'supplier_master_snapshot', 'supply_cost_snapshot']);
+    expect(readinessTemplate.readiness.sourceIds).toEqual(['ds-035']);
+    expect(readinessTemplate.readiness.skuCount).toBe(0);
+    expect(readinessTemplate.readiness.supplierCount).toBe(0);
+    expect(readinessTemplate.readiness.warehouseCount).toBe(0);
+    expect(readinessTemplate.readiness.containsRawSupplierNames).toBe(false);
+    expect(readinessTemplate.readiness.containsPurchaseOrderLines).toBe(false);
+    expect(readinessTemplate.readiness.containsUnitCostValues).toBe(false);
+    expect(readinessTemplate.readiness.allowedExportFields).toEqual(
+      expect.arrayContaining(['skuHash', 'warehouseCode', 'supplierHash', 'costBucket', 'costIndex']),
+    );
+    expect(snapshotTemplate).toMatchObject({
+      privateData: true,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    });
+    expect(snapshotTemplate.snapshotManifest.sourceIds).toEqual(readinessTemplate.readiness.sourceIds);
+    expect(snapshotTemplate.snapshotManifest.skuCount).toBe(0);
+    expect(snapshotTemplate.snapshotManifest.containsRawSupplierNames).toBe(false);
+    expect(snapshotTemplate.snapshotManifest.containsPurchaseOrderLines).toBe(false);
+    expect(snapshotTemplate.snapshotManifest.containsUnitCostValues).toBe(false);
+  });
+
+  it('passes ERP readiness only with inventory coverage, versioned mappings, commercial boundary, and compliance evidence', () => {
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/connectors/internal-erp-dry-run.mjs',
+        '--readiness-gate',
+        '--readiness',
+        'tests/fixtures/internal-erp-readiness-valid.json',
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          MKT53_ERP_CONNECTION_SECRET: 'fixture-erp-secret',
+        },
+      },
+    );
+    const gate = JSON.parse(output) as {
+      status: string;
+      readinessPathSource: string;
+      privateInput: { readinessPathConfigured: boolean; publicBundleAllowed: boolean; gitAllowed: boolean };
+      thresholds: { minimumSkuCount: number; minimumSupplierCount: number; minimumWarehouseCount: number; minimumInventoryRecordCount: number };
+      checks: Array<{ id: string; status: string; details: Record<string, unknown>; blockers: Array<{ type: string }> }>;
+      blockers: Array<{ type: string }>;
+      safety: { networkCalls: number; databaseReads: number; businessDataWrites: number };
+    };
+
+    expect(output).not.toContain('fixture-erp-secret');
+    expect(gate.status).toBe('ready-for-authorized-erp-supply-chain-pipeline-implementation');
+    expect(gate.readinessPathSource).toBe('cli');
+    expect(gate.privateInput).toMatchObject({
+      readinessPathConfigured: true,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    });
+    expect(gate.thresholds).toMatchObject({
+      minimumSkuCount: 50,
+      minimumSupplierCount: 5,
+      minimumWarehouseCount: 2,
+      minimumInventoryRecordCount: 50,
+    });
+    expect(gate.checks.every((check) => check.status === 'ready')).toBe(true);
+    expect(gate.checks.find((check) => check.id === 'sourceCoverage')?.details).toMatchObject({
+      missingSourceIds: [],
+    });
+    expect(gate.checks.find((check) => check.id === 'snapshotVolume')?.details).toMatchObject({
+      skuCount: 80,
+      supplierCount: 8,
+      warehouseCount: 3,
+      inventoryRecordCount: 120,
+    });
+    expect(gate.checks.find((check) => check.id === 'snapshotDefinition')?.details).toMatchObject({
+      erpSnapshotVersion: 'fixture-erp-2026-06-h1',
+      supplierMappingVersion: 'fixture-supplier-map-v1',
+      costModelVersion: 'fixture-cost-index-v1',
+      currency: 'USD',
+    });
+    expect(gate.checks.find((check) => check.id === 'commercialBoundary')?.details).toMatchObject({
+      commercialDataHandlingStatus: 'approved',
+      costDisclosureMode: 'aggregated-index',
+      containsRawSupplierNames: false,
+      containsPurchaseOrderLines: false,
+      containsUnitCostValues: false,
       forbiddenKeys: [],
     });
     expect(gate.blockers).toHaveLength(0);

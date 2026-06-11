@@ -166,3 +166,11 @@ CRM 私有 readiness gate 是 `npm run data:connector:crm:readiness`。该 gate 
 CRM readiness 私有路径是 `configs/private/internal-crm-readiness.json` 或服务器 `/opt/mkt53/private/internal-crm-readiness.json`。CRM snapshot manifest 私有路径是 `configs/private/internal-crm-snapshot-manifest.json` 或服务器 `/opt/mkt53/private/internal-crm-snapshot-manifest.json`。模板位于 `app/scripts/data/connectors/templates/internal-crm-readiness-template.json` 和 `app/scripts/data/connectors/templates/internal-crm-snapshot-manifest-template.json`，可以提交；填入真实授权记录、脱敏快照、RFM 版本、内部 owner 或私有存储引用后的文件不得进入 `public`、`src`、测试夹具、git 历史或前端构建产物。
 
 CRM 最低 readiness 阈值当前固定为：脱敏客户行数不少于 1000，RFM 分层不少于 7 类，且 `champions`、`loyal-customers`、`potential-loyalists`、`new-customers`、`at-risk`、`hibernating`、`lost` 都必须有非零覆盖。通过 gate 只表示可以进入授权 CRM/RFM pipeline 实现，不表示已经获得真实用户分层；`UsersPage` 的 RFM 区域仍必须保持示例/待接入边界，直到真实脱敏快照、RFM 计算和人工复核记录完成。
+
+Momcozy ERP / Supply Chain P1 当前交付物是 `npm run data:connector:erp:dry-run`。该脚本从 connector backlog 动态识别 `ds-035`，输出 `inventory_snapshot`、`supplier_master_snapshot` 和 `supply_cost_snapshot` 三类快照契约；`networkCalls=0`、`databaseReads=0`、`businessDataWrites=0`，不读取 ERP，不导出供应商明细、采购订单或原始成本，不提升供应链来源复核状态。
+
+ERP 私有 readiness gate 是 `npm run data:connector:erp:readiness`。该 gate 只检查只读授权记录、采集窗口、source id 覆盖、SKU 数、供应商数、仓库数、库存记录数、ERP 快照版本、库存策略版本、供应商映射版本、成本模型版本、安全导出字段、商业敏感数据处理、owner 复核、合规复核和快照范围。状态不是 `ready-for-authorized-erp-supply-chain-pipeline-implementation` 时，不得实现真实 ERP 采集、供应链成本计算或页面快照绑定。
+
+ERP readiness 私有路径是 `configs/private/internal-erp-readiness.json` 或服务器 `/opt/mkt53/private/internal-erp-readiness.json`。ERP snapshot manifest 私有路径是 `configs/private/internal-erp-snapshot-manifest.json` 或服务器 `/opt/mkt53/private/internal-erp-snapshot-manifest.json`。模板位于 `app/scripts/data/connectors/templates/internal-erp-readiness-template.json` 和 `app/scripts/data/connectors/templates/internal-erp-snapshot-manifest-template.json`，可以提交；填入真实授权记录、库存快照、供应商映射、成本模型、内部 owner 或私有存储引用后的文件不得进入 `public`、`src`、测试夹具、git 历史或前端构建产物。
+
+ERP 最低 readiness 阈值当前固定为：SKU 数不少于 50，供应商数不少于 5，仓库数不少于 2，库存记录数不少于 50，成本披露模式必须是 `aggregated-index`，并且不得包含供应商原名、采购订单行或原始单位成本。通过 gate 只表示可以进入授权 ERP/Supply Chain pipeline 实现，不表示已经获得真实供应链结论；`SupplyChain` 页面仍必须保持示例/待接入边界，直到真实快照、成本模型和人工复核记录完成。
