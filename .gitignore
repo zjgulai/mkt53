@@ -39,6 +39,7 @@ app/configs/private/
 tmp/
 *.tmp
 *.baiduyun.uploading.cfg
+docs/architecture/**/renders/*.png
 
 # 本地工具缓存与执行计划草稿
 .codegraph/

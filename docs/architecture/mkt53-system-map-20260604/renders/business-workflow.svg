@@ -1,0 +1,243 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="2280" height="920" viewBox="0 0 2280 920">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 4 L 0 8 z" fill="#1e3a5f" opacity="0.9" />
+    </marker>
+    <filter id="paper">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.025"/>
+      </feComponentTransfer>
+      <feBlend mode="multiply" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+  <g filter="url(#paper)">
+    <text x="100" y="124" fill="#1e40af" font-size="34" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="100" dy="0">mkt53 业务流程图</tspan></text>
+<text x="104" y="155" fill="#64748b" font-size="17" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="104" dy="0">从业务问题到证据分层、分析产出、补采集任务和部署验收的闭环</tspan></text>
+
+    <rect x="140" y="230" width="255" height="90" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="140" y="230" width="255" height="90" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="140" y="230" width="255" height="90" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="267.5" y="260" fill="#374151" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="267.5" dy="0">业务问题输入</tspan><tspan x="267.5" dy="22.5">市场/竞品/用户/行业/AI</tspan></text>
+
+    <rect x="480" y="230" width="255" height="90" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="480" y="230" width="255" height="90" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="480" y="230" width="255" height="90" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="607.5" y="260" fill="#374151" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="607.5" dy="0">路由到专题页面</tspan><tspan x="607.5" dy="22.5">46 routes / 43 pages</tspan></text>
+
+    <rect x="820" y="230" width="255" height="90" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="820" y="230" width="255" height="90" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="820" y="230" width="255" height="90" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="947.5" y="260" fill="#374151" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="947.5" dy="0">读取页面数据与指标</tspan><tspan x="947.5" dy="22.5">静态数组 / 表资产 / registry</tspan></text>
+
+    <rect x="1160" y="230" width="255" height="90" rx="12" ry="12" fill="#fef3c7" opacity="0.78" stroke="none" />
+
+    <rect x="1160" y="230" width="255" height="90" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1160" y="230" width="255" height="90" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1287.5" y="260" fill="#374151" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1287.5" dy="0">来源状态判断</tspan><tspan x="1287.5" dy="22.5">verified / needs-review / example</tspan></text>
+
+    <line x1="396.8" y1="276.2" x2="481.8" y2="276.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="395" y1="275" x2="480" y2="275" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="417.5" y="268" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="417.5" dy="0">选择业务域</tspan></text>
+
+    <line x1="736.8" y1="276.2" x2="821.8" y2="276.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="735" y1="275" x2="820" y2="275" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="761.5" y="268" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="761.5" dy="0">进入页面</tspan></text>
+
+    <line x1="1076.8" y1="276.2" x2="1161.8" y2="276.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1075" y1="275" x2="1160" y2="275" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1101.5" y="268" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1101.5" dy="0">追溯来源</tspan></text>
+
+    <polygon points="1605,225 1680,280 1605,335 1530,280" fill="#fef3c7" opacity="0.78" stroke="none" />
+
+    <polygon points="1605,225 1680,280 1605,335 1530,280" fill="none" stroke="#b45309" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <polygon points="1605,225 1680,280 1605,335 1530,280" fill="none" stroke="#b45309" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1605" y="253" fill="#374151" font-size="16" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1605" dy="0">是否已具备</tspan><tspan x="1605" dy="20">可用证据?</tspan></text>
+
+    <line x1="1416.8" y1="276.2" x2="1531.8" y2="281.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1415" y1="275" x2="1530" y2="280" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1460.5" y="270.5" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1460.5" dy="0">证据门</tspan></text>
+
+    <rect x="1840" y="180" width="300" height="90" rx="12" ry="12" fill="#a7f3d0" opacity="0.78" stroke="none" />
+
+    <rect x="1840" y="180" width="300" height="90" rx="12" ry="12" fill="none" stroke="#047857" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1840" y="180" width="300" height="90" rx="12" ry="12" fill="none" stroke="#047857" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1990" y="210" fill="#374151" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1990" dy="0">产出洞察/报告</tspan><tspan x="1990" dy="22.5">机会点/风险/行动建议</tspan></text>
+
+    <rect x="1840" y="350" width="300" height="90" rx="12" ry="12" fill="#fee2e2" opacity="0.78" stroke="none" />
+
+    <rect x="1840" y="350" width="300" height="90" rx="12" ry="12" fill="none" stroke="#dc2626" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1840" y="350" width="300" height="90" rx="12" ry="12" fill="none" stroke="#dc2626" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1990" y="380" fill="#374151" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1990" dy="0">生成补证任务</tspan><tspan x="1990" dy="22.5">manual / connector backlog</tspan></text>
+
+    <line x1="1681.8" y1="261.2" x2="1841.8" y2="226.2" stroke="#047857" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1680" y1="260" x2="1840" y2="225" stroke="#047857" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1688" y="235.5" fill="#047857" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1688" dy="0">是: ok/verified/A-B</tspan></text>
+
+    <line x1="1681.8" y1="306.2" x2="1841.8" y2="396.2" stroke="#dc2626" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1680" y1="305" x2="1840" y2="395" stroke="#dc2626" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1712" y="343" fill="#dc2626" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1712" dy="0">否: 缺样本/授权/口径</tspan></text>
+
+    <rect x="160" y="470" width="760" height="360" rx="12" ry="12" fill="#eff6ff" opacity="0.78" stroke="none" />
+
+    <rect x="160" y="470" width="760" height="360" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="160" y="470" width="760" height="360" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="176" y="506" fill="#1e40af" font-size="22" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="176" dy="0">横向问题分流</tspan></text>
+
+    <rect x="190" y="545" width="205" height="76" rx="12" ry="12" fill="#eff6ff" opacity="0.78" stroke="none" />
+
+    <rect x="190" y="545" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="190" y="545" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="292.5" y="571" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="292.5" dy="0">市场机会</tspan><tspan x="292.5" dy="17.5">TAM/SAM/SOM/区域/品类</tspan></text>
+
+    <rect x="450" y="545" width="205" height="76" rx="12" ry="12" fill="#eff6ff" opacity="0.78" stroke="none" />
+
+    <rect x="450" y="545" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="450" y="545" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="552.5" y="571" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="552.5" dy="0">竞品监测</tspan><tspan x="552.5" dy="17.5">Amazon/SKU/价格/新品</tspan></text>
+
+    <rect x="710" y="545" width="205" height="76" rx="12" ry="12" fill="#eff6ff" opacity="0.78" stroke="none" />
+
+    <rect x="710" y="545" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="710" y="545" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="812.5" y="571" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="812.5" dy="0">用户洞察</tspan><tspan x="812.5" dy="17.5">画像/访谈/情感/审美</tspan></text>
+
+    <rect x="190" y="670" width="205" height="76" rx="12" ry="12" fill="#eff6ff" opacity="0.78" stroke="none" />
+
+    <rect x="190" y="670" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="190" y="670" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="292.5" y="696" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="292.5" dy="0">行业风险</tspan><tspan x="292.5" dy="17.5">法规/供应链/IP/展会</tspan></text>
+
+    <rect x="450" y="670" width="205" height="76" rx="12" ry="12" fill="#eff6ff" opacity="0.78" stroke="none" />
+
+    <rect x="450" y="670" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="450" y="670" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="552.5" y="696" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="552.5" dy="0">AI工作流</tspan><tspan x="552.5" dy="17.5">评论/NLP/设计/知识库</tspan></text>
+
+    <rect x="710" y="670" width="205" height="76" rx="12" ry="12" fill="#eff6ff" opacity="0.78" stroke="none" />
+
+    <rect x="710" y="670" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="710" y="670" width="205" height="76" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="812.5" y="696" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="812.5" dy="0">数据治理</tspan><tspan x="812.5" dy="17.5">来源/表/字段/血缘</tspan></text>
+
+    <rect x="1000" y="470" width="620" height="360" rx="12" ry="12" fill="#ecfdf5" opacity="0.78" stroke="none" />
+
+    <rect x="1000" y="470" width="620" height="360" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1000" y="470" width="620" height="360" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="1016" y="506" fill="#1e40af" font-size="22" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1016" dy="0">纵向治理闭环</tspan></text>
+
+    <rect x="1040" y="545" width="165" height="76" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="1040" y="545" width="165" height="76" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1040" y="545" width="165" height="76" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1122.5" y="571" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1122.5" dy="0">决策层</tspan><tspan x="1122.5" dy="17.5">优先级/风险边界</tspan></text>
+
+    <rect x="1240" y="545" width="165" height="76" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="1240" y="545" width="165" height="76" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1240" y="545" width="165" height="76" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1322.5" y="571" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1322.5" dy="0">分析层</tspan><tspan x="1322.5" dy="17.5">指标/样本/口径</tspan></text>
+
+    <rect x="1440" y="545" width="165" height="76" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="1440" y="545" width="165" height="76" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1440" y="545" width="165" height="76" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1522.5" y="571" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1522.5" dy="0">数据层</tspan><tspan x="1522.5" dy="17.5">表/字段/owner</tspan></text>
+
+    <rect x="1140" y="680" width="165" height="76" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="1140" y="680" width="165" height="76" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1140" y="680" width="165" height="76" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1222.5" y="706" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1222.5" dy="0">采集层</tspan><tspan x="1222.5" dy="17.5">URL/连接器/人工</tspan></text>
+
+    <rect x="1340" y="680" width="165" height="76" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="1340" y="680" width="165" height="76" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1340" y="680" width="165" height="76" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1422.5" y="706" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1422.5" dy="0">运维层</tspan><tspan x="1422.5" dy="17.5">测试/部署/E2E</tspan></text>
+
+    <rect x="1700" y="490" width="520" height="320" rx="12" ry="12" fill="#f8fafc" opacity="0.78" stroke="none" />
+
+    <rect x="1700" y="490" width="520" height="320" rx="12" ry="12" fill="none" stroke="#334155" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1700" y="490" width="520" height="320" rx="12" ry="12" fill="none" stroke="#334155" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="1716" y="526" fill="#1e40af" font-size="22" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1716" dy="0">停止条件</tspan></text>
+
+    <rect x="1740" y="560" width="440" height="185" rx="12" ry="12" fill="#1e293b" opacity="0.78" stroke="none" />
+
+    <rect x="1740" y="560" width="440" height="185" rx="12" ry="12" fill="none" stroke="#334155" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1740" y="560" width="440" height="185" rx="12" ry="12" fill="none" stroke="#334155" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1754" y="587" fill="#ffffff" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1754" dy="0">质量门</tspan></text>
+<text x="1754" y="616" fill="#22c55e" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1754" dy="0">issueCount=0</tspan><tspan x="1754" dy="17.5">criticalIssueCount=0</tspan><tspan x="1754" dy="17.5">connector-required 不伪造为 ok</tspan><tspan x="1754" dy="17.5">生产 E2E 14 passed</tspan></text>
+
+    <line x1="1991.8" y1="441.2" x2="1991.8" y2="561.2" stroke="#334155" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1990" y1="440" x2="1990" y2="560" stroke="#334155" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1954" y="493" fill="#334155" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1954" dy="0">进入任务/发布队列</tspan></text>
+
+    <line x1="1841.8" y1="226.2" x2="1841.8" y2="491.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1840" y1="225" x2="1840" y2="490" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1824" y="350.5" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1824" dy="0">沉淀报告</tspan></text>
+
+    <line x1="1991.8" y1="441.2" x2="1621.8" y2="761.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1990" y1="440" x2="1620" y2="760" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1777" y="593" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1777" dy="0">刷新后回流治理</tspan></text>
+  </g>
+</svg>

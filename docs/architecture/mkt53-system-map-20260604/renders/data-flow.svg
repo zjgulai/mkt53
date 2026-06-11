@@ -1,0 +1,279 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="2340" height="1145" viewBox="0 0 2340 1145">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 4 L 0 8 z" fill="#1e3a5f" opacity="0.9" />
+    </marker>
+    <filter id="paper">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.025"/>
+      </feComponentTransfer>
+      <feBlend mode="multiply" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+  <g filter="url(#paper)">
+    <text x="100" y="124" fill="#1e40af" font-size="34" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="100" dy="0">mkt53 数据流转图</tspan></text>
+<text x="104" y="155" fill="#64748b" font-size="17" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="104" dy="0">真实数据、人工来源、授权连接器和静态部署之间的流向与边界</tspan></text>
+
+    <rect x="110" y="200" width="420" height="700" rx="12" ry="12" fill="#fff7ed" opacity="0.78" stroke="none" />
+
+    <rect x="110" y="200" width="420" height="700" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="110" y="200" width="420" height="700" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="126" y="236" fill="#1e40af" font-size="22" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="126" dy="0">来源层</tspan></text>
+
+    <rect x="150" y="275" width="330" height="78" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="150" y="275" width="330" height="78" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="150" y="275" width="330" height="78" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="315" y="302" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="315" dy="0">公开研报/官网</tspan><tspan x="315" dy="18.75">Precedence/Fortune/Mordor</tspan></text>
+
+    <rect x="150" y="395" width="330" height="78" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="150" y="395" width="330" height="78" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="150" y="395" width="330" height="78" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="315" y="422" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="315" dy="0">官方/行业来源</tspan><tspan x="315" dy="18.75">CPSC/EU/WIPO/展会</tspan></text>
+
+    <rect x="150" y="515" width="330" height="78" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="150" y="515" width="330" height="78" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="150" y="515" width="330" height="78" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="315" y="542" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="315" dy="0">授权平台</tspan><tspan x="315" dy="18.75">Amazon/YouTube/Import Genius</tspan></text>
+
+    <rect x="150" y="635" width="330" height="78" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="150" y="635" width="330" height="78" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="150" y="635" width="330" height="78" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="315" y="662" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="315" dy="0">内部系统</tspan><tspan x="315" dy="18.75">CRM/ERP/知识库/报告</tspan></text>
+
+    <rect x="150" y="755" width="330" height="78" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="150" y="755" width="330" height="78" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="150" y="755" width="330" height="78" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="315" y="782" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="315" dy="0">AI与爬虫</tspan><tspan x="315" dy="18.75">NLP/生成日志/网页评论</tspan></text>
+
+    <rect x="600" y="200" width="460" height="700" rx="12" ry="12" fill="#ecfdf5" opacity="0.78" stroke="none" />
+
+    <rect x="600" y="200" width="460" height="700" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="600" y="200" width="460" height="700" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="616" y="236" fill="#1e40af" font-size="22" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="616" dy="0">注册与审计层</tspan></text>
+
+    <rect x="645" y="290" width="370" height="88" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="645" y="290" width="370" height="88" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="645" y="290" width="370" height="88" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="830" y="317" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="830" dy="0">sourceRegistry.ts</tspan><tspan x="830" dy="18.75">45 sources</tspan></text>
+
+    <rect x="645" y="440" width="370" height="88" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="645" y="440" width="370" height="88" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="645" y="440" width="370" height="88" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="830" y="467" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="830" dy="0">analyzeConsistency()</tspan><tspan x="830" dy="18.75">43 pages / 27 tables / 0 issues</tspan></text>
+
+    <rect x="645" y="590" width="370" height="88" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="645" y="590" width="370" height="88" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="645" y="590" width="370" height="88" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="830" y="617" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="830" dy="0">classifyCollectionMethod()</tspan><tspan x="830" dy="18.75">public/manual/connector/local</tspan></text>
+
+    <rect x="645" y="740" width="370" height="88" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="645" y="740" width="370" height="88" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="645" y="740" width="370" height="88" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="830" y="767" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="830" dy="0">buildConnectorBacklog()</tspan><tspan x="830" dy="18.75">23 sources / 10 groups</tspan></text>
+
+    <rect x="1130" y="200" width="520" height="700" rx="12" ry="12" fill="#fffbeb" opacity="0.78" stroke="none" />
+
+    <rect x="1130" y="200" width="520" height="700" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1130" y="200" width="520" height="700" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="1146" y="236" fill="#1e40af" font-size="22" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1146" dy="0">采集执行层</tspan></text>
+
+    <rect x="1175" y="265" width="430" height="78" rx="12" ry="12" fill="#fef3c7" opacity="0.78" stroke="none" />
+
+    <rect x="1175" y="265" width="430" height="78" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1175" y="265" width="430" height="78" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1390" y="292" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1390" dy="0">public-url-check</tspan><tspan x="1390" dy="18.75">8 methods -&gt; ok/fetch/source-error</tspan></text>
+
+    <rect x="1175" y="385" width="430" height="78" rx="12" ry="12" fill="#fef3c7" opacity="0.78" stroke="none" />
+
+    <rect x="1175" y="385" width="430" height="78" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1175" y="385" width="430" height="78" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1390" y="412" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1390" dy="0">local-file-check</tspan><tspan x="1390" dy="18.75">代码资产存在性 + hash</tspan></text>
+
+    <rect x="1175" y="505" width="430" height="78" rx="12" ry="12" fill="#fef3c7" opacity="0.78" stroke="none" />
+
+    <rect x="1175" y="505" width="430" height="78" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1175" y="505" width="430" height="78" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1390" y="532" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1390" dy="0">manual-required</tspan><tspan x="1390" dy="18.75">12 人工/采购/访谈凭证</tspan></text>
+
+    <rect x="1175" y="625" width="430" height="78" rx="12" ry="12" fill="#fef3c7" opacity="0.78" stroke="none" />
+
+    <rect x="1175" y="625" width="430" height="78" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1175" y="625" width="430" height="78" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1390" y="652" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1390" dy="0">connector-required</tspan><tspan x="1390" dy="18.75">23 授权/内部/合规连接器</tspan></text>
+
+    <rect x="1175" y="765" width="430" height="78" rx="12" ry="12" fill="#fef3c7" opacity="0.78" stroke="none" />
+
+    <rect x="1175" y="765" width="430" height="78" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1175" y="765" width="430" height="78" rx="12" ry="12" fill="none" stroke="#b45309" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1390" y="792" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1390" dy="0">public/periodic-data/latest.json</tspan><tspan x="1390" dy="18.75">2026-06-11T07:30:40Z</tspan></text>
+
+    <rect x="1720" y="200" width="560" height="700" rx="12" ry="12" fill="#eff6ff" opacity="0.78" stroke="none" />
+
+    <rect x="1720" y="200" width="560" height="700" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1720" y="200" width="560" height="700" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="1736" y="236" fill="#1e40af" font-size="22" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1736" dy="0">消费与发布层</tspan></text>
+
+    <rect x="1765" y="275" width="470" height="78" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="1765" y="275" width="470" height="78" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1765" y="275" width="470" height="78" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="2000" y="302" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="2000" dy="0">DataManage /data</tspan><tspan x="2000" dy="18.75">fetch periodic manifest</tspan></text>
+
+    <rect x="1765" y="395" width="470" height="78" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="1765" y="395" width="470" height="78" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1765" y="395" width="470" height="78" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="2000" y="422" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="2000" dy="0">DataSourcePage /data-source</tspan><tspan x="2000" dy="18.75">展示来源可信度</tspan></text>
+
+    <rect x="1765" y="515" width="470" height="78" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="1765" y="515" width="470" height="78" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1765" y="515" width="470" height="78" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="2000" y="542" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="2000" dy="0">业务页面</tspan><tspan x="2000" dy="18.75">market / competition / users / industry / self / ai</tspan></text>
+
+    <rect x="1765" y="635" width="470" height="78" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="1765" y="635" width="470" height="78" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1765" y="635" width="470" height="78" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="2000" y="662" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="2000" dy="0">Vite dist</tspan><tspan x="2000" dy="18.75">assets + periodic-data</tspan></text>
+
+    <rect x="1765" y="755" width="470" height="78" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="1765" y="755" width="470" height="78" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1765" y="755" width="470" height="78" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="2000" y="782" fill="#374151" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="2000" dy="0">腾讯云 nginx</tspan><tspan x="2000" dy="18.75">mkt.lute-tlz-dddd.top</tspan></text>
+
+    <line x1="531.8" y1="316.2" x2="601.8" y2="316.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="530" y1="315" x2="600" y2="315" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="557" y="308" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="557" dy="0">登记</tspan></text>
+
+    <line x1="531.8" y1="436.2" x2="601.8" y2="436.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="530" y1="435" x2="600" y2="435" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="557" y="428" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="557" dy="0">登记</tspan></text>
+
+    <line x1="531.8" y1="556.2" x2="601.8" y2="556.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="530" y1="555" x2="600" y2="555" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="557" y="548" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="557" dy="0">登记</tspan></text>
+
+    <line x1="531.8" y1="676.2" x2="601.8" y2="676.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="530" y1="675" x2="600" y2="675" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="557" y="668" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="557" dy="0">登记</tspan></text>
+
+    <line x1="531.8" y1="796.2" x2="601.8" y2="796.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="530" y1="795" x2="600" y2="795" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="557" y="788" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="557" dy="0">登记</tspan></text>
+
+    <line x1="1061.8" y1="336.2" x2="1131.8" y2="306.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1060" y1="335" x2="1130" y2="305" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1087" y="313" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1087" dy="0">读取</tspan></text>
+
+    <line x1="1061.8" y1="486.2" x2="1131.8" y2="426.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1060" y1="485" x2="1130" y2="425" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1083" y="448" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1083" dy="0">一致性</tspan></text>
+
+    <line x1="1061.8" y1="636.2" x2="1131.8" y2="586.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1060" y1="635" x2="1130" y2="585" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1087" y="603" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1087" dy="0">分类</tspan></text>
+
+    <line x1="1061.8" y1="786.2" x2="1131.8" y2="666.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1060" y1="785" x2="1130" y2="665" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1067" y="718" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1067" dy="0">backlog</tspan></text>
+
+    <line x1="1606.8" y1="806.2" x2="1721.8" y2="316.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1605" y1="805" x2="1720" y2="315" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1630.5" y="553" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1630.5" dy="0">manifest</tspan></text>
+
+    <line x1="1606.8" y1="806.2" x2="1721.8" y2="436.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1605" y1="805" x2="1720" y2="435" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1622.5" y="613" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1622.5" dy="0">registry状态</tspan></text>
+
+    <line x1="1606.8" y1="806.2" x2="1721.8" y2="676.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1605" y1="805" x2="1720" y2="675" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1626.5" y="733" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1626.5" dy="0">随 dist 发布</tspan></text>
+
+    <line x1="2001.8" y1="714.2" x2="2001.8" y2="756.2" stroke="#334155" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="2000" y1="713" x2="2000" y2="755" stroke="#334155" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1972" y="727" fill="#334155" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1972" dy="0">rsync部署</tspan></text>
+
+    <rect x="1070" y="935" width="760" height="150" rx="12" ry="12" fill="#1e293b" opacity="0.78" stroke="none" />
+
+    <rect x="1070" y="935" width="760" height="150" rx="12" ry="12" fill="none" stroke="#334155" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1070" y="935" width="760" height="150" rx="12" ry="12" fill="none" stroke="#334155" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1084" y="962" fill="#ffffff" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1084" dy="0">最新 manifest totals</tspan></text>
+<text x="1084" y="991" fill="#22c55e" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1084" dy="0">{ total:45, ok:10,</tspan><tspan x="1084" dy="17.5">  manual-required:12,</tspan><tspan x="1084" dy="17.5">  connector-required:23,</tspan><tspan x="1084" dy="17.5">  source-error:0, fetch-error:0 }</tspan></text>
+  </g>
+</svg>

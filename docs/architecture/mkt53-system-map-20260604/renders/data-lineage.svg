@@ -1,0 +1,453 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="2260" height="1300" viewBox="0 0 2260 1300">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 4 L 0 8 z" fill="#1e3a5f" opacity="0.9" />
+    </marker>
+    <filter id="paper">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.025"/>
+      </feComponentTransfer>
+      <feBlend mode="multiply" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+  <g filter="url(#paper)">
+    <text x="100" y="124" fill="#1e40af" font-size="34" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="100" dy="0">mkt53 数据血缘关系图</tspan></text>
+<text x="104" y="155" fill="#64748b" font-size="17" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="104" dy="0">从外部/内部来源到 27 张表，再到 dashboard、AI、报告与页面的关键血缘</tspan></text>
+
+    <rect x="110" y="205" width="430" height="820" rx="12" ry="12" fill="#fff7ed" opacity="0.78" stroke="none" />
+
+    <rect x="110" y="205" width="430" height="820" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="110" y="205" width="430" height="820" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="126" y="241" fill="#1e40af" font-size="22" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="126" dy="0">来源入口</tspan></text>
+
+    <rect x="150" y="280" width="340" height="72" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="150" y="280" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="150" y="280" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="320" y="306" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="320" dy="0">行业研报</tspan><tspan x="320" dy="17.5">Grand View / Statista / Mordor</tspan></text>
+
+    <rect x="150" y="395" width="340" height="72" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="150" y="395" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="150" y="395" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="320" y="421" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="320" dy="0">平台/电商</tspan><tspan x="320" dy="17.5">Amazon / Vendor Central</tspan></text>
+
+    <rect x="150" y="510" width="340" height="72" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="150" y="510" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="150" y="510" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="320" y="536" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="320" dy="0">用户与社媒</tspan><tspan x="320" dy="17.5">访谈 / 社媒 API / 评论</tspan></text>
+
+    <rect x="150" y="625" width="340" height="72" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="150" y="625" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="150" y="625" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="320" y="651" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="320" dy="0">政府/行业</tspan><tspan x="320" dy="17.5">CPSC / EU / WIPO / 展会</tspan></text>
+
+    <rect x="150" y="740" width="340" height="72" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="150" y="740" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="150" y="740" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="320" y="766" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="320" dy="0">内部系统</tspan><tspan x="320" dy="17.5">ERP / CRM / 知识库 / 报告</tspan></text>
+
+    <rect x="150" y="855" width="340" height="72" rx="12" ry="12" fill="#fed7aa" opacity="0.78" stroke="none" />
+
+    <rect x="150" y="855" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="150" y="855" width="340" height="72" rx="12" ry="12" fill="none" stroke="#c2410c" stroke-width="2"  opacity="0.92" />
+
+
+<text x="320" y="881" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="320" dy="0">AI/爬虫</tspan><tspan x="320" dy="17.5">NLP / 生成日志 / 网页评论</tspan></text>
+
+    <rect x="620" y="205" width="290" height="350" rx="12" ry="12" fill="#ecfdf5" opacity="0.78" stroke="none" />
+
+    <rect x="620" y="205" width="290" height="350" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="620" y="205" width="290" height="350" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="636" y="237" fill="#1e40af" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="636" dy="0">市场洞察数据</tspan><tspan x="636" dy="22.5">6 tables</tspan></text>
+
+    <rect x="644" y="283" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="644" y="283" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="644" y="283" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="764" y="307" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="764" dy="0">market_size_global</tspan></text>
+
+    <rect x="644" y="323" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="644" y="323" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="644" y="323" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="764" y="347" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="764" dy="0">market_trend_monthly</tspan></text>
+
+    <rect x="644" y="363" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="644" y="363" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="644" y="363" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="764" y="387" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="764" dy="0">pest_analysis</tspan></text>
+
+    <rect x="644" y="403" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="644" y="403" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="644" y="403" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="764" y="427" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="764" dy="0">porter_five_forces</tspan></text>
+
+    <rect x="644" y="443" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="644" y="443" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="644" y="443" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="764" y="467" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="764" dy="0">customs_data</tspan></text>
+
+    <rect x="644" y="483" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="644" y="483" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="644" y="483" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="764" y="507" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="764" dy="0">category_analysis</tspan></text>
+
+    <rect x="970" y="205" width="290" height="350" rx="12" ry="12" fill="#ecfdf5" opacity="0.78" stroke="none" />
+
+    <rect x="970" y="205" width="290" height="350" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="970" y="205" width="290" height="350" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="986" y="237" fill="#1e40af" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="986" dy="0">竞争情报数据</tspan><tspan x="986" dy="22.5">4 tables</tspan></text>
+
+    <rect x="994" y="283" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="994" y="283" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="994" y="283" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1114" y="307" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1114" dy="0">competitor_products</tspan></text>
+
+    <rect x="994" y="323" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="994" y="323" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="994" y="323" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1114" y="347" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1114" dy="0">new_product_tracker</tspan></text>
+
+    <rect x="994" y="363" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="994" y="363" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="994" y="363" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1114" y="387" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1114" dy="0">region_competitive_landscape</tspan></text>
+
+    <rect x="994" y="403" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="994" y="403" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="994" y="403" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1114" y="427" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1114" dy="0">price_analysis</tspan></text>
+
+    <rect x="1320" y="205" width="290" height="350" rx="12" ry="12" fill="#ecfdf5" opacity="0.78" stroke="none" />
+
+    <rect x="1320" y="205" width="290" height="350" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1320" y="205" width="290" height="350" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="1336" y="237" fill="#1e40af" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1336" dy="0">用户研究数据</tspan><tspan x="1336" dy="22.5">5 tables</tspan></text>
+
+    <rect x="1344" y="283" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="1344" y="283" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1344" y="283" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1464" y="307" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1464" dy="0">user_personas</tspan></text>
+
+    <rect x="1344" y="323" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="1344" y="323" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1344" y="323" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1464" y="347" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1464" dy="0">social_mention_data</tspan></text>
+
+    <rect x="1344" y="363" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="1344" y="363" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1344" y="363" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1464" y="387" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1464" dy="0">user_comments</tspan></text>
+
+    <rect x="1344" y="403" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="1344" y="403" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1344" y="403" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1464" y="427" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1464" dy="0">consumer_interviews</tspan></text>
+
+    <rect x="1344" y="443" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="1344" y="443" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1344" y="443" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1464" y="467" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1464" dy="0">rfm_user_segments</tspan></text>
+
+    <rect x="620" y="645" width="290" height="350" rx="12" ry="12" fill="#ecfdf5" opacity="0.78" stroke="none" />
+
+    <rect x="620" y="645" width="290" height="350" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="620" y="645" width="290" height="350" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="636" y="677" fill="#1e40af" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="636" dy="0">行业动态数据</tspan><tspan x="636" dy="22.5">4 tables</tspan></text>
+
+    <rect x="644" y="723" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="644" y="723" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="644" y="723" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="764" y="747" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="764" dy="0">policy_regulations</tspan></text>
+
+    <rect x="644" y="763" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="644" y="763" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="644" y="763" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="764" y="787" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="764" dy="0">supply_chain_nodes</tspan></text>
+
+    <rect x="644" y="803" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="644" y="803" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="644" y="803" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="764" y="827" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="764" dy="0">ip_patents</tspan></text>
+
+    <rect x="644" y="843" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="644" y="843" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="644" y="843" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="764" y="867" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="764" dy="0">trade_exhibitions</tspan></text>
+
+    <rect x="970" y="645" width="290" height="350" rx="12" ry="12" fill="#ecfdf5" opacity="0.78" stroke="none" />
+
+    <rect x="970" y="645" width="290" height="350" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="970" y="645" width="290" height="350" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="986" y="677" fill="#1e40af" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="986" dy="0">品牌自研数据</tspan><tspan x="986" dy="22.5">4 tables</tspan></text>
+
+    <rect x="994" y="723" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="994" y="723" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="994" y="723" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1114" y="747" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1114" dy="0">momcozy_products</tspan></text>
+
+    <rect x="994" y="763" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="994" y="763" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="994" y="763" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1114" y="787" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1114" dy="0">pricing_strategy</tspan></text>
+
+    <rect x="994" y="803" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="994" y="803" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="994" y="803" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1114" y="827" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1114" dy="0">channel_performance</tspan></text>
+
+    <rect x="994" y="843" width="240" height="30" rx="12" ry="12" fill="#dcfce7" opacity="0.78" stroke="none" />
+
+    <rect x="994" y="843" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="994" y="843" width="240" height="30" rx="12" ry="12" fill="none" stroke="#166534" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1114" y="867" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1114" dy="0">promotion_campaigns</tspan></text>
+
+    <rect x="1320" y="645" width="290" height="350" rx="12" ry="12" fill="#f5f3ff" opacity="0.78" stroke="none" />
+
+    <rect x="1320" y="645" width="290" height="350" rx="12" ry="12" fill="none" stroke="#6d28d9" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1320" y="645" width="290" height="350" rx="12" ry="12" fill="none" stroke="#6d28d9" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="1336" y="677" fill="#1e40af" font-size="18" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1336" dy="0">AI辅助数据</tspan><tspan x="1336" dy="22.5">4 tables</tspan></text>
+
+    <rect x="1344" y="723" width="240" height="30" rx="12" ry="12" fill="#ddd6fe" opacity="0.78" stroke="none" />
+
+    <rect x="1344" y="723" width="240" height="30" rx="12" ry="12" fill="none" stroke="#6d28d9" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1344" y="723" width="240" height="30" rx="12" ry="12" fill="none" stroke="#6d28d9" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1464" y="747" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1464" dy="0">comment_analysis_ai</tspan></text>
+
+    <rect x="1344" y="763" width="240" height="30" rx="12" ry="12" fill="#ddd6fe" opacity="0.78" stroke="none" />
+
+    <rect x="1344" y="763" width="240" height="30" rx="12" ry="12" fill="none" stroke="#6d28d9" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1344" y="763" width="240" height="30" rx="12" ry="12" fill="none" stroke="#6d28d9" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1464" y="787" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1464" dy="0">design_assistant_output</tspan></text>
+
+    <rect x="1344" y="803" width="240" height="30" rx="12" ry="12" fill="#ddd6fe" opacity="0.78" stroke="none" />
+
+    <rect x="1344" y="803" width="240" height="30" rx="12" ry="12" fill="none" stroke="#6d28d9" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1344" y="803" width="240" height="30" rx="12" ry="12" fill="none" stroke="#6d28d9" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1464" y="827" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1464" dy="0">knowledge_base</tspan></text>
+
+    <rect x="1344" y="843" width="240" height="30" rx="12" ry="12" fill="#ddd6fe" opacity="0.78" stroke="none" />
+
+    <rect x="1344" y="843" width="240" height="30" rx="12" ry="12" fill="none" stroke="#6d28d9" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1344" y="843" width="240" height="30" rx="12" ry="12" fill="none" stroke="#6d28d9" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1464" y="867" fill="#374151" font-size="12" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1464" dy="0">web_review_scraped</tspan></text>
+
+    <rect x="1720" y="265" width="480" height="590" rx="12" ry="12" fill="#eff6ff" opacity="0.78" stroke="none" />
+
+    <rect x="1720" y="265" width="480" height="590" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3" stroke-dasharray="10 8" opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1720" y="265" width="480" height="590" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2" stroke-dasharray="10 8" opacity="0.92" />
+
+
+<text x="1736" y="301" fill="#1e40af" font-size="22" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1736" dy="0">输出与应用</tspan></text>
+
+    <rect x="1770" y="355" width="380" height="74" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="1770" y="355" width="380" height="74" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1770" y="355" width="380" height="74" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1960" y="381" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1960" dy="0">dashboard_kpi</tspan><tspan x="1960" dy="17.5">首页/模块 KPI</tspan></text>
+
+    <rect x="1770" y="470" width="380" height="74" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="1770" y="470" width="380" height="74" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1770" y="470" width="380" height="74" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1960" y="496" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1960" dy="0">market / competition / users / industry</tspan><tspan x="1960" dy="17.5">专题页面</tspan></text>
+
+    <rect x="1770" y="585" width="380" height="74" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="1770" y="585" width="380" height="74" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1770" y="585" width="380" height="74" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1960" y="611" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1960" dy="0">comment_analysis_ai</tspan><tspan x="1960" dy="17.5">AI 评论洞察</tspan></text>
+
+    <rect x="1770" y="700" width="380" height="74" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="1770" y="700" width="380" height="74" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1770" y="700" width="380" height="74" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1960" y="726" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1960" dy="0">product_analysis</tspan><tspan x="1960" dy="17.5">产品/价格/渠道策略</tspan></text>
+
+    <rect x="1770" y="815" width="380" height="74" rx="12" ry="12" fill="#dbeafe" opacity="0.78" stroke="none" />
+
+    <rect x="1770" y="815" width="380" height="74" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="1770" y="815" width="380" height="74" rx="12" ry="12" fill="none" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" />
+
+
+<text x="1960" y="841" fill="#374151" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="middle" dominant-baseline="alphabetic"><tspan x="1960" dy="0">reports / ai-assistant</tspan><tspan x="1960" dy="17.5">报告与问答输出</tspan></text>
+
+    <line x1="541.8" y1="316.2" x2="621.8" y2="316.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="540" y1="315" x2="620" y2="315" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="564" y="308" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="564" dy="0">研报入库</tspan></text>
+
+    <line x1="541.8" y1="431.2" x2="971.8" y2="316.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="540" y1="430" x2="970" y2="315" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="731" y="365.5" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="731" dy="0">Amazon</tspan></text>
+
+    <line x1="541.8" y1="551.2" x2="1321.8" y2="316.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="540" y1="550" x2="1320" y2="315" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="910" y="425.5" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="910" dy="0">访谈/评论</tspan></text>
+
+    <line x1="541.8" y1="661.2" x2="621.8" y2="756.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="540" y1="660" x2="620" y2="755" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="560" y="700.5" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="560" dy="0">法规/IP</tspan></text>
+
+    <line x1="541.8" y1="776.2" x2="971.8" y2="756.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="540" y1="775" x2="970" y2="755" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="739" y="758" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="739" dy="0">内部经营</tspan></text>
+
+    <line x1="541.8" y1="891.2" x2="1321.8" y2="756.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="540" y1="890" x2="1320" y2="755" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="910" y="815.5" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="910" dy="0">AI/爬虫</tspan></text>
+
+    <line x1="911.8" y1="371.2" x2="1721.8" y2="391.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="910" y1="370" x2="1720" y2="390" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1239" y="373" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1239" dy="0">market_trend -&gt; KPI</tspan></text>
+
+    <line x1="1261.8" y1="371.2" x2="1721.8" y2="516.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1260" y1="370" x2="1720" y2="515" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1454" y="435.5" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1454" dy="0">竞品表 -&gt; 页面</tspan></text>
+
+    <line x1="1611.8" y1="371.2" x2="1721.8" y2="621.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1610" y1="370" x2="1720" y2="620" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1589" y="488" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1589" dy="0">user_comments -&gt; AI</tspan></text>
+
+    <line x1="1261.8" y1="811.2" x2="1721.8" y2="736.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1260" y1="810" x2="1720" y2="735" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1446" y="765.5" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1446" dy="0">自研表 -&gt; 产品分析</tspan></text>
+
+    <line x1="1611.8" y1="811.2" x2="1721.8" y2="851.2" stroke="#1e3a5f" stroke-width="3"  opacity="0.2" marker-end="url(#arrowhead)"/>
+    <line x1="1610" y1="810" x2="1720" y2="850" stroke="#1e3a5f" stroke-width="2"  opacity="0.92" marker-end="url(#arrowhead)"/>
+
+<text x="1641" y="823" fill="#64748b" font-size="13" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="1641" dy="0">知识库/报告</tspan></text>
+
+    <rect x="580" y="1090" width="1220" height="150" rx="12" ry="12" fill="#1e293b" opacity="0.78" stroke="none" />
+
+    <rect x="580" y="1090" width="1220" height="150" rx="12" ry="12" fill="none" stroke="#334155" stroke-width="3"  opacity="0.22" transform="translate(1.8 1.2)" />
+    <rect x="580" y="1090" width="1220" height="150" rx="12" ry="12" fill="none" stroke="#334155" stroke-width="2"  opacity="0.92" />
+
+
+<text x="594" y="1117" fill="#ffffff" font-size="15" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="594" dy="0">关键血缘路径</tspan></text>
+<text x="594" y="1146" fill="#22c55e" font-size="14" font-family="Menlo, Monaco, monospace" text-anchor="start" dominant-baseline="alphabetic"><tspan x="594" dy="0">研报 -&gt; market_size_global -&gt; market_trend_monthly -&gt; dashboard_kpi</tspan><tspan x="594" dy="17.5">Amazon -&gt; competitor_products -&gt; price_analysis/new_product_tracker</tspan><tspan x="594" dy="17.5">user_comments -&gt; comment_analysis_ai -&gt; dashboard_kpi</tspan></text>
+  </g>
+</svg>
