@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "connectorId": "review-nlp",
+  "fixtureOnly": true,
+  "note": "Synthetic fixture for validating the VOC NLP readiness gate. Do not use as business evidence.",
+  "readiness": {
+    "authorizationRecordId": "fixture-voc-auth-record-20260611",
+    "authorizationOwner": "fixture-user-research-owner",
+    "authorizationApprovedAt": "2026-06-11",
+    "collectionWindowStart": "2026-06-01",
+    "collectionWindowEnd": "2026-06-15",
+    "datasetManifestId": "fixture-voc-manifest-2026-06-h1",
+    "sourceIds": [
+      "ds-021",
+      "ds-030",
+      "ds-032",
+      "ds-033"
+    ],
+    "totalReviewSampleCount": 1000,
+    "labeledSampleCount": 120,
+    "sourceSampleCounts": {
+      "ds-021": 400,
+      "ds-030": 250,
+      "ds-032": 200,
+      "ds-033": 150
+    },
+    "modelName": "fixture-voc-sentiment-topic-model",
+    "modelVersion": "fixture-2026-06-h1",
+    "keywordDictionaryVersion": "fixture-keywords-2026-06",
+    "productMappingStatus": "ready",
+    "humanAgreementValue": 0.82,
+    "reviewOwner": "fixture-voc-review-owner",
+    "reviewApprovedAt": "2026-06-11",
+    "complianceReviewer": "fixture-compliance-owner",
+    "piiHandlingStatus": "approved",
+    "complianceReviewStatus": "approved",
+    "allowedSnapshotTypes": [
+      "review_sample_manifest",
+      "sentiment_score_snapshot",
+      "topic_cluster_snapshot",
+      "human_review_sample"
+    ],
+    "containsRawReviewText": false
+  }
+}

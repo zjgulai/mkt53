@@ -48,6 +48,10 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:amazon:readiness']).toContain('--readiness-gate');
     expect(packageJson.scripts['data:connector:amazon:readiness:checklist']).toContain('amazon-commerce-readiness-checklist.mjs');
     expect(packageJson.scripts['data:connector:amazon:readiness:template']).toContain('--print-readiness-template');
+    expect(packageJson.scripts['data:connector:voc-nlp:dry-run']).toContain('scripts/data/connectors/voc-nlp-dry-run.mjs');
+    expect(packageJson.scripts['data:connector:voc-nlp:readiness']).toContain('--readiness-gate');
+    expect(packageJson.scripts['data:connector:voc-nlp:readiness:template']).toContain('--print-readiness-template');
+    expect(packageJson.scripts['data:connector:voc-nlp:sample:template']).toContain('--print-sample-manifest-template');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(packageJson.scripts['data:deploy:semi-monthly']).toContain('scripts/data/semi-monthly-refresh-and-deploy.sh');
@@ -93,10 +97,14 @@ describe('production helper scripts', () => {
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/bootstrap-amazon-private-inputs.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-private-input-audit.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-readiness-checklist.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/voc-nlp-dry-run.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/voc-nlp-readiness-template.json'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/voc-nlp-sample-manifest-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-mapping-partial-valid.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/amazon-commerce-readiness-partial-valid.json'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'tests/fixtures/voc-nlp-readiness-valid.json'), constants.R_OK)).not.toThrow();
     expect(readFileSync(join(process.cwd(), '.gitignore'), 'utf8')).toContain('configs/private/');
   });
 
@@ -349,6 +357,168 @@ describe('production helper scripts', () => {
       'brand_share_snapshot',
       'category_rank_snapshot',
     ]);
+  });
+
+  it('runs the VOC NLP connector in blocked dry-run mode without reading review text or calling models', () => {
+    const output = execFileSync('node', ['scripts/data/connectors/voc-nlp-dry-run.mjs', '--json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        MKT53_VOC_NLP_API_SECRET: 'SHOULD_NOT_LEAK_IN_DRY_RUN',
+      },
+    });
+    const dryRun = JSON.parse(output) as {
+      connectorId: string;
+      mode: string;
+      status: string;
+      sourceCount: number;
+      sourceIds: string[];
+      safety: { networkCalls: number; modelCalls: number; businessDataWrites: number; privateValuesRedacted: boolean };
+      privateInput: { publicBundleAllowed: boolean; gitAllowed: boolean };
+      blockers: Array<{ type: string }>;
+      snapshotContracts: Array<{ snapshotType: string; requiredFields: string[] }>;
+    };
+
+    expect(output).not.toContain('SHOULD_NOT_LEAK_IN_DRY_RUN');
+    expect(dryRun.connectorId).toBe('review-nlp');
+    expect(dryRun.mode).toBe('dry-run');
+    expect(dryRun.status).toBe('blocked');
+    expect(dryRun.sourceCount).toBe(4);
+    expect(dryRun.sourceIds).toEqual(expect.arrayContaining(['ds-021', 'ds-030', 'ds-032', 'ds-033']));
+    expect(dryRun.safety).toMatchObject({
+      networkCalls: 0,
+      modelCalls: 0,
+      businessDataWrites: 0,
+      privateValuesRedacted: true,
+    });
+    expect(dryRun.privateInput).toMatchObject({ publicBundleAllowed: false, gitAllowed: false });
+    expect(dryRun.blockers).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: 'missing-private-voc-nlp-readiness-record' }),
+        expect.objectContaining({ type: 'missing-private-voc-sample-manifest' }),
+        expect.objectContaining({ type: 'missing-model-evaluation-record' }),
+        expect.objectContaining({ type: 'missing-human-review-agreement-record' }),
+      ]),
+    );
+    expect(dryRun.snapshotContracts.map((contract) => contract.snapshotType)).toEqual([
+      'review_sample_manifest',
+      'sentiment_score_snapshot',
+      'topic_cluster_snapshot',
+      'human_review_sample',
+    ]);
+  });
+
+  it('prints private VOC NLP readiness templates without credentials or business values', () => {
+    const readinessOutput = execFileSync('node', ['scripts/data/connectors/voc-nlp-dry-run.mjs', '--print-readiness-template'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const sampleOutput = execFileSync('node', ['scripts/data/connectors/voc-nlp-dry-run.mjs', '--print-sample-manifest-template'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const readinessTemplate = JSON.parse(readinessOutput) as {
+      privateData: boolean;
+      publicBundleAllowed: boolean;
+      gitAllowed: boolean;
+      recommendedLocalPrivateReadinessPath: string;
+      expectedSnapshotTypes: string[];
+      readiness: { sourceIds: string[]; totalReviewSampleCount: number; containsRawReviewText: boolean };
+    };
+    const sampleTemplate = JSON.parse(sampleOutput) as {
+      privateData: boolean;
+      publicBundleAllowed: boolean;
+      gitAllowed: boolean;
+      sampleManifest: { sourceIds: string[]; containsRawReviewText: boolean; totalReviewSampleCount: number };
+    };
+
+    expect(`${readinessOutput}\n${sampleOutput}`).not.toMatch(/clientSecret|refreshToken|accessToken|password|privateKey|authorizationHeader/i);
+    expect(readinessTemplate).toMatchObject({
+      privateData: true,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+      recommendedLocalPrivateReadinessPath: 'configs/private/voc-nlp-readiness.json',
+    });
+    expect(readinessTemplate.expectedSnapshotTypes).toEqual([
+      'review_sample_manifest',
+      'sentiment_score_snapshot',
+      'topic_cluster_snapshot',
+      'human_review_sample',
+    ]);
+    expect(readinessTemplate.readiness.sourceIds).toEqual(['ds-021', 'ds-030', 'ds-032', 'ds-033']);
+    expect(readinessTemplate.readiness.totalReviewSampleCount).toBe(0);
+    expect(readinessTemplate.readiness.containsRawReviewText).toBe(false);
+    expect(sampleTemplate).toMatchObject({
+      privateData: true,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    });
+    expect(sampleTemplate.sampleManifest.sourceIds).toEqual(readinessTemplate.readiness.sourceIds);
+    expect(sampleTemplate.sampleManifest.totalReviewSampleCount).toBe(0);
+    expect(sampleTemplate.sampleManifest.containsRawReviewText).toBe(false);
+  });
+
+  it('passes VOC NLP readiness only with private sample, model, human review, and compliance evidence', () => {
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/connectors/voc-nlp-dry-run.mjs',
+        '--readiness-gate',
+        '--readiness',
+        'tests/fixtures/voc-nlp-readiness-valid.json',
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          MKT53_VOC_NLP_API_SECRET: 'fixture-voc-secret',
+        },
+      },
+    );
+    const gate = JSON.parse(output) as {
+      status: string;
+      readinessPathSource: string;
+      privateInput: { readinessPathConfigured: boolean; publicBundleAllowed: boolean; gitAllowed: boolean };
+      thresholds: { minimumTotalReviewSampleCount: number; minimumLabeledSampleCount: number; minimumHumanAgreementValue: number };
+      checks: Array<{ id: string; status: string; details: Record<string, unknown>; blockers: Array<{ type: string }> }>;
+      blockers: Array<{ type: string }>;
+      safety: { networkCalls: number; modelCalls: number; businessDataWrites: number };
+    };
+
+    expect(output).not.toContain('fixture-voc-secret');
+    expect(gate.status).toBe('ready-for-authorized-voc-nlp-pipeline-implementation');
+    expect(gate.readinessPathSource).toBe('cli');
+    expect(gate.privateInput).toMatchObject({
+      readinessPathConfigured: true,
+      publicBundleAllowed: false,
+      gitAllowed: false,
+    });
+    expect(gate.thresholds).toMatchObject({
+      minimumTotalReviewSampleCount: 1000,
+      minimumLabeledSampleCount: 100,
+      minimumHumanAgreementValue: 0.75,
+    });
+    expect(gate.checks.every((check) => check.status === 'ready')).toBe(true);
+    expect(gate.checks.find((check) => check.id === 'sourceCoverage')?.details).toMatchObject({
+      missingSourceIds: [],
+    });
+    expect(gate.checks.find((check) => check.id === 'sampleVolume')?.details).toMatchObject({
+      totalReviewSampleCount: 1000,
+      labeledSampleCount: 120,
+      sourceSampleCountsCovered: true,
+    });
+    expect(gate.checks.find((check) => check.id === 'humanReview')?.details).toMatchObject({
+      humanAgreementValue: 0.82,
+    });
+    expect(gate.checks.find((check) => check.id === 'privacyCompliance')?.details).toMatchObject({
+      piiHandlingStatus: 'approved',
+      complianceReviewStatus: 'approved',
+      containsRawReviewText: false,
+    });
+    expect(gate.blockers).toHaveLength(0);
+    expect(gate.safety).toMatchObject({ networkCalls: 0, modelCalls: 0, businessDataWrites: 0 });
   });
 
   it('validates a partial Amazon ASIN/SKU mapping without treating it as full coverage', () => {

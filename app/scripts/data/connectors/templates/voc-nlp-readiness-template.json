@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "connectorId": "review-nlp",
+  "templateName": "voc-nlp-readiness-template",
+  "privateData": true,
+  "publicBundleAllowed": false,
+  "gitAllowed": false,
+  "recommendedLocalPrivateReadinessPath": "configs/private/voc-nlp-readiness.json",
+  "recommendedServerPrivateReadinessPath": "/opt/mkt53/private/voc-nlp-readiness.json",
+  "recommendedLocalPrivateSampleManifestPath": "configs/private/voc-nlp-sample-manifest.json",
+  "recommendedServerPrivateSampleManifestPath": "/opt/mkt53/private/voc-nlp-sample-manifest.json",
+  "requiredBeforeRealConnector": [
+    "authorizationRecordId",
+    "authorizationOwner",
+    "authorizationApprovedAt",
+    "collectionWindowStart",
+    "collectionWindowEnd",
+    "datasetManifestId",
+    "sourceIds",
+    "totalReviewSampleCount",
+    "labeledSampleCount",
+    "sourceSampleCounts",
+    "modelName",
+    "modelVersion",
+    "keywordDictionaryVersion",
+    "productMappingStatus",
+    "humanAgreementValue",
+    "reviewOwner",
+    "reviewApprovedAt",
+    "piiHandlingStatus",
+    "complianceReviewStatus",
+    "allowedSnapshotTypes"
+  ],
+  "thresholds": {
+    "minimumTotalReviewSampleCount": 1000,
+    "minimumLabeledSampleCount": 100,
+    "minimumHumanAgreementValue": 0.75
+  },
+  "expectedSnapshotTypes": [
+    "review_sample_manifest",
+    "sentiment_score_snapshot",
+    "topic_cluster_snapshot",
+    "human_review_sample"
+  ],
+  "readiness": {
+    "authorizationRecordId": "",
+    "authorizationOwner": "",
+    "authorizationApprovedAt": "YYYY-MM-DD",
+    "collectionWindowStart": "YYYY-MM-DD",
+    "collectionWindowEnd": "YYYY-MM-DD",
+    "datasetManifestId": "",
+    "sourceIds": [
+      "ds-021",
+      "ds-030",
+      "ds-032",
+      "ds-033"
+    ],
+    "totalReviewSampleCount": 0,
+    "labeledSampleCount": 0,
+    "sourceSampleCounts": {
+      "ds-021": 0,
+      "ds-030": 0,
+      "ds-032": 0,
+      "ds-033": 0
+    },
+    "modelName": "",
+    "modelVersion": "",
+    "keywordDictionaryVersion": "",
+    "productMappingStatus": "ready",
+    "humanAgreementValue": 0,
+    "reviewOwner": "",
+    "reviewApprovedAt": "YYYY-MM-DD",
+    "complianceReviewer": "",
+    "piiHandlingStatus": "approved",
+    "complianceReviewStatus": "approved",
+    "allowedSnapshotTypes": [
+      "review_sample_manifest",
+      "sentiment_score_snapshot",
+      "topic_cluster_snapshot",
+      "human_review_sample"
+    ],
+    "containsRawReviewText": false,
+    "note": "Fill this file only in private config paths. Do not include credentials, raw review text, customer identifiers, platform tokens, ASIN/SKU lists, owner private contacts, or model provider secrets."
+  }
+}
