@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "connectorId": "internal-erp",
+  "templateName": "internal-erp-snapshot-manifest-template",
+  "privateData": true,
+  "publicBundleAllowed": false,
+  "gitAllowed": false,
+  "recommendedLocalPrivateSnapshotManifestPath": "configs/private/internal-erp-snapshot-manifest.json",
+  "recommendedServerPrivateSnapshotManifestPath": "/opt/mkt53/private/internal-erp-snapshot-manifest.json",
+  "snapshotManifest": {
+    "snapshotId": "",
+    "collectionWindowStart": "YYYY-MM-DD",
+    "collectionWindowEnd": "YYYY-MM-DD",
+    "sourceIds": [
+      "ds-035"
+    ],
+    "skuCount": 0,
+    "supplierCount": 0,
+    "warehouseCount": 0,
+    "inventoryRecordCount": 0,
+    "warehouseSet": [],
+    "erpSnapshotVersion": "",
+    "inventoryPolicyVersion": "",
+    "supplierMappingVersion": "",
+    "costModelVersion": "",
+    "currency": "USD",
+    "costDisclosureMode": "aggregated-index",
+    "allowedExportFields": [
+      "skuHash",
+      "warehouseCode",
+      "region",
+      "inventoryOnHand",
+      "inventoryReserved",
+      "inventoryTurnoverDays",
+      "supplierHash",
+      "supplierTier",
+      "countryOrRegion",
+      "category",
+      "qualificationStatus",
+      "leadTimeDays",
+      "costBucket",
+      "costIndex",
+      "currency"
+    ],
+    "commercialDataHandlingStatus": "approved",
+    "containsRawSupplierNames": false,
+    "containsPurchaseOrderLines": false,
+    "containsUnitCostValues": false,
+    "privateStorage": {
+      "locationType": "private-data-warehouse-or-private-directory",
+      "redactedPath": "",
+      "gitAllowed": false,
+      "publicBundleAllowed": false
+    },
+    "note": "This manifest records counts, windows, versions, safe field names, and private storage references only. Do not paste supplier details, purchase order rows, or cost rows here."
+  }
+}

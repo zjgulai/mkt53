@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "connectorId": "internal-erp",
+  "fixtureOnly": true,
+  "note": "Synthetic fixture for validating the ERP readiness gate. Do not use as business evidence.",
+  "readiness": {
+    "authorizationRecordId": "fixture-erp-auth-record-20260611",
+    "authorizationOwner": "fixture-supply-chain-owner",
+    "authorizationApprovedAt": "2026-06-11",
+    "collectionWindowStart": "2026-06-01",
+    "collectionWindowEnd": "2026-06-15",
+    "snapshotId": "fixture-erp-supply-chain-snapshot-2026-06-h1",
+    "sourceIds": [
+      "ds-035"
+    ],
+    "skuCount": 80,
+    "supplierCount": 8,
+    "warehouseCount": 3,
+    "inventoryRecordCount": 120,
+    "warehouseSet": [
+      "fixture-cn-south",
+      "fixture-us-west",
+      "fixture-eu-west"
+    ],
+    "erpSnapshotVersion": "fixture-erp-2026-06-h1",
+    "inventoryPolicyVersion": "fixture-inventory-policy-v1",
+    "supplierMappingVersion": "fixture-supplier-map-v1",
+    "costModelVersion": "fixture-cost-index-v1",
+    "currency": "USD",
+    "costDisclosureMode": "aggregated-index",
+    "allowedExportFields": [
+      "skuHash",
+      "warehouseCode",
+      "region",
+      "inventoryOnHand",
+      "inventoryReserved",
+      "inventoryTurnoverDays",
+      "supplierHash",
+      "supplierTier",
+      "countryOrRegion",
+      "category",
+      "qualificationStatus",
+      "leadTimeDays",
+      "costBucket",
+      "costIndex",
+      "currency"
+    ],
+    "commercialDataHandlingStatus": "approved",
+    "containsRawSupplierNames": false,
+    "containsPurchaseOrderLines": false,
+    "containsUnitCostValues": false,
+    "reviewOwner": "fixture-supply-chain-review-owner",
+    "reviewApprovedAt": "2026-06-11",
+    "complianceReviewer": "fixture-compliance-owner",
+    "complianceReviewStatus": "approved",
+    "allowedSnapshotTypes": [
+      "inventory_snapshot",
+      "supplier_master_snapshot",
+      "supply_cost_snapshot"
+    ]
+  }
+}
