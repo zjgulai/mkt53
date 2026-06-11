@@ -30,12 +30,13 @@ describe('production helper scripts', () => {
     expect(script).toContain('/images/world-map.jpg');
   });
 
-  it('keeps weekly data collection scripts discoverable from npm', () => {
+  it('keeps periodic data collection scripts discoverable from npm', () => {
     const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as { scripts: Record<string, string> };
 
     expect(packageJson.scripts['data:audit']).toContain('scripts/data/audit-consistency.mjs');
     expect(packageJson.scripts['data:collect:weekly']).toContain('scripts/data/collect-weekly-sources.mjs');
     expect(packageJson.scripts['data:refresh:weekly']).toContain('scripts/data/refresh-weekly-data.mjs');
+    expect(packageJson.scripts['data:refresh:semi-monthly']).toContain('scripts/data/refresh-semi-monthly-data.mjs');
     expect(packageJson.scripts['data:connector:amazon:dry-run']).toContain('scripts/data/connectors/amazon-commerce-dry-run.mjs');
     expect(packageJson.scripts['data:connector:amazon:mapping:validate']).toContain('--json --no-write');
     expect(packageJson.scripts['data:connector:amazon:mapping:template']).toContain('--print-mapping-template');
@@ -48,21 +49,36 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:amazon:readiness:template']).toContain('--print-readiness-template');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
+    expect(packageJson.scripts['data:deploy:semi-monthly']).toContain('scripts/data/semi-monthly-refresh-and-deploy.sh');
+    expect(packageJson.scripts['data:publish:semi-monthly:local']).toContain('scripts/data/semi-monthly-refresh-local-static.sh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/connectors.json');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/periodic-data/latest.json');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('data:connector:amazon:private:audit');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_AMAZON_PRIVATE_DIR');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_PRIVATE_AUDIT_REQUIRED');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('data:refresh:weekly -- "$@"');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('Continuing public weekly refresh');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('data:connector:amazon:private:audit');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_AMAZON_PRIVATE_DIR');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_PRIVATE_AUDIT_REQUIRED');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('data:refresh:semi-monthly -- "$@"');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('Continuing public semi-monthly refresh');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/install-semi-monthly-cron.sh'), 'utf8')).toContain('mkt53 weekly data refresh');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/install-semi-monthly-cron.sh'), 'utf8')).toContain('npm run data:publish:weekly:local');
 
     for (const script of [
       'scripts/data/audit-consistency.mjs',
       'scripts/data/collect-weekly-sources.mjs',
       'scripts/data/refresh-weekly-data.mjs',
+      'scripts/data/refresh-semi-monthly-data.mjs',
       'scripts/data/weekly-refresh-and-deploy.sh',
       'scripts/data/weekly-refresh-local-static.sh',
       'scripts/data/install-weekly-cron.sh',
+      'scripts/data/semi-monthly-refresh-and-deploy.sh',
+      'scripts/data/semi-monthly-refresh-local-static.sh',
+      'scripts/data/install-semi-monthly-cron.sh',
     ]) {
       expect(() => accessSync(join(process.cwd(), script), constants.X_OK)).not.toThrow();
     }
@@ -130,6 +146,60 @@ describe('production helper scripts', () => {
     );
     expect(manifest.connectorBacklog.items.every((item) => item.blockedReason.includes('不得伪造'))).toBe(true);
     expect(manifest.totals['connector-required']).toBe(23);
+  });
+
+  it('adds semi-monthly period metadata without dropping weekly compatibility', async () => {
+    const { semiMonthlyPeriod } = (await import('../../scripts/data/collect-weekly-sources.mjs')) as {
+      semiMonthlyPeriod: (input: Date) => {
+        periodType: string;
+        period: string;
+        windowStart: string;
+        windowEnd: string;
+        timezone: string;
+        nextScheduledAt: string;
+        scheduleCron: string;
+      };
+    };
+
+    expect(semiMonthlyPeriod(new Date('2026-06-11T00:00:00.000Z'))).toMatchObject({
+      periodType: 'semi-monthly',
+      period: '2026-06-H1',
+      windowStart: '2026-06-01',
+      windowEnd: '2026-06-15',
+      timezone: 'Asia/Shanghai',
+      nextScheduledAt: '2026-06-16T09:00:00+08:00',
+      scheduleCron: '0 9 1,16 * *',
+    });
+    expect(semiMonthlyPeriod(new Date('2026-06-16T01:00:00.000Z'))).toMatchObject({
+      period: '2026-06-H2',
+      windowStart: '2026-06-16',
+      windowEnd: '2026-06-30',
+      nextScheduledAt: '2026-07-01T09:00:00+08:00',
+    });
+
+    const output = execFileSync('node', ['scripts/data/collect-weekly-sources.mjs', '--json', '--no-network', '--cadence', 'semi-monthly'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const manifest = JSON.parse(output) as {
+      refreshCadence: string;
+      periodType: string;
+      period: string;
+      week: string;
+      windowStart: string;
+      windowEnd: string;
+      nextScheduledAt: string;
+      totals: Record<string, number>;
+    };
+
+    expect(manifest.refreshCadence).toBe('semi-monthly');
+    expect(manifest.periodType).toBe('semi-monthly');
+    expect(manifest.period).toMatch(/^\d{4}-\d{2}-H[12]$/);
+    expect(manifest.week).toMatch(/^\d{4}-W\d{2}$/);
+    expect(manifest.windowStart).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(manifest.windowEnd).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(manifest.nextScheduledAt).toMatch(/^\d{4}-\d{2}-\d{2}T09:00:00\+08:00$/);
+    expect(manifest.totals.total).toBe(45);
   });
 
   it('checks code asset sources from local files without external network access', () => {

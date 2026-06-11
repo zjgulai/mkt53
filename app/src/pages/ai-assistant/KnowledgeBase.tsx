@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { aiAssistantSidebarItems } from './constants';
 import { BookOpen } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
-const stats = [{"label":"知识条目","value":"8,560"},{"label":"法规文档","value":"342"},{"label":"竞品资料","value":"1,280"},{"label":"检索准确率","value":"96.5%"}];
+const stats = [{"label":"知识条目","value":"8,560"},{"label":"法规文档","value":"342"},{"label":"竞品资料","value":"1,280"},{"label":"检索评估版本","value":"v0.9"}];
 
 const features = ["全球母婴法规标准知识图谱","竞品产品参数与技术规格库","用户痛点与需求知识库","智能问答与自然语言检索","文档自动摘要与关键信息提取"];
 
@@ -14,7 +15,7 @@ export default function KnowledgeBase() {
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex gap-8">
-          <aside className="w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
+          <aside className="hidden lg:block w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
             <nav className="space-y-0.5">
               {aiAssistantSidebarItems.map((item, i) => (
                 <button key={i} onClick={() => navigate(item.path)} className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-[#1d1d1f] hover:bg-[#FBF8F5] transition-all">{item.label}</button>
@@ -33,6 +34,12 @@ export default function KnowledgeBase() {
                 </div>
               </div>
             </div>
+            <PageEvidenceNotice
+              sourceIds={['ds-022']}
+              title="知识库版本化状态"
+              description="知识库为内部维护资产，可作为检索入口展示；检索准确率需要随版本、评测集和人工抽检记录持续复核，不再作为无上下文固定准确率展示。"
+              cadence="内部维护"
+            />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {stats.map((s, i) => (
                 <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">

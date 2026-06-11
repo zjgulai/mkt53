@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Database, Search, CheckCircle, LayoutGrid, FileBarChart, Map as MapIcon, Flame, X, ExternalLink } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 
 interface Product {
@@ -9,35 +10,35 @@ interface Product {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// 竞品产品数据库 — 全部数据来自<span className="text-[#B5AFA8]">Amazon.com</span> 2026年5月真实采集
+// 竞品产品数据库 — Amazon公开页样例，待授权采集任务复核
 // 汇率: 1 USD ≈ 15,800 IDR (印尼配送价，美国本土实际价格约低20-30%)
 // ═══════════════════════════════════════════════════════════════════
 
 const competitorProducts: Product[] = [
-  // ─── MEDELA (4款) ─── Source: <span className="text-[#B5AFA8]">Amazon.com</span> 2026-05-23
+  // ─── MEDELA (4款) ─── Source: Amazon公开页历史样例，待授权采集复核
   { id: "m1", brand: "Medela", name: "Pro+ Breast Pump", category: "吸奶器", type: "双边电动医院级", price: "$199", source: "Amazon · 4.3★ · 73 reviews", rating: "4.3", reviews: "73", highlight: "可充电·医院级双电动·FSA/HSA合格" },
   { id: "m2", brand: "Medela", name: "Freestyle Hands-free", category: "吸奶器", type: "穿戴式电动", price: "$219", source: "Amazon · 3.6★ · 1,834 reviews", rating: "3.6", reviews: "1834", highlight: "可穿戴罩杯·APP连接·便携小巧·FSA/HSA" },
   { id: "m3", brand: "Medela", name: "Hands-free Collection Cups", category: "配件", type: "免手持罩杯", price: "$50", source: "Amazon · 4.1★ · 1,275 reviews", rating: "4.1", reviews: "1275", highlight: "兼容Freestyle Flex/MaxFlow/Swing Maxi" },
   { id: "m4", brand: "Medela", name: "PersonalFit Flex Shields", category: "配件", type: "替换接头", price: "$22", source: "Amazon · 4.8★ · 4,493 reviews", rating: "4.8", reviews: "4493", highlight: "兼容MaxFlow/Swing Maxi/Freestyle" },
 
-  // ─── ELVIE (3款) ─── Source: <span className="text-[#B5AFA8]">Amazon.com</span> 2026-05-23
+  // ─── ELVIE (3款) ─── Source: Amazon公开页历史样例，待授权采集复核
   { id: "e1", brand: "Elvie", name: "Elvie Stride", category: "吸奶器", type: "穿戴式电动医院级", price: "$199", source: "Amazon · 4.3★ · 4,176 reviews", rating: "4.3", reviews: "4176", highlight: "APP控制·免提·超静音·2模式10级·5oz/杯" },
   { id: "e2", brand: "Elvie", name: "Elvie Stride 2", category: "吸奶器", type: "穿戴式电动医院级", price: "$249", source: "Amazon · 3.8★ · 160 reviews", rating: "3.8", reviews: "160", highlight: "双吸奶器·10级设置·可 rechargeable" },
   { id: "e3", brand: "Elvie", name: "Elvie Curve", category: "吸奶器", type: "手动穿戴式", price: "$36", source: "Amazon · 4.0★ · 3,991 reviews", rating: "4.0", reviews: "3991", highlight: "硅胶手动·防踢·文胸内佩戴·FSA/HSA" },
 
-  // ─── WILLOW (4款) ─── Source: <span className="text-[#B5AFA8]">Amazon.com</span> 2026-05-23
+  // ─── WILLOW (4款) ─── Source: Amazon公开页历史样例，待授权采集复核
   { id: "w1", brand: "Willow", name: "Willow Go", category: "吸奶器", type: "穿戴式电动", price: "$299", source: "Amazon · 3.8★ · 1,536 reviews", rating: "3.8", reviews: "1536", highlight: "免提·便携·无绳·9级医院级吸力·FSA/HSA" },
   { id: "w2", brand: "Willow", name: "Willow 360", category: "吸奶器", type: "穿戴式电动", price: "$349", source: "Amazon · 4.4★ · 3,457 reviews", rating: "4.4", reviews: "3457", highlight: "唯一防漏穿戴式·7级医院级·APP兼容" },
   { id: "w3", brand: "Willow", name: "Willow Wave (Dual)", category: "吸奶器", type: "穿戴式手动", price: "$67", source: "Amazon · 3.6★ · 277 reviews", rating: "3.6", reviews: "277", highlight: "双手动·完全适配胸罩·人体工学手柄·5oz" },
   { id: "w4", brand: "Willow", name: "Willow 3.0", category: "吸奶器", type: "穿戴式电动", price: "$349", source: "Amazon · 3.4★ · 2,086 reviews", rating: "3.4", reviews: "2086", highlight: "100%防漏·完全适配文胸·24mm法兰·FSA/HSA" },
 
-  // ─── SPECTRA (4款) ─── Source: <span className="text-[#B5AFA8]">Amazon.com</span> 2026-05-23
+  // ─── SPECTRA (4款) ─── Source: Amazon公开页历史样例，待授权采集复核
   { id: "s1", brand: "Spectra", name: "S1 Plus Electric Pump", category: "吸奶器", type: "双边电动", price: "$246", source: "Amazon · 4.6★ · 1,009 reviews", rating: "4.6", reviews: "1009", highlight: "含手提包+奶瓶+冷却器·医院级" },
   { id: "s2", brand: "Spectra", name: "S2 Plus Premier", category: "吸奶器", type: "双边电动", price: "$246", source: "Amazon · 4.5★ · 130 reviews", rating: "4.5", reviews: "130", highlight: "含灰色手提包高级配件·28mm" },
   { id: "s3", brand: "Spectra", name: "S2 Plus", category: "吸奶器", type: "双边电动", price: "$246", source: "Amazon · 4.6★ · 53 reviews", rating: "4.6", reviews: "53", highlight: "含手提包+奶瓶+冷却器" },
   { id: "s4", brand: "Spectra", name: "S1 Plus Premier Rechargeable", category: "吸奶器", type: "双边电动可充电", price: "$310", source: "Amazon · 4.4★ · 108 reviews", rating: "4.4", reviews: "108", highlight: "可充电·含灰色手提包·28mm·FSA/HSA" },
 
-  // ─── HAAKAA (7款) ─── Source: <span className="text-[#B5AFA8]">Amazon.com</span> 2026-05-23
+  // ─── HAAKAA (7款) ─── Source: Amazon公开页历史样例，待授权采集复核
   { id: "h1", brand: "Haakaa", name: "Manual Breast Pump 4oz/100ml", category: "吸奶器", type: "手动硅胶", price: "$14.50", source: "Amazon · 4.6★ · 96,000 reviews", rating: "4.6", reviews: "96000", highlight: "100%食品级硅胶·BPA-free·Amazon #1 Best Seller" },
   { id: "h2", brand: "Haakaa", name: "Gen.2 Silicone Pump 4oz", category: "吸奶器", type: "手动硅胶", price: "$14.50", source: "Amazon · 4.6★ · 16,000 reviews", rating: "4.6", reviews: "16000", highlight: "100%食品级硅胶·BPA PVC-free" },
   { id: "h3", brand: "Haakaa", name: "Gen.2 Pump + Lid 5oz/150ml", category: "吸奶器", type: "手动硅胶", price: "$31", source: "Amazon · 4.6★ · 12,000 reviews", rating: "4.6", reviews: "12000", highlight: "5oz·第2代·含盖子" },
@@ -46,10 +47,10 @@ const competitorProducts: Product[] = [
   { id: "h6", brand: "Haakaa", name: "E-Ladybug Wearable Electric", category: "吸奶器", type: "穿戴式电动", price: "$212", source: "Amazon · 4.1★ · 23 reviews", rating: "4.1", reviews: "23", highlight: "超薄免提·3模式12级·微振动·180ml杯" },
   { id: "h7", brand: "Haakaa", name: "Gen.2 Plus Upgraded Manual 5oz", category: "吸奶器", type: "手动硅胶", price: "$26", source: "Amazon · 4.1★ · 68 reviews", rating: "4.1", reviews: "68", highlight: "Multi-Ring ComfortCARE·防溅插片" },
 
-  // ─── LANSINOH (1款) ─── Source: <span className="text-[#B5AFA8]">Amazon.com</span> 2026-05-23
+  // ─── LANSINOH (1款) ─── Source: Amazon公开页历史样例，待授权采集复核
   { id: "l1", brand: "Lansinoh", name: "NaturalWave Double Electric", category: "吸奶器", type: "双边电动医院级", price: "$201", source: "Amazon · 4.4★ · 48 reviews", rating: "4.4", reviews: "48", highlight: "12级吸力·5个法兰尺寸·婴儿模仿运动·FSA/HSA" },
 
-  // ─── PHILIPS AVENT (1款) ─── Source: Amazon + camelcamelcamel 2026-05-23
+  // ─── PHILIPS AVENT (1款) ─── Source: Amazon + camelcamelcamel 历史样例，待复核
   { id: "p1", brand: "Philips Avent", name: "Single Electric Pump Advanced", category: "吸奶器", type: "单边电动", price: "$149", source: "Amazon · ~4.2★ · ~350 reviews", rating: "4.2", reviews: "350", highlight: "FSA/HSA合格·价格历史$88-$149" },
 
   // ─── FREEMIE (1款) ─── Source: Amazon.sg + TheBump 2026-05
@@ -80,7 +81,7 @@ export default function ProductManage() {
   const [searchModel, setSearchModel] = useState('');
   const [filterLetter, setFilterLetter] = useState<string | null>(null);
 
-  // ── 动态提取选项（从真实数据中） ──
+  // ── 动态提取选项（从当前样例数组中） ──
   const brandOptions = useMemo(() => ['全部', ...Array.from(new Set(competitorProducts.map(p => p.brand))).sort()], []);
   const categoryOptions = useMemo(() => ['全部', ...Array.from(new Set(competitorProducts.map(p => p.category))).sort()], []);
 
@@ -124,12 +125,18 @@ export default function ProductManage() {
                 <div className="w-9 h-9 rounded-2xl bg-[#af52de] flex items-center justify-center shadow-sm">
                   <Database className="w-4 h-4 text-white" strokeWidth={2} />
                 </div>
-                <div>
-                  <h1 className="text-lg font-semibold text-[#1d1d1f]">竞品产品信息管理</h1>
-                  <p className="text-xs text-[#86868b]">{competitorProducts.length}款产品 · {totalBrands}个品牌 · 全部数据来自<span className="text-[#B5AFA8]">Amazon.com</span> 2026年5月采集</p>
+                  <div>
+                    <h1 className="text-lg font-semibold text-[#1d1d1f]">竞品产品信息管理</h1>
+                  <p className="text-xs text-[#86868b]">{competitorProducts.length}款产品 · {totalBrands}个品牌 · 公开页样例+待采集任务</p>
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-009']}
+              title="产品库数据待采集复核"
+              description="产品参数、价格、评分和评价数需要补 Amazon 授权采集时间戳、SKU 映射和站点范围；当前表格按公开页样例展示。"
+            />
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -198,8 +205,8 @@ export default function ProductManage() {
 
                 {/* 按钮 */}
                 <div className="flex items-center gap-2 ml-auto">
-                  <button onClick={() => { /* 筛选逻辑已通过useMemo实时响应 */ }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#C25B6E] text-white text-sm font-medium hover:bg-[#A34759] transition-colors duration-200 cursor-default opacity-90">
-                    <Search className="w-4 h-4" />实时筛选
+                  <button onClick={() => { /* 筛选逻辑已通过useMemo响应 */ }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#C25B6E] text-white text-sm font-medium hover:bg-[#A34759] transition-colors duration-200 cursor-default opacity-90">
+                    <Search className="w-4 h-4" />筛选结果
                   </button>
                   <button onClick={handleReset} className="px-4 py-2 rounded-xl border border-[#EDE6DF] text-sm text-[#86868b] hover:bg-[#FBF8F5] transition-colors duration-200">
                     重置
@@ -248,7 +255,7 @@ export default function ProductManage() {
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FBF8F5] border border-[#EDE6DF]">
               <ExternalLink className="w-3.5 h-3.5 text-[#86868b]" />
               <span className="text-[10px] text-[#86868b]">
-                <span className="text-[#B5AFA8]">数据来源：</span><span className="text-[#B5AFA8]">Amazon.com</span> 公开产品页面，<span className="text-[#B5AFA8]">采集时间</span> 2026-05-23。价格为印尼配送价（IDR换算），美国本土实际售价可能低20-30%。评分和评价数为Amazon实时数据。
+                <span className="text-[#B5AFA8]">数据来源：</span><span className="text-[#B5AFA8]">Amazon.com</span> 公开产品页面样例，授权采集时间戳待补。价格为印尼配送价（IDR换算），美国本土实际售价可能低20-30%。评分和评价数需在采集任务中复核。
               </span>
             </div>
 
@@ -257,7 +264,7 @@ export default function ProductManage() {
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-sm font-semibold text-[#1d1d1f]">竞品产品清单（{filtered.length}款）</h3>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-[#86868B] bg-[#FBF8F5] px-2 py-1 rounded-lg"><span className="text-[#B5AFA8]">Amazon.com</span> · 2026-05-23</span>
+                  <span className="text-[10px] text-[#86868B] bg-[#FBF8F5] px-2 py-1 rounded-lg"><span className="text-[#B5AFA8]">Amazon公开页样例</span> · 待复核</span>
                 </div>
               </div>
               <table className="w-full text-left">

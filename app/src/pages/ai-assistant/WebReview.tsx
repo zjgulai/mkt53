@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { aiAssistantSidebarItems } from './constants';
 import { Globe } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
-const stats = [{"label":"评测网站","value":"12"},{"label":"检测指标","value":"48"},{"label":"Momcozy得分","value":"87"},{"label":"行业平均","value":"72"}];
+const stats = [{"label":"样例网站","value":"12"},{"label":"检测指标","value":"48"},{"label":"Momcozy样例分","value":"87"},{"label":"行业样例分","value":"72"}];
 
-const features = ["官网性能与用户体验评测","竞品网站功能对比分析","SEO优化建议与关键词分析","移动端适配性测试","购物车转化率优化建议"];
+const features = ["官网性能与用户体验评测","竞品网站功能对比分析需先确认平台条款","SEO优化建议与关键词分析","移动端适配性测试","购物车转化率优化建议"];
 
 const insights = [{"topic":"页面加载速度","sentiment":"正面","mentions":89,"trend":"上升"},{"topic":"产品筛选功能","sentiment":"混合","mentions":56,"trend":"稳定"},{"topic":"移动端体验","sentiment":"正面","mentions":134,"trend":"上升"},{"topic":"多语言支持","sentiment":"正面","mentions":78,"trend":"上升"},{"topic":"支付流程","sentiment":"混合","mentions":45,"trend":"稳定"}];
 
@@ -14,7 +15,7 @@ export default function WebReview() {
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex gap-8">
-          <aside className="w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
+          <aside className="hidden lg:block w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
             <nav className="space-y-0.5">
               {aiAssistantSidebarItems.map((item, i) => (
                 <button key={i} onClick={() => navigate(item.path)} className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-[#1d1d1f] hover:bg-[#FBF8F5] transition-all">{item.label}</button>
@@ -33,6 +34,12 @@ export default function WebReview() {
                 </div>
               </div>
             </div>
+            <PageEvidenceNotice
+              sourceIds={['ds-023']}
+              title="网页评论合规口径"
+              description="网页评测和竞品网站采集需补 robots.txt、平台条款、采样 URL、采集时间和脱敏策略。当前评分与洞察为页面样例，不作为真实站点审计结果。"
+              cadence="合规待复核"
+            />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {stats.map((s, i) => (
                 <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">

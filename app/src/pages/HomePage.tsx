@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Label } from 'recharts';
 import { Star, Zap, TrendingUp, BarChart3, Users, Shield, FileText, Cpu, Globe, Award, Bell, ChevronRight, Target, ShoppingBag, MessageSquare, Lightbulb, BookOpen, MapPin, ExternalLink, CheckCircle } from 'lucide-react';
 import { getSourceRegistryItem } from '@/data/source-registry';
+import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 
 // ═══════════════════════════════════════════════════════════════════
 // Momcozy 市场洞察工作台 · 首页全面重构
@@ -45,7 +46,7 @@ const shareData = [
 // 热门板块（8个核心工作台入口）
 const hotModules = [
   { icon: BarChart3, title: '市场数据看板', desc: 'TAM/SAM/SOM · PEST · 波特五力', color: '#C25B6E', link: '/market/trend', badge: null },
-  { icon: Target, title: '竞品库', desc: '8品牌25款 · Amazon实时数据', color: '#ff9500', link: '/competition', badge: '8品牌' },
+  { icon: Target, title: '竞品库', desc: '8品牌25款 · Amazon连接器待接入', color: '#ff9500', link: '/competition', badge: '8品牌' },
   { icon: Cpu, title: '新品监测', desc: '2026新品追踪 · 威胁评估', color: '#34c759', link: '/competition/new', badge: '15款' },
   { icon: Users, title: '用户画像', desc: '6类画像 · 8大人群聚类', color: '#af52de', link: '/users/regional', badge: null },
   { icon: Shield, title: '政策法规', desc: '7国政策 · 合规追踪', color: '#5856d6', link: '/industry', badge: '7国' },
@@ -138,9 +139,9 @@ const notifications = [
   { id: 4, title: '日本PSC认证续期提醒', desc: '证书将于2026-08到期', time: '2天前', type: 'warning', icon: Shield, impact: '合规风险', impactDesc: '逾期未续期将暂停日本销售', priority: 'P1' },
 ];
 
-// 本周关键洞察 — 驱动行动的顶层结论
+// 本期关键洞察 — 驱动行动的顶层结论
 // 模板: [数据发现] + [业务含义] + [建议行动]
-const weeklyInsights = [
+const periodInsights = [
   { icon: TrendingUp, title: '穿戴式增速领先', value: '+18.2%', desc: '穿戴式细分增速超行业均值2.1x，建议Q3加大M9/W1产能投入', color: '#C25B6E', action: '查看产品规划' },
   { icon: Target, title: 'Medela份额下滑', value: '-0.8pp', desc: 'Medela连续2季份额流失，窗口期建议加速北美渠道扩张', color: '#ff9500', action: '查看竞争策略' },
   { icon: Shield, title: 'CPSC规则复核', value: '7月8日', desc: 'CPC/eFiling要求需法务复核；未确认官网实时声明强制要求', color: '#ff3b30', action: '查看合规要求' },
@@ -176,6 +177,14 @@ const actionColors2: Record<string, string> = {
 
 export default function HomePage() {
   const [activeReportTab, setActiveReportTab] = useState('全部');
+  const {
+    status: collectionStatus,
+    totals: collectionTotals,
+    period: collectionPeriod,
+    generatedAtText: collectionGeneratedAt,
+    windowText: collectionWindow,
+    nextScheduleText,
+  } = usePeriodicManifest();
   // R3: 政策法规筛选状态
   const [policyTag, setPolicyTag] = useState('全部');
   const [policyStatus, setPolicyStatus] = useState('全部');
@@ -203,16 +212,37 @@ export default function HomePage() {
   };
 
   const filteredReports = latestReports.filter(r => activeReportTab === '全部' || r.category === activeReportTab);
+  const collectionSummary =
+    collectionStatus === 'ready'
+      ? `半月数据周期 ${collectionPeriod} · ${collectionWindow} · 生成 ${collectionGeneratedAt}`
+      : collectionStatus === 'loading'
+        ? '正在读取半月数据周期'
+        : '半月数据状态暂不可用';
+  const collectionBadges = collectionStatus === 'ready'
+    ? [
+        { label: '公开来源成功', value: collectionTotals.ok ?? 0, color: '#34c759' },
+        { label: '连接器待接入', value: collectionTotals['connector-required'] ?? 0, color: '#ff9500' },
+        { label: '人工补录', value: collectionTotals['manual-required'] ?? 0, color: '#5856d6' },
+        { label: '下次计划', value: nextScheduleText.replace('下次计划 ', ''), color: '#86868b' },
+      ]
+    : [{ label: '采集状态', value: collectionStatus === 'loading' ? '读取中' : '未生成', color: '#ff9500' }];
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
         {/* ═══════════ 工作台头部 ═══════════ */}
         <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div className="min-w-0">
               <h1 className="text-2xl font-semibold text-[#1d1d1f] tracking-tight">{greeting()}，Momcozy 市场洞察工作台</h1>
-              <p className="text-[#86868b] mt-1.5 text-sm">今日数据已更新 · 2026年5月23日 · 覆盖全球60+市场 · 服务500万+用户</p>
+              <p className="text-[#86868b] mt-1.5 text-sm">{collectionSummary}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                {collectionBadges.map((item) => (
+                  <span key={item.label} className="text-[10px] rounded-full border border-[#EDE6DF] bg-white/70 px-2 py-1 text-[#86868b]">
+                    {item.label} <strong style={{ color: item.color }}>{item.value}</strong>
+                  </span>
+                ))}
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <div className="relative">
@@ -237,9 +267,9 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* ═══════════ 本周关键洞察（R1: 驱动行动的顶层结论）═ */}
+        {/* ═══════════ 本期关键洞察（R1: 驱动行动的顶层结论）═ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {weeklyInsights.map((ins, i) => {
+          {periodInsights.map((ins, i) => {
             const IconComp = ins.icon;
             return (
               <div key={i} className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF] hover:border-[#C25B6E]/20 transition-all cursor-pointer group" onClick={() => navigate('/market/trend')}>
@@ -592,7 +622,7 @@ export default function HomePage() {
                   </div>
                   <h3 className="text-sm font-semibold text-[#1d1d1f]">活跃先锋</h3>
                 </div>
-                <span className="text-[10px] text-[#86868b] bg-white/60 px-2 py-0.5 rounded-full">本周</span>
+                <span className="text-[10px] text-[#86868b] bg-white/60 px-2 py-0.5 rounded-full">本期</span>
               </div>
               <div className="space-y-2">
                 {[

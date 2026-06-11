@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Shirt, TrendingUp, DollarSign, Star, ArrowUpRight } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 
 const trendData = [
@@ -93,6 +94,12 @@ export default function NursingProducts() {
                 ))}
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-039']}
+              title="哺乳用品采集状态"
+              description="趋势和品牌份额需要 Amazon 类目采集授权、类目定义和品牌映射；未接入前只作为半月复核线索。"
+            />
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

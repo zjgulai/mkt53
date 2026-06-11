@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, ScatterChart, Scatter, ZAxis } from 'recharts';
 import { Eye, Package, DollarSign, Truck, Megaphone, Target, Star, Globe, TrendingUp, Award, Users, Zap, ShoppingCart, Calendar, ArrowUpRight, Lightbulb, Heart, MapPin, Download } from 'lucide-react';
 import { exportToCsv } from '@/utils/csvExport';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 // ═══════════════════════════════════════════════════════════════════
 // Momcozy 看自己 · 营销4P深度诊断
-// 数据基于2025-2026年公开信息深度采集
+// 来源混合内部、平台和主观测算，展示层必须标注复核边界。
 // 分析框架：BCG矩阵 / 价格弹性 / 4M影响者模型 / 渠道效率矩阵
 // ═══════════════════════════════════════════════════════════════════
 
@@ -146,7 +147,7 @@ export default function SelfInsight() {
                 <p className="text-xs text-[#86868b]">Momcozy 营销4P深度诊断 · BCG矩阵/价格竞争地图/4M影响者模型</p>
               </div>
             </div>
-            <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">数据更新：</span>2026-05-23</span>
+            <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">数据状态：</span>内部/平台快照待拆分</span>
           </div>
           <div className="flex items-center gap-1 flex-wrap">
             {tabs.map((tab) => (
@@ -157,6 +158,13 @@ export default function SelfInsight() {
             ))}
           </div>
         </div>
+
+        <PageEvidenceNotice
+          sourceIds={['ds-019', 'ds-020']}
+          title="自我诊断来源口径"
+          description="营销 4P 混合内部数据、Amazon 平台信息和主观 BCG 测算；当前诊断需要补数据快照、外部份额校准和更新时间拆分。"
+          className="mb-6"
+        />
 
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* R21: 战略诊断总结横幅 */}

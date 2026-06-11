@@ -1,6 +1,7 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Beaker, Lightbulb, ArrowUpRight } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 const topFeatures = [
   { feature: 'APP智能控制', growth: 38, adoption: 68, color: '#C25B6E' },
@@ -65,6 +66,12 @@ export default function FlavorReport() {
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-033']}
+              title="VOC报告示例口径"
+              description="当前趋势和预测尚未绑定真实 VOC 快照、模型版本和人工复核人；报告结论只能作为解释性展示。"
+            />
 
             {/* Feature Rankings */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Anchor, ArrowUpRight, ArrowDownRight, FileText, Search } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 
 // HS Code classification for breast pumps and baby care products
@@ -80,6 +81,12 @@ export default function CustomsData() {
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-006']}
+              title="海关数据示例口径"
+              description="当前 HS 编码、贸易流向和口岸数据为示例数据，尚未接入 Import Genius API 或数仓，不作为真实贸易结论。"
+            />
 
             {/* Tab Navigation */}
             <div className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">

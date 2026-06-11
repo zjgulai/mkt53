@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, ScatterChart, Scatter, ZAxis, Cell } from 'recharts';
 import { Droplets, TrendingUp, Star, DollarSign, Zap, Target } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 
 const pumpTrend = [
@@ -106,6 +107,12 @@ export default function BreastPump() {
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-005']}
+              title="吸奶器品类测算口径待复核"
+              description="品类拆分来自 Precedence/Technavio 加权推算，需补权重公式和原始口径；页面结论按方向性测算使用。"
+            />
 
             {/* Tab Navigation */}
             <div className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">

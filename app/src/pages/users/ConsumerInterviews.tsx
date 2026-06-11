@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import InterviewAgents from '@/components/InterviewAgents';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import { exportToCsv } from '@/utils/csvExport';
 
 // ─── NPS分布 ───
@@ -74,7 +75,7 @@ const interviews = [
     quoteCN: '我每天在办公室吸奶3次。M5可以藏在文胸里，没人发现。电池轻松支持5次使用。彻底改变了我的工作效率。',
     painPoints: ['办公室隐私不够', '吸奶时间安排难', '清洗设备不便', '背奶包保温有限'],
     needs: ['更长续航', '超静音模式<35dB', '便携清洁方案', '智能提醒清洗'],
-    rating: 5, date: '2026-05-23', duration: '52min', method: '视频访谈+使用日志',
+    rating: 5, date: '样例访谈日 2026-05-23', duration: '52min', method: '视频访谈+使用日志',
     sentiment: { joy: 85, trust: 78, anticipation: 72, sadness: 15, anger: 5 },
   },
   {
@@ -84,7 +85,7 @@ const interviews = [
     quoteCN: '作为新手妈妈，我感到不知所措。M9的APP指导我完成所有设置。哺乳文胸非常柔软。真希望早点发现这个品牌。',
     painPoints: ['初次使用学习成本高', '不知如何选择档位', '涨奶疼痛难忍', '夜间操作不便'],
     needs: ['新手引导教程', 'AI智能档位推荐', '疼痛缓解模式', '夜间柔光界面'],
-    rating: 4, date: '2026-05-23', duration: '48min', method: '视频访谈+屏幕录制',
+    rating: 4, date: '样例访谈日 2026-05-23', duration: '48min', method: '视频访谈+屏幕录制',
     sentiment: { joy: 72, trust: 85, anticipation: 68, sadness: 25, anger: 8 },
   },
   {
@@ -94,7 +95,7 @@ const interviews = [
     quoteCN: '有两个孩子，效率就是一切。KleanPal每天节省我30分钟。M5让我可以一边陪大孩玩一边吸奶。物有所值。',
     painPoints: ['时间不够分配', '两个孩子需求冲突', '产品清洁维护繁琐', '配件收纳混乱'],
     needs: ['多功能集成', '一键快速清洁', '大容量储存', '统一配件生态'],
-    rating: 5, date: '2026-05-23', duration: '61min', method: '家访+使用场景观察',
+    rating: 5, date: '样例访谈日 2026-05-23', duration: '61min', method: '家访+使用场景观察',
     sentiment: { joy: 90, trust: 82, anticipation: 75, sadness: 10, anger: 3 },
   },
   {
@@ -104,7 +105,7 @@ const interviews = [
     quoteCN: '我晚上用配方奶，白天吸奶。M6 Slim对我小公寓来说足够紧凑。非常安静。但希望罩杯尺寸选择更清晰。',
     painPoints: ['混合喂养协调难', '夜间喂奶疲劳', '产品占用空间', '尺码选择困惑'],
     needs: ['紧凑设计', '超静音', '夜间模式', '智能尺码推荐'],
-    rating: 4, date: '2026-05-23', duration: '45min', method: '视频访谈',
+    rating: 4, date: '样例访谈日 2026-05-23', duration: '45min', method: '视频访谈',
     sentiment: { joy: 65, trust: 70, anticipation: 60, sadness: 30, anger: 12 },
   },
   {
@@ -114,7 +115,7 @@ const interviews = [
     quoteCN: '吸力模式感觉自然，不像旧泵那样疼痛。储奶袋防漏且易于标记。德国妈妈很欣赏质量认证详情。',
     painPoints: ['旧产品吸力疼痛', '储奶袋曾漏奶', '奶量追踪不便', '欧盟认证信息难找'],
     needs: ['舒适吸力技术', '防漏储奶方案', '智能奶量追踪', 'CE认证展示'],
-    rating: 5, date: '2026-05-23', duration: '55min', method: '视频访谈+产品拆解',
+    rating: 5, date: '样例访谈日 2026-05-23', duration: '55min', method: '视频访谈+产品拆解',
     sentiment: { joy: 80, trust: 88, anticipation: 70, sadness: 12, anger: 5 },
   },
   {
@@ -124,7 +125,7 @@ const interviews = [
     quoteCN: '喜欢Air1的超薄设计。但吸力不如预期强劲，考虑到价格。问罩杯适配时客服很有帮助。',
     painPoints: ['吸力强度不够', '价格偏高', '配件需另购', '澳洲本地维修难'],
     needs: ['增强吸力模式', '套装优惠定价', '配件捆绑销售', '澳洲本地服务点'],
-    rating: 3, date: '2026-05-23', duration: '43min', method: '视频访谈',
+    rating: 3, date: '样例访谈日 2026-05-23', duration: '43min', method: '视频访谈',
     sentiment: { joy: 55, trust: 65, anticipation: 50, sadness: 35, anger: 20 },
   },
   {
@@ -134,7 +135,7 @@ const interviews = [
     quoteCN: '加热功能是革命性的！泵奶前热敷按摩增加了20%的产量。我在Instagram分享后朋友们都想试。',
     painPoints: ['加热等待时间', '产品价格高', '新加坡购买渠道少', '充电接口不通用'],
     needs: ['快速加热<30s', '分期付款选项', '本地经销商', 'Type-C统一接口'],
-    rating: 5, date: '2026-05-23', duration: '58min', method: '视频访谈+社交媒体分析',
+    rating: 5, date: '样例访谈日 2026-05-23', duration: '58min', method: '视频访谈+社交媒体分析',
     sentiment: { joy: 92, trust: 80, anticipation: 88, sadness: 8, anger: 2 },
   },
   {
@@ -144,7 +145,7 @@ const interviews = [
     quoteCN: '作为礼物收到。产品不错但APP中找不到阿拉伯语支持。希望看到更多面向中东妈妈的内容。',
     painPoints: ['APP无阿拉伯语', '缺乏本地化内容', '保修政策不清晰', '高温环境使用担忧'],
     needs: ['多语言APP', '区域化内容', '清晰保修政策', '高温使用指南'],
-    rating: 3, date: '2026-05-23', duration: '40min', method: '视频访谈',
+    rating: 3, date: '样例访谈日 2026-05-23', duration: '40min', method: '视频访谈',
     sentiment: { joy: 45, trust: 55, anticipation: 60, sadness: 40, anger: 25 },
   },
 ];
@@ -182,7 +183,7 @@ export default function ConsumerInterviews() {
 
             {/* ═══ Header ═══ */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-              <div className="flex items-center justify-between mb-5">
+              <div className="flex items-start justify-between gap-3 flex-wrap mb-5">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-2xl bg-[#C25B6E] flex items-center justify-center shadow-sm" style={{ boxShadow: '0 2px 8px #C25B6E30' }}>
                     <Users className="w-5 h-5 text-white" strokeWidth={2} />
@@ -196,7 +197,7 @@ export default function ConsumerInterviews() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg">
-                    <span className="text-[#B5AFA8]">数据更新：</span>2026-05-23
+                    <span className="text-[#B5AFA8]">样本状态：</span>访谈样本待复核
                   </span>
                   <button
                     onClick={() => exportToCsv(
@@ -221,12 +222,18 @@ export default function ConsumerInterviews() {
               </div>
             </div>
 
+            <PageEvidenceNotice
+              sourceIds={['ds-014']}
+              title="消费者访谈样本口径"
+              description="当前访谈记录缺少完整招募条件、样本配额和原始访谈凭证；NPS、Kano 和旅程结论应作为定性线索，不能替代量化调研结论。"
+            />
+
             {/* ═══ AI Agents ═══ */}
             <InterviewAgents
               interviewType="consumer"
               sampleSize={interviews.length}
               regions={['美国', '英国', '加拿大', '日本', '德国', '澳大利亚', '新加坡', '阿联酋']}
-              dateRange="2026-05-23 ~ 2026-05-23"
+              dateRange="样例访谈日：2026-05-23 · 待样本复核"
             />
 
             {/* ═══ KPI Cards ═══ */}

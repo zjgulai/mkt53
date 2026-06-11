@@ -1,6 +1,7 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { LayoutDashboard, TrendingUp, ArrowUpRight, ArrowDownRight, Package, DollarSign, Globe, Target, Download } from 'lucide-react';
 import { exportToCsv } from '@/utils/csvExport';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 
 // ── TAM/SAM/SOM Market Sizing Model ──
@@ -94,9 +95,15 @@ export default function MarketPage() {
                     <p className="text-xs text-[#86868b]">全球母婴喂养电器市场 · TAM/SAM/SOM分析框架</p>
                   </div>
                 </div>
-                <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">数据更新：</span>2026-05-23</span>
+                <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">数据状态：</span>半月复核 · 人工凭证待补</span>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-001', 'ds-002']}
+              title="市场总览来源口径"
+              description="TAM/SAM/SOM 使用 Precedence Research 口径；区域份额来自 Fortune BI，服务器自动化可能返回 403，需保留人工访问或采购报告凭证。"
+            />
 
             {/* TAM/SAM/SOM Cards — flex layout + min-w-0 */}
             <div className="flex gap-3">

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { LayoutGrid, FileBarChart, Map as MapIcon, Database, TrendingUp, Zap, Shield, ArrowUpRight, AlertTriangle, CheckCircle, Flame, Cpu, Baby } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 
 // ── 2026 NEW PRODUCT DATA (Latest as of May 2026) ──
@@ -88,7 +89,7 @@ export default function NewCompetition() {
                   </div>
                   <div>
                     <h1 className="text-lg font-semibold text-[#1d1d1f]">新品竞争监测</h1>
-                    <p className="text-xs text-[#86868b]">2025-2026年竞品新品动态 · 2026年5月23日更新</p>
+                    <p className="text-xs text-[#86868b]">2025-2026年竞品新品动态 · 半月复核线索</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -98,6 +99,13 @@ export default function NewCompetition() {
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-008']}
+              title="新品线索使用边界"
+              description="品牌官网和新闻稿适合支撑新品线索；销量、威胁等级和应对动作属于内部判断，不作为已验证销售结论。"
+              cadence="新品线索复核口径"
+            />
 
             {/* 2026 Market Snapshot */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -147,7 +155,7 @@ export default function NewCompetition() {
                 <h3 className="text-sm font-semibold text-[#1d1d1f]">
                   {timeFilter === '即将上市' ? '即将上市（2026 H2）' : '新品上市清单'}（{filtered.length}款）
                 </h3>
-                <span className="text-[10px] text-[#86868B] bg-[#FBF8F5] px-2 py-1 rounded-lg"><span className="text-[#B5AFA8]">数据截止：</span>2026-05-23</span>
+                <span className="text-[10px] text-[#86868B] bg-[#FBF8F5] px-2 py-1 rounded-lg"><span className="text-[#B5AFA8]">线索窗口：</span>2025-2026 · 半月复核</span>
               </div>
               <div className="space-y-2">
                 {filtered.map((p, i) => (

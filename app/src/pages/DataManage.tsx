@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Database, Table, ChevronRight, ChevronDown, BarChart3, Target, Users, Shield, Eye, Sparkles, Link2, AlertCircle, CheckCircle, Info, ShieldCheck, Download, Lock, Globe, HardDrive, Search, Layers, RefreshCw, FileText, BookOpen } from 'lucide-react';
 import OperationsManual from '@/components/OperationsManual';
+import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 import { exportToCsv } from '@/utils/csvExport';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -22,17 +23,6 @@ interface DataTable {
 interface DataModule {
   id: string; name: string; icon: typeof Table; color: string; page: string;
   desc: string; tables: DataTable[];
-}
-
-interface WeeklyCollectionManifest {
-  week: string;
-  generatedAt: string;
-  refreshCadence: string;
-  auditSummary: {
-    pagesWithStaticDataWithoutRegistry: number;
-    issueCount: number;
-  };
-  totals: Record<string, number>;
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -129,7 +119,7 @@ const changeHistory = [
   { date: '2026-05-23', tableId: 't_consumer_iv', action: '更新', user: '孙研究员', desc: 'Q2消费者访谈数据导入', before: '8条记录', after: '12条记录' },
   { date: '2026-05-20', tableId: 't_porter', action: '更新', user: '李研究员', desc: '波特五力Q2重评', before: '2026-01', after: '2026-05' },
   { date: '2026-05-23', tableId: 't_mkt_size', action: '更新', user: '张分析师', desc: 'Q2市场规模数据更新', before: '$36.8B', after: '$38.1B' },
-  { date: '2026-05-23', tableId: 't_comp_product', action: '采集', user: '系统', desc: 'Amazon竞品价格周度采集', before: '-', after: '15条记录' },
+  { date: '2026-05-23', tableId: 't_comp_product', action: '排队', user: '系统', desc: 'Amazon竞品价格半月复核任务，连接器待接入', before: '-', after: '15条待复核记录' },
   { date: '2026-05-22', tableId: 't_comment', action: '清洗', user: '孙研究员', desc: '评论情感NLP重跑', before: '准确率82%', after: '准确率87%' },
   { date: '2026-05-20', tableId: 't_customs', action: '导入', user: '王运营', desc: '4月海关数据导入', before: '缺失', after: '1,240条' },
   { date: '2026-05-18', tableId: 't_policy', action: '复核', user: '郑法务', desc: '美国CPSC CPC/eFiling来源复核', before: '官网实时声明口径', after: '待按官方CPC/eFiling规则重审' },
@@ -249,8 +239,8 @@ const dataModules: DataModule[] = [
 
     tables: [
       {
-        id: 't_comp_product', name: 'competitor_products', desc: '竞品产品数据库（Amazon实时采集）',
-        updateFreq: '周', upstream: ['<span className="text-[#B5AFA8]">Amazon.com</span>'], downstream: ['new_product_tracker', 'price_analysis'],
+        id: 't_comp_product', name: 'competitor_products', desc: '竞品产品数据库（Amazon连接器待接入）',
+        updateFreq: '半月复核', upstream: ['<span className="text-[#B5AFA8]">Amazon.com</span>'], downstream: ['new_product_tracker', 'price_analysis'],
         fields: [
           { name: 'product_id', type: 'VARCHAR(20)', desc: '产品唯一ID', source: '系统生成', required: true },
           { name: 'brand', type: 'VARCHAR(50)', desc: '品牌（Medela/Elvie/Willow等）', source: 'Amazon', required: true },
@@ -608,13 +598,13 @@ const dataModules: DataModule[] = [
 const dataLineage = [
   { from: '外部研报（Grand View Research/Statista）', to: 'market_size_global', type: '外部导入' },
   { from: 'market_size_global', to: 'market_trend_monthly', type: '派生计算' },
-  { from: '<span className="text-[#B5AFA8]">Amazon.com</span>', to: 'competitor_products', type: '实时采集' },
+  { from: '<span className="text-[#B5AFA8]">Amazon.com</span>', to: 'competitor_products', type: '连接器待接入' },
   { from: 'competitor_products', to: 'new_product_tracker', type: '派生计算' },
   { from: 'competitor_products', to: 'price_analysis', type: '派生计算' },
   { from: 'user_comments', to: 'comment_analysis_ai', type: 'AI分析' },
   { from: 'consumer_interviews', to: 'user_personas', type: '归纳提炼' },
   { from: 'user_personas', to: 'rfm_user_segments', type: '模型计算' },
-  { from: '各国政府网站', to: 'policy_regulations', type: '实时采集' },
+  { from: '各国政府网站', to: 'policy_regulations', type: '公开来源复核' },
   { from: '内部ERP', to: 'momcozy_products', type: '系统同步' },
   { from: 'WIPO/USPTO', to: 'ip_patents', type: 'API同步' },
 ];
@@ -627,32 +617,16 @@ export default function DataManage() {
   const [governanceView, setGovernanceView] = useState<'tables' | 'layers' | 'governance' | 'manual'>('tables');
   const [scopeFilter, setScopeFilter] = useState<SourceScope | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [weeklyManifest, setWeeklyManifest] = useState<WeeklyCollectionManifest | null>(null);
-  const [weeklyManifestStatus, setWeeklyManifestStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
-
-  useEffect(() => {
-    let active = true;
-
-    fetch('/weekly-data/latest.json', { cache: 'no-store' })
-      .then((response) => {
-        if (!response.ok) throw new Error(`Weekly manifest unavailable: ${response.status}`);
-        return response.json() as Promise<WeeklyCollectionManifest>;
-      })
-      .then((manifest) => {
-        if (!active) return;
-        setWeeklyManifest(manifest);
-        setWeeklyManifestStatus('ready');
-      })
-      .catch(() => {
-        if (!active) return;
-        setWeeklyManifest(null);
-        setWeeklyManifestStatus('missing');
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
+  const {
+    manifest: collectionManifest,
+    path: collectionManifestPath,
+    status: collectionManifestStatus,
+    totals: collectionTotals,
+    period: collectionPeriod,
+    generatedAtText: collectionGeneratedAt,
+    windowText: collectionWindow,
+    nextScheduleText: nextSchedule,
+  } = usePeriodicManifest();
 
   const toggleTable = (id: string) => {
     setExpandedTables(prev => {
@@ -666,8 +640,6 @@ export default function DataManage() {
   const currentModule = dataModules.find(m => m.id === activeModule)!;
   const totalTables = dataModules.reduce((s, m) => s + m.tables.length, 0);
   const totalFields = dataModules.reduce((s, m) => s + m.tables.reduce((ts, t) => ts + t.fields.length, 0), 0);
-  const weeklyTotals = weeklyManifest?.totals ?? {};
-  const weeklyGeneratedAt = weeklyManifest ? new Date(weeklyManifest.generatedAt).toLocaleString('zh-CN', { hour12: false }) : '-';
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -711,31 +683,32 @@ export default function DataManage() {
           )} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FBF8F5] text-xs text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all border border-[#EDE6DF]"><Download className="w-3.5 h-3.5" />治理报告</button>
         </div>
 
-        {/* 周度采集刷新状态 */}
+        {/* 半月采集刷新状态 */}
         <div className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF] mb-6">
           <div className="flex items-center gap-3 flex-wrap">
             <div className="w-9 h-9 rounded-xl bg-[#34c759]/10 flex items-center justify-center">
-              {weeklyManifestStatus === 'ready' ? <CheckCircle className="w-4 h-4 text-[#34c759]" /> : <AlertCircle className="w-4 h-4 text-[#ff9500]" />}
+              {collectionManifestStatus === 'ready' ? <CheckCircle className="w-4 h-4 text-[#34c759]" /> : <AlertCircle className="w-4 h-4 text-[#ff9500]" />}
             </div>
-            <div className="min-w-[180px]">
-              <p className="text-xs font-semibold text-[#1d1d1f]">周度数据采集刷新</p>
+            <div className="min-w-[240px]">
+              <p className="text-xs font-semibold text-[#1d1d1f]">半月数据采集刷新</p>
               <p className="text-[10px] text-[#86868b]">
-                {weeklyManifestStatus === 'ready' ? `${weeklyManifest?.week} · ${weeklyGeneratedAt}` : weeklyManifestStatus === 'loading' ? '正在读取 manifest' : '未生成 public/weekly-data/latest.json'}
+                {collectionManifestStatus === 'ready' ? `${collectionPeriod} · ${collectionGeneratedAt}` : collectionManifestStatus === 'loading' ? '正在读取 manifest' : '未生成 public/periodic-data/latest.json'}
               </p>
+              {collectionManifestStatus === 'ready' ? <p className="text-[10px] text-[#B5AFA8]">{collectionWindow} · {nextSchedule}</p> : null}
             </div>
             {[
-              { label: '公开来源成功', value: weeklyTotals.ok ?? 0, color: '#34c759' },
-              { label: '连接器待接入', value: weeklyTotals['connector-required'] ?? 0, color: '#ff9500' },
-              { label: '人工补录', value: weeklyTotals['manual-required'] ?? 0, color: '#5856d6' },
-              { label: '请求异常', value: (weeklyTotals['source-error'] ?? 0) + (weeklyTotals['fetch-error'] ?? 0), color: '#ff3b30' },
-              { label: '未绑定registry页面', value: weeklyManifest?.auditSummary.pagesWithStaticDataWithoutRegistry ?? 0, color: '#C25B6E' },
+              { label: '公开来源成功', value: collectionTotals.ok ?? 0, color: '#34c759' },
+              { label: '连接器待接入', value: collectionTotals['connector-required'] ?? 0, color: '#ff9500' },
+              { label: '人工补录', value: collectionTotals['manual-required'] ?? 0, color: '#5856d6' },
+              { label: '请求异常', value: (collectionTotals['source-error'] ?? 0) + (collectionTotals['fetch-error'] ?? 0), color: '#ff3b30' },
+              { label: '未绑定registry页面', value: collectionManifest?.auditSummary?.pagesWithStaticDataWithoutRegistry ?? 0, color: '#C25B6E' },
             ].map((item) => (
               <div key={item.label} className="px-3 py-2 rounded-xl bg-[#FBF8F5] border border-[#EDE6DF] min-w-[112px]">
                 <p className="text-[10px] text-[#86868b]">{item.label}</p>
                 <p className="text-lg font-bold" style={{ color: item.color }}>{item.value}</p>
               </div>
             ))}
-            <a href="/weekly-data/latest.json" className="ml-auto text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E] transition-colors">
+            <a href={collectionManifestPath} className="ml-auto text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E] transition-colors">
               查看manifest
             </a>
           </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { FileBarChart, Target, TrendingUp, Zap } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 
 const radarData = [
@@ -75,6 +76,12 @@ export default function CategoryAnalysis() {
                 ))}
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-038']}
+              title="品类分析待补测算依据"
+              description="品类规模、增长、利润率和竞争强度为综合测算，需补权重公式、BSR 快照和外部报告来源后再升级为正式结论。"
+            />
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

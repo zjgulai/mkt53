@@ -2,10 +2,11 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Calendar, MapPin, Users, Star, Globe, Ticket } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 const exhibitions = [
   {
-    id: 1, name: 'ABC Kids Expo 2025', location: 'Las Vegas, US', date: '2026-05-23 ~ 05-17', status: '已结束',
+    id: 1, name: 'ABC Kids Expo 2025', location: 'Las Vegas, US', date: '样例日期待复核', status: '已结束',
     visitors: 18500, momcozyBooth: 'Hall C-320', boothSize: 120,
     leads: 1240, orders: 86, satisfaction: 4.7,
     highlights: ['M5 Pro新品全球首发', '与Target采购团队达成年度框架协议', '获得"最佳创新设计"展位奖'],
@@ -26,14 +27,14 @@ const exhibitions = [
     feedback: '国内消费者对智能互联功能接受度最高，计划重点展示APP数据分析功能。',
   },
   {
-    id: 4, name: 'Pueri Expo 2025', location: 'São Paulo, Brazil', date: '2026-05-23 ~ 04-25', status: '已结束',
+    id: 4, name: 'Pueri Expo 2025', location: 'São Paulo, Brazil', date: '样例日期待复核', status: '已结束',
     visitors: 8200, momcozyBooth: 'Hall B-108', boothSize: 80,
     leads: 560, orders: 34, satisfaction: 4.4,
     highlights: ['首次进入南美市场', '本地化葡萄牙语产品展示', '与当地最大母婴连锁达成试销协议'],
     feedback: '南美市场对价格敏感度高，M6 Slim的性价比定位非常契合当地需求。',
   },
   {
-    id: 5, name: 'Tokyo Baby Show 2025', location: 'Tokyo, Japan', date: '2026-05-23 ~ 06-29', status: '即将举办',
+    id: 5, name: 'Tokyo Baby Show 2025', location: 'Tokyo, Japan', date: '样例日期待复核', status: '即将举办',
     visitors: 45000, momcozyBooth: 'East Hall 4-220', boothSize: 90,
     leads: null, orders: null, satisfaction: null,
     highlights: ['日本限定樱花粉配色首发', '与本地母婴达人深度合作', 'Mini产品线的亚洲首秀'],
@@ -97,6 +98,12 @@ export default function Exhibition() {
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-018']}
+              title="展会线索使用口径"
+              description="展会官网可支撑日程与参展线索，但线索数、订单和 ROI 仍需 CRM 或展会复盘快照复核；页面不直接输出经营结论。"
+            />
 
             {/* ROI Chart */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">

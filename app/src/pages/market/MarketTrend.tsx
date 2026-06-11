@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
 import { TrendingUp, Shield, Cpu, Users, Scale, Zap, Globe, ArrowUpRight, ArrowDownRight, DollarSign } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 
 const pestData = {
@@ -103,6 +104,12 @@ export default function MarketTrend() {
                 </div>
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-003', 'ds-004']}
+              title="大盘趋势复核边界"
+              description="PEST 来源组合仍需拆分到具体政策 URL；波特五力评分是解释性模型，当前按示例/待复核口径展示，不作为机构原始结论。"
+            />
 
             {/* PEST Analysis */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">

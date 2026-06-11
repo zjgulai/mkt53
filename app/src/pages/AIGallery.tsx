@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Image, Sparkles, Download, ZoomIn, X, Wand2, Clock, Tag, CheckCircle, Copy, Check } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 interface GalleryImage {
   id: string;
@@ -183,7 +184,7 @@ const stats = [
   { label: 'AI生成图片', value: '145', icon: <Image className="w-4 h-4" />, color: '#C25B6E' },
   { label: '品类覆盖', value: '9', icon: <CheckCircle className="w-4 h-4" />, color: '#ff9500' },
   { label: '平均生成时间', value: '12.3s', icon: <Clock className="w-4 h-4" />, color: '#34c759' },
-  { label: '节省设计成本', value: '$256K', icon: <Sparkles className="w-4 h-4" />, color: '#af52de' },
+  { label: '成本估算待审', value: '待审', icon: <Sparkles className="w-4 h-4" />, color: '#af52de' },
 ];
 
 export default function AIGallery() {
@@ -232,6 +233,13 @@ export default function AIGallery() {
             </div>
           </div>
         </div>
+
+        <PageEvidenceNotice
+          sourceIds={['ds-026']}
+          title="AI图库素材口径"
+          description="图库中的日期是素材生成或入库日期，不代表市场数据快照或半月业务数据更新。生成请求、模型版本、供应商成本和人工审核记录尚未接入。"
+          cadence="素材库状态"
+        />
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

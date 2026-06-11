@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Send, Zap, User, MessageSquare, Youtube, Wand2, BookOpen, BarChart3, Globe, Search } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import { aiAssistantSidebarItems } from './ai-assistant/constants';
 
 const iconMap: Record<string, React.ElementType> = {
@@ -52,7 +53,7 @@ export default function AIAssistantPage() {
     if (!query.trim()) return;
     setMessages([...messages, { role: 'user', content: query }]);
     setTimeout(() => {
-      setMessages(prev => [...prev, { role: 'ai', content: '收到您的请求，我正在分析Momcozy相关市场数据。根据最新母婴市场情报，穿戴式吸奶器品类正在快速增长，建议关注妈妈用户痛点和产品创新方向。' }]);
+      setMessages(prev => [...prev, { role: 'ai', content: '收到您的请求，我正在基于当前页面示例配置和待复核市场资料整理线索。穿戴式吸奶器品类需要继续补齐真实数据快照、来源窗口和人工复核记录后再形成经营结论。' }]);
     }, 800);
     setQuery('');
   };
@@ -100,6 +101,14 @@ export default function AIAssistantPage() {
                 "分析2026年Q1全球吸奶器市场份额变化" → "Medela新品威胁评估" → "生成M5产品优化建议"
               </p>
             </div>
+            <div className="px-5 pt-4">
+              <PageEvidenceNotice
+                sourceIds={['ds-025']}
+                title="AI助手演示边界"
+                description="快捷指令、最近分析和对话回复为静态演示配置，未接入真实调用日志、检索链路或服务端审计。当前回复只能作为线索整理，不作为已验证市场结论。"
+                cadence="演示配置"
+              />
+            </div>
             <div className="flex-1 min-w-0 overflow-y-auto p-5 space-y-6">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : ''}`}>
@@ -122,7 +131,7 @@ export default function AIAssistantPage() {
                 {['市场趋势分析', '竞品数据对比', '用户洞察提取', '产品建议生成'].map((c, i) => (
                   <span key={i} className="px-1.5 py-0.5 rounded bg-white text-[9px] text-[#86868b] border border-[#EDE6DF]">{c}</span>
                 ))}
-                <span className="text-[9px] text-[#ff9500] ml-auto">数据截止2026-05-23 · 仅供参考</span>
+                <span className="text-[9px] text-[#ff9500] ml-auto">静态演示配置 · 待接入调用日志</span>
               </div>
             </div>
             <div className="p-4 border-t border-[#EDE6DF]">

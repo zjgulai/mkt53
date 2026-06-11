@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Database, ExternalLink, AlertTriangle, CheckCircle, Info, Shield, TrendingUp, BarChart3, Globe, Users, Target } from 'lucide-react';
 import { getVerificationStatusMeta, sourceRegistry, type SourceRegistryItem } from '@/data/source-registry';
+import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 
 // ═══════════════════════════════════════════════════════════════════
 // 数据来源管理页面 — 企业级数据溯源与质量管控
@@ -43,9 +44,37 @@ const calcModels = [
 const relColors = { A: '#34c759', B: '#5856d6', C: '#ff9500', D: '#ff3b30' };
 const relLabels = { A: '高可信度', B: '中等可信度', C: '需谨慎', D: '示例数据' };
 
+function getDisplaySourceName(source: DataSource) {
+  if (source.verificationStatus !== 'verified' && source.sourceName.includes('实时采集')) {
+    return source.sourceName.replace('实时采集', '连接器待接入');
+  }
+
+  return source.sourceName;
+}
+
+function getDisplaySourceType(source: DataSource) {
+  if (source.sourceType === '实时采集') return '连接器待接入';
+
+  if (source.verificationStatus !== 'verified' && source.sourceName.includes('Amazon') && ['平台API', '平台数据'].includes(source.sourceType)) {
+    return '连接器待接入';
+  }
+
+  return source.sourceType;
+}
+
 export default function DataSourcePage() {
   const [activeTab, setActiveTab] = useState<DataSourceTabId>('sources');
   const [filterModule, setFilterModule] = useState('全部');
+  const {
+    manifest: collectionManifest,
+    path: collectionManifestPath,
+    status: collectionStatus,
+    totals: collectionTotals,
+    period: collectionPeriod,
+    generatedAtText: collectionGeneratedAt,
+    windowText: collectionWindow,
+    nextScheduleText,
+  } = usePeriodicManifest();
 
   const modules = ['全部', ...Array.from(new Set(dataSources.map(d => d.module)))];
   const filtered = filterModule === '全部' ? dataSources : dataSources.filter(d => d.module === filterModule);
@@ -75,6 +104,14 @@ export default function DataSourcePage() {
     needsReview: dataSources.filter(d => d.verificationStatus === 'needs-review').length,
     verified: dataSources.filter(d => d.verificationStatus === 'verified').length,
   };
+  const requestErrorTotal = (collectionTotals['source-error'] ?? 0) + (collectionTotals['fetch-error'] ?? 0);
+  const connectorRequiredTotal = collectionTotals['connector-required'] ?? collectionManifest?.connectorBacklog?.total ?? 0;
+  const collectionSummary =
+    collectionStatus === 'ready'
+      ? `${collectionPeriod} · ${collectionWindow} · 生成 ${collectionGeneratedAt}`
+      : collectionStatus === 'loading'
+        ? '正在读取半月采集状态'
+        : '未生成 public/periodic-data/latest.json';
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -87,9 +124,41 @@ export default function DataSourcePage() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-[#1d1d1f]">数据来源管理</h1>
-              <p className="text-xs text-[#86868b]">{stats.total}条数据溯源 · {stats.a}A级 · {stats.needsReview}条待复核 · 5套测算模型</p>
+              <p className="text-xs text-[#86868b]">{stats.total}条数据溯源 · {stats.a}A级 · {stats.needsReview}条待复核 · 半月周期 {collectionStatus === 'ready' ? collectionPeriod : '读取中'}</p>
             </div>
           </div>
+        </div>
+
+        {/* 半月数据状态 */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-[#EDE6DF] mb-6">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="w-9 h-9 rounded-xl bg-[#5856d6]/10 flex items-center justify-center">
+              {collectionStatus === 'ready' ? <CheckCircle className="w-4 h-4 text-[#34c759]" /> : <AlertTriangle className="w-4 h-4 text-[#ff9500]" />}
+            </div>
+            <div className="min-w-[260px]">
+              <p className="text-xs font-semibold text-[#1d1d1f]">半月数据状态</p>
+              <p className="text-[10px] text-[#86868b]">{collectionSummary}</p>
+              {collectionStatus === 'ready' ? <p className="text-[10px] text-[#B5AFA8]">{nextScheduleText}</p> : null}
+            </div>
+            {[
+              { label: '来源总数', value: collectionTotals.total ?? stats.total, color: '#1d1d1f' },
+              { label: '公开/本地可验证', value: collectionTotals.ok ?? stats.verified, color: '#34c759' },
+              { label: '连接器待接入', value: connectorRequiredTotal, color: '#ff9500' },
+              { label: '人工补录', value: collectionTotals['manual-required'] ?? 0, color: '#5856d6' },
+              { label: '请求异常', value: requestErrorTotal, color: '#ff3b30' },
+            ].map(item => (
+              <div key={item.label} className="px-3 py-2 rounded-xl bg-[#FBF8F5] border border-[#EDE6DF] min-w-[112px]">
+                <p className="text-[10px] text-[#86868b]">{item.label}</p>
+                <p className="text-lg font-bold" style={{ color: item.color }}>{item.value}</p>
+              </div>
+            ))}
+            <a href={collectionManifestPath} className="ml-auto text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E] transition-colors">
+              查看manifest
+            </a>
+          </div>
+          <p className="mt-3 text-[10px] text-[#86868b] leading-relaxed">
+            服务器出口边界：Fortune BI、Mordor、Mamava/Medela 等外站请求可能返回 403，manifest 保留 source-error，不改写为已验证结论。
+          </p>
         </div>
 
         {/* R19: 内外部数据分布 */}
@@ -205,13 +274,13 @@ export default function DataSourcePage() {
                         <td className="py-2.5 px-3">
                           {ds.sourceUrl ? (
                             <a href={ds.sourceUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-[#5856d6] hover:underline">
-                              {ds.sourceName} <ExternalLink className="w-3 h-3" />
+                              {getDisplaySourceName(ds)} <ExternalLink className="w-3 h-3" />
                             </a>
                           ) : (
-                            <span className="text-xs text-[#86868b]">{ds.sourceName}</span>
+                            <span className="text-xs text-[#86868b]">{getDisplaySourceName(ds)}</span>
                           )}
                         </td>
-                        <td className="py-2.5 px-3"><span className="px-1.5 py-0.5 rounded text-[10px] bg-[#FBF8F5] text-[#86868b]">{ds.sourceType}</span></td>
+                        <td className="py-2.5 px-3"><span className="px-1.5 py-0.5 rounded text-[10px] bg-[#FBF8F5] text-[#86868b]">{getDisplaySourceType(ds)}</span></td>
                         <td className="py-2.5 px-3 text-xs text-[#86868b]">{ds.year}</td>
                         <td className="py-2.5 px-3">
                           <span className="flex items-center gap-1.5">

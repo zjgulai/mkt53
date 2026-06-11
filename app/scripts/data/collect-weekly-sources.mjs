@@ -11,11 +11,18 @@ const defaultMaxAttempts = 2;
 const defaultRetryDelayMs = 500;
 const previewLimitBytes = 4096;
 const retryableHttpStatuses = new Set([408, 425, 429, 500, 502, 503, 504]);
+const dataRefreshTimezone = 'Asia/Shanghai';
+const semiMonthlyCron = '0 9 1,16 * *';
+
+function safeRefreshCadence(value) {
+  return value === 'semi-monthly' ? 'semi-monthly' : 'weekly';
+}
 
 function parseArgs(argv) {
   const options = {
     json: argv.includes('--json'),
     noNetwork: argv.includes('--no-network'),
+    refreshCadence: argv.includes('--semi-monthly') ? 'semi-monthly' : 'weekly',
     writePath: undefined,
     timeoutMs: defaultTimeoutMs,
     maxAttempts: defaultMaxAttempts,
@@ -24,12 +31,78 @@ function parseArgs(argv) {
 
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === '--write') options.writePath = argv[i + 1];
+    if (argv[i] === '--cadence') options.refreshCadence = safeRefreshCadence(argv[i + 1]);
     if (argv[i] === '--timeout-ms') options.timeoutMs = Number(argv[i + 1]);
     if (argv[i] === '--max-attempts') options.maxAttempts = Number(argv[i + 1]);
     if (argv[i] === '--retry-delay-ms') options.retryDelayMs = Number(argv[i + 1]);
   }
 
   return options;
+}
+
+function pad2(value) {
+  return String(value).padStart(2, '0');
+}
+
+function zonedDateParts(input, timeZone = dataRefreshTimezone) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(input);
+  const values = Object.fromEntries(parts.filter((part) => part.type !== 'literal').map((part) => [part.type, Number(part.value)]));
+
+  return {
+    year: values.year,
+    month: values.month,
+    day: values.day,
+  };
+}
+
+function scheduleTimestamp(year, month, day) {
+  return `${year}-${pad2(month)}-${pad2(day)}T09:00:00+08:00`;
+}
+
+export function semiMonthlyPeriod(input = new Date()) {
+  const { year, month, day } = zonedDateParts(input);
+  const half = day <= 15 ? 'H1' : 'H2';
+  const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  const windowStartDay = half === 'H1' ? 1 : 16;
+  const windowEndDay = half === 'H1' ? 15 : lastDay;
+  let nextYear = year;
+  let nextMonth = month;
+  let nextDay = 16;
+
+  if (half === 'H2') {
+    nextDay = 1;
+    nextMonth += 1;
+    if (nextMonth > 12) {
+      nextMonth = 1;
+      nextYear += 1;
+    }
+  }
+
+  return {
+    periodType: 'semi-monthly',
+    period: `${year}-${pad2(month)}-${half}`,
+    windowStart: `${year}-${pad2(month)}-${pad2(windowStartDay)}`,
+    windowEnd: `${year}-${pad2(month)}-${pad2(windowEndDay)}`,
+    timezone: dataRefreshTimezone,
+    nextScheduledAt: scheduleTimestamp(nextYear, nextMonth, nextDay),
+    scheduleCron: semiMonthlyCron,
+  };
+}
+
+function collectionPeriod(refreshCadence, generatedAt) {
+  if (refreshCadence === 'semi-monthly') {
+    return semiMonthlyPeriod(generatedAt);
+  }
+
+  return {
+    periodType: 'weekly',
+    period: isoWeek(generatedAt),
+  };
 }
 
 function safePositiveInteger(value, fallback) {
@@ -253,7 +326,10 @@ export async function collectWeeklySources(options = {}) {
   const maxAttempts = safePositiveInteger(options.maxAttempts, defaultMaxAttempts);
   const retryDelayMs = Number.isFinite(options.retryDelayMs) && options.retryDelayMs >= 0 ? options.retryDelayMs : defaultRetryDelayMs;
   const noNetwork = options.noNetwork ?? false;
-  const generatedAt = new Date().toISOString();
+  const refreshCadence = safeRefreshCadence(options.refreshCadence ?? options.cadence);
+  const generatedAt = options.generatedAt ? new Date(options.generatedAt).toISOString() : new Date().toISOString();
+  const generatedDate = new Date(generatedAt);
+  const periodMetadata = collectionPeriod(refreshCadence, generatedDate);
   const sourceRegistry = extractSourceRegistry(appRoot);
   const audit = analyzeConsistency(appRoot);
   const connectorBacklog = buildConnectorBacklog(sourceRegistry);
@@ -292,9 +368,10 @@ export async function collectWeeklySources(options = {}) {
 
   return {
     schemaVersion: 1,
-    week: isoWeek(new Date(generatedAt)),
+    week: isoWeek(generatedDate),
+    ...periodMetadata,
     generatedAt,
-    refreshCadence: 'weekly',
+    refreshCadence,
     collectionPolicy: {
       publicUrl: publicUrlPolicy,
     },
@@ -303,6 +380,10 @@ export async function collectWeeklySources(options = {}) {
     totals,
     sources,
   };
+}
+
+export async function collectSemiMonthlySources(options = {}) {
+  return collectWeeklySources({ ...options, refreshCadence: 'semi-monthly' });
 }
 
 async function main() {
@@ -318,8 +399,10 @@ async function main() {
   if (options.json || !options.writePath) {
     process.stdout.write(`${JSON.stringify(manifest, null, 2)}\n`);
   } else {
+    const cadenceLabel = manifest.refreshCadence === 'semi-monthly' ? 'semi-monthly' : 'weekly';
     process.stdout.write([
-      `mkt53 weekly source collection`,
+      `mkt53 ${cadenceLabel} source collection`,
+      `period=${manifest.period}`,
       `week=${manifest.week}`,
       `generatedAt=${manifest.generatedAt}`,
       `total=${manifest.totals.total}`,

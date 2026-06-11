@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Baby, Sun, TrendingUp, DollarSign, Sparkles } from 'lucide-react';
+import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 
 const careTrend = [
@@ -79,6 +80,12 @@ export default function BabyCare() {
                 ))}
               </div>
             </div>
+
+            <PageEvidenceNotice
+              sourceIds={['ds-037']}
+              title="婴儿护理数据为展示性推算"
+              description="规模、品牌份额和 Momcozy 占比缺少报告口径、Amazon 类目采集和权重公式，不能作为正式经营结论。"
+            />
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
