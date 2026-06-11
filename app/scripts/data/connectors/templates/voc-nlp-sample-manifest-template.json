@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "connectorId": "review-nlp",
+  "templateName": "voc-nlp-sample-manifest-template",
+  "privateData": true,
+  "publicBundleAllowed": false,
+  "gitAllowed": false,
+  "recommendedLocalPrivateSampleManifestPath": "configs/private/voc-nlp-sample-manifest.json",
+  "recommendedServerPrivateSampleManifestPath": "/opt/mkt53/private/voc-nlp-sample-manifest.json",
+  "sampleManifest": {
+    "datasetManifestId": "",
+    "collectionWindowStart": "YYYY-MM-DD",
+    "collectionWindowEnd": "YYYY-MM-DD",
+    "sourceIds": [
+      "ds-021",
+      "ds-030",
+      "ds-032",
+      "ds-033"
+    ],
+    "totalReviewSampleCount": 0,
+    "labeledSampleCount": 0,
+    "sourceSampleCounts": {
+      "ds-021": 0,
+      "ds-030": 0,
+      "ds-032": 0,
+      "ds-033": 0
+    },
+    "languages": [],
+    "keywordDictionaryVersion": "",
+    "productMappingStatus": "ready",
+    "piiHandlingStatus": "approved",
+    "containsRawReviewText": false,
+    "rawReviewStorage": {
+      "locationType": "private-object-store-or-private-directory",
+      "redactedPath": "",
+      "gitAllowed": false,
+      "publicBundleAllowed": false
+    },
+    "note": "This manifest records counts, windows, versions, and private storage references only. Do not paste review text or customer identifiers here."
+  }
+}

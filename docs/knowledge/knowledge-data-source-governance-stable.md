@@ -150,3 +150,11 @@ Amazon 真实连接器实现前必须通过 `npm run data:connector:amazon:readi
 私有输入交叉审计通过 `npm run data:connector:amazon:private:audit -- --private-dir <private-dir>` 执行。该审计只输出映射覆盖率、无效行计数、缺失 readiness 字段、清单缺项、source id 和字段名；不得输出真实 ASIN、SKU、授权记录、owner、竞品明细或凭据值。服务器审计报告路径是 `/opt/mkt53/private/amazon-commerce-private-input-audit.json`，权限保持 `600`。报告状态不是 `ready-for-readiness-gate` 时，不得运行真实 Amazon readiness gate，更不得实现或调度真实平台采集。
 
 服务器半月刷新会在公开静态包发布前尝试更新私有输入交叉审计报告。该 sidecar 只写 `/opt/mkt53/private`，不得写入 `/opt/mkt53/html`；默认不因私有输入缺项或审计脚本异常阻塞公开 manifest 刷新。只有显式设置 `MKT53_PRIVATE_AUDIT_REQUIRED=1` 时，半月任务才把私有审计失败升级为 hard gate。
+
+Review / VOC NLP P0 当前交付物是 `npm run data:connector:voc-nlp:dry-run`。该脚本从 connector backlog 动态识别 `ds-021`、`ds-030`、`ds-032`、`ds-033`，输出评论样本、情感分数、主题聚类和人工复核样本四类快照契约；`networkCalls=0`、`modelCalls=0`、`businessDataWrites=0`，不读取评论原文，不调用模型，不提升任何来源复核状态。
+
+VOC NLP 私有 readiness gate 是 `npm run data:connector:voc-nlp:readiness`。该 gate 只检查授权记录、采集窗口、source id 覆盖、样本量、标注样本量、模型版本、关键词词典版本、产品映射状态、人工一致率、PII 处理、合规复核和快照范围。状态不是 `ready-for-authorized-voc-nlp-pipeline-implementation` 时，不得实现真实评论采集、NLP 运行或页面快照绑定。
+
+VOC NLP readiness 私有路径是 `configs/private/voc-nlp-readiness.json` 或服务器 `/opt/mkt53/private/voc-nlp-readiness.json`。样本 manifest 私有路径是 `configs/private/voc-nlp-sample-manifest.json` 或服务器 `/opt/mkt53/private/voc-nlp-sample-manifest.json`。模板位于 `app/scripts/data/connectors/templates/voc-nlp-readiness-template.json` 和 `app/scripts/data/connectors/templates/voc-nlp-sample-manifest-template.json`，可以提交；填入真实授权记录、样本量、模型评估、人工复核或私有存储引用后的文件不得进入 `public`、`src`、测试夹具、git 历史或前端构建产物。
+
+VOC NLP 最低 readiness 阈值当前固定为：总评论样本不少于 1000，人工标注样本不少于 100，人工一致率不少于 0.75，且每个 Review NLP source id 都必须有非零样本覆盖。通过 gate 只表示可以进入授权连接器实现，不表示已获得真实 VOC 结论；页面仍必须维持 `needs-review` 或 `example` 状态，直到真实快照、模型评估和人工复核记录完成并被 source registry 复核。
