@@ -5,7 +5,7 @@ module: data-governance
 topic: source-registry
 status: stable
 created: 2026-05-31
-updated: 2026-06-02
+updated: 2026-06-11
 owner: self
 source: human+ai
 ---
@@ -65,7 +65,7 @@ source: human+ai
 3. 海关、CRM、社媒、Amazon、AI 模型数据缺少真实接入记录时，不得从 `example` 或 `needs-review` 升级为 `verified`。
 4. 页面文案不得把 `needs-review` 显示为“已验证原文”。
 5. 新增来源必须补测试，至少覆盖 id 唯一性和关键风险状态。
-6. 周度采集脚本只能记录公开 URL 元数据和样本哈希；受限平台、内部系统、AI/NLP 输出必须标记为 `connector-required` 或 `manual-required`。
+6. 半月采集脚本只能记录公开 URL 元数据和样本哈希；受限平台、内部系统、AI/NLP 输出必须标记为 `connector-required` 或 `manual-required`。
 7. 含静态数组数据的页面必须至少有一条 `sourceRegistry.page` 绑定；新增页面不得重新制造未绑定静态数据。
 8. 不同地域、样本、机构或调查方法的组合来源必须拆分为独立 registry 条目；禁止用一个 `sourceName` 合并成无法复核的混合口径。
 
@@ -102,9 +102,11 @@ npm run test:e2e
 | 平台采集数据 | 显示采集时间、渠道范围、授权或合规前提 |
 | 内部系统数据 | 显示系统名、时间窗口、版本或快照 |
 
-## 周度采集 manifest
+## 半月采集 manifest
 
-`npm run data:refresh:weekly` 会生成 `app/public/weekly-data/latest.json`。该文件用于 `/data` 页面展示本周采集状态。禁止回退到 `app/public/data/`，否则会与 React Router 的 `/data` 页面冲突，并在生产 nginx 下触发目录 403。
+`npm run data:refresh:semi-monthly` 会生成 `app/public/periodic-data/latest.json`。该文件用于 `/data` 页面展示半月采集状态。脚本会同步写入 `app/public/weekly-data/latest.json` 作为兼容路径。禁止回退到 `app/public/data/`，否则会与 React Router 的 `/data` 页面冲突，并在生产 nginx 下触发目录 403。
+
+2026-06-11 生产 manifest 已验证：`period=2026-06-H1`，`refreshCadence=semi-monthly`，来源总数 45，`ok=10`，`connector-required=23`，`manual-required=12`，`issueCount=0`。这些计数只描述来源接入状态，不代表 45 条来源都已完成业务数值复核。
 
 | 状态 | 处理规则 |
 |---|---|
@@ -113,9 +115,9 @@ npm run test:e2e
 | `connector-required` | 需要授权连接器，未接入前不得声称已采集 |
 | `manual-required` | 需要采购报告、人工上传或补充 URL |
 
-`sourceType=代码资产` 的来源走 `local-file-check`，用当前 app 副本里的文件存在性、文件大小和 SHA-256 哈希作为可用性证据。此类来源可以保留 GitHub URL 作为人工阅读入口，但周度采集不得依赖 GitHub blob 网络请求；本地文件缺失时才应进入 `source-error`。
+`sourceType=代码资产` 的来源走 `local-file-check`，用当前 app 副本里的文件存在性、文件大小和 SHA-256 哈希作为可用性证据。此类来源可以保留 GitHub URL 作为人工阅读入口，但半月采集不得依赖 GitHub blob 网络请求；本地文件缺失时才应进入 `source-error`。
 
-`connector-required` 会进入 `app/public/weekly-data/connectors.json`。该文件只代表授权连接器接入队列，包含 `requiredAccess`、`outputContract`、`stopCondition` 和 `blockedReason`；它不是业务数据快照，不能作为真实采集成功证据。
+`connector-required` 会进入 `app/public/periodic-data/connectors.json`，并同步进入 `app/public/weekly-data/connectors.json` 兼容路径。该文件只代表授权连接器接入队列，包含 `requiredAccess`、`outputContract`、`stopCondition` 和 `blockedReason`；它不是业务数据快照，不能作为真实采集成功证据。
 
 公开 URL 采集默认不是单次请求判定。脚本会记录 `collectionPolicy.publicUrl`、每条公开来源的 `checkAttemptCount`、`attempts` 和 `statusStability`；只有重试后仍失败时，才进入 `fetch-error` 或可重试 HTTP 的 `source-error`。`403`、`404` 等明确权限或链接错误仍直接保留为 `source-error`，避免用重试掩盖真实来源问题。
 
@@ -137,4 +139,4 @@ Amazon 真实连接器实现前必须通过 `npm run data:connector:amazon:readi
 
 私有输入交叉审计通过 `npm run data:connector:amazon:private:audit -- --private-dir <private-dir>` 执行。该审计只输出映射覆盖率、无效行计数、缺失 readiness 字段、清单缺项、source id 和字段名；不得输出真实 ASIN、SKU、授权记录、owner、竞品明细或凭据值。服务器审计报告路径是 `/opt/mkt53/private/amazon-commerce-private-input-audit.json`，权限保持 `600`。报告状态不是 `ready-for-readiness-gate` 时，不得运行真实 Amazon readiness gate，更不得实现或调度真实平台采集。
 
-服务器周度刷新会在公开静态包发布前尝试更新私有输入交叉审计报告。该 sidecar 只写 `/opt/mkt53/private`，不得写入 `/opt/mkt53/html`；默认不因私有输入缺项或审计脚本异常阻塞公开 manifest 刷新。只有显式设置 `MKT53_PRIVATE_AUDIT_REQUIRED=1` 时，周度任务才把私有审计失败升级为 hard gate。
+服务器半月刷新会在公开静态包发布前尝试更新私有输入交叉审计报告。该 sidecar 只写 `/opt/mkt53/private`，不得写入 `/opt/mkt53/html`；默认不因私有输入缺项或审计脚本异常阻塞公开 manifest 刷新。只有显式设置 `MKT53_PRIVATE_AUDIT_REQUIRED=1` 时，半月任务才把私有审计失败升级为 hard gate。

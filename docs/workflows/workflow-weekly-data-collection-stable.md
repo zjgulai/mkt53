@@ -5,12 +5,16 @@ module: data-collection
 topic: weekly-refresh
 status: stable
 created: 2026-06-02
-updated: 2026-06-02
+updated: 2026-06-11
 owner: self
 source: human+ai
 ---
 
 # 周度数据采集刷新工作流
+
+## 当前定位
+
+自 2026-06-11 起，正式数据刷新节奏切换为半月一次，主工作流见 `docs/workflows/workflow-semi-monthly-data-collection-stable.md`。本文件保留为旧命令和 `public/weekly-data/*` 兼容说明，不再代表当前计划频率。
 
 ## 当前结论
 
@@ -25,7 +29,7 @@ source: human+ai
 | critical issue | 0 |
 | 静态数据但未绑定 registry 的页面 | 0 |
 
-当前没有后端数据库或常驻任务。周度刷新采用“脚本采集 → 生成静态 manifest → 构建部署”的方式，不把受限来源伪装成已采集数据。
+当前没有后端数据库或常驻任务。历史周度刷新曾采用“脚本采集 → 生成静态 manifest → 构建部署”的方式；当前生产节奏已切到半月刷新，不把受限来源伪装成已采集数据。
 
 ## 脚本入口
 
@@ -45,8 +49,8 @@ npm run data:connector:amazon:readiness:checklist
 
 | 文件 | 用途 |
 |---|---|
-| `public/weekly-data/latest.json` | 前端可读取的最新周度采集 manifest |
-| `public/weekly-data/connectors.json` | 授权连接器接入 backlog，按连接器类型分组 |
+| `public/weekly-data/latest.json` | 兼容路径 manifest，当前内容由半月刷新脚本同步写入 |
+| `public/weekly-data/connectors.json` | 兼容路径 connector backlog，当前内容由半月刷新脚本同步写入 |
 | `tmp/data-collection/audit-latest.json` | 本次一致性审计结果 |
 | `tmp/data-collection/runs/<week>.json` | 本地周度运行留痕 |
 | `tmp/data-collection/runs/<week>-connectors.json` | 本地连接器 backlog 留痕 |
@@ -70,7 +74,9 @@ npm run data:connector:amazon:readiness:checklist
 
 公开 URL 默认采集策略：`timeoutMs=8000`、`maxAttempts=2`、`retryDelayMs=500`。脚本只对 `fetch-error` 和 `408/425/429/500/502/503/504` 等瞬态 HTTP 状态重试；`403`、`404` 等明确权限或链接问题不重复请求。manifest 的 `collectionPolicy.publicUrl` 会记录当次策略，每个公开 URL 结果会记录 `checkAttemptCount`、`attempts` 和 `statusStability`，用于区分一次成功、重试恢复和重试后仍失败。
 
-## 周度部署
+## 历史周度部署（兼容）
+
+以下命令只保留给历史回滚分析和旧路径兼容，不是当前生产调度入口。当前生产发布入口是 `npm run data:deploy:semi-monthly`。
 
 开发机人工触发远程部署：
 
@@ -93,7 +99,7 @@ cd /opt/mkt53/automation/app
 npm run data:publish:weekly:local
 ```
 
-该命令只写入 `MKT53_STATIC_HTML_DIR`，默认是 `/opt/mkt53/html`，不需要 SSH key，不触碰宿主 landing 或其他应用。服务器存在 `MKT53_AMAZON_PRIVATE_DIR` 时，会额外生成 Amazon 私有输入交叉审计报告；默认目录是 `/opt/mkt53/private`，默认报告路径是 `/opt/mkt53/private/amazon-commerce-private-input-audit.json`。私有审计失败默认只写入 cron 日志并继续公开静态刷新；只有设置 `MKT53_PRIVATE_AUDIT_REQUIRED=1` 时，才把私有审计失败作为周度任务硬失败。
+该命令只写入 `MKT53_STATIC_HTML_DIR`，默认是 `/opt/mkt53/html`，不需要 SSH key，不触碰宿主 landing 或其他应用。服务器存在 `MKT53_AMAZON_PRIVATE_DIR` 时，会额外生成 Amazon 私有输入交叉审计报告；默认目录是 `/opt/mkt53/private`，默认报告路径是 `/opt/mkt53/private/amazon-commerce-private-input-audit.json`。私有审计失败默认只写入 cron 日志并继续公开静态刷新；只有设置 `MKT53_PRIVATE_AUDIT_REQUIRED=1` 时，才把私有审计失败作为任务硬失败。
 
 需要调整公开 URL 稳定性策略时，直接把参数传给刷新命令：
 
@@ -102,7 +108,9 @@ cd /opt/mkt53/automation/app
 npm run data:publish:weekly:local -- --timeout-ms 12000 --max-attempts 3 --retry-delay-ms 1000
 ```
 
-## 服务器 cron
+## 历史 weekly cron（不要新装）
+
+当前服务器已安装半月 cron，见 `docs/workflows/workflow-semi-monthly-data-collection-stable.md`。除非明确执行回滚，不要再安装 weekly cron。
 
 只在 mkt53 专属自动化目录安装：
 
@@ -112,7 +120,7 @@ bash scripts/data/install-weekly-cron.sh --print
 bash scripts/data/install-weekly-cron.sh
 ```
 
-默认计划：每周一 03:15 执行 `npm run data:publish:weekly:local`。如需调整：
+历史默认计划：每周一 03:15 执行 `npm run data:publish:weekly:local`。如需回滚并调整：
 
 ```bash
 MKT53_WEEKLY_CRON="30 2 * * 1" bash scripts/data/install-weekly-cron.sh
@@ -120,7 +128,7 @@ MKT53_WEEKLY_CRON="30 2 * * 1" bash scripts/data/install-weekly-cron.sh
 
 ## 当前连接器实现队列
 
-静态页面已全部绑定 `source-registry.ts`。`npm run data:refresh:weekly` 会根据 `connector-required` 来源生成 `connectorBacklog` 和 `connectors.json`。下一阶段不再是补 source id，而是补真实连接器、采集窗口和复核证据：
+静态页面已全部绑定 `source-registry.ts`。当前半月刷新会根据 `connector-required` 来源生成 `connectorBacklog` 和 `connectors.json`，并同步写入 `weekly-data` 兼容路径。下一阶段不再是补 source id，而是补真实连接器、采集窗口和复核证据：
 
 | 连接器类型 | 主要来源 | 优先级 |
 |---|---|---|
@@ -226,14 +234,14 @@ npm run data:connector:amazon:private:audit -- --private-dir /opt/mkt53/private 
 
 交叉审计同时读取 `amazon-commerce-mapping.json`、`amazon-commerce-readiness.json` 和 `amazon-commerce-readiness-checklist.md`。报告状态为 `blocked` 时，只能继续补私有输入；状态为 `ready-for-readiness-gate` 时，才进入 `npm run data:connector:amazon:readiness`。报告文件权限必须保持 `600`，目录权限必须保持 `700`。报告不得进入 `/opt/mkt53/html`、`app/public/`、测试夹具或 git。
 
-周度服务器刷新也会调用同一私有审计：
+半月服务器刷新也会调用同一私有审计：
 
 ```bash
 cd /opt/mkt53/automation/app
 MKT53_AMAZON_PRIVATE_DIR=/opt/mkt53/private npm run data:publish:weekly:local
 ```
 
-如果业务要求周度任务在私有审计失败时停止：
+如果业务要求半月任务在私有审计失败时停止：
 
 ```bash
 cd /opt/mkt53/automation/app

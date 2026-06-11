@@ -5,7 +5,7 @@ module: deployment
 topic: static-deploy
 status: stable
 created: 2026-05-31
-updated: 2026-06-02
+updated: 2026-06-11
 owner: self
 source: human+ai
 ---
@@ -49,29 +49,45 @@ rsync -az --delete dist/ ubuntu@101.34.52.232:/opt/mkt53/html/
 
 `rsync --delete` 会让远端静态目录与本地 `dist/` 保持一致。执行前必须确认当前构建产物来自已通过门禁的代码。
 
-## 周度数据刷新部署
+## 半月数据刷新部署
 
-周度数据刷新不改 nginx，不改宿主 landing，只刷新 mkt53 静态构建中的 `public/weekly-data/latest.json`：
+半月数据刷新不改 nginx，不改宿主 landing，只刷新 mkt53 静态构建中的 `public/periodic-data/latest.json`，并同步写入 `public/weekly-data/latest.json` 作为兼容路径：
 
 ```bash
 cd app
-npm run data:deploy:weekly
+npm run data:deploy:semi-monthly
 ```
 
-该命令会先运行 `npm run data:refresh:weekly`，再执行 `deploy:prod`、`smoke:prod` 和 `test:e2e:prod`。受限来源会保留为 `connector-required` 或 `manual-required`，不能用脚本输出替代真实授权采集。
+该命令会先运行 `npm run data:refresh:semi-monthly`，再执行 `deploy:prod`、`smoke:prod` 和 `test:e2e:prod`。受限来源会保留为 `connector-required` 或 `manual-required`，不能用脚本输出替代真实授权采集。
 
 服务器 cron 使用本地静态发布入口：
 
 ```bash
 cd /opt/mkt53/automation/app
-npm run data:publish:weekly:local
+npm run data:publish:semi-monthly:local
 ```
 
 该入口默认写入 `/opt/mkt53/html/`，不依赖 SSH key，不触碰 `ai_video_nginx`、宿主 landing 或其他应用目录。
 
+## 最新生产验证
+
+2026-06-11 半月数据发布已完成生产回归：
+
+| 检查项 | 结果 |
+|---|---|
+| 发布命令 | `npm run data:deploy:semi-monthly` 通过 |
+| 生产 smoke | `npm run smoke:prod` 通过 |
+| 生产 E2E | `npm run test:e2e:prod` 14/14 通过 |
+| 生产 manifest | `period=2026-06-H1`，`refreshCadence=semi-monthly`，`issueCount=0` |
+| 证据边界页面 | `/#/ai-assistant`、`/#/ai-gallery`、`/#/reports`、`/#/report/r009` 已进入生产 E2E |
+| nginx | `docker exec ai_video_nginx nginx -t` 通过 |
+| 首页 | `https://mkt.lute-tlz-dddd.top` 返回 HTTP/2 200 |
+
+本次发布只同步 `/opt/mkt53/html/`，未修改宿主 landing、nginx 配置、compose 配置或其他应用目录。
+
 ## 宿主导航页入口
 
-宿主域名 `https://lute-tlz-dddd.top` 是共享静态 landing page，不属于 mkt53 的 Vite 构建产物。2026-06-02 线上确认：当前页面是多服务卡片网格，包含 12 个服务入口，其中 mkt 卡片进入本项目：
+宿主域名 `https://lute-tlz-dddd.top` 是共享静态 landing page，不属于 mkt53 的 Vite 构建产物。2026-06-11 线上回归确认：当前页面是多服务卡片网格，包含 12 个服务入口，其中 mkt 卡片进入本项目：
 
 | 字段 | 当前值 |
 |---|---|
