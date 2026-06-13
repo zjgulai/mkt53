@@ -159,6 +159,8 @@ Amazon 真实连接器实现前必须通过 `npm run data:connector:amazon:readi
 
 私有输入占位只能通过 `npm run data:connector:amazon:private:bootstrap -- --target-dir <private-dir>` 创建。该命令只复制空 mapping/readiness 模板、生成 readiness checklist，并设置 `700/600` 权限；默认不覆盖已有私有文件。如果服务器已经存在真实映射、readiness record 或人工清单，不得使用 `--force`。占位文件和清单仍属于私有材料，不能提交到 git、不能进入前端静态目录，也不能被用作业务数据证据。
 
+ASIN/SKU 逐行填报草稿通过 `npm run data:connector:amazon:mapping:scaffold -- --target-dir <private-dir>` 生成。该命令把七个 Amazon source id 展开为 67 行空白映射，写入 `amazon-commerce-mapping-fill-draft.json` 和 `amazon-commerce-mapping-fill-draft.csv`，默认不覆盖已有草稿。草稿只能留在 private 路径；填入真实 ASIN、SKU、品牌、产品名、品类、更新时间和 owner 后，先以草稿路径运行 `mapping:validate` 和 `mapping:coverage`。只有覆盖率 ready 后，才允许把通过校验的草稿作为最终 `amazon-commerce-mapping.json` 输入 private audit。
+
 人工填报清单通过 `npm run data:connector:amazon:readiness:checklist` 生成。清单只来自公开模板，列出七个 Amazon source id 的最低映射数、mapping 必填字段、readiness 必填字段、owner/合规复核和安全边界。服务器私有清单路径是 `/opt/mkt53/private/amazon-commerce-readiness-checklist.md`；该文件权限保持 `600`，不得进入 `/opt/mkt53/html`、git 或前端构建产物。
 
 私有输入交叉审计通过 `npm run data:connector:amazon:private:audit -- --private-dir <private-dir>` 执行。该审计只输出映射覆盖率、无效行计数、缺失 readiness 字段、清单缺项、source id 和字段名；不得输出真实 ASIN、SKU、授权记录、owner、竞品明细或凭据值。服务器审计报告路径是 `/opt/mkt53/private/amazon-commerce-private-input-audit.json`，权限保持 `600`。报告状态不是 `ready-for-readiness-gate` 时，不得运行真实 Amazon readiness gate，更不得实现或调度真实平台采集。

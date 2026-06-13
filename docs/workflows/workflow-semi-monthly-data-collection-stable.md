@@ -167,6 +167,18 @@ npm run data:connector:amazon:private:bootstrap -- --target-dir /opt/mkt53/priva
 
 该命令创建 `amazon-commerce-mapping.json`、`amazon-commerce-readiness.json`、`amazon-commerce-readiness-checklist.md` 和 `reports/`，目录权限为 `700`，文件权限为 `600`。默认不覆盖已有私有文件；服务器已有真实映射或 readiness record 时不得使用 `--force`。
 
+生成 67 行 ASIN/SKU 私有填报草稿：
+
+```bash
+cd app
+npm run data:connector:amazon:mapping:scaffold -- --target-dir configs/private
+
+cd /opt/mkt53/automation/app
+npm run data:connector:amazon:mapping:scaffold -- --target-dir /opt/mkt53/private
+```
+
+该命令只生成 `amazon-commerce-mapping-fill-draft.json` 和 `amazon-commerce-mapping-fill-draft.csv`，不覆盖最终 `amazon-commerce-mapping.json`。草稿按七个 Amazon source id 展开为 67 行空白映射，权限为 `600`，只能由业务/数据 owner 在私有目录中填写。填完后先对草稿执行 `mapping:validate` 和 `mapping:coverage`；覆盖率 ready 后，再把通过校验的草稿作为最终 `amazon-commerce-mapping.json` 输入 private audit。
+
 私有输入交叉审计：
 
 ```bash

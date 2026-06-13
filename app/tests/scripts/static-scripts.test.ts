@@ -62,6 +62,7 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:amazon:mapping:template']).toContain('--print-mapping-template');
     expect(packageJson.scripts['data:connector:amazon:mapping:coverage']).toContain('--coverage-report');
     expect(packageJson.scripts['data:connector:amazon:mapping:archive']).toContain('--archive-coverage-report');
+    expect(packageJson.scripts['data:connector:amazon:mapping:scaffold']).toContain('scaffold-amazon-mapping-fill-draft.mjs');
     expect(packageJson.scripts['data:connector:amazon:private:bootstrap']).toContain('bootstrap-amazon-private-inputs.mjs');
     expect(packageJson.scripts['data:connector:amazon:private:audit']).toContain('amazon-commerce-private-input-audit.mjs');
     expect(packageJson.scripts['data:connector:amazon:readiness']).toContain('--readiness-gate');
@@ -129,6 +130,7 @@ describe('production helper scripts', () => {
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/source-tasks.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/public-evidence-seeds.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-dry-run.mjs'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/scaffold-amazon-mapping-fill-draft.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/bootstrap-amazon-private-inputs.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-private-input-audit.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-readiness-checklist.mjs'), constants.X_OK)).not.toThrow();
@@ -1180,6 +1182,90 @@ describe('production helper scripts', () => {
       expect(audit.status).toBe('blocked');
       expect(audit.checklist).toMatchObject({ status: 'ready', missingChecklistItems: [] });
       expect(audit.blockers.some((blocker) => blocker.scope === 'checklist' && blocker.type === 'missing-checklist-file')).toBe(false);
+    } finally {
+      rmSync(privateDir, { recursive: true, force: true });
+    }
+  });
+
+  it('scaffolds a private Amazon mapping fill draft without business values', () => {
+    const privateDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-private-'));
+
+    try {
+      const output = execFileSync(
+        'node',
+        ['scripts/data/connectors/scaffold-amazon-mapping-fill-draft.mjs', '--target-dir', privateDir],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+        },
+      );
+      const scaffold = JSON.parse(output) as {
+        rowCount: number;
+        sourceCoverage: Array<{ sourceId: string; requiredRows: number; draftRows: number }>;
+        files: {
+          json: { path: string; status: string; overwritten: boolean; mode: string };
+          csv: { path: string; status: string; overwritten: boolean; mode: string };
+        };
+        safety: { publicBundleAllowed: boolean; gitAllowed: boolean; containsBusinessAsinSkuValues: boolean };
+        nextCommands: string[];
+      };
+
+      expect(output).not.toMatch(/clientSecret|refreshToken|accessToken|password|privateKey|authorizationHeader/i);
+      expect(scaffold.rowCount).toBe(67);
+      expect(scaffold.sourceCoverage).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ sourceId: 'ds-007', requiredRows: 15, draftRows: 15 }),
+          expect.objectContaining({ sourceId: 'ds-009', requiredRows: 25, draftRows: 25 }),
+          expect.objectContaining({ sourceId: 'ds-010', requiredRows: 1, draftRows: 1 }),
+          expect.objectContaining({ sourceId: 'ds-019', requiredRows: 8, draftRows: 8 }),
+          expect.objectContaining({ sourceId: 'ds-037', requiredRows: 5, draftRows: 5 }),
+          expect.objectContaining({ sourceId: 'ds-038', requiredRows: 8, draftRows: 8 }),
+          expect.objectContaining({ sourceId: 'ds-039', requiredRows: 5, draftRows: 5 }),
+        ]),
+      );
+      expect(scaffold.files.json).toMatchObject({ status: 'created', overwritten: false, mode: '600' });
+      expect(scaffold.files.csv).toMatchObject({ status: 'created', overwritten: false, mode: '600' });
+      expect(statSync(privateDir).mode & 0o777).toBe(0o700);
+      expect(statSync(scaffold.files.json.path).mode & 0o777).toBe(0o600);
+      expect(statSync(scaffold.files.csv.path).mode & 0o777).toBe(0o600);
+      expect(scaffold.safety).toMatchObject({
+        publicBundleAllowed: false,
+        gitAllowed: false,
+        containsBusinessAsinSkuValues: false,
+      });
+      expect(scaffold.nextCommands.some((command) => command.includes('data:connector:amazon:mapping:validate'))).toBe(true);
+
+      const jsonDraft = JSON.parse(readFileSync(scaffold.files.json.path, 'utf8')) as {
+        privateData: boolean;
+        publicBundleAllowed: boolean;
+        gitAllowed: boolean;
+        mappings: Array<{ sourceId: string; asin: string; sku: string; mappingOwner: string; mappingUpdatedAt: string }>;
+      };
+      const csvDraft = readFileSync(scaffold.files.csv.path, 'utf8');
+      const ds009Rows = jsonDraft.mappings.filter((mapping) => mapping.sourceId === 'ds-009');
+
+      expect(jsonDraft).toMatchObject({ privateData: true, publicBundleAllowed: false, gitAllowed: false });
+      expect(jsonDraft.mappings).toHaveLength(67);
+      expect(ds009Rows).toHaveLength(25);
+      expect(jsonDraft.mappings.every((mapping) => mapping.asin === '' && mapping.sku === '' && mapping.mappingOwner === '')).toBe(true);
+      expect(jsonDraft.mappings.every((mapping) => mapping.mappingUpdatedAt === 'YYYY-MM-DD')).toBe(true);
+      expect(csvDraft.trimEnd().split('\n')).toHaveLength(68);
+      expect(csvDraft).toContain('sourceId,site,marketplaceId,rowNumberWithinSource');
+
+      const secondOutput = execFileSync(
+        'node',
+        ['scripts/data/connectors/scaffold-amazon-mapping-fill-draft.mjs', '--target-dir', privateDir],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+        },
+      );
+      const secondScaffold = JSON.parse(secondOutput) as {
+        files: { json: { status: string; overwritten: boolean }; csv: { status: string; overwritten: boolean } };
+      };
+
+      expect(secondScaffold.files.json).toMatchObject({ status: 'exists', overwritten: false });
+      expect(secondScaffold.files.csv).toMatchObject({ status: 'exists', overwritten: false });
     } finally {
       rmSync(privateDir, { recursive: true, force: true });
     }
