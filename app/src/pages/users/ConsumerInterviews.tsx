@@ -262,7 +262,7 @@ export default function ConsumerInterviews() {
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">NPS净推荐值分布</h3>
                 <p className="text-[10px] text-[#86868b] mb-3">综合NPS = +49（推荐者60% - 批评者10.7%）· 行业平均+45</p>
                 <div className="h-56">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <PieChart>
                       <Pie data={npsDistribution} cx="50%" cy="50%" innerRadius={45} outerRadius={75} paddingAngle={4} dataKey="count">
                         {npsDistribution.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.color} />))}
@@ -279,7 +279,7 @@ export default function ConsumerInterviews() {
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">多品牌满意度对比雷达</h3>
                 <p className="text-[10px] text-[#86868b] mb-3">8维度评估 · Momcozy在性价比(4.8)和便携性(4.7)显著领先</p>
                 <div className="h-56">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <RadarChart data={satisfactionRadar} cx="50%" cy="50%" outerRadius="70%">
                       <PolarGrid stroke="#EDE6DF" />
                       <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 9, fill: '#86868b' }} />
@@ -301,7 +301,7 @@ export default function ConsumerInterviews() {
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">Kano需求优先级矩阵</h3>
                 <p className="text-[10px] text-[#86868b] mb-3">横轴=实现难度 · 纵轴=用户影响力 · 绿色优先投入</p>
                 <div className="h-56 relative">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <ScatterChart>
                       <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                       <XAxis type="number" dataKey="x" name="实现难度" tick={{ fontSize: 9, fill: '#86868b' }} axisLine={false} tickLine={false} label={{ value: '实现难度 →', position: 'bottom', fontSize: 9, fill: '#86868b' }} />

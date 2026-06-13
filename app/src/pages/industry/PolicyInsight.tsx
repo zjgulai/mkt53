@@ -182,7 +182,7 @@ export default function PolicyInsight() {
               <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-3">合规状态分布</h3>
                 <div className="h-48">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <PieChart>
                       <Pie data={riskDist} cx="50%" cy="50%" innerRadius={40} outerRadius={65} paddingAngle={3} dataKey="value">
                         {riskDist.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.color} />))}

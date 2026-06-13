@@ -229,7 +229,7 @@ export default function StoreInterviews() {
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">门店类型运营能力雷达</h3>
                 <p className="text-[10px] text-[#86868b] mb-3">8维度对比 · 快闪店在转化率和社交传播领先，旗舰店在坪效和满意度最强</p>
                 <div className="h-56">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <RadarChart data={storeRadar} cx="50%" cy="50%" outerRadius="70%">
                       <PolarGrid stroke="#EDE6DF" />
                       <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 9, fill: '#86868b' }} />
@@ -248,7 +248,7 @@ export default function StoreInterviews() {
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">LA旗舰店客流与转化趋势</h3>
                 <p className="text-[10px] text-[#86868b] mb-3">2024-12 ~ 2025-06 · 客流增长57.5%，转化率从12.5%提升至17.2%</p>
                 <div className="h-56">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <AreaChart data={monthlyTraffic}>
                       <defs>
                         <linearGradient id="storeVisitors" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#C25B6E" stopOpacity={0.15}/><stop offset="95%" stopColor="#C25B6E" stopOpacity={0}/></linearGradient>

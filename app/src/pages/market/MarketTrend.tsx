@@ -159,7 +159,7 @@ export default function MarketTrend() {
                   <h3 className="text-sm font-semibold text-[#1d1d1f]">波特五力模型</h3>
                 </div>
                 <div className="h-56">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <RadarChart data={porterForces} cx="50%" cy="50%" outerRadius="70%">
                       <PolarGrid stroke="#EDE6DF" />
                       <PolarAngleAxis dataKey="factor" tick={{ fontSize: 9, fill: '#86868b' }} />
@@ -215,7 +215,7 @@ export default function MarketTrend() {
                 <span className="text-[10px] text-[#86868B] bg-[#FBF8F5] px-2 py-1 rounded-lg ml-auto">渗透率 %</span>
               </div>
               <div className="h-56">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                   <AreaChart data={techTrendData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                     <XAxis dataKey="year" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />

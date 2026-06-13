@@ -5,7 +5,7 @@ module: project
 topic: readme
 status: stable
 created: 2026-05-31
-updated: 2026-06-12
+updated: 2026-06-13
 owner: self
 source: human+ai
 ---
@@ -19,6 +19,7 @@ Momcozy 母婴品牌全球市场分析看板，面向内部团队的数据洞察
 | 线上地址 | `https://mkt.lute-tlz-dddd.top` |
 | 宿主入口 | `https://lute-tlz-dddd.top`，服务卡片「市场洞察工作台」进入本项目 |
 | 应用目录 | `app/` |
+| 前端运行栈 | React 19 + Vite 8 + Recharts 3.8.1 |
 | 生产静态目录 | `/opt/mkt53/html/` |
 | 宿主 landing 文件 | `/opt/ai-video/deploy/lighthouse/landing/index.html` |
 | 质量门禁 | `.github/workflows/quality-gate.yml` |

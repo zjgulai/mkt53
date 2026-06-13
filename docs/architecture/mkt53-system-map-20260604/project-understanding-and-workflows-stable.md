@@ -5,7 +5,7 @@ module: mkt53
 topic: system-map-and-workflows
 status: stable
 created: 2026-06-04
-updated: 2026-06-12
+updated: 2026-06-13
 owner: self
 source: human+ai
 ---
@@ -18,7 +18,7 @@ mkt53 当前不是单一静态展示站，而是一个“Momcozy 市场洞察工
 
 当前系统事实：
 
-- 前端：React 19 + TypeScript + Vite 7 + React Router v7。
+- 前端：React 19 + TypeScript + Vite 8 + React Router v7 + Recharts 3.8.1。
 - 路由：`App.tsx` 中定义 46 条路由，其中业务页面覆盖市场、竞争、用户、行业、自我洞察、AI 助手、AI 图库、报告、数据管理、数据来源管理。
 - 数据资产：`DataManage.tsx` 中维护 6 大数据模块、27 张数据表、字段字典、治理信息和数据血缘。
 - 来源注册：`source-registry.ts` 中维护 45 个来源条目。

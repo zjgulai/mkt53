@@ -308,7 +308,7 @@ export default function IndustryPage() {
                     <div>
                       <h4 className="text-xs text-[#86868b] mb-2">功能需求占比结构</h4>
                       <div className="h-56">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                           <PieChart>
                             <Pie data={flavorData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value">
                               {flavorData.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.color} />))}
@@ -322,7 +322,7 @@ export default function IndustryPage() {
                     <div className="lg:col-span-2">
                       <h4 className="text-xs text-[#86868b] mb-2">功能需求占比趋势</h4>
                       <div className="h-56">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                           <AreaChart data={flavorTrendData}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                             <XAxis dataKey="quarter" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
@@ -1080,7 +1080,7 @@ function SupplyChainSection() {
             <span className="text-[10px] text-[#86868b] ml-auto">基准=100</span>
           </div>
           <div className="h-44">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
               <LineChart data={materialPriceData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                 <XAxis dataKey="month" tick={{ fontSize: 9, fill: '#86868b' }} axisLine={false} tickLine={false} />
