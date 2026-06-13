@@ -44,7 +44,7 @@ function checklistRow(cells) {
   return `| ${cells.join(' | ')} |`;
 }
 
-function buildChecklist(mappingTemplate, readinessTemplate) {
+export function buildChecklist(mappingTemplate, readinessTemplate) {
   const mappingRows = mappingTemplate.mappings;
   const totalMinimumMappedItems = mappingRows.reduce((sum, item) => sum + item.minimumMappedItems, 0);
   const uniqueKey = mappingTemplate.uniqueKey.join(' + ');

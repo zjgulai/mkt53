@@ -5,7 +5,7 @@ module: data-collection
 topic: semi-monthly-refresh
 status: stable
 created: 2026-06-11
-updated: 2026-06-12
+updated: 2026-06-13
 owner: self
 source: human+ai
 ---
@@ -150,6 +150,36 @@ npm run data:publish:semi-monthly:local
 ```
 
 该命令只写入 `MKT53_STATIC_HTML_DIR`，默认是 `/opt/mkt53/html`，不依赖 SSH key，不触碰宿主 landing、nginx 配置或其他应用目录。服务器存在 `MKT53_AMAZON_PRIVATE_DIR` 时，会继续生成 Amazon 私有输入交叉审计报告。
+
+## Amazon 私有输入 sidecar
+
+Amazon 价格、评论、SKU、BSR 和 Brand Analytics 数据不能由公开证据或大模型补齐。半月刷新只允许在私有目录中维护授权前置材料和脱敏审计结果，真实采集必须等私有映射、授权记录、owner 复核和合规复核全部通过。
+
+私有目录首次初始化：
+
+```bash
+cd app
+npm run data:connector:amazon:private:bootstrap -- --target-dir configs/private
+
+cd /opt/mkt53/automation/app
+npm run data:connector:amazon:private:bootstrap -- --target-dir /opt/mkt53/private
+```
+
+该命令创建 `amazon-commerce-mapping.json`、`amazon-commerce-readiness.json`、`amazon-commerce-readiness-checklist.md` 和 `reports/`，目录权限为 `700`，文件权限为 `600`。默认不覆盖已有私有文件；服务器已有真实映射或 readiness record 时不得使用 `--force`。
+
+私有输入交叉审计：
+
+```bash
+MKT53_AMAZON_PRIVATE_DIR=/opt/mkt53/private npm run data:connector:amazon:private:audit -- --write /opt/mkt53/private/amazon-commerce-private-input-audit.json --force
+```
+
+审计输出只允许包含缺项、计数、source id、字段名和安全边界，不得输出真实 ASIN、SKU、授权记录、owner、竞品明细或凭据值。报告状态为 `ready-for-readiness-gate` 后，才允许进入：
+
+```bash
+MKT53_AMAZON_MAPPING_PATH=/opt/mkt53/private/amazon-commerce-mapping.json MKT53_AMAZON_READINESS_PATH=/opt/mkt53/private/amazon-commerce-readiness.json npm run data:connector:amazon:readiness
+```
+
+即使 readiness gate 通过，也只表示可以开始实现授权 Amazon 连接器；不表示已经有 Amazon 业务数据快照。
 
 需要调整公开 URL 稳定性策略时，直接把参数传给刷新命令：
 
