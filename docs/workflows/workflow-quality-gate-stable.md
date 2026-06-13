@@ -60,9 +60,13 @@ npm run lint
 npm audit
 npm run build
 npm run data:audit
+npx playwright install --with-deps chromium
+npm run test:e2e
 ```
 
 CI 使用 Node.js 22 执行项目命令，并按 `app/package-lock.json` 缓存 npm 依赖。GitHub Actions action 版本使用 `actions/checkout@v6` 和 `actions/setup-node@v6`，要求 runner 支持 Node.js 24 action runtime；当前 `ubuntu-latest` 托管 runner 满足该要求。
+
+CI 的 Playwright 步骤只安装 Chromium，并通过 `MKT53_E2E_PORT=3030` 与 `MKT53_E2E_REUSE_EXISTING=0` 强制启动独立 Vite 服务，避免复用 runner 上潜在残留服务。
 
 ## 测试职责边界
 

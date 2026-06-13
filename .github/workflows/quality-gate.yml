@@ -27,3 +27,8 @@ jobs:
       - run: npm audit
       - run: npm run build
       - run: npm run data:audit
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+        env:
+          MKT53_E2E_PORT: 3030
+          MKT53_E2E_REUSE_EXISTING: 0

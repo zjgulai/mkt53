@@ -83,9 +83,10 @@ npm run lint
 npm audit
 npm run build
 npm run data:audit
+npm run test:e2e
 ```
 
-页面布局、核心路由或移动端体验发生变化时，额外执行：
+CI 默认执行上述门禁，并在 GitHub Actions 中先安装 Chromium 后运行 `npm run test:e2e`。页面布局、核心路由或移动端体验发生变化时，本地也执行：
 
 ```bash
 cd app

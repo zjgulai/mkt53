@@ -23,7 +23,7 @@ mkt53 是 Momcozy 母婴品牌市场洞察工作台，线上地址为 `https://m
 - 数据来源页已展示补证队列和浏览器辅助公开证据状态。
 - 腾讯云生产环境已部署当前 2026-06-12 半月数据。
 - 远端自动化副本 `/opt/mkt53/automation/app` 已同步当前代码。
-- GitHub Actions Node 24 runtime、Browserslist 数据过期和 Recharts 2.x 不活跃三项运维债务已进入治理收口；当前分支迁移图表依赖到 Recharts 3.8.1。
+- GitHub Actions Node 24 runtime、Browserslist 数据过期、Recharts 2.x 不活跃和核心页面 E2E 只在本地执行等运维债务已进入治理收口；当前分支将 Playwright 核心页面 E2E 接入 CI。
 
 当前不要误读：
 
@@ -85,19 +85,16 @@ mkt53 是 Momcozy 母婴品牌市场洞察工作台，线上地址为 `https://m
 当前本地状态要点：
 
 - 主线已合并公开证据、半月刷新、生产 manifest、GitHub Actions runtime、Browserslist 数据更新等收口工作。
-- 当前工作分支为 `codex/recharts-3-migration`，变更范围限定在 Recharts 3.8.1 依赖迁移、图表容器初始尺寸兼容、少量 tooltip 类型修正和文档同步。
+- 当前工作分支为 `codex/ci-playwright-e2e`，变更范围限定在 GitHub Actions 本地 Playwright E2E 接入和质量门禁文档同步。
 - 本轮不刷新半月业务数据，不修改 `periodic-data/latest.json`，不写入连接器或人工凭证数据。
 - `app/tmp/public-evidence/`、`tmp/screenshots/`、`app/dist/`、`node_modules/` 等是本地产物或 ignored 产物，不应提交。
 - `ai_video.pem` 位于仓库根目录但已 gitignore，不得提交。
 
 本轮新增或关键更新文件：
 
-- `app/package.json`
-- `app/package-lock.json`
-- `app/src/components/ui/chart.tsx`
-- 图表密集页面中的 `ResponsiveContainer` 初始尺寸参数
+- `.github/workflows/quality-gate.yml`
 - `README.md`
-- `AGENTS.md`
+- `docs/workflows/workflow-quality-gate-stable.md`
 - `docs/knowledge/knowledge-session-summary-20260605-stable.md`
 
 ## 4. 当前能力边界
@@ -188,9 +185,9 @@ ssh -i ai_video.pem ubuntu@101.34.52.232 \
 2. 补 VOC NLP 私有 readiness record 与样本 manifest，明确样本窗口、模型版本、人工标注样本和一致率。
 3. 补 CRM 私有 readiness record 与脱敏 snapshot manifest，形成真实 RFM 快照前不要升级页面结论。
 4. 补 ERP 私有 readiness record 与脱敏 snapshot manifest，供应链页面继续保持示例/待接入边界。
-5. 将 Playwright 本地 E2E 的核心页面视觉守护接入 CI，避免图表和移动端回归只停留在本地门禁。
+5. 为生产部署脚本增加“部署后生产 E2E 必跑”的显式自动化钩子或发布 checklist，减少人工漏跑风险。
 
-当前已完成的运维债务：GitHub Actions action runtime 升级、Browserslist `caniuse-lite` 更新、Recharts 3.8.1 迁移。
+当前已完成的运维债务：GitHub Actions action runtime 升级、Browserslist `caniuse-lite` 更新、Recharts 3.8.1 迁移、Playwright 核心页面 E2E 接入 CI。
 
 执行原则：后续迭代优先选择能提升自动化、模块化和数仓管理专业化的动作。自动化指刷新、采集、审计、发布和回归可重复执行；模块化指每个数据域都有独立契约和停止条件；数仓管理专业化指真实数据必须具备快照、字段口径、来源、窗口、脱敏和复核记录。凡是不能增强这三点的展示型扩展，默认降级排期。
 
