@@ -4,16 +4,116 @@ import Sidebar from '@/components/Sidebar';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 const newsItems = [
-  { id: 1, title: 'Momcozy Wearable Breast Pump获得FDA 510(k)许可，涵盖7个型号', source: 'FDA.gov', date: '2025-10-29', category: '法规', tag: '重要', hot: true },
-  { id: 2, title: '全球可穿戴吸奶器市场规模2025年预计达18.2亿美元，年增15.3%', source: 'MarketWatch', date: '待复核 2026-05-23', category: '市场', tag: null, hot: true },
-  { id: 3, title: 'eufy Wearable Breast Pump S1获FDA 510(k)许可，赛道竞争加剧', source: 'FDA.gov', date: '2025-08-11', category: '竞品', tag: null, hot: false },
-  { id: 4, title: '中国GB 6675-2025玩具安全新标准发布，2026年11月计划生效', source: 'SAC China', date: '2025-10-05', category: '法规', tag: '重要', hot: true },
-  { id: 5, title: '欧盟MDR过渡期延长至2027-2028年，吸奶器等Class IIa器械影响分析', source: 'EU Commission', date: '2024-12-18', category: '法规', tag: null, hot: false },
-  { id: 6, title: 'Medela发布Sonata Pro智能吸奶器，集成AI泌乳分析功能', source: 'Medela', date: '待复核 2026-05-23', category: '竞品', tag: null, hot: false },
-  { id: 7, title: '美国CPSC 16 CFR Part 1242哺乳枕安全标准正式生效', source: 'CPSC', date: '待复核 2026-05-23', category: '法规', tag: '重要', hot: true },
-  { id: 8, title: '母婴行业2025年Q2投融资报告：可穿戴设备赛道获投金额同比增长42%', source: '36氪', date: '2025-07-01', category: '资本', tag: null, hot: false },
-  { id: 9, title: 'Willow Go 3.0发布，续航提升至8小时，直接对标Momcozy M5', source: 'Willow', date: '待复核 2026-05-23', category: '竞品', tag: null, hot: true },
-  { id: 10, title: '中国工信部发布7项儿童用品强制性国标草案征求意见稿', source: 'MIIT', date: '2025-08-01', category: '法规', tag: null, hot: false },
+  {
+    id: 1,
+    title: 'Momcozy Wearable Breast Pump K253283 获 FDA 510(k) substantially equivalent 判定',
+    source: 'FDA.gov',
+    date: '2025-09-25',
+    category: '法规',
+    tag: '重要',
+    hot: true,
+    verification: '已补证',
+    sourceUrl: 'https://www.accessdata.fda.gov/cdrh_docs/pdf25/K253283.pdf',
+  },
+  {
+    id: 2,
+    title: 'Mordor：可穿戴吸奶器市场 2025 年 USD 615.55M，2030 年 USD 899.53M',
+    source: 'Mordor Intelligence',
+    date: '补证 2026-06-11',
+    category: '市场',
+    tag: null,
+    hot: true,
+    verification: '已补证',
+    sourceUrl: 'https://www.mordorintelligence.com/industry-reports/wearable-breast-pumps-market',
+  },
+  {
+    id: 3,
+    title: 'eufy Wearable Breast Pump S1 获 FDA 510(k) 许可线索，需补 K250207 官方文件',
+    source: 'FDA.gov',
+    date: '待复核',
+    category: '竞品',
+    tag: null,
+    hot: false,
+    verification: '待复核',
+    sourceUrl: 'https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfpmn/pmn.cfm',
+  },
+  {
+    id: 4,
+    title: '中国 GB 6675-2025 玩具安全新标准发布，2026 年 11 月计划生效',
+    source: 'SAC China',
+    date: '待复核',
+    category: '法规',
+    tag: '重要',
+    hot: true,
+    verification: '待复核',
+    sourceUrl: 'https://www.sac.gov.cn/',
+  },
+  {
+    id: 5,
+    title: '欧盟 MDR 过渡期延长至 2027-2028 年，Class IIa 影响需按证书条件复核',
+    source: 'EU Commission',
+    date: '2024-12-18',
+    category: '法规',
+    tag: null,
+    hot: false,
+    verification: '待复核',
+    sourceUrl: 'https://health.ec.europa.eu/medical-devices-sector/new-regulations_en',
+  },
+  {
+    id: 6,
+    title: 'Medela Pump In Style Pro 获 2026 Best New Product / Breast Milk Pump 相关认可',
+    source: 'Medela',
+    date: '补证 2026-06-11',
+    category: '竞品',
+    tag: null,
+    hot: false,
+    verification: '已补证',
+    sourceUrl: 'https://www.medela.com/en/about-medela/medela-news/pump-in-style-pro-named-best-new-product-in-the-us-for-2026',
+  },
+  {
+    id: 7,
+    title: '美国 CPSC 16 CFR Part 1242 哺乳枕安全规则适用于 2025-04-23 后生产产品',
+    source: 'CPSC',
+    date: '2025-04-23',
+    category: '法规',
+    tag: '重要',
+    hot: true,
+    verification: '已补证',
+    sourceUrl: 'https://www.cpsc.gov/Business--Manufacturing/Business-Education/Business-Guidance/Nursing-Pillows',
+  },
+  {
+    id: 8,
+    title: '母婴行业 2025 年 Q2 投融资报告线索：可穿戴设备赛道数据需补原文 URL',
+    source: '36氪',
+    date: '待复核',
+    category: '资本',
+    tag: null,
+    hot: false,
+    verification: '待复核',
+    sourceUrl: null,
+  },
+  {
+    id: 9,
+    title: 'Willow Go / Willow 3.0 新品表述待官网新闻稿复核，暂不作为确定新品事实',
+    source: 'Willow',
+    date: '待复核',
+    category: '竞品',
+    tag: null,
+    hot: false,
+    verification: '待复核',
+    sourceUrl: 'https://onewillow.com/',
+  },
+  {
+    id: 10,
+    title: '中国工信部儿童用品强制性国标草案线索，需补公告原文与适用范围',
+    source: 'MIIT',
+    date: '待复核',
+    category: '法规',
+    tag: null,
+    hot: false,
+    verification: '待复核',
+    sourceUrl: 'https://www.miit.gov.cn/',
+  },
 ];
 
 const sidebarItems = [
@@ -48,6 +148,11 @@ const sidebarItems = [
 
 const catColors: Record<string, string> = {
   '法规': '#C25B6E', '市场': '#34c759', '竞品': '#ff9500', '资本': '#5856d6',
+};
+
+const verificationColors: Record<string, string> = {
+  '已补证': '#34c759',
+  '待复核': '#ff9500',
 };
 
 export default function IndustryNews() {
@@ -94,17 +199,25 @@ export default function IndustryNews() {
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${catColors[n.category]}15` }}>
                       <Newspaper className="w-5 h-5" style={{ color: catColors[n.category] }} strokeWidth={2} />
                     </div>
-                    <div className="flex-1 min-w-0 min-w-0">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <span className="px-2 py-0.5 rounded-md text-[10px] font-medium text-white" style={{ backgroundColor: catColors[n.category] }}>{n.category}</span>
+                        <span className="px-2 py-0.5 rounded-md text-[10px] font-medium" style={{ backgroundColor: `${verificationColors[n.verification]}15`, color: verificationColors[n.verification] }}>{n.verification}</span>
                         {n.tag && <span className="px-2 py-0.5 rounded-md bg-[#ff3b30]/10 text-[10px] text-[#ff3b30] font-medium">{n.tag}</span>}
                         {n.hot && <span className="px-2 py-0.5 rounded-md bg-[#ff9500]/10 text-[10px] text-[#ff9500] font-medium flex items-center gap-0.5"><TrendingUp className="w-3 h-3" />热门</span>}
                       </div>
-                      <h3 className="text-sm font-medium text-[#1d1d1f] truncate group-hover:text-[#C25B6E] transition-colors duration-200 mb-1">{n.title}</h3>
-                      <div className="flex items-center gap-4 text-[10px] text-[#86868b]">
+                      <h3 className="text-sm font-medium text-[#1d1d1f] group-hover:text-[#C25B6E] transition-colors duration-200 mb-1 line-clamp-2">{n.title}</h3>
+                      <div className="flex items-center gap-4 text-[10px] text-[#86868b] flex-wrap">
                         <span>{n.source}</span>
                         <span className="flex items-center gap-0.5"><Clock className="w-3 h-3" />{n.date}</span>
-                        <ExternalLink className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                        {n.sourceUrl ? (
+                          <a href={n.sourceUrl} target="_blank" rel="noreferrer" className="ml-auto inline-flex items-center gap-1 text-[#C25B6E] hover:underline">
+                            来源
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        ) : (
+                          <span className="ml-auto text-[#86868b]">来源待补</span>
+                        )}
                       </div>
                     </div>
                   </div>
