@@ -340,7 +340,7 @@ export default function HomePage() {
 
                 {/* R2: 双Y轴复合图表 + R3: 实线/虚线区分历史vs预测 + R4: SOM层 + R7: 关键里程碑 */}
                 <div className="h-56">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <ComposedChart data={marketTrendData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" vertical={false} />
                       <XAxis dataKey="year" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={{ stroke: '#EDE6DF' }} tickLine={false} />
@@ -350,7 +350,7 @@ export default function HomePage() {
                       <YAxis yAxisId="sam" orientation="right" tick={{ fontSize: 9, fill: '#86868b' }} axisLine={false} tickLine={false} domain={[0, 65]} tickFormatter={(v) => `$${v}B`} width={45} />
                       <Tooltip
                         contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: '11px' }}
-                        formatter={(value: string | number, name: string) => [`$${value}B`, name]}
+                        formatter={(value: string | number | readonly (string | number)[] | undefined, name: string | number | undefined) => [`$${value ?? '-'}B`, name ?? '指标']}
                         labelStyle={{ color: '#1d1d1f', fontWeight: 600 }}
                       />
 

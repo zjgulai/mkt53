@@ -99,7 +99,7 @@ export default function FlavorReport() {
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
               <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">趋势预测 (2025-2027E)</h3>
               <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                   <BarChart data={trendForecast}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                     <XAxis dataKey="year" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />

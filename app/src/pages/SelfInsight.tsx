@@ -213,7 +213,7 @@ export default function SelfInsight() {
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">品牌竞争力雷达（vs 核心竞品）</h3>
                 <p className="text-[10px] text-[#86868b] mb-5"><span className="text-[#B5AFA8]">数据来源：</span>Newsweek 2026/USA TODAY/Grand View Research Research 2024</p>
                 <div className="h-72">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <RadarChart data={brandRadar}>
                       <PolarGrid stroke="#EDE6DF" />
                       <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: '#86868b' }} />
@@ -255,7 +255,7 @@ export default function SelfInsight() {
               <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">竞争定位图：价格 vs 产品评分</h3>
               <p className="text-[10px] text-[#86868b] mb-5">气泡大小=估算销量 · <span className="text-[#B5AFA8]">数据来源：</span>Amazon/eufy官网公开信息2026</p>
               <div className="h-72">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                   <ScatterChart margin={{ top: 10, right: 30, bottom: 10, left: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                     <XAxis type="number" dataKey="price" name="价格" unit="$" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} label={{ value: '价格 ($)', position: 'bottom', fontSize: 10, fill: '#86868b' }} />
@@ -309,7 +309,7 @@ export default function SelfInsight() {
                 </div>
                 <p className="text-[10px] text-[#86868b] mb-5">X轴=相对市场份额 · Y轴=市场增长率(%) · 气泡=营收($M)</p>
                 <div className="h-72 relative">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <ScatterChart margin={{ top: 10, right: 30, bottom: 10, left: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                       <XAxis type="number" dataKey="relativeShare" name="相对份额" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
@@ -491,7 +491,7 @@ export default function SelfInsight() {
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">ASP趋势对比</h3>
                 <p className="text-[10px] text-[#86868b] mb-5">2024-2026各品牌均价走势 · Momcozy逆势上行</p>
                 <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <LineChart data={aspTrend}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                       <XAxis dataKey="quarter" tick={{ fontSize: 9, fill: '#86868b' }} axisLine={false} tickLine={false} />
@@ -598,7 +598,7 @@ export default function SelfInsight() {
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">渠道效率矩阵</h3>
                 <p className="text-[10px] text-[#86868b] mb-5">X轴=品牌控制力(%) · Y轴=毛利率(%) · 气泡=营收份额 · 理想区域=右上</p>
                 <div className="h-72 relative">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <ScatterChart margin={{ top: 10, right: 30, bottom: 10, left: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                       <XAxis type="number" dataKey="control" name="控制力" unit="%" domain={[0, 100]} tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />

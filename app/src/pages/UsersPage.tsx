@@ -257,7 +257,7 @@ export default function UsersPage() {
               </div>
             </div>
             <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                 <LineChart data={industryMentionData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                   <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} angle={-45} textAnchor="end" height={50} />
@@ -316,7 +316,7 @@ export default function UsersPage() {
               </div>
             </div>
             <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                 <LineChart data={mentionTrendData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                   <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
@@ -336,7 +336,7 @@ export default function UsersPage() {
             <div className="lg:col-span-2 bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
               <h3 className="text-sm font-semibold text-[#1d1d1f] mb-3">母婴品牌讨论量对比分析(万)</h3>
               <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                   <LineChart data={discussTrendData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                     <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
@@ -716,7 +716,7 @@ export default function UsersPage() {
           <div>
             <h4 className="text-xs text-[#86868b] mb-3">3.1.2 收入分布</h4>
             <div className="h-48">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                 <BarChart data={incomeData} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                   <XAxis type="number" tick={{ fontSize: 9, fill: '#86868b' }} axisLine={false} tickLine={false} unit="%" />
@@ -764,7 +764,7 @@ export default function UsersPage() {
             <p className="text-[10px] text-[#86868b] mb-5">方法论：Ipsos心理图谱V2模型 · 基于价值观×生活方式×收入三维聚类</p>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 h-96">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                   <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                     <XAxis type="number" dataKey="x" name="世代" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} domain={[0, 6]} ticks={[1, 2, 3, 4, 5]} tickFormatter={(v) => ['', 'Z世代', '千禧一代', 'X世代', '婴儿潮一代', ''][v] || ''} />
@@ -804,7 +804,7 @@ export default function UsersPage() {
             <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">八大人群能力雷达对比</h3>
             <p className="text-[10px] text-[#86868b] mb-5">6维度评估：消费能力/科技接受度/品牌忠诚度/社交影响力/价格敏感度/品质要求</p>
             <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                 <RadarChart data={eightPersonasRadar}>
                   <PolarGrid stroke="#EDE6DF" />
                   <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: '#86868b' }} />

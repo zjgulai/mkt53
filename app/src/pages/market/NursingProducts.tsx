@@ -125,7 +125,7 @@ export default function NursingProducts() {
                 <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                   <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">细分品类趋势（亿美元）</h3>
                   <div className="h-72">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                       <LineChart data={trendData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                         <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
@@ -143,7 +143,7 @@ export default function NursingProducts() {
                 <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                   <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">季节性销售指数</h3>
                   <div className="h-56">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                       <BarChart data={seasonData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                         <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />

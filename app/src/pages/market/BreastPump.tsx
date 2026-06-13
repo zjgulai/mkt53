@@ -170,7 +170,7 @@ export default function BreastPump() {
                 <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                   <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">细分品类趋势（$M）</h3>
                   <div className="h-56">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                       <AreaChart data={pumpTrend}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                         <XAxis dataKey="year" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
@@ -251,16 +251,16 @@ export default function BreastPump() {
                     <span className="text-[10px] text-[#86868B] bg-[#FBF8F5] px-2 py-1 rounded-lg">象限分析</span>
                   </div>
                   <div className="h-72">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                       <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                         <XAxis type="number" dataKey="x" name="均价" unit="$" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} label={{ value: '平均售价 ($)', position: 'bottom', fontSize: 10, fill: '#86868b' }} />
                         <YAxis type="number" dataKey="y" name="评分" domain={[4.0, 5.0]} tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} label={{ value: '用户评分', angle: -90, position: 'left', fontSize: 10, fill: '#86868b' }} />
                         <ZAxis type="number" dataKey="z" range={[100, 1200]} />
-                        <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: '11px' }} formatter={(value: string | number, name: string) => {
-                          if (name === 'x') return [`$${value}`, '均价'];
+                        <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: '11px' }} formatter={(value: string | number | readonly (string | number)[] | undefined, name: string | number | undefined) => {
+                          if (name === 'x') return [`$${value ?? '-'}`, '均价'];
                           if (name === 'y') return [value, '评分'];
-                          return [value, name];
+                          return [value ?? '-', name ?? '指标'];
                         }} />
                         <Scatter name="品牌" data={productMatrix}>
                           {productMatrix.map((entry, index) => (
@@ -327,7 +327,7 @@ export default function BreastPump() {
                   <span className="text-[10px] text-[#86868B] bg-[#FBF8F5] px-2 py-1 rounded-lg">需求重要性 %</span>
                 </div>
                 <div className="h-72">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <BarChart data={featureDemand} layout="vertical" margin={{ left: 20 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                       <XAxis type="number" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} unit="%" />

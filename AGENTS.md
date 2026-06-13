@@ -14,10 +14,10 @@ Momcozy 母婴品牌全球市场分析看板，面向内部团队的数据洞察
 | 层 | 技术 |
 |---|---|
 | 框架 | React 19 + TypeScript |
-| 构建 | Vite 7 |
+| 构建 | Vite 8 |
 | 样式 | Tailwind CSS v3 + shadcn/ui |
 | 路由 | React Router v7 |
-| 图表 | Recharts |
+| 图表 | Recharts 3.8.1 |
 | 地图 | 静态 world-map.jpg + 自定义坐标投影 |
 | UI 组件 | Radix UI 全套 |
 

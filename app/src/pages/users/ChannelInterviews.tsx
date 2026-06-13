@@ -232,7 +232,7 @@ export default function ChannelInterviews() {
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">渠道健康度多维对比</h3>
                 <p className="text-[10px] text-[#86868b] mb-3">8维度评估 · DTC在利润率和品牌控制维度全面领先</p>
                 <div className="h-56">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <RadarChart data={healthRadar} cx="50%" cy="50%" outerRadius="70%">
                       <PolarGrid stroke="#EDE6DF" />
                       <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 9, fill: '#86868b' }} />
@@ -280,7 +280,7 @@ export default function ChannelInterviews() {
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-1">合作深度 × 战略重要性矩阵</h3>
                 <p className="text-[10px] text-[#86868b] mb-3">横轴=合作深度 · 纵轴=战略重要性 · 气泡大小=销售规模</p>
                 <div className="h-56 relative">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <ScatterChart>
                       <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                       <XAxis type="number" dataKey="x" name="合作深度" domain={[0, 100]} tick={{ fontSize: 9, fill: '#86868b' }} axisLine={false} tickLine={false} label={{ value: '合作深度 →', position: 'bottom', fontSize: 9, fill: '#86868b' }} />
@@ -303,7 +303,7 @@ export default function ChannelInterviews() {
               <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-3">渠道类型分布</h3>
                 <div className="h-48">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <PieChart>
                       <Pie data={channelTypeDist} cx="50%" cy="50%" innerRadius={40} outerRadius={70} paddingAngle={3} dataKey="value">
                         {channelTypeDist.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.color} />))}

@@ -133,7 +133,7 @@ export default function RegionCompetition() {
               <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">Momcozy 2026年区域竞争能力雷达</h3>
                 <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
                       <PolarGrid stroke="#EDE6DF" />
                       <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 10, fill: '#86868b' }} />
@@ -149,7 +149,7 @@ export default function RegionCompetition() {
               <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                 <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">Momcozy 2026年各国份额</h3>
                 <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
                     <BarChart data={shareTrendData2026} layout="vertical" margin={{ left: 20 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                       <XAxis type="number" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} unit="%" />
