@@ -24,6 +24,7 @@ Momcozy 母婴品牌全球市场分析看板，面向内部团队的数据洞察
 | 宿主 landing 文件 | `/opt/ai-video/deploy/lighthouse/landing/index.html` |
 | 质量门禁 | `.github/workflows/quality-gate.yml` |
 | 部署脚本 | `app/scripts/deploy-static.sh` |
+| 完整生产发布 | `npm run deploy:prod:verified` |
 | 生产 smoke | `app/scripts/smoke-prod.sh` |
 | 生产 E2E | `npm run test:e2e:prod` |
 | 半月数据刷新 | `npm run data:refresh:semi-monthly` |
@@ -113,9 +114,10 @@ npm run data:public-evidence:dry-run
 
 ```bash
 cd app
-npm run deploy:prod
-npm run smoke:prod
+npm run deploy:prod:verified
 ```
+
+`deploy:prod:verified` 会先调用 `deploy:prod` 完成 `test`、`lint`、`npm audit`、`build` 和 `/opt/mkt53/html/` 静态同步，再执行 `smoke:prod` 和 `test:e2e:prod`。`deploy:prod` 保留为底层静态同步入口；单独使用后必须补跑生产 smoke 和生产 E2E。
 
 半月数据刷新需要同时发布生产 manifest 时执行：
 

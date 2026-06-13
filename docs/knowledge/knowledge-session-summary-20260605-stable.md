@@ -145,10 +145,17 @@ npm run data:refresh:semi-monthly:public-evidence -- --public-evidence-timeout-m
 
 ```bash
 cd app
+npm run deploy:prod:verified
+```
+
+半月数据发布：
+
+```bash
+cd app
 npm run data:deploy:semi-monthly -- --public-evidence-live --timeout-ms 12000 --max-attempts 2 --public-evidence-timeout-ms 30000
 ```
 
-生产核验：
+生产核验单独重跑：
 
 ```bash
 cd app
@@ -185,9 +192,8 @@ ssh -i ai_video.pem ubuntu@101.34.52.232 \
 2. 补 VOC NLP 私有 readiness record 与样本 manifest，明确样本窗口、模型版本、人工标注样本和一致率。
 3. 补 CRM 私有 readiness record 与脱敏 snapshot manifest，形成真实 RFM 快照前不要升级页面结论。
 4. 补 ERP 私有 readiness record 与脱敏 snapshot manifest，供应链页面继续保持示例/待接入边界。
-5. 为生产部署脚本增加“部署后生产 E2E 必跑”的显式自动化钩子或发布 checklist，减少人工漏跑风险。
 
-当前已完成的运维债务：GitHub Actions action runtime 升级、Browserslist `caniuse-lite` 更新、Recharts 3.8.1 迁移、Playwright 核心页面 E2E 接入 CI。
+当前已完成的运维债务：GitHub Actions action runtime 升级、Browserslist `caniuse-lite` 更新、Recharts 3.8.1 迁移、Playwright 核心页面 E2E 接入 CI、普通静态生产发布接入 `deploy:prod:verified`。
 
 执行原则：后续迭代优先选择能提升自动化、模块化和数仓管理专业化的动作。自动化指刷新、采集、审计、发布和回归可重复执行；模块化指每个数据域都有独立契约和停止条件；数仓管理专业化指真实数据必须具备快照、字段口径、来源、窗口、脱敏和复核记录。凡是不能增强这三点的展示型扩展，默认降级排期。
 

@@ -48,6 +48,7 @@
     "data:publish:semi-monthly:local": "bash scripts/data/semi-monthly-refresh-local-static.sh",
     "preview": "vite preview",
     "deploy:prod": "bash scripts/deploy-static.sh",
+    "deploy:prod:verified": "bash scripts/deploy-static-and-verify.sh",
     "smoke:prod": "bash scripts/smoke-prod.sh"
   },
   "dependencies": {

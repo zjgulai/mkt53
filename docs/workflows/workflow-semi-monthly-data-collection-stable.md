@@ -138,9 +138,9 @@ npm run data:deploy:semi-monthly -- --public-evidence-live --timeout-ms 12000 --
 该命令依次执行：
 
 1. `npm run data:refresh:semi-monthly`
-2. `npm run deploy:prod`
-3. `npm run smoke:prod`
-4. `npm run test:e2e:prod`
+2. `npm run deploy:prod:verified`
+
+`deploy:prod:verified` 内部继续执行 `deploy:prod`、`smoke:prod` 和 `test:e2e:prod`，保证半月数据发布与普通静态发布共用同一条生产回归链。
 
 服务器本地触发静态刷新：
 
