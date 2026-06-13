@@ -23,13 +23,14 @@ mkt53 是 Momcozy 母婴品牌市场洞察工作台，线上地址为 `https://m
 - 数据来源页已展示补证队列和浏览器辅助公开证据状态。
 - 腾讯云生产环境已部署当前 2026-06-12 半月数据。
 - 远端自动化副本 `/opt/mkt53/automation/app` 已同步当前代码。
-- GitHub Actions Node 24 runtime、Browserslist 数据过期、Recharts 2.x 不活跃和核心页面 E2E 只在本地执行等运维债务已进入治理收口；当前分支将 Playwright 核心页面 E2E 接入 CI。
+- GitHub Actions Node 24 runtime、Browserslist 数据过期、Recharts 2.x 不活跃、核心页面 E2E 只在本地执行、普通静态发布缺少强制生产 E2E 钩子等运维债务已治理。
 
 当前不要误读：
 
 - 公开证据样本不是平台级完整数据。
 - 连接器待接入和人工凭证待补不等于业务数据已采集。
 - Amazon、社媒、CRM、ERP、Import Genius、VOC/NLP、访谈记录仍需授权连接器或人工凭证。
+- 2026-06-13 完整生产 E2E 的宿主 landing 用例失败来自 `lute-tlz-dddd.top` apex DNS 无 A 记录，不代表 mkt53 看板本体不可访问。
 
 ## 2. 生产状态
 
@@ -57,8 +58,10 @@ mkt53 是 Momcozy 母婴品牌市场洞察工作台，线上地址为 `https://m
 
 生产验证结果：
 
-- `npm run smoke:prod` 通过。
-- `npm run test:e2e:prod` 14/14 通过。
+- 2026-06-13 `npm run deploy:prod:verified` 已执行到静态发布和 `smoke:prod` 通过，并同步 `/opt/mkt53/html/`。
+- 2026-06-13 完整 `npm run test:e2e:prod` 未通过，失败点仅为宿主 `https://lute-tlz-dddd.top/`：system、1.1.1.1、8.8.8.8 均查不到 apex A 记录。
+- 2026-06-13 `mkt.lute-tlz-dddd.top` 解析到 `101.34.52.232`，mkt53 本体生产 E2E 12/12 通过。
+- 2026-06-12 `npm run test:e2e:prod` 曾 14/14 通过；该结果已成为历史基线，不代表 2026-06-13 apex DNS 仍正常。
 - 生产 `/data-source` 桌面和移动端显示公开证据状态，未发现横向溢出或运行时错误。
 - `weekly-data/*` 兼容路径仍返回 200，但只作为旧消费者兼容层，不代表周度调度。
 
@@ -188,10 +191,11 @@ ssh -i ai_video.pem ubuntu@101.34.52.232 \
 
 优先级按当前产品风险排序：
 
-1. 补 Amazon 私有 ASIN/SKU 映射与授权记录，通过私有输入交叉审计和 readiness gate 后再实现真实连接器。
-2. 补 VOC NLP 私有 readiness record 与样本 manifest，明确样本窗口、模型版本、人工标注样本和一致率。
-3. 补 CRM 私有 readiness record 与脱敏 snapshot manifest，形成真实 RFM 快照前不要升级页面结论。
-4. 补 ERP 私有 readiness record 与脱敏 snapshot manifest，供应链页面继续保持示例/待接入边界。
+1. 恢复 `lute-tlz-dddd.top A 101.34.52.232`，再重跑 `npm run test:e2e:prod`，恢复完整宿主入口生产回归。
+2. 补 Amazon 私有 ASIN/SKU 映射与授权记录，通过私有输入交叉审计和 readiness gate 后再实现真实连接器。
+3. 补 VOC NLP 私有 readiness record 与样本 manifest，明确样本窗口、模型版本、人工标注样本和一致率。
+4. 补 CRM 私有 readiness record 与脱敏 snapshot manifest，形成真实 RFM 快照前不要升级页面结论。
+5. 补 ERP 私有 readiness record 与脱敏 snapshot manifest，供应链页面继续保持示例/待接入边界。
 
 当前已完成的运维债务：GitHub Actions action runtime 升级、Browserslist `caniuse-lite` 更新、Recharts 3.8.1 迁移、Playwright 核心页面 E2E 接入 CI、普通静态生产发布接入 `deploy:prod:verified`。
 
