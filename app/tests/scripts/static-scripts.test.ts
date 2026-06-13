@@ -69,6 +69,8 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:amazon:readiness']).toContain('--readiness-gate');
     expect(packageJson.scripts['data:connector:amazon:readiness:checklist']).toContain('amazon-commerce-readiness-checklist.mjs');
     expect(packageJson.scripts['data:connector:amazon:readiness:template']).toContain('--print-readiness-template');
+    expect(packageJson.scripts['data:connector:amazon:readiness:scaffold']).toContain('scaffold-amazon-readiness-fill-draft.mjs');
+    expect(packageJson.scripts['data:connector:amazon:readiness:promote']).toContain('promote-amazon-readiness-fill-draft.mjs');
     expect(packageJson.scripts['data:connector:voc-nlp:dry-run']).toContain('scripts/data/connectors/voc-nlp-dry-run.mjs');
     expect(packageJson.scripts['data:connector:voc-nlp:readiness']).toContain('--readiness-gate');
     expect(packageJson.scripts['data:connector:voc-nlp:readiness:template']).toContain('--print-readiness-template');
@@ -1460,6 +1462,216 @@ describe('production helper scripts', () => {
       });
       expect(manifest.safety.privateInputWrites).toBe(0);
       expect(existsSync(join(privateDir, 'amazon-commerce-mapping.json'))).toBe(false);
+    } finally {
+      rmSync(privateDir, { recursive: true, force: true });
+    }
+  });
+
+  it('scaffolds a private Amazon readiness fill draft without credential or owner values', () => {
+    const privateDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-private-'));
+
+    try {
+      const output = execFileSync('node', ['scripts/data/connectors/scaffold-amazon-readiness-fill-draft.mjs', '--target-dir', privateDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const scaffold = JSON.parse(output) as {
+        files: { json: { path: string; status: string; overwritten: boolean; mode: string } };
+        safety: { containsCredentialValues: boolean; containsAuthorizationValues: boolean; containsOwnerValues: boolean };
+        nextCommands: string[];
+      };
+      const draft = JSON.parse(readFileSync(scaffold.files.json.path, 'utf8')) as {
+        privateData: boolean;
+        publicBundleAllowed: boolean;
+        gitAllowed: boolean;
+        readiness: {
+          authorizationRecordId: string;
+          authorizationOwner: string;
+          authorizationApprovedAt: string;
+          collectionWindowStart: string;
+          collectionWindowEnd: string;
+          reviewOwner: string;
+          reviewApprovedAt: string;
+          complianceReviewStatus: string;
+          allowedSnapshotTypes: string[];
+        };
+      };
+
+      expect(output).not.toMatch(/clientSecret|refreshToken|accessToken|password|privateKey|authorizationHeader/i);
+      expect(scaffold.files.json).toMatchObject({ status: 'created', overwritten: false, mode: '600' });
+      expect(scaffold.safety).toMatchObject({
+        containsCredentialValues: false,
+        containsAuthorizationValues: false,
+        containsOwnerValues: false,
+      });
+      expect(scaffold.nextCommands.some((command) => command.includes('data:connector:amazon:readiness:promote'))).toBe(true);
+      expect(statSync(privateDir).mode & 0o777).toBe(0o700);
+      expect(statSync(scaffold.files.json.path).mode & 0o777).toBe(0o600);
+      expect(draft).toMatchObject({ privateData: true, publicBundleAllowed: false, gitAllowed: false });
+      expect(draft.readiness).toMatchObject({
+        authorizationRecordId: '',
+        authorizationOwner: '',
+        authorizationApprovedAt: 'YYYY-MM-DD',
+        collectionWindowStart: 'YYYY-MM-DD',
+        collectionWindowEnd: 'YYYY-MM-DD',
+        reviewOwner: '',
+        reviewApprovedAt: 'YYYY-MM-DD',
+        complianceReviewStatus: 'approved',
+      });
+      expect(draft.readiness.allowedSnapshotTypes).toEqual([
+        'product_snapshot',
+        'review_snapshot',
+        'brand_share_snapshot',
+        'category_rank_snapshot',
+      ]);
+
+      const secondOutput = execFileSync('node', ['scripts/data/connectors/scaffold-amazon-readiness-fill-draft.mjs', '--target-dir', privateDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const secondScaffold = JSON.parse(secondOutput) as { files: { json: { status: string; overwritten: boolean } } };
+
+      expect(secondScaffold.files.json).toMatchObject({ status: 'exists', overwritten: false });
+    } finally {
+      rmSync(privateDir, { recursive: true, force: true });
+    }
+  });
+
+  it('keeps Amazon readiness promotion blocked for an unfilled private draft', () => {
+    const privateDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-private-'));
+
+    try {
+      execFileSync('node', ['scripts/data/connectors/scaffold-amazon-readiness-fill-draft.mjs', '--target-dir', privateDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const output = execFileSync('node', ['scripts/data/connectors/promote-amazon-readiness-fill-draft.mjs', '--private-dir', privateDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const manifest = JSON.parse(output) as {
+        status: string;
+        output: { status: string; overwritten: boolean };
+        validation: {
+          checks: {
+            requiredFields: { status: string; missingRequiredFields: string[] };
+            dates: { status: string; invalidDateFields: string[] };
+            collectionWindow: { status: string; matchesExpected: boolean };
+          };
+          blockers: Array<{ type: string; fields?: string[] }>;
+        };
+        safety: { networkCalls: number; businessDataWrites: number; privateInputWrites: number; requiresExplicitWriteFinal: boolean };
+      };
+
+      expect(output).not.toMatch(/clientSecret|refreshToken|accessToken|password|privateKey|authorizationHeader/i);
+      expect(manifest.status).toBe('blocked');
+      expect(manifest.output).toMatchObject({ status: 'blocked-not-written', overwritten: false });
+      expect(manifest.validation.checks.requiredFields).toMatchObject({
+        status: 'blocked',
+        missingRequiredFields: ['authorizationRecordId', 'authorizationOwner', 'reviewOwner'],
+      });
+      expect(manifest.validation.checks.dates.status).toBe('blocked');
+      expect(manifest.validation.checks.collectionWindow).toMatchObject({ status: 'blocked', matchesExpected: false });
+      expect(manifest.validation.blockers).toEqual(expect.arrayContaining([expect.objectContaining({ type: 'missing-readiness-fields' })]));
+      expect(manifest.safety).toMatchObject({
+        networkCalls: 0,
+        businessDataWrites: 0,
+        privateInputWrites: 0,
+        requiresExplicitWriteFinal: true,
+      });
+      expect(existsSync(join(privateDir, 'amazon-commerce-readiness.json'))).toBe(false);
+    } finally {
+      rmSync(privateDir, { recursive: true, force: true });
+    }
+  });
+
+  it('promotes a complete private Amazon readiness JSON with backup and redacted output', () => {
+    const privateDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-private-'));
+
+    try {
+      const scaffoldOutput = execFileSync('node', ['scripts/data/connectors/scaffold-amazon-readiness-fill-draft.mjs', '--target-dir', privateDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const scaffold = JSON.parse(scaffoldOutput) as { files: { json: { path: string } } };
+      const draft = JSON.parse(readFileSync(scaffold.files.json.path, 'utf8')) as {
+        readiness: Record<string, unknown>;
+      };
+
+      draft.readiness = {
+        ...draft.readiness,
+        authorizationRecordId: 'AUTH-2026-PRIVATE-001',
+        authorizationOwner: 'commerce-owner',
+        authorizationApprovedAt: '2026-06-01',
+        collectionWindowStart: '2026-06-01',
+        collectionWindowEnd: '2026-06-15',
+        reviewOwner: 'business-reviewer',
+        reviewApprovedAt: '2026-06-13',
+        complianceReviewer: 'legal-reviewer',
+        complianceReviewStatus: 'approved',
+        allowedSnapshotTypes: ['product_snapshot', 'review_snapshot', 'brand_share_snapshot', 'category_rank_snapshot'],
+      };
+      writeFileSync(scaffold.files.json.path, `${JSON.stringify(draft, null, 2)}\n`);
+
+      const finalPath = join(privateDir, 'amazon-commerce-readiness.json');
+      writeFileSync(finalPath, '{"readiness":{"preserve":"existing-readiness"}}\n', { mode: 0o600 });
+      chmodSync(finalPath, 0o600);
+
+      const dryRunOutput = execFileSync('node', ['scripts/data/connectors/promote-amazon-readiness-fill-draft.mjs', '--private-dir', privateDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const dryRun = JSON.parse(dryRunOutput) as {
+        status: string;
+        output: { status: string; overwritten: boolean };
+        validation: { checks: { collectionWindow: { status: string }; snapshotScope: { status: string } } };
+      };
+
+      expect(dryRunOutput).not.toContain('AUTH-2026-PRIVATE-001');
+      expect(dryRunOutput).not.toContain('commerce-owner');
+      expect(dryRunOutput).not.toContain('business-reviewer');
+      expect(dryRun.status).toBe('ready-to-promote');
+      expect(dryRun.output).toMatchObject({ status: 'ready-not-written', overwritten: false });
+      expect(dryRun.validation.checks.collectionWindow.status).toBe('ready');
+      expect(dryRun.validation.checks.snapshotScope.status).toBe('ready');
+      expect(readFileSync(finalPath, 'utf8')).toContain('existing-readiness');
+
+      const writeOutput = execFileSync(
+        'node',
+        ['scripts/data/connectors/promote-amazon-readiness-fill-draft.mjs', '--private-dir', privateDir, '--write-final'],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+        },
+      );
+      const manifest = JSON.parse(writeOutput) as {
+        status: string;
+        output: { status: string; overwritten: boolean; mode: string; backup: { path: string; status: string; mode: string } };
+        safety: { privateInputWrites: number; publicBundleAllowed: boolean; gitAllowed: boolean };
+      };
+      const finalReadiness = JSON.parse(readFileSync(finalPath, 'utf8')) as {
+        privateData: boolean;
+        publicBundleAllowed: boolean;
+        gitAllowed: boolean;
+        readiness: { authorizationRecordId: string; authorizationOwner: string; reviewOwner: string };
+      };
+
+      expect(writeOutput).not.toContain('AUTH-2026-PRIVATE-001');
+      expect(writeOutput).not.toContain('commerce-owner');
+      expect(writeOutput).not.toContain('business-reviewer');
+      expect(manifest.status).toBe('promoted');
+      expect(manifest.output).toMatchObject({ status: 'replaced', overwritten: true, mode: '600' });
+      expect(manifest.output.backup).toMatchObject({ status: 'created', mode: '600' });
+      expect(manifest.safety).toMatchObject({ privateInputWrites: 1, publicBundleAllowed: false, gitAllowed: false });
+      expect(statSync(privateDir).mode & 0o777).toBe(0o700);
+      expect(statSync(finalPath).mode & 0o777).toBe(0o600);
+      expect(statSync(manifest.output.backup.path).mode & 0o777).toBe(0o600);
+      expect(finalReadiness).toMatchObject({ privateData: true, publicBundleAllowed: false, gitAllowed: false });
+      expect(finalReadiness.readiness).toMatchObject({
+        authorizationRecordId: 'AUTH-2026-PRIVATE-001',
+        authorizationOwner: 'commerce-owner',
+        reviewOwner: 'business-reviewer',
+      });
     } finally {
       rmSync(privateDir, { recursive: true, force: true });
     }
