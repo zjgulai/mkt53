@@ -83,20 +83,18 @@ npm run data:publish:semi-monthly:local
 
 ## 最新生产验证
 
-2026-06-13 普通静态发布入口已完成代码合并和 mkt53 本体发布验证，但完整宿主入口回归被 apex DNS 阻断：
+2026-06-13 apex DNS 恢复后，普通静态发布入口和完整宿主入口回归已完成验证：
 
 | 检查项 | 结果 |
 |---|---|
 | PR / main CI | PR #17 已合并，main `quality-gate` run `27457652365` 通过 |
 | 发布命令 | `npm run deploy:prod:verified` 已执行；`test` 50/50、`lint`、`npm audit`、`build`、`rsync`、`smoke:prod` 均通过 |
-| 完整生产 E2E | `npm run test:e2e:prod` 未通过，失败点仅为 `https://lute-tlz-dddd.top/` 宿主 landing 的 DNS/连接错误 |
-| DNS 复核 | `lute-tlz-dddd.top` 在 system、1.1.1.1、8.8.8.8 下无 A 记录；`mkt.lute-tlz-dddd.top` 均解析到 `101.34.52.232` |
-| 服务器直连 | `curl --resolve lute-tlz-dddd.top:443:101.34.52.232 https://lute-tlz-dddd.top/` 返回 HTTP/2 200，nginx server block 存在 |
-| mkt53 本体 E2E | 只跑 `mkt53 production` 相关用例 12/12 通过，桌面和移动端均通过 |
+| DNS 复核 | `lute-tlz-dddd.top` 在 DNSPod 权威 NS、system、1.1.1.1、8.8.8.8 下均返回 `101.34.52.232`，TTL 600 |
+| 完整生产 E2E | `npm run test:e2e:prod` 14/14 通过，覆盖宿主 landing 与 mkt53 目标页桌面/移动端 |
 | 生产 manifest | `period=2026-06-H1`，`generatedAt=2026-06-12T02:23:17.911Z`，`refreshCadence=semi-monthly`，`issueCount=0` |
 | nginx | `docker exec ai_video_nginx nginx -t` 通过；`/opt/mkt53/html/index.html` 更新时间为 `2026-06-13 13:23:36 +0800` |
 
-结论：mkt53 静态看板本体已部署并回归通过；完整生产 E2E 需要先在 DNSPod 恢复 `lute-tlz-dddd.top A 101.34.52.232`，再重跑 `npm run test:e2e:prod`。不得用本地 hosts、Playwright host resolver 或 `curl --resolve` 把公开 DNS 缺失伪装成通过。
+历史事故线索：2026-06-13 曾短暂缺失 `lute-tlz-dddd.top` apex A 记录，导致完整生产 E2E 的宿主 landing 用例失败；已通过恢复 `lute-tlz-dddd.top A 101.34.52.232` 解除。
 
 2026-06-12 半月数据发布已完成生产回归：
 
@@ -116,7 +114,7 @@ npm run data:publish:semi-monthly:local
 
 ## 宿主导航页入口
 
-宿主域名 `https://lute-tlz-dddd.top` 是共享静态 landing page，不属于 mkt53 的 Vite 构建产物。2026-06-12 线上回归确认：当前页面是多服务卡片网格，包含 12 个服务入口，其中 mkt 卡片进入本项目。2026-06-13 复核发现服务器端 nginx 配置仍存在，但公开 DNS 暂无 apex A 记录；修复 DNS 前完整生产 E2E 会在宿主 landing 用例失败。
+宿主域名 `https://lute-tlz-dddd.top` 是共享静态 landing page，不属于 mkt53 的 Vite 构建产物。2026-06-13 线上回归确认：当前页面是多服务卡片网格，包含 12 个服务入口，其中 mkt 卡片进入本项目；apex DNS 已恢复到 `101.34.52.232`，完整生产 E2E 14/14 通过。
 
 | 字段 | 当前值 |
 |---|---|
