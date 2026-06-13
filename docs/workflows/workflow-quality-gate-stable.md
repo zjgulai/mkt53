@@ -39,6 +39,13 @@ npm run test:e2e
 
 `npm run test:e2e` 使用 Playwright 启动本地 Vite 服务，覆盖桌面 `1440x900` 与移动端 `390x844`，断言核心页面标题可见、无水平滚动、无控制台 error。
 
+本机存在其他高 CPU Node/Vitest 任务时，组件测试可能出现交互超时。此时先不要把超时直接判定为业务回归，改用串行诊断入口复核：
+
+```bash
+cd app
+npm run test:serial
+```
+
 改动宿主导航页入口、生产域名、landing 卡片文案或发布验收规则时，额外执行：
 
 ```bash
@@ -73,7 +80,8 @@ CI 的 Playwright 步骤只安装 Chromium，并通过 `MKT53_E2E_PORT=3030` 与
 | 命令 | 职责 |
 |---|---|
 | `npm run test` | Vitest 单元测试、组件测试、路由懒加载、脚本约束、客户端 bundle 泄漏检查 |
-| `npm run lint` | ESLint 静态检查 |
+| `npm run test:serial` | 本机资源紧张时的串行 Vitest 诊断入口，不替代 CI 默认并行测试 |
+| `npm run lint` | ESLint 静态检查，范围限定为 `src`、`tests`、Playwright 配置和 Vite 配置 |
 | `npm audit` | npm 依赖漏洞检查 |
 | `npm run build` | TypeScript 编译与 Vite 生产构建 |
 | `npm run data:audit` | 页面、数据管理表、source registry 和采集状态一致性审计 |

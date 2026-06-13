@@ -4,6 +4,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
+const SCRIPT_INTEGRATION_TIMEOUT_MS = 30_000;
+
 describe('production helper scripts', () => {
   it('keeps deploy-static executable and guarded by local quality gates', () => {
     const scriptPath = join(process.cwd(), 'scripts/deploy-static.sh');
@@ -2059,7 +2061,7 @@ describe('production helper scripts', () => {
     } finally {
       rmSync(targetDir, { recursive: true, force: true });
     }
-  });
+  }, SCRIPT_INTEGRATION_TIMEOUT_MS);
 
   it('archives Amazon mapping coverage reports with retention and private permissions', () => {
     const archiveDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-coverage-'));
@@ -2135,5 +2137,5 @@ describe('production helper scripts', () => {
     } finally {
       rmSync(archiveDir, { recursive: true, force: true });
     }
-  });
+  }, SCRIPT_INTEGRATION_TIMEOUT_MS);
 });
