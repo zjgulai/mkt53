@@ -5,7 +5,7 @@ module: deployment
 topic: static-deploy
 status: stable
 created: 2026-05-31
-updated: 2026-06-11
+updated: 2026-06-12
 owner: self
 source: human+ai
 ---
@@ -51,7 +51,7 @@ rsync -az --delete dist/ ubuntu@101.34.52.232:/opt/mkt53/html/
 
 ## 半月数据刷新部署
 
-半月数据刷新不改 nginx，不改宿主 landing，只刷新 mkt53 静态构建中的 `public/periodic-data/latest.json`，并同步写入 `public/weekly-data/latest.json` 作为兼容路径：
+半月数据刷新不改 nginx，不改宿主 landing，只刷新 mkt53 静态构建中的 `public/periodic-data/*`，并同步写入 `public/weekly-data/*` 作为兼容路径：
 
 ```bash
 cd app
@@ -59,6 +59,13 @@ npm run data:deploy:semi-monthly
 ```
 
 该命令会先运行 `npm run data:refresh:semi-monthly`，再执行 `deploy:prod`、`smoke:prod` 和 `test:e2e:prod`。受限来源会保留为 `connector-required` 或 `manual-required`，不能用脚本输出替代真实授权采集。
+
+需要随生产发布同步 live 浏览器公开证据样本时，显式传参：
+
+```bash
+cd app
+npm run data:deploy:semi-monthly -- --public-evidence-live --timeout-ms 12000 --max-attempts 2 --public-evidence-timeout-ms 30000
+```
 
 服务器 cron 使用本地静态发布入口：
 
@@ -71,23 +78,25 @@ npm run data:publish:semi-monthly:local
 
 ## 最新生产验证
 
-2026-06-11 半月数据发布已完成生产回归：
+2026-06-12 半月数据发布已完成生产回归：
 
 | 检查项 | 结果 |
 |---|---|
-| 发布命令 | `npm run data:deploy:semi-monthly` 通过 |
+| 发布命令 | `npm run data:deploy:semi-monthly -- --public-evidence-live --timeout-ms 12000 --max-attempts 2 --public-evidence-timeout-ms 30000` 通过 |
 | 生产 smoke | `npm run smoke:prod` 通过 |
 | 生产 E2E | `npm run test:e2e:prod` 14/14 通过 |
-| 生产 manifest | `period=2026-06-H1`，`refreshCadence=semi-monthly`，`issueCount=0` |
+| 生产 manifest | `period=2026-06-H1`，`generatedAt=2026-06-12T02:23:17.911Z`，`refreshCadence=semi-monthly`，`issueCount=0` |
+| 公开证据 manifest | `mode=live-browser-capture`，`generatedAt=2026-06-12T02:23:22.683Z`，12/12 captured，`businessDataWrites=0` |
 | 证据边界页面 | `/#/ai-assistant`、`/#/ai-gallery`、`/#/reports`、`/#/report/r009` 已进入生产 E2E |
 | nginx | `docker exec ai_video_nginx nginx -t` 通过 |
 | 首页 | `https://mkt.lute-tlz-dddd.top` 返回 HTTP/2 200 |
+| 数据来源页 | `/#/data-source` 桌面/移动端显示公开证据状态，无横向溢出 |
 
-本次发布只同步 `/opt/mkt53/html/`，未修改宿主 landing、nginx 配置、compose 配置或其他应用目录。
+本次发布同步 `/opt/mkt53/html/`，并在发布前同步远端自动化副本 `/opt/mkt53/automation/app`；自动化副本备份为 `/opt/mkt53/backups/automation-app-20260612102246/app-code.tgz`。未修改宿主 landing、nginx 配置、compose 配置或其他应用目录。
 
 ## 宿主导航页入口
 
-宿主域名 `https://lute-tlz-dddd.top` 是共享静态 landing page，不属于 mkt53 的 Vite 构建产物。2026-06-11 线上回归确认：当前页面是多服务卡片网格，包含 12 个服务入口，其中 mkt 卡片进入本项目：
+宿主域名 `https://lute-tlz-dddd.top` 是共享静态 landing page，不属于 mkt53 的 Vite 构建产物。2026-06-12 线上回归确认：当前页面是多服务卡片网格，包含 12 个服务入口，其中 mkt 卡片进入本项目：
 
 | 字段 | 当前值 |
 |---|---|

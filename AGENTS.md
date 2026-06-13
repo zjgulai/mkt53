@@ -131,7 +131,8 @@ npm run test    # 运行 Vitest 测试
 npm run lint    # 运行 ESLint
 npm run build   # 构建生产产物到 dist/
 npm run data:audit          # 审计页面、数据管理表和 source registry 一致性
-npm run data:refresh:weekly # 生成周度数据采集 manifest
+npm run data:refresh:semi-monthly # 生成半月数据采集 manifest
+npm run data:public-evidence:dry-run # 规划公开证据样本，不联网、不写业务数据
 ```
 
 ## 部署
@@ -169,15 +170,17 @@ npm run test:e2e:prod
 
 `test:e2e:prod` 不启动本地 dev server，直接验证宿主 landing 的 `card mkt`、12 个服务卡片数量、mkt 目标页标题和桌面/移动端无水平溢出。
 
-周度数据刷新：
+半月数据刷新：
 
 ```bash
 cd app
-npm run data:refresh:weekly
-npm run data:deploy:weekly
+npm run data:refresh:semi-monthly
+npm run data:deploy:semi-monthly
 ```
 
-服务器 cron 使用 `/opt/mkt53/automation/app` 内的 `npm run data:publish:weekly:local`，默认只写入 `/opt/mkt53/html/`。`data:refresh:weekly` 生成 `public/weekly-data/latest.json` 和 `public/weekly-data/connectors.json`，供 `/data` 页面展示本周采集状态并保留授权连接器 backlog；不要使用 `public/data/`，该路径会与前端 `/data` 路由冲突。Amazon、CRM、ERP、社交媒体 API、Import Genius 和 AI/NLP 模型来源必须保持 `connector-required`，直到授权连接器接入；不得把缺失采集伪装成真实数据。
+服务器 cron 使用 `/opt/mkt53/automation/app` 内的 `npm run data:publish:semi-monthly:local`，每月 1 日和 16 日 09:00 执行，默认只写入 `/opt/mkt53/html/`。`data:refresh:semi-monthly` 生成 `public/periodic-data/latest.json`、`connectors.json`、`source-tasks.json`，并同步 `public/weekly-data/*` 兼容路径；不要使用 `public/data/`，该路径会与前端 `/data` 路由冲突。
+
+公开证据样本通过 `data:public-evidence:dry-run` / `data:public-evidence:live` 和 `--public-evidence-live` 接入半月刷新。公开证据只保留 URL、标题、hash、匹配项、摘要和本地 `tmp/public-evidence/` 证据路径；不得把 Amazon 公开页样本写成 Amazon 平台级价格、评论、SKU、销量或 BSR 数据。Amazon、CRM、ERP、社交媒体 API、Import Genius、VOC/NLP 和访谈类来源必须保持 `connector-required` 或 `manual-required`，直到授权连接器或人工凭证接入；不得把缺失采集伪装成真实数据。
 
 ### 宿主导航页入口卡片
 

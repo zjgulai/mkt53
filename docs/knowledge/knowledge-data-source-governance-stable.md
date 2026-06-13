@@ -5,7 +5,7 @@ module: data-governance
 topic: source-registry
 status: stable
 created: 2026-05-31
-updated: 2026-06-11
+updated: 2026-06-12
 owner: self
 source: human+ai
 ---
@@ -65,7 +65,7 @@ source: human+ai
 3. 海关、CRM、社媒、Amazon、AI 模型数据缺少真实接入记录时，不得从 `example` 或 `needs-review` 升级为 `verified`。
 4. 页面文案不得把 `needs-review` 显示为“已验证原文”。
 5. 新增来源必须补测试，至少覆盖 id 唯一性和关键风险状态。
-6. 半月采集脚本只能记录公开 URL 元数据和样本哈希；受限平台、内部系统、AI/NLP 输出必须标记为 `connector-required` 或 `manual-required`。
+6. 半月采集脚本只能记录公开 URL 元数据、公开证据样本摘要和样本哈希；受限平台、内部系统、AI/NLP 输出必须标记为 `connector-required` 或 `manual-required`。
 7. 含静态数组数据的页面必须至少有一条 `sourceRegistry.page` 绑定；新增页面不得重新制造未绑定静态数据。
 8. 不同地域、样本、机构或调查方法的组合来源必须拆分为独立 registry 条目；禁止用一个 `sourceName` 合并成无法复核的混合口径。
 
@@ -106,7 +106,9 @@ npm run test:e2e
 
 `npm run data:refresh:semi-monthly` 会生成 `app/public/periodic-data/latest.json`。该文件用于 `/data` 页面展示半月采集状态。脚本会同步写入 `app/public/weekly-data/latest.json` 作为兼容路径。禁止回退到 `app/public/data/`，否则会与 React Router 的 `/data` 页面冲突，并在生产 nginx 下触发目录 403。
 
-2026-06-11 生产 manifest 已验证：`period=2026-06-H1`，`refreshCadence=semi-monthly`，来源总数 45，`ok=10`，`connector-required=23`，`manual-required=12`，`issueCount=0`。这些计数只描述来源接入状态，不代表 45 条来源都已完成业务数值复核。
+2026-06-12 生产 manifest 已验证：`period=2026-06-H1`，`refreshCadence=semi-monthly`，`generatedAt=2026-06-12T02:23:17.911Z`，来源总数 45，`ok=10`，`connector-required=23`，`manual-required=12`，`issueCount=0`。这些计数只描述来源接入状态，不代表 45 条来源都已完成业务数值复核。
+
+同次生产发布的公开证据 manifest 已验证：`mode=live-browser-capture`，`generatedAt=2026-06-12T02:23:22.683Z`，12/12 captured，`networkCalls=12`，`businessDataWrites=0`，`rawTextIncluded=false`，`screenshotsIncluded=false`。该 manifest 是公开样本证据索引，不是 Amazon、CRM、ERP、VOC、海关或访谈业务数据快照。
 
 | 状态 | 处理规则 |
 |---|---|
@@ -114,6 +116,18 @@ npm run test:e2e
 | `fetch-error` / `source-error` | 公开来源按当次 `collectionPolicy.publicUrl` 多次尝试后仍失败，下次重试或人工复核 |
 | `connector-required` | 需要授权连接器，未接入前不得声称已采集 |
 | `manual-required` | 需要采购报告、人工上传或补充 URL |
+
+## 浏览器辅助公开证据
+
+`npm run data:public-evidence:dry-run` 只生成采集规划，不启动浏览器，`networkCalls=0`、`businessDataWrites=0`。`npm run data:public-evidence:live` 或半月刷新参数 `--public-evidence-live` 会用 Chromium 访问公开页面，写入 `app/public/periodic-data/public-evidence-samples.json` 与 `app/public/weekly-data/public-evidence-samples.json`。
+
+公开证据 manifest 允许进入 public 静态包的字段仅限 URL、标题、HTTP 状态、可见文本长度、可见文本哈希、匹配词、非逐字摘要、证据边界和本地 `tmp/public-evidence/` 路径。完整可见文本和截图只留在 ignored 的 `app/tmp/public-evidence/`，不得提交到 git，也不得写入前端 public bundle。
+
+公开证据的使用边界：
+
+- Amazon 公开搜索页或品牌页只能作为公开页面存在性样本，不得写成平台级价格、评论、SKU、销量或 BSR 数据。
+- 品牌官网、新闻、法规、展会和公开调研页只能补强条目来源，不得替代采购报告、授权 API、CRM、ERP、VOC/NLP、海关或访谈凭证。
+- 页面返回 403、验证码、空白或错误时，保留失败状态，不得改写为 `verified` 或 `ok`。
 
 `sourceType=代码资产` 的来源走 `local-file-check`，用当前 app 副本里的文件存在性、文件大小和 SHA-256 哈希作为可用性证据。此类来源可以保留 GitHub URL 作为人工阅读入口，但半月采集不得依赖 GitHub blob 网络请求；本地文件缺失时才应进入 `source-error`。
 

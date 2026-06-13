@@ -5,7 +5,7 @@ module: data-collection
 topic: weekly-refresh
 status: stable
 created: 2026-06-02
-updated: 2026-06-11
+updated: 2026-06-12
 owner: self
 source: human+ai
 ---
@@ -238,14 +238,14 @@ npm run data:connector:amazon:private:audit -- --private-dir /opt/mkt53/private 
 
 ```bash
 cd /opt/mkt53/automation/app
-MKT53_AMAZON_PRIVATE_DIR=/opt/mkt53/private npm run data:publish:weekly:local
+MKT53_AMAZON_PRIVATE_DIR=/opt/mkt53/private npm run data:publish:semi-monthly:local
 ```
 
 如果业务要求半月任务在私有审计失败时停止：
 
 ```bash
 cd /opt/mkt53/automation/app
-MKT53_PRIVATE_AUDIT_REQUIRED=1 npm run data:publish:weekly:local
+MKT53_PRIVATE_AUDIT_REQUIRED=1 npm run data:publish:semi-monthly:local
 ```
 
 通过环境变量读取私有映射：
