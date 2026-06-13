@@ -37,7 +37,7 @@ mkt53 已作为 `Lute Data Science Hub` 的一个正式入口上线。截至 202
 
 | 入口 | 链接 | 当前状态 |
 |---|---|---|
-| 宿主导航页 | `https://lute-tlz-dddd.top` | 多服务卡片网格，当前包含 12 个服务入口 |
+| 宿主导航页 | `https://lute-tlz-dddd.top` | nginx landing 已配置；2026-06-13 公开 DNS 暂无 apex A 记录，需恢复后完整生产 E2E 才能通过 |
 | 市场洞察入口卡片 | `https://mkt.lute-tlz-dddd.top` | subtitle `Market Insight Platform`，标题「市场洞察工作台」，CTA「打开市场看板」 |
 | mkt53 看板本体 | `https://mkt.lute-tlz-dddd.top` | Vite 静态看板，首页标题为 Momcozy 市场洞察工作台 |
 | 数据管理页 | `https://mkt.lute-tlz-dddd.top/#/data` | 生产使用 hash 路由；裸 `/data` 不是数据页入口 |

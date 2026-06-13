@@ -169,6 +169,8 @@ npm run test:e2e:prod
 
 `test:e2e:prod` 不启动本地 dev server，直接验证宿主 landing 的 `card mkt`、12 个服务卡片数量、mkt 目标页标题和桌面/移动端无水平溢出。
 
+2026-06-13 生产验证发现：`mkt.lute-tlz-dddd.top` 解析和看板本体正常，`lute-tlz-dddd.top` apex 公开 DNS 暂无 A 记录，导致完整 `test:e2e:prod` 的宿主 landing 用例失败。修复前不要用本地 hosts 或 `--resolve` 把完整生产 E2E 伪装成通过；应恢复 apex A 记录到 `101.34.52.232` 后重跑 `npm run test:e2e:prod`。
+
 半月数据刷新：
 
 ```bash
