@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { accessSync, chmodSync, constants, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { accessSync, chmodSync, constants, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
@@ -63,6 +63,7 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:amazon:mapping:coverage']).toContain('--coverage-report');
     expect(packageJson.scripts['data:connector:amazon:mapping:archive']).toContain('--archive-coverage-report');
     expect(packageJson.scripts['data:connector:amazon:mapping:scaffold']).toContain('scaffold-amazon-mapping-fill-draft.mjs');
+    expect(packageJson.scripts['data:connector:amazon:mapping:promote']).toContain('promote-amazon-mapping-fill-draft.mjs');
     expect(packageJson.scripts['data:connector:amazon:private:bootstrap']).toContain('bootstrap-amazon-private-inputs.mjs');
     expect(packageJson.scripts['data:connector:amazon:private:audit']).toContain('amazon-commerce-private-input-audit.mjs');
     expect(packageJson.scripts['data:connector:amazon:readiness']).toContain('--readiness-gate');
@@ -1266,6 +1267,199 @@ describe('production helper scripts', () => {
 
       expect(secondScaffold.files.json).toMatchObject({ status: 'exists', overwritten: false });
       expect(secondScaffold.files.csv).toMatchObject({ status: 'exists', overwritten: false });
+    } finally {
+      rmSync(privateDir, { recursive: true, force: true });
+    }
+  });
+
+  it('keeps Amazon mapping promotion blocked for an unfilled private draft', () => {
+    const privateDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-private-'));
+
+    try {
+      execFileSync('node', ['scripts/data/connectors/scaffold-amazon-mapping-fill-draft.mjs', '--target-dir', privateDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const output = execFileSync('node', ['scripts/data/connectors/promote-amazon-mapping-fill-draft.mjs', '--private-dir', privateDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const manifest = JSON.parse(output) as {
+        status: string;
+        output: { status: string; overwritten: boolean };
+        validation: {
+          counts: { mappingCount: number; validMappingCount: number; invalidMappingCount: number };
+          coverage: { totalRequiredItems: number; totalMappedItems: number; missingItemCount: number };
+          blockers: Array<{ type: string; count?: number; sourceId?: string }>;
+        };
+        safety: { networkCalls: number; businessDataWrites: number; privateInputWrites: number; requiresExplicitWriteFinal: boolean };
+      };
+
+      expect(output).not.toMatch(/clientSecret|refreshToken|accessToken|password|privateKey|authorizationHeader/i);
+      expect(manifest.status).toBe('blocked');
+      expect(manifest.output).toMatchObject({ status: 'blocked-not-written', overwritten: false });
+      expect(manifest.validation.counts).toMatchObject({ mappingCount: 67, validMappingCount: 0, invalidMappingCount: 67 });
+      expect(manifest.validation.coverage).toMatchObject({
+        totalRequiredItems: 67,
+        totalMappedItems: 0,
+        missingItemCount: 67,
+      });
+      expect(manifest.validation.blockers).toEqual(expect.arrayContaining([expect.objectContaining({ type: 'invalid-mapping-rows', count: 67 })]));
+      expect(manifest.safety).toMatchObject({
+        networkCalls: 0,
+        businessDataWrites: 0,
+        privateInputWrites: 0,
+        requiresExplicitWriteFinal: true,
+      });
+      expect(existsSync(join(privateDir, 'amazon-commerce-mapping.json'))).toBe(false);
+    } finally {
+      rmSync(privateDir, { recursive: true, force: true });
+    }
+  });
+
+  it('promotes a complete private Amazon mapping JSON with backup and redacted output', () => {
+    const privateDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-private-'));
+
+    try {
+      const scaffoldOutput = execFileSync('node', ['scripts/data/connectors/scaffold-amazon-mapping-fill-draft.mjs', '--target-dir', privateDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const scaffold = JSON.parse(scaffoldOutput) as { files: { json: { path: string } } };
+      const draft = JSON.parse(readFileSync(scaffold.files.json.path, 'utf8')) as {
+        mappings: Array<Record<string, string | number>>;
+      };
+
+      draft.mappings = draft.mappings.map((mapping, index) => ({
+        ...mapping,
+        asin: `B0MKT${String(index + 1).padStart(5, '0')}`,
+        sku: `SKU-${String(index + 1).padStart(3, '0')}`,
+        brand: index % 2 === 0 ? 'Momcozy' : 'Competitor',
+        productName: `Mapped Product ${index + 1}`,
+        category: 'breast-pump',
+        mappingStatus: 'ready',
+        mappingUpdatedAt: '2026-06-13',
+        mappingOwner: 'data-owner',
+      }));
+      writeFileSync(scaffold.files.json.path, `${JSON.stringify(draft, null, 2)}\n`);
+
+      const finalPath = join(privateDir, 'amazon-commerce-mapping.json');
+      writeFileSync(finalPath, '{"mappings":[]}\n', { mode: 0o600 });
+      chmodSync(finalPath, 0o600);
+
+      const dryRunOutput = execFileSync('node', ['scripts/data/connectors/promote-amazon-mapping-fill-draft.mjs', '--private-dir', privateDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const dryRun = JSON.parse(dryRunOutput) as {
+        status: string;
+        output: { status: string; overwritten: boolean };
+        validation: { coverage: { status: string; totalMappedItems: number; missingItemCount: number; invalidMappingCount: number } };
+      };
+
+      expect(dryRunOutput).not.toContain('B0MKT00001');
+      expect(dryRunOutput).not.toContain('SKU-001');
+      expect(dryRun.status).toBe('ready-to-promote');
+      expect(dryRun.output).toMatchObject({ status: 'ready-not-written', overwritten: false });
+      expect(dryRun.validation.coverage).toMatchObject({
+        status: 'ready',
+        totalMappedItems: 67,
+        missingItemCount: 0,
+        invalidMappingCount: 0,
+      });
+      expect(readFileSync(finalPath, 'utf8')).toContain('"mappings":[]');
+
+      const writeOutput = execFileSync(
+        'node',
+        ['scripts/data/connectors/promote-amazon-mapping-fill-draft.mjs', '--private-dir', privateDir, '--write-final'],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+        },
+      );
+      const manifest = JSON.parse(writeOutput) as {
+        status: string;
+        output: { status: string; overwritten: boolean; mode: string; backup: { path: string; status: string; mode: string } };
+        safety: { privateInputWrites: number; publicBundleAllowed: boolean; gitAllowed: boolean };
+      };
+      const finalMapping = JSON.parse(readFileSync(finalPath, 'utf8')) as {
+        privateData: boolean;
+        publicBundleAllowed: boolean;
+        gitAllowed: boolean;
+        mappings: Array<{ asin: string; sku: string }>;
+      };
+
+      expect(writeOutput).not.toContain('B0MKT00001');
+      expect(writeOutput).not.toContain('SKU-001');
+      expect(manifest.status).toBe('promoted');
+      expect(manifest.output).toMatchObject({ status: 'replaced', overwritten: true, mode: '600' });
+      expect(manifest.output.backup).toMatchObject({ status: 'created', mode: '600' });
+      expect(manifest.safety).toMatchObject({ privateInputWrites: 1, publicBundleAllowed: false, gitAllowed: false });
+      expect(statSync(privateDir).mode & 0o777).toBe(0o700);
+      expect(statSync(finalPath).mode & 0o777).toBe(0o600);
+      expect(statSync(manifest.output.backup.path).mode & 0o777).toBe(0o600);
+      expect(finalMapping).toMatchObject({ privateData: true, publicBundleAllowed: false, gitAllowed: false });
+      expect(finalMapping.mappings).toHaveLength(67);
+      expect(finalMapping.mappings[0]).toMatchObject({ asin: 'B0MKT00001', sku: 'SKU-001' });
+    } finally {
+      rmSync(privateDir, { recursive: true, force: true });
+    }
+  });
+
+  it('accepts a complete private Amazon mapping CSV as promotion input', () => {
+    const privateDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-private-'));
+
+    try {
+      const scaffoldOutput = execFileSync('node', ['scripts/data/connectors/scaffold-amazon-mapping-fill-draft.mjs', '--target-dir', privateDir], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const scaffold = JSON.parse(scaffoldOutput) as { files: { json: { path: string }; csv: { path: string } } };
+      const draft = JSON.parse(readFileSync(scaffold.files.json.path, 'utf8')) as {
+        fields: string[];
+        mappings: Array<Record<string, string | number>>;
+      };
+      const rows = draft.mappings.map((mapping, index) => ({
+        ...mapping,
+        asin: `B0CSV${String(index + 1).padStart(5, '0')}`,
+        sku: `CSV-SKU-${String(index + 1).padStart(3, '0')}`,
+        brand: 'Momcozy',
+        productName: `CSV Product ${index + 1}`,
+        category: 'nursing-products',
+        mappingStatus: 'ready',
+        mappingUpdatedAt: '2026-06-13',
+        mappingOwner: 'data-owner',
+      }));
+      const csv = [draft.fields.join(','), ...rows.map((row) => draft.fields.map((field) => row[field]).join(','))].join('\n');
+      writeFileSync(scaffold.files.csv.path, `${csv}\n`);
+
+      const output = execFileSync(
+        'node',
+        ['scripts/data/connectors/promote-amazon-mapping-fill-draft.mjs', '--private-dir', privateDir, '--input', scaffold.files.csv.path],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+        },
+      );
+      const manifest = JSON.parse(output) as {
+        status: string;
+        input: { format: string; rowCount: number };
+        validation: { coverage: { status: string; totalMappedItems: number; missingItemCount: number; invalidMappingCount: number } };
+        safety: { privateInputWrites: number };
+      };
+
+      expect(output).not.toContain('B0CSV00001');
+      expect(output).not.toContain('CSV-SKU-001');
+      expect(manifest.status).toBe('ready-to-promote');
+      expect(manifest.input).toMatchObject({ format: 'csv', rowCount: 67 });
+      expect(manifest.validation.coverage).toMatchObject({
+        status: 'ready',
+        totalMappedItems: 67,
+        missingItemCount: 0,
+        invalidMappingCount: 0,
+      });
+      expect(manifest.safety.privateInputWrites).toBe(0);
+      expect(existsSync(join(privateDir, 'amazon-commerce-mapping.json'))).toBe(false);
     } finally {
       rmSync(privateDir, { recursive: true, force: true });
     }
