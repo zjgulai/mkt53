@@ -177,7 +177,22 @@ cd /opt/mkt53/automation/app
 npm run data:connector:amazon:mapping:scaffold -- --target-dir /opt/mkt53/private
 ```
 
-该命令只生成 `amazon-commerce-mapping-fill-draft.json` 和 `amazon-commerce-mapping-fill-draft.csv`，不覆盖最终 `amazon-commerce-mapping.json`。草稿按七个 Amazon source id 展开为 67 行空白映射，权限为 `600`，只能由业务/数据 owner 在私有目录中填写。填完后先对草稿执行 `mapping:validate` 和 `mapping:coverage`；覆盖率 ready 后，再把通过校验的草稿作为最终 `amazon-commerce-mapping.json` 输入 private audit。
+该命令只生成 `amazon-commerce-mapping-fill-draft.json` 和 `amazon-commerce-mapping-fill-draft.csv`，不覆盖最终 `amazon-commerce-mapping.json`。草稿按七个 Amazon source id 展开为 67 行空白映射，权限为 `600`，只能由业务/数据 owner 在私有目录中填写。
+
+填完后先执行 promotion dry-run。该命令默认只校验，不写最终映射：
+
+```bash
+cd /opt/mkt53/automation/app
+npm run data:connector:amazon:mapping:promote -- --private-dir /opt/mkt53/private
+```
+
+只有返回 `ready-to-promote` 后，才允许显式写入最终映射：
+
+```bash
+npm run data:connector:amazon:mapping:promote -- --private-dir /opt/mkt53/private --write-final
+```
+
+promotion gate 会先校验 67 行覆盖率、ASIN 格式、source id、站点、marketplace、`mappingStatus=ready`、`mappingUpdatedAt` 和重复键；通过后写入 `amazon-commerce-mapping.json`，并在 private `backups/` 中备份旧映射。输出只包含计数、缺项和路径，不输出真实 ASIN、SKU、品牌、owner 或凭据值。
 
 私有输入交叉审计：
 
