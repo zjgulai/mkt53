@@ -32,6 +32,8 @@
     "data:connector:amazon:readiness": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --readiness-gate",
     "data:connector:amazon:readiness:checklist": "node scripts/data/connectors/amazon-commerce-readiness-checklist.mjs",
     "data:connector:amazon:readiness:template": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --print-readiness-template",
+    "data:connector:amazon:readiness:scaffold": "node scripts/data/connectors/scaffold-amazon-readiness-fill-draft.mjs",
+    "data:connector:amazon:readiness:promote": "node scripts/data/connectors/promote-amazon-readiness-fill-draft.mjs",
     "data:connector:voc-nlp:dry-run": "node scripts/data/connectors/voc-nlp-dry-run.mjs",
     "data:connector:voc-nlp:readiness": "node scripts/data/connectors/voc-nlp-dry-run.mjs --readiness-gate",
     "data:connector:voc-nlp:readiness:template": "node scripts/data/connectors/voc-nlp-dry-run.mjs --print-readiness-template",

@@ -194,6 +194,22 @@ npm run data:connector:amazon:mapping:promote -- --private-dir /opt/mkt53/privat
 
 promotion gate 会先校验 67 行覆盖率、ASIN 格式、source id、站点、marketplace、`mappingStatus=ready`、`mappingUpdatedAt` 和重复键；通过后写入 `amazon-commerce-mapping.json`，并在 private `backups/` 中备份旧映射。输出只包含计数、缺项和路径，不输出真实 ASIN、SKU、品牌、owner 或凭据值。
 
+生成和晋升 Amazon readiness 私有填报草稿：
+
+```bash
+cd /opt/mkt53/automation/app
+npm run data:connector:amazon:readiness:scaffold -- --target-dir /opt/mkt53/private
+npm run data:connector:amazon:readiness:promote -- --private-dir /opt/mkt53/private
+```
+
+`readiness:promote` 默认只校验，不写最终 readiness。它校验授权记录、采集窗口、owner review、compliance review、snapshot scope 和 secret-like 字段边界。只有返回 `ready-to-promote` 后，才允许显式写入：
+
+```bash
+npm run data:connector:amazon:readiness:promote -- --private-dir /opt/mkt53/private --write-final
+```
+
+写入前会备份旧 `amazon-commerce-readiness.json`，输出不得包含真实授权记录、owner、凭据或业务明细。
+
 私有输入交叉审计：
 
 ```bash
