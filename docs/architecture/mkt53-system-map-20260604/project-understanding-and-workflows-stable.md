@@ -5,7 +5,7 @@ module: mkt53
 topic: system-map-and-workflows
 status: stable
 created: 2026-06-04
-updated: 2026-06-11
+updated: 2026-06-12
 owner: self
 source: human+ai
 ---
@@ -22,8 +22,9 @@ mkt53 当前不是单一静态展示站，而是一个“Momcozy 市场洞察工
 - 路由：`App.tsx` 中定义 46 条路由，其中业务页面覆盖市场、竞争、用户、行业、自我洞察、AI 助手、AI 图库、报告、数据管理、数据来源管理。
 - 数据资产：`DataManage.tsx` 中维护 6 大数据模块、27 张数据表、字段字典、治理信息和数据血缘。
 - 来源注册：`source-registry.ts` 中维护 45 个来源条目。
-- 半月刷新：`refresh-semi-monthly-data.mjs` 读取 `sourceRegistry`，结合一致性审计和连接器 backlog，生成 `public/periodic-data/latest.json`，并同步写入 `public/weekly-data/latest.json` 兼容路径。
-- 最新线上数据状态：`period=2026-06-H1`，`generatedAt=2026-06-11T07:30:40.503Z`，`total=45`，`ok=10`，`manual-required=12`，`connector-required=23`，`issueCount=0`。
+- 半月刷新：`refresh-semi-monthly-data.mjs` 读取 `sourceRegistry`，结合一致性审计、连接器 backlog、补证任务队列和公开证据摘要，生成 `public/periodic-data/latest.json`，并同步写入 `public/weekly-data/latest.json` 兼容路径。
+- 最新线上数据状态：`period=2026-06-H1`，`generatedAt=2026-06-12T02:23:17.911Z`，`total=45`，`ok=10`，`manual-required=12`，`connector-required=23`，`issueCount=0`。
+- 最新公开证据状态：`public-evidence-samples.json` 为 `live-browser-capture`，`generatedAt=2026-06-12T02:23:22.683Z`，12/12 captured，`businessDataWrites=0`；它只证明公开页面样本可见，不替代授权连接器或人工凭证。
 - 部署：`deploy:prod` 通过 test、lint、audit、build 后 rsync 到腾讯云轻量服务器 `/opt/mkt53/html/`，由共享 nginx 容器 `ai_video_nginx` 服务。
 
 核心判断：
@@ -380,9 +381,10 @@ sourceRegistry.ts
 -> public-url-check / local-file-check / manual-required / connector-required
 -> buildConnectorBacklog()
 -> public/periodic-data/latest.json
+-> public/periodic-data/public-evidence-samples.json
 -> 同步 public/weekly-data/latest.json 兼容路径
 -> DataManage 优先 fetch('/periodic-data/latest.json')
--> /data 页面展示半月刷新状态
+-> /data 与 /data-source 页面展示半月刷新和公开证据状态
 ```
 
 停止条件：
@@ -392,6 +394,7 @@ sourceRegistry.ts
 - `source-error=0` 和 `fetch-error=0`，或异常被显式记录。
 - `connector-required` 未被伪造成 `ok`。
 - manifest 的 `generatedAt` 更新到目标时间节点。
+- `publicEvidence.businessDataWrites=0`，公开证据没有被写成真实平台或内部系统数据。
 
 ### 7.2 来源复核工作流
 

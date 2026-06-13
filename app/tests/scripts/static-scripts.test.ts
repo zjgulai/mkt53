@@ -35,9 +35,16 @@ describe('production helper scripts', () => {
 
     expect(packageJson.scripts['data:audit']).toContain('scripts/data/audit-consistency.mjs');
     expect(packageJson.scripts['data:collect:weekly']).toContain('scripts/data/collect-weekly-sources.mjs');
+    expect(packageJson.scripts['data:public-evidence:dry-run']).toContain('scripts/data/collect-public-evidence.mjs');
+    expect(packageJson.scripts['data:public-evidence:dry-run']).toContain('--dry-run');
+    expect(packageJson.scripts['data:public-evidence:live']).toContain('scripts/data/collect-public-evidence.mjs');
+    expect(packageJson.scripts['data:public-evidence:live']).toContain('--live');
+    expect(packageJson.scripts['data:public-evidence:live']).toContain('--write-public');
     expect(packageJson.scripts['data:source-tasks']).toContain('scripts/data/build-source-tasks.mjs');
     expect(packageJson.scripts['data:refresh:weekly']).toContain('scripts/data/refresh-weekly-data.mjs');
     expect(packageJson.scripts['data:refresh:semi-monthly']).toContain('scripts/data/refresh-semi-monthly-data.mjs');
+    expect(packageJson.scripts['data:refresh:semi-monthly:public-evidence']).toContain('scripts/data/refresh-semi-monthly-data.mjs');
+    expect(packageJson.scripts['data:refresh:semi-monthly:public-evidence']).toContain('--public-evidence-live');
     expect(packageJson.scripts['data:connector:amazon:dry-run']).toContain('scripts/data/connectors/amazon-commerce-dry-run.mjs');
     expect(packageJson.scripts['data:connector:amazon:mapping:validate']).toContain('--json --no-write');
     expect(packageJson.scripts['data:connector:amazon:mapping:template']).toContain('--print-mapping-template');
@@ -69,6 +76,10 @@ describe('production helper scripts', () => {
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-weekly-data.mjs'), 'utf8')).toContain('public/weekly-data/source-tasks.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/periodic-data/latest.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/periodic-data/source-tasks.json');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('collectPublicEvidence');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/periodic-data/public-evidence-samples.json');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('--public-evidence-live');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('--skip-public-evidence');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('data:connector:amazon:private:audit');
     expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_AMAZON_PRIVATE_DIR');
@@ -86,6 +97,7 @@ describe('production helper scripts', () => {
     for (const script of [
       'scripts/data/audit-consistency.mjs',
       'scripts/data/build-source-tasks.mjs',
+      'scripts/data/collect-public-evidence.mjs',
       'scripts/data/collect-weekly-sources.mjs',
       'scripts/data/refresh-weekly-data.mjs',
       'scripts/data/refresh-semi-monthly-data.mjs',
@@ -101,6 +113,7 @@ describe('production helper scripts', () => {
 
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-backlog.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/source-tasks.mjs'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/public-evidence-seeds.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-dry-run.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/bootstrap-amazon-private-inputs.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-private-input-audit.mjs'), constants.X_OK)).not.toThrow();
@@ -208,6 +221,53 @@ describe('production helper scripts', () => {
     expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-002')).toBe(true);
     expect(manifest.sourceTaskQueue.tasks.every((task) => task.requiredEvidence.length > 0)).toBe(true);
     expect(manifest.sourceTaskQueue.tasks.every((task) => task.acceptanceCriteria.join(' ').includes('不得'))).toBe(true);
+  });
+
+  it('plans browser-assisted public evidence capture without network or business writes', () => {
+    const output = execFileSync('node', ['scripts/data/collect-public-evidence.mjs', '--json', '--dry-run'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const manifest = JSON.parse(output) as {
+      mode: string;
+      generatedRule: string;
+      publicBundlePolicy: { rawTextIncluded: boolean; screenshotsIncluded: boolean };
+      summary: {
+        total: number;
+        captureStatusCounts: Record<string, number>;
+        networkCalls: number;
+        businessDataWrites: number;
+      };
+      records: Array<{
+        seedId: string;
+        sourceId: string;
+        url: string;
+        captureStatus: string;
+        notFullPlatformDataset: boolean;
+        rawTextPublicBundleAllowed: boolean;
+        screenshotPublicBundleAllowed: boolean;
+        collectionBoundary: string;
+        safety: { networkCalls: number; loginAttempted: boolean; bypassAttempted: boolean; businessDataWrites: number };
+      }>;
+    };
+
+    expect(manifest.mode).toBe('dry-run');
+    expect(manifest.generatedRule).toContain('does not log in');
+    expect(manifest.publicBundlePolicy).toMatchObject({ rawTextIncluded: false, screenshotsIncluded: false });
+    expect(manifest.summary.total).toBeGreaterThanOrEqual(10);
+    expect(manifest.summary.captureStatusCounts.planned).toBe(manifest.summary.total);
+    expect(manifest.summary.networkCalls).toBe(0);
+    expect(manifest.summary.businessDataWrites).toBe(0);
+    expect(manifest.records.some((record) => record.seedId.includes('amazon'))).toBe(true);
+    expect(manifest.records.every((record) => record.url.startsWith('https://'))).toBe(true);
+    expect(manifest.records.every((record) => record.notFullPlatformDataset === true)).toBe(true);
+    expect(manifest.records.every((record) => record.rawTextPublicBundleAllowed === false)).toBe(true);
+    expect(manifest.records.every((record) => record.screenshotPublicBundleAllowed === false)).toBe(true);
+    expect(manifest.records.every((record) => record.collectionBoundary.length > 20)).toBe(true);
+    expect(manifest.records.every((record) => record.safety.networkCalls === 0)).toBe(true);
+    expect(manifest.records.every((record) => record.safety.loginAttempted === false)).toBe(true);
+    expect(manifest.records.every((record) => record.safety.bypassAttempted === false)).toBe(true);
+    expect(manifest.records.every((record) => record.safety.businessDataWrites === 0)).toBe(true);
   });
 
   it('adds semi-monthly period metadata without dropping weekly compatibility', async () => {

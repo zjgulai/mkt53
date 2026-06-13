@@ -5,7 +5,7 @@ module: mkt53
 topic: system-map-artifacts
 status: stable
 created: 2026-06-04
-updated: 2026-06-11
+updated: 2026-06-12
 owner: self
 source: human+ai
 ---
@@ -32,8 +32,9 @@ source: human+ai
 - `app/src/App.tsx` 路由定义：46 条路由。
 - `app/src/pages/DataManage.tsx`：6 大数据模块、27 张数据表、数据治理与血缘视图。
 - `app/src/data/source-registry.ts`：45 个来源条目。
-- `app/scripts/data/*`：一致性审计、半月采集、连接器 backlog、Amazon 私有输入脚本。
-- `app/public/periodic-data/latest.json`：2026-06-11 半月 manifest，周期 `2026-06-H1`。
+- `app/scripts/data/*`：一致性审计、半月采集、公开证据样本、连接器 backlog、Amazon 私有输入脚本。
+- `app/public/periodic-data/latest.json`：2026-06-12 半月 manifest，周期 `2026-06-H1`。
+- `app/public/periodic-data/public-evidence-samples.json`：2026-06-12 浏览器辅助公开证据样本，12/12 captured。
 - `app/public/weekly-data/latest.json`：兼容路径，由半月刷新脚本同步写入。
 - `app/package.json`：测试、构建、部署、E2E 和数据刷新脚本。
 

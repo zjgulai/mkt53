@@ -26,6 +26,16 @@ export interface PeriodicCollectionManifest {
     priorityCounts?: Record<string, number>;
     ownerTeamCounts?: Record<string, number>;
   };
+  publicEvidence?: {
+    mode: string;
+    generatedAt: string;
+    total: number;
+    captureStatusCounts?: Record<string, number>;
+    evidenceClassCounts?: Record<string, number>;
+    networkCalls: number;
+    businessDataWrites: number;
+    manifestPath?: string;
+  };
   totals: Record<string, number>;
 }
 

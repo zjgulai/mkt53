@@ -1,52 +1,80 @@
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Calendar, MapPin, Users, Star, Globe, Ticket } from 'lucide-react';
+import { Calendar, CheckCircle2, ExternalLink, Globe, MapPin, Ticket, Users } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 
 const exhibitions = [
   {
-    id: 1, name: 'ABC Kids Expo 2025', location: 'Las Vegas, US', date: '样例日期待复核', status: '已结束',
-    visitors: 18500, momcozyBooth: 'Hall C-320', boothSize: 120,
-    leads: 1240, orders: 86, satisfaction: 4.7,
-    highlights: ['M5 Pro新品全球首发', '与Target采购团队达成年度框架协议', '获得"最佳创新设计"展位奖'],
-    feedback: 'M5 Pro的静音演示吸引了大量专业买家驻足，北美渠道商对无线充电功能非常感兴趣。',
+    id: 1,
+    name: 'ABC Kids Expo 2026',
+    location: 'Las Vegas, US · Mandalay Bay',
+    date: '2026-05-13 ~ 05-15',
+    status: '已结束',
+    audience: '官方展商页预估 4,000-5,000 专业观众',
+    momcozyBooth: '待补展位记录',
+    sourceName: 'ABC Kids Expo exhibitor page',
+    sourceUrl: 'https://theabcshow.com/pages/exhibitors-2024',
+    highlights: ['北美 B2B juvenile products 展会', '2026 展商页已公开日期与地点', '经营复盘需补 CRM 或展会复盘快照'],
+    feedback: '公开来源可确认展会日程与地点；线索、订单、满意度和 ROI 暂不作为已采集经营数据展示。',
   },
   {
-    id: 2, name: 'Kind + Jugend 2025', location: 'Cologne, Germany', date: '2025-09-04 ~ 09-06', status: '即将举办',
-    visitors: 22000, momcozyBooth: 'Hall 10.2-B45', boothSize: 150,
-    leads: null, orders: null, satisfaction: null,
-    highlights: ['计划发布欧洲限定配色系列', '与Medela同台竞技展示技术差异化', '邀请5位欧洲母婴达人现场直播'],
-    feedback: '欧洲消费者对环保包装和B Corp认证关注度很高，正在调整展示重点。',
+    id: 2,
+    name: 'Kind + Jugend 2026',
+    location: 'Cologne, Germany',
+    date: '2026-09-15 ~ 09-17',
+    status: '报名中',
+    audience: '官方展会页已发布 2026 档期',
+    momcozyBooth: '待补展位记录',
+    sourceName: 'Kind + Jugend official',
+    sourceUrl: 'https://www.kindundjugend.com/trade-fair/kind-jugend/',
+    highlights: ['欧洲母婴用品与儿童用品展会', '2026 档期为 9 月 15-17 日', '参展计划需补内部展位与预算记录'],
+    feedback: '当前只把官网档期作为参展线索；展位、费用、达人合作和销售目标需内部计划单补证。',
   },
   {
-    id: 3, name: 'CBME China 2025', location: 'Shanghai, China', date: '2025-07-16 ~ 07-18', status: '报名中',
-    visitors: 95000, momcozyBooth: '待定', boothSize: 200,
-    leads: null, orders: null, satisfaction: null,
-    highlights: ['全品类首次同台展示', ' launching 智能母婴生态系统概念', '合作伙伴招商大会'],
-    feedback: '国内消费者对智能互联功能接受度最高，计划重点展示APP数据分析功能。',
+    id: 3,
+    name: 'CBME China 2026',
+    location: 'Shanghai, China · NECC',
+    date: '2026-07-15 ~ 07-17',
+    status: '报名中',
+    audience: '官方页面确认 2026 年上海国家会展中心档期',
+    momcozyBooth: '待补展位记录',
+    sourceName: 'CBME China official',
+    sourceUrl: 'https://www.cbmexpochina.com/about-cbme-china/',
+    highlights: ['中国孕婴童产业展会', '2026 档期为 7 月 15-17 日', '平台招商与渠道动作需另补计划表'],
+    feedback: '官网可支撑日期与地点；招商会、渠道合作和全品类展示仍需内部活动方案确认。',
   },
   {
-    id: 4, name: 'Pueri Expo 2025', location: 'São Paulo, Brazil', date: '样例日期待复核', status: '已结束',
-    visitors: 8200, momcozyBooth: 'Hall B-108', boothSize: 80,
-    leads: 560, orders: 34, satisfaction: 4.4,
-    highlights: ['首次进入南美市场', '本地化葡萄牙语产品展示', '与当地最大母婴连锁达成试销协议'],
-    feedback: '南美市场对价格敏感度高，M6 Slim的性价比定位非常契合当地需求。',
+    id: 4,
+    name: 'Pueri Expo 2026',
+    location: 'São Paulo, Brazil · Expo Center Norte',
+    date: '2026-04-26 ~ 04-28',
+    status: '已结束',
+    audience: '公开展会目录确认 2026 档期',
+    momcozyBooth: '待补展位记录',
+    sourceName: 'Pueri Expo public listing',
+    sourceUrl: 'https://en.cns.travel/trade-show/pueri-expo-sao-paulo',
+    highlights: ['巴西婴童用品专业展会', '2026 档期为 4 月 26-28 日', '南美经营反馈需展后复盘凭证'],
+    feedback: '本条只用于南美展会日程线索；价格敏感度、试销协议和订单结果不再作为已验证事实展示。',
   },
   {
-    id: 5, name: 'Tokyo Baby Show 2025', location: 'Tokyo, Japan', date: '样例日期待复核', status: '即将举办',
-    visitors: 45000, momcozyBooth: 'East Hall 4-220', boothSize: 90,
-    leads: null, orders: null, satisfaction: null,
-    highlights: ['日本限定樱花粉配色首发', '与本地母婴达人深度合作', 'Mini产品线的亚洲首秀'],
-    feedback: '日本消费者对产品细节和包装品质要求很高，正在优化展示材料的日语翻译。',
+    id: 5,
+    name: 'Baby & Kids Expo Tokyo Summer 2026',
+    location: 'Tokyo, Japan · Tokyo Big Sight',
+    date: '2026-06-24 ~ 06-26',
+    status: '即将举办',
+    audience: '官方 Lifestyle Week Tokyo Summer 档期',
+    momcozyBooth: '待补展位记录',
+    sourceName: 'Lifestyle Week Tokyo official',
+    sourceUrl: 'https://www.lifestyle-expo.jp/summer/en-gb.html',
+    highlights: ['日本生活方式展 Baby & Kids Expo 展区', '2026 档期为 6 月 24-26 日', '本地化展示材料需补内部执行记录'],
+    feedback: '当前可作为日本市场展会线索；达人合作、限定配色和 Mini 产品首秀需品牌活动计划单补证。',
   },
 ];
 
-const roiData = [
-  { expo: 'ABC Kids', cost: 85000, revenue: 420000, roi: 394 },
-  { expo: 'Pueri Expo', cost: 45000, revenue: 180000, roi: 300 },
-  { expo: 'CBME 2024', cost: 120000, revenue: 680000, roi: 467 },
-  { expo: 'Kind+Jugend', cost: 95000, revenue: 380000, roi: 300 },
+const reviewSummary = [
+  { label: '公开日程已补证', value: '5', detail: '名称、日期、地点、状态来自公开来源' },
+  { label: '经营复盘待补', value: '5', detail: '线索、订单、ROI 需 CRM 或展后复盘快照' },
+  { label: '下一场待举办', value: '3', detail: 'Tokyo、CBME、Kind + Jugend 仍在 2026 后续窗口' },
 ];
 
 const sidebarItems = [
@@ -94,7 +122,7 @@ export default function Exhibition() {
                 </div>
                 <div>
                   <h1 className="text-lg font-semibold text-[#1d1d1f]">展会调研</h1>
-                  <p className="text-xs text-[#86868b]">追踪全球 {exhibitions.length} 大母婴行业展会，分析参展ROI与市场反馈</p>
+                  <p className="text-xs text-[#86868b]">追踪全球 {exhibitions.length} 大母婴行业展会，公开日程已补证，经营复盘待补来源</p>
                 </div>
               </div>
             </div>
@@ -105,20 +133,20 @@ export default function Exhibition() {
               description="展会官网可支撑日程与参展线索，但线索数、订单和 ROI 仍需 CRM 或展会复盘快照复核；页面不直接输出经营结论。"
             />
 
-            {/* ROI Chart */}
+            {/* Source Review Summary */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-              <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">展会ROI分析 (USD)</h3>
-              <div className="h-56">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={roiData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
-                    <XAxis dataKey="expo" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
-                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} formatter={(value: number) => `$${value.toLocaleString()}`} />
-                    <Bar dataKey="cost" fill="#C25B6E" radius={[4, 4, 0, 0]} name="参展成本" />
-                    <Bar dataKey="revenue" fill="#34c759" radius={[4, 4, 0, 0]} name="获得收入" />
-                  </BarChart>
-                </ResponsiveContainer>
+              <h3 className="text-sm font-semibold text-[#1d1d1f] mb-4">公开来源补证状态</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {reviewSummary.map((item) => (
+                  <div key={item.label} className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CheckCircle2 className="w-4 h-4 text-[#34c759]" />
+                      <span className="text-[11px] font-medium text-[#1d1d1f]">{item.label}</span>
+                    </div>
+                    <div className="text-2xl font-semibold text-[#C25B6E]">{item.value}</div>
+                    <p className="text-[10px] text-[#86868b] mt-1 leading-relaxed">{item.detail}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -130,30 +158,21 @@ export default function Exhibition() {
                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white flex-shrink-0 shadow-sm ${e.status === '已结束' ? 'bg-[#34c759]' : 'bg-[#ff9500]'}`} style={{ boxShadow: `0 2px 8px ${e.status === '已结束' ? '#34c75925' : '#ff950025'}` }}>
                       <Globe className="w-5 h-5" strokeWidth={2} />
                     </div>
-                    <div className="flex-1 min-w-0 min-w-0">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <span className="text-sm font-semibold text-[#1d1d1f]">{e.name}</span>
                         <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${e.status === '已结束' ? 'bg-[#34c759]/10 text-[#34c759]' : e.status === '即将举办' ? 'bg-[#ff9500]/10 text-[#ff9500]' : 'bg-[#C25B6E]/10 text-[#C25B6E]'}`}>{e.status}</span>
-                        {e.satisfaction && (
-                          <div className="flex items-center gap-0.5 ml-auto">
-                            {Array.from({ length: 5 }).map((_, s) => (<Star key={s} className={`w-3.5 h-3.5 ${s < Math.floor(e.satisfaction!) ? 'text-[#ff9500] fill-[#ff9500]' : 'text-[#EDE6DF]'}`} />))}
-                            <span className="text-xs text-[#1d1d1f] ml-1">{e.satisfaction}</span>
-                          </div>
-                        )}
+                        <a href={e.sourceUrl} target="_blank" rel="noreferrer" className="ml-auto text-[10px] text-[#C25B6E] inline-flex items-center gap-1 hover:underline">
+                          {e.sourceName}
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
                       </div>
-                      <div className="flex items-center gap-4 mb-3 text-[10px] text-[#86868b]">
+                      <div className="flex items-center gap-4 mb-3 text-[10px] text-[#86868b] flex-wrap">
                         <span className="flex items-center gap-0.5"><MapPin className="w-3 h-3" />{e.location}</span>
                         <span className="flex items-center gap-0.5"><Calendar className="w-3 h-3" />{e.date}</span>
-                        <span className="flex items-center gap-0.5"><Users className="w-3 h-3" />{e.visitors.toLocaleString()} 访客</span>
-                        <span className="flex items-center gap-0.5"><Ticket className="w-3 h-3" />{e.momcozyBooth} · {e.boothSize}㎡</span>
+                        <span className="flex items-center gap-0.5"><Users className="w-3 h-3" />{e.audience}</span>
+                        <span className="flex items-center gap-0.5"><Ticket className="w-3 h-3" />{e.momcozyBooth}</span>
                       </div>
-                      {e.leads !== null && (
-                        <div className="flex items-center gap-4 mb-3">
-                          <span className="text-[10px] bg-[#FBF8F5] px-2 py-0.5 rounded-md text-[#1d1d1f]">线索 {e.leads}</span>
-                          <span className="text-[10px] bg-[#FBF8F5] px-2 py-0.5 rounded-md text-[#1d1d1f]">订单 {e.orders}</span>
-                          <span className="text-[10px] bg-[#34c759]/10 px-2 py-0.5 rounded-md text-[#34c759] font-medium">ROI {Math.round((e.orders! * 5000 - e.boothSize * 500) / (e.boothSize * 500) * 100)}%</span>
-                        </div>
-                      )}
                       <div className="flex flex-wrap gap-1.5 mb-2">
                         {e.highlights.map((h, hi) => (
                           <span key={hi} className="px-2 py-0.5 rounded-md bg-[#FBF8F5] text-[10px] text-[#C25B6E]">{h}</span>

@@ -5,7 +5,7 @@ module: project
 topic: readme
 status: stable
 created: 2026-05-31
-updated: 2026-06-11
+updated: 2026-06-12
 owner: self
 source: human+ai
 ---
@@ -26,11 +26,12 @@ Momcozy 母婴品牌全球市场分析看板，面向内部团队的数据洞察
 | 生产 smoke | `app/scripts/smoke-prod.sh` |
 | 生产 E2E | `npm run test:e2e:prod` |
 | 半月数据刷新 | `npm run data:refresh:semi-monthly` |
+| 公开证据刷新 | `npm run data:refresh:semi-monthly:public-evidence` |
 | 半月数据发布 | `npm run data:deploy:semi-monthly` |
 
 ## 当前产品形态
 
-mkt53 已作为 `Lute Data Science Hub` 的一个正式入口上线。截至 2026-06-11，当前线上形态是：
+mkt53 已作为 `Lute Data Science Hub` 的一个正式入口上线。截至 2026-06-12，当前线上形态是：
 
 | 入口 | 链接 | 当前状态 |
 |---|---|---|
@@ -50,15 +51,17 @@ mkt53 已作为 `Lute Data Science Hub` 的一个正式入口上线。截至 202
 | 刷新频率 | 半月一次 |
 | 当前周期 | `2026-06-H1` |
 | 数据窗口 | `2026-06-01` 至 `2026-06-15` |
-| 生产 manifest 生成时间 | `2026-06-11T07:30:40.503Z` |
+| 生产 manifest 生成时间 | `2026-06-12T02:23:17.911Z` |
+| 公开证据 manifest 生成时间 | `2026-06-12T02:23:22.683Z` |
 | 下次计划刷新 | `2026-06-16T09:00:00+08:00` |
 | 来源总数 | 45 |
 | 可自动或本地验证 | 10 |
 | 连接器待接入 | 23 |
 | 人工补录或复核 | 12 |
+| 公开证据样本 | 12/12 live browser captured，`businessDataWrites=0` |
 | 当前审计问题数 | 0 |
 
-服务器自动化目录 `/opt/mkt53/automation/app` 已安装半月 cron：每月 1 日和 16 日 09:00 执行 `npm run data:publish:semi-monthly:local`，只写入 `/opt/mkt53/html/`。
+服务器自动化目录 `/opt/mkt53/automation/app` 已同步当前半月机制并安装半月 cron：每月 1 日和 16 日 09:00 执行 `npm run data:publish:semi-monthly:local`，只写入 `/opt/mkt53/html/`。默认 cron 公开证据为 dry-run 规划；人工发布需要 live 公开证据时显式传入 `--public-evidence-live`。
 
 ## 最短路径
 
@@ -101,6 +104,7 @@ npm run test:e2e:prod
 cd app
 npm run data:audit
 npm run data:refresh:semi-monthly
+npm run data:public-evidence:dry-run
 ```
 
 ## 生产部署
@@ -115,7 +119,7 @@ npm run smoke:prod
 
 ```bash
 cd app
-npm run data:deploy:semi-monthly
+npm run data:deploy:semi-monthly -- --public-evidence-live --timeout-ms 12000 --max-attempts 2 --public-evidence-timeout-ms 30000
 ```
 
 部署依赖仓库根目录的 `ai_video.pem`。该文件已被 `.gitignore` 排除，不进入仓库。
@@ -160,11 +164,13 @@ app/
 │  ├─ periodic-data/
 │  │  ├─ latest.json
 │  │  ├─ connectors.json
-│  │  └─ source-tasks.json
+│  │  ├─ source-tasks.json
+│  │  └─ public-evidence-samples.json
 │  └─ weekly-data/      # 兼容旧路径
 │     ├─ latest.json
 │     ├─ connectors.json
-│     └─ source-tasks.json
+│     ├─ source-tasks.json
+│     └─ public-evidence-samples.json
 ├─ scripts/
 │  └─ data/
 ├─ playwright.config.ts

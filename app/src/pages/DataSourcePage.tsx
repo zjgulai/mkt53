@@ -110,6 +110,10 @@ export default function DataSourcePage() {
   const sourceTaskCounts = sourceTaskQueue?.queueTypeCounts ?? {};
   const sourceTaskTotal = sourceTaskQueue?.total ?? connectorRequiredTotal + (collectionTotals['manual-required'] ?? 0);
   const sourceTaskQueuePath = collectionManifestPath.replace('latest.json', 'source-tasks.json');
+  const publicEvidence = collectionManifest?.publicEvidence;
+  const publicEvidenceCaptured = publicEvidence?.captureStatusCounts?.captured ?? 0;
+  const publicEvidenceTotal = publicEvidence?.total ?? 0;
+  const publicEvidencePath = collectionManifestPath.replace('latest.json', 'public-evidence-samples.json');
   const collectionSummary =
     collectionStatus === 'ready'
       ? `${collectionPeriod} · ${collectionWindow} · 生成 ${collectionGeneratedAt}`
@@ -161,23 +165,29 @@ export default function DataSourcePage() {
             </a>
           </div>
           <p className="mt-3 text-[10px] text-[#86868b] leading-relaxed">
-            服务器出口边界：Fortune BI、Mordor、Mamava/Medela 等外站请求可能返回 403，manifest 保留 source-error，不改写为已验证结论。
+            服务器出口边界：Fortune BI、Mordor、Mamava/Medela 等外站请求可能返回 403，manifest 保留 source-error，不改写为已验证结论；公开证据样本只保留 URL、摘要、哈希和本地证据路径。
           </p>
-          <div className="mt-4 grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div className="mt-4 grid grid-cols-2 md:grid-cols-6 gap-3">
             {[
               { label: '补证任务', value: sourceTaskTotal, color: '#1d1d1f' },
               { label: '连接器接入', value: sourceTaskCounts['connector-readiness'] ?? connectorRequiredTotal, color: '#ff9500' },
               { label: '人工凭证', value: sourceTaskCounts['manual-evidence'] ?? collectionTotals['manual-required'] ?? 0, color: '#5856d6' },
               { label: '公开复核', value: sourceTaskCounts['public-source-review'] ?? 0, color: '#C25B6E' },
+              { label: publicEvidence?.mode === 'live-browser-capture' ? '公开证据 live' : '公开证据规划', value: publicEvidenceTotal > 0 ? `${publicEvidenceCaptured}/${publicEvidenceTotal}` : '-', color: publicEvidenceCaptured === publicEvidenceTotal && publicEvidenceTotal > 0 ? '#34c759' : '#ff9500' },
             ].map(item => (
               <div key={item.label} className="px-3 py-2 rounded-xl bg-[#FBF8F5] border border-[#EDE6DF]">
                 <p className="text-[10px] text-[#86868b]">{item.label}</p>
                 <p className="text-lg font-bold" style={{ color: item.color }}>{item.value}</p>
               </div>
             ))}
-            <a href={sourceTaskQueuePath} className="px-3 py-2 rounded-xl border border-[#EDE6DF] bg-white text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E] transition-colors flex items-center justify-center">
-              查看补证队列
-            </a>
+            <div className="grid gap-2">
+              <a href={sourceTaskQueuePath} className="px-3 py-2 rounded-xl border border-[#EDE6DF] bg-white text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E] transition-colors flex items-center justify-center">
+                查看补证队列
+              </a>
+              <a href={publicEvidencePath} className="px-3 py-2 rounded-xl border border-[#EDE6DF] bg-white text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E] transition-colors flex items-center justify-center">
+                查看公开证据
+              </a>
+            </div>
           </div>
         </div>
 

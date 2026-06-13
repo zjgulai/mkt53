@@ -339,7 +339,7 @@ function dataFlow() {
     ['local-file-check\n代码资产存在性 + hash', 1115, 325],
     ['manual-required\n12 人工/采购/访谈凭证', 1115, 445],
     ['connector-required\n23 授权/内部/合规连接器', 1115, 565],
-    ['public/periodic-data/latest.json\n2026-06-11T07:30:40Z', 1115, 705],
+    ['public/periodic-data/latest.json\n2026-06-12T02:23:17Z', 1115, 705],
   ].forEach(([label, x, y]) => e.push(...node(label, x, y, 430, 78, { backgroundColor: palette.decisionFill, strokeColor: palette.decisionStroke, fontSize: 15 })));
 
   e.push(...section('消费与发布层', 1660, 140, 560, 700, { backgroundColor: '#eff6ff', strokeColor: palette.primaryStroke }));

@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "generatedRule": "These seeds are public evidence samples only. They are not connector output, not full platform datasets, and not a substitute for authorized APIs or internal exports.",
+  "seeds": [
+    {
+      "id": "amazon-search-wearable-breast-pump-sample",
+      "sourceId": "ds-009",
+      "page": "ProductManage",
+      "metric": "Amazon public search sample",
+      "label": "Amazon wearable breast pump public search sample",
+      "url": "https://www.amazon.com/s?k=wearable+breast+pump",
+      "evidenceClass": "public-page-sample",
+      "expectedEvidenceTerms": ["breast pump"],
+      "collectionBoundary": "Public visible search page only; no login, no bypass, no review scraping, no claim of complete pricing or review coverage.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "momcozy-m5-official-sample",
+      "sourceId": "ds-008",
+      "page": "NewCompetition",
+      "metric": "Brand official product page sample",
+      "label": "Momcozy M5 official product page sample",
+      "url": "https://momcozy.com/products/m5-smart-wearable-breast-pump-upgraded-with-app-control",
+      "evidenceClass": "brand-official-page",
+      "expectedEvidenceTerms": ["M5", "breast pump"],
+      "collectionBoundary": "Public brand page only; no checkout, no account area, no inventory claim.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "willow-go-official-sample",
+      "sourceId": "ds-008",
+      "page": "NewCompetition",
+      "metric": "Brand official product page sample",
+      "label": "Willow Go official product page sample",
+      "url": "https://onewillow.com/products/willow-go-pump-kit",
+      "evidenceClass": "brand-official-page",
+      "expectedEvidenceTerms": ["Willow Go", "breast pump"],
+      "collectionBoundary": "Public brand page only; no checkout, no account area, no inventory claim.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "medela-pump-in-style-pro-2026-news",
+      "sourceId": "ds-034",
+      "page": "IndustryNews",
+      "metric": "Brand official news evidence",
+      "label": "Medela Pump In Style Pro 2026 official news",
+      "url": "https://www.medela.com/en/about-medela/medela-news/pump-in-style-pro-named-best-new-product-in-the-us-for-2026",
+      "evidenceClass": "brand-official-news",
+      "expectedEvidenceTerms": ["Pump In Style", "2026"],
+      "collectionBoundary": "Public brand news page only.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "cpsc-nursing-pillows-rule",
+      "sourceId": "ds-034",
+      "page": "IndustryNews",
+      "metric": "Regulatory public evidence",
+      "label": "CPSC nursing pillows rule public evidence",
+      "url": "https://www.cpsc.gov/Business--Manufacturing/Business-Education/Business-Guidance/Nursing-Pillows",
+      "evidenceClass": "official-regulatory-page",
+      "expectedEvidenceTerms": ["16 CFR Part 1242", "April 23, 2025"],
+      "collectionBoundary": "Public regulatory guidance page only.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "mordor-wearable-breast-pumps-market",
+      "sourceId": "ds-034",
+      "page": "IndustryNews",
+      "metric": "Market report public page sample",
+      "label": "Mordor wearable breast pumps market public page",
+      "url": "https://www.mordorintelligence.com/industry-reports/wearable-breast-pumps-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Wearable Breast Pumps", "Market Size"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "fortune-bi-breast-pump-market",
+      "sourceId": "ds-002",
+      "page": "MarketPage",
+      "metric": "Market report public page sample",
+      "label": "Fortune BI breast pump market public page",
+      "url": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Breast Pump Market", "Market Size"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "abc-kids-expo-2026",
+      "sourceId": "ds-018",
+      "page": "Exhibition",
+      "metric": "Exhibition official schedule evidence",
+      "label": "ABC Kids Expo 2026 public exhibitor page",
+      "url": "https://theabcshow.com/pages/exhibitors-2024",
+      "evidenceClass": "exhibition-official-page",
+      "expectedEvidenceTerms": ["2026", "Mandalay Bay"],
+      "collectionBoundary": "Public exhibition page only; no exhibitor portal login.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "kind-und-jugend-2026",
+      "sourceId": "ds-018",
+      "page": "Exhibition",
+      "metric": "Exhibition official schedule evidence",
+      "label": "Kind + Jugend 2026 official page",
+      "url": "https://www.kindundjugend.com/trade-fair/kind-jugend/",
+      "evidenceClass": "exhibition-official-page",
+      "expectedEvidenceTerms": ["15", "17", "2026"],
+      "collectionBoundary": "Public exhibition page only.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "cbme-china-2026",
+      "sourceId": "ds-018",
+      "page": "Exhibition",
+      "metric": "Exhibition official schedule evidence",
+      "label": "CBME China 2026 official page",
+      "url": "https://www.cbmexpochina.com/about-cbme-china/",
+      "evidenceClass": "exhibition-official-page",
+      "expectedEvidenceTerms": ["2026", "July", "NECC"],
+      "collectionBoundary": "Public exhibition page only.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "tokyo-baby-kids-expo-2026",
+      "sourceId": "ds-018",
+      "page": "Exhibition",
+      "metric": "Exhibition official schedule evidence",
+      "label": "Baby & Kids Expo Tokyo Summer 2026 official page",
+      "url": "https://www.lifestyle-expo.jp/summer/en-gb.html",
+      "evidenceClass": "exhibition-official-page",
+      "expectedEvidenceTerms": ["June 24", "2026", "Tokyo Big Sight"],
+      "collectionBoundary": "Public exhibition page only.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "mamava-medela-2025-breastfeeding-survey",
+      "sourceId": "ds-043",
+      "page": "UsersPage",
+      "metric": "Public survey evidence sample",
+      "label": "Mamava / Medela 2025 breastfeeding survey public page",
+      "url": "https://www.mamava.com/why-buy-blog/2025-state-of-breastfeeding-survey",
+      "evidenceClass": "public-survey-page",
+      "expectedEvidenceTerms": ["2025 State of Breastfeeding", "Medela"],
+      "collectionBoundary": "Public article page only; no survey raw data extraction.",
+      "notFullPlatformDataset": true
+    }
+  ]
+}
