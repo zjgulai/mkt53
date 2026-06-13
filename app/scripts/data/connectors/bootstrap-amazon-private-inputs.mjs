@@ -2,6 +2,7 @@
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { buildChecklist } from './amazon-commerce-readiness-checklist.mjs';
 
 const connectorId = 'amazon-commerce';
 const defaultTargetDir = process.env.MKT53_AMAZON_PRIVATE_DIR ?? 'configs/private';
@@ -9,6 +10,7 @@ const mappingTemplatePath = 'scripts/data/connectors/templates/amazon-commerce-m
 const readinessTemplatePath = 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json';
 const mappingFileName = 'amazon-commerce-mapping.json';
 const readinessFileName = 'amazon-commerce-readiness.json';
+const checklistFileName = 'amazon-commerce-readiness-checklist.md';
 const reportsDirName = 'reports';
 const blockedTargetSegments = new Set(['public', 'src', 'tests', 'fixtures', 'dist', 'node_modules']);
 
@@ -73,8 +75,10 @@ function bootstrapAmazonPrivateInputs(options) {
   const reportsDir = join(targetDir, reportsDirName);
   const mappingPath = join(targetDir, mappingFileName);
   const readinessPath = join(targetDir, readinessFileName);
+  const checklistPath = join(targetDir, checklistFileName);
   const mappingTemplate = readFileSync(resolve(process.cwd(), mappingTemplatePath), 'utf8');
   const readinessTemplate = readFileSync(resolve(process.cwd(), readinessTemplatePath), 'utf8');
+  const checklist = buildChecklist(JSON.parse(mappingTemplate), JSON.parse(readinessTemplate));
 
   mkdirSync(targetDir, { recursive: true, mode: 0o700 });
   mkdirSync(reportsDir, { recursive: true, mode: 0o700 });
@@ -83,6 +87,7 @@ function bootstrapAmazonPrivateInputs(options) {
 
   const mapping = writePrivatePlaceholder(mappingPath, mappingTemplate, options.force);
   const readiness = writePrivatePlaceholder(readinessPath, readinessTemplate, options.force);
+  const readinessChecklist = writePrivatePlaceholder(checklistPath, checklist, options.force);
 
   return {
     schemaVersion: 1,
@@ -95,6 +100,7 @@ function bootstrapAmazonPrivateInputs(options) {
     files: {
       mapping,
       readiness,
+      readinessChecklist,
     },
     safety: {
       containsCredentialValues: false,
@@ -104,6 +110,7 @@ function bootstrapAmazonPrivateInputs(options) {
       overwritesExistingFilesByDefault: false,
     },
     nextCommands: [
+      `MKT53_AMAZON_PRIVATE_DIR=${targetDir} npm run data:connector:amazon:private:audit`,
       `MKT53_AMAZON_MAPPING_PATH=${mappingPath} npm run data:connector:amazon:mapping:validate`,
       `MKT53_AMAZON_MAPPING_PATH=${mappingPath} MKT53_AMAZON_READINESS_PATH=${readinessPath} npm run data:connector:amazon:readiness`,
       `MKT53_AMAZON_MAPPING_PATH=${mappingPath} MKT53_AMAZON_COVERAGE_REPORT_DIR=${reportsDir} npm run data:connector:amazon:mapping:archive`,

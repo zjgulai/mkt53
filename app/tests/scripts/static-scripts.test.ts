@@ -1124,6 +1124,67 @@ describe('production helper scripts', () => {
     expect(template.readiness.allowedSnapshotTypes).toEqual(template.expectedSnapshotTypes);
   });
 
+  it('bootstraps Amazon private inputs with a readiness checklist for audit handoff', () => {
+    const privateDir = mkdtempSync(join(tmpdir(), 'mkt53-amazon-private-'));
+
+    try {
+      const bootstrapOutput = execFileSync(
+        'node',
+        ['scripts/data/connectors/bootstrap-amazon-private-inputs.mjs', '--target-dir', privateDir],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+        },
+      );
+      const bootstrap = JSON.parse(bootstrapOutput) as {
+        targetDirMode: string;
+        files: {
+          mapping: { path: string; status: string; mode: string };
+          readiness: { path: string; status: string; mode: string };
+          readinessChecklist: { path: string; status: string; mode: string };
+        };
+        safety: { publicBundleAllowed: boolean; gitAllowed: boolean; containsBusinessAsinSkuValues: boolean };
+        nextCommands: string[];
+      };
+
+      expect(bootstrap.targetDirMode).toBe('700');
+      expect(bootstrap.files.mapping).toMatchObject({ status: 'created', mode: '600' });
+      expect(bootstrap.files.readiness).toMatchObject({ status: 'created', mode: '600' });
+      expect(bootstrap.files.readinessChecklist).toMatchObject({ status: 'created', mode: '600' });
+      expect(statSync(privateDir).mode & 0o777).toBe(0o700);
+      expect(statSync(bootstrap.files.mapping.path).mode & 0o777).toBe(0o600);
+      expect(statSync(bootstrap.files.readiness.path).mode & 0o777).toBe(0o600);
+      expect(statSync(bootstrap.files.readinessChecklist.path).mode & 0o777).toBe(0o600);
+      expect(readFileSync(bootstrap.files.readinessChecklist.path, 'utf8')).toContain('Amazon Commerce Private Input Readiness Checklist');
+      expect(bootstrap.safety).toMatchObject({
+        publicBundleAllowed: false,
+        gitAllowed: false,
+        containsBusinessAsinSkuValues: false,
+      });
+      expect(bootstrap.nextCommands.some((command) => command.includes('data:connector:amazon:private:audit'))).toBe(true);
+
+      const auditOutput = execFileSync(
+        'node',
+        ['scripts/data/connectors/amazon-commerce-private-input-audit.mjs', '--private-dir', privateDir],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+        },
+      );
+      const audit = JSON.parse(auditOutput) as {
+        status: string;
+        checklist: { status: string; missingChecklistItems: string[] };
+        blockers: Array<{ scope: string; type: string }>;
+      };
+
+      expect(audit.status).toBe('blocked');
+      expect(audit.checklist).toMatchObject({ status: 'ready', missingChecklistItems: [] });
+      expect(audit.blockers.some((blocker) => blocker.scope === 'checklist' && blocker.type === 'missing-checklist-file')).toBe(false);
+    } finally {
+      rmSync(privateDir, { recursive: true, force: true });
+    }
+  });
+
   it('loads a private Amazon mapping path from MKT53_AMAZON_MAPPING_PATH', () => {
     const output = execFileSync('node', ['scripts/data/connectors/amazon-commerce-dry-run.mjs', '--json', '--no-write'], {
       cwd: process.cwd(),

@@ -5,7 +5,7 @@ module: data-governance
 topic: source-registry
 status: stable
 created: 2026-05-31
-updated: 2026-06-12
+updated: 2026-06-13
 owner: self
 source: human+ai
 ---
@@ -157,7 +157,7 @@ Amazon 映射覆盖率必须用 `npm run data:connector:amazon:mapping:coverage 
 
 Amazon 真实连接器实现前必须通过 `npm run data:connector:amazon:readiness`。该 gate 读取私有映射和私有 readiness record，只检查环境凭据存在性、映射覆盖率、授权记录、采集窗口、owner 复核、合规复核、快照范围和私有边界；脚本仍保持 `networkCalls=0`、`businessDataWrites=0`。默认采集窗口必须跟随当前半月周期，当前为 `2026-06-01..2026-06-15`，私有 readiness record 的 `collectionWindowStart` 和 `collectionWindowEnd` 必须与 gate 命令窗口一致。状态不是 `ready-for-authorized-connector-implementation` 时，不得实现或调度真实 Amazon 采集。即使 gate 通过，也只表示可以开始授权连接器实现，不表示已有真实业务数据快照。
 
-私有输入占位只能通过 `npm run data:connector:amazon:private:bootstrap -- --target-dir <private-dir>` 创建。该命令只复制空模板并设置 `700/600` 权限，默认不覆盖已有私有文件；如果服务器已经存在真实映射或 readiness record，不得使用 `--force`。占位文件仍属于私有材料，不能提交到 git、不能进入前端静态目录，也不能被用作业务数据证据。
+私有输入占位只能通过 `npm run data:connector:amazon:private:bootstrap -- --target-dir <private-dir>` 创建。该命令只复制空 mapping/readiness 模板、生成 readiness checklist，并设置 `700/600` 权限；默认不覆盖已有私有文件。如果服务器已经存在真实映射、readiness record 或人工清单，不得使用 `--force`。占位文件和清单仍属于私有材料，不能提交到 git、不能进入前端静态目录，也不能被用作业务数据证据。
 
 人工填报清单通过 `npm run data:connector:amazon:readiness:checklist` 生成。清单只来自公开模板，列出七个 Amazon source id 的最低映射数、mapping 必填字段、readiness 必填字段、owner/合规复核和安全边界。服务器私有清单路径是 `/opt/mkt53/private/amazon-commerce-readiness-checklist.md`；该文件权限保持 `600`，不得进入 `/opt/mkt53/html`、git 或前端构建产物。
 
