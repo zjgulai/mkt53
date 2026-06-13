@@ -5,7 +5,7 @@ module: deployment
 topic: static-deploy
 status: stable
 created: 2026-05-31
-updated: 2026-06-12
+updated: 2026-06-13
 owner: self
 source: human+ai
 ---
@@ -33,11 +33,16 @@ source: human+ai
 
 ```bash
 cd app
-npm run deploy:prod
-npm run smoke:prod
+npm run deploy:prod:verified
 ```
 
-`npm run deploy:prod` 调用 `app/scripts/deploy-static.sh`，按顺序执行：
+`npm run deploy:prod:verified` 调用 `app/scripts/deploy-static-and-verify.sh`，按顺序执行：
+
+1. `npm run deploy:prod`
+2. `npm run smoke:prod`
+3. `npm run test:e2e:prod`
+
+`npm run deploy:prod` 是底层静态同步入口，调用 `app/scripts/deploy-static.sh`，按顺序执行：
 
 ```bash
 npm run test
@@ -47,7 +52,7 @@ npm run build
 rsync -az --delete dist/ ubuntu@101.34.52.232:/opt/mkt53/html/
 ```
 
-`rsync --delete` 会让远端静态目录与本地 `dist/` 保持一致。执行前必须确认当前构建产物来自已通过门禁的代码。
+`rsync --delete` 会让远端静态目录与本地 `dist/` 保持一致。普通生产发布默认使用 `deploy:prod:verified`，避免部署后漏跑生产 smoke 或生产 E2E；只有排查失败阶段才单独使用 `deploy:prod`。
 
 ## 半月数据刷新部署
 
@@ -58,7 +63,7 @@ cd app
 npm run data:deploy:semi-monthly
 ```
 
-该命令会先运行 `npm run data:refresh:semi-monthly`，再执行 `deploy:prod`、`smoke:prod` 和 `test:e2e:prod`。受限来源会保留为 `connector-required` 或 `manual-required`，不能用脚本输出替代真实授权采集。
+该命令会先运行 `npm run data:refresh:semi-monthly`，再执行 `deploy:prod:verified`。受限来源会保留为 `connector-required` 或 `manual-required`，不能用脚本输出替代真实授权采集。
 
 需要随生产发布同步 live 浏览器公开证据样本时，显式传参：
 

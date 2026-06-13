@@ -17,6 +17,18 @@ describe('production helper scripts', () => {
     expect(script).toContain('rsync -az --delete');
   });
 
+  it('keeps verified production deploy chained through smoke and E2E checks', () => {
+    const scriptPath = join(process.cwd(), 'scripts/deploy-static-and-verify.sh');
+    const script = readFileSync(scriptPath, 'utf8');
+    const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as { scripts: Record<string, string> };
+
+    expect(() => accessSync(scriptPath, constants.X_OK)).not.toThrow();
+    expect(packageJson.scripts['deploy:prod:verified']).toContain('scripts/deploy-static-and-verify.sh');
+    expect(script).toContain('npm run deploy:prod');
+    expect(script).toContain('npm run smoke:prod');
+    expect(script).toContain('npm run test:e2e:prod');
+  });
+
   it('keeps production smoke checks focused on routing, assets, and known leak markers', () => {
     const scriptPath = join(process.cwd(), 'scripts/smoke-prod.sh');
     const script = readFileSync(scriptPath, 'utf8');
@@ -91,6 +103,7 @@ describe('production helper scripts', () => {
     expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_PRIVATE_AUDIT_REQUIRED');
     expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('data:refresh:semi-monthly -- "$@"');
     expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('Continuing public semi-monthly refresh');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-and-deploy.sh'), 'utf8')).toContain('npm run deploy:prod:verified');
     expect(readFileSync(join(process.cwd(), 'scripts/data/install-semi-monthly-cron.sh'), 'utf8')).toContain('mkt53 weekly data refresh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/install-semi-monthly-cron.sh'), 'utf8')).toContain('npm run data:publish:weekly:local');
 
@@ -107,6 +120,7 @@ describe('production helper scripts', () => {
       'scripts/data/semi-monthly-refresh-and-deploy.sh',
       'scripts/data/semi-monthly-refresh-local-static.sh',
       'scripts/data/install-semi-monthly-cron.sh',
+      'scripts/deploy-static-and-verify.sh',
     ]) {
       expect(() => accessSync(join(process.cwd(), script), constants.X_OK)).not.toThrow();
     }
