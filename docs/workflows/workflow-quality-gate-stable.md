@@ -5,7 +5,7 @@ module: engineering
 topic: quality-gate
 status: stable
 created: 2026-05-31
-updated: 2026-06-02
+updated: 2026-06-13
 owner: self
 source: human+ai
 ---
@@ -62,7 +62,7 @@ npm run build
 npm run data:audit
 ```
 
-CI 使用 Node.js 22，并按 `app/package-lock.json` 缓存 npm 依赖。
+CI 使用 Node.js 22 执行项目命令，并按 `app/package-lock.json` 缓存 npm 依赖。GitHub Actions action 版本使用 `actions/checkout@v6` 和 `actions/setup-node@v6`，要求 runner 支持 Node.js 24 action runtime；当前 `ubuntu-latest` 托管 runner 满足该要求。
 
 ## 测试职责边界
 

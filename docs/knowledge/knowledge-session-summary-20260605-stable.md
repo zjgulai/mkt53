@@ -5,7 +5,7 @@ module: mkt53
 topic: session-summary-20260605
 status: stable
 created: 2026-06-05
-updated: 2026-06-12
+updated: 2026-06-13
 owner: self
 source: human+ai
 ---
@@ -187,12 +187,11 @@ ssh -i ai_video.pem ubuntu@101.34.52.232 \
 
 优先级按当前产品风险排序：
 
-1. 提交并合并当前公开证据/半月刷新/文档同步改动，保证 `main` 与生产 2026-06-12 状态一致。
-2. 补 Amazon 私有 ASIN/SKU 映射与授权记录，通过私有输入交叉审计和 readiness gate 后再实现真实连接器。
-3. 补 VOC NLP 私有 readiness record 与样本 manifest，明确样本窗口、模型版本、人工标注样本和一致率。
-4. 补 CRM 私有 readiness record 与脱敏 snapshot manifest，形成真实 RFM 快照前不要升级页面结论。
-5. 补 ERP 私有 readiness record 与脱敏 snapshot manifest，供应链页面继续保持示例/待接入边界。
-6. 处理非阻塞运维债务：GitHub Actions Node.js 20 runner 弃用提示、Browserslist `caniuse-lite` 过期提示。
+1. 补 Amazon 私有 ASIN/SKU 映射与授权记录，通过私有输入交叉审计和 readiness gate 后再实现真实连接器。
+2. 补 VOC NLP 私有 readiness record 与样本 manifest，明确样本窗口、模型版本、人工标注样本和一致率。
+3. 补 CRM 私有 readiness record 与脱敏 snapshot manifest，形成真实 RFM 快照前不要升级页面结论。
+4. 补 ERP 私有 readiness record 与脱敏 snapshot manifest，供应链页面继续保持示例/待接入边界。
+5. 处理非阻塞运维债务：Browserslist `caniuse-lite` 过期提示、Recharts 2.x 不活跃提示。
 
 执行原则：后续迭代优先选择能提升自动化、模块化和数仓管理专业化的动作。自动化指刷新、采集、审计、发布和回归可重复执行；模块化指每个数据域都有独立契约和停止条件；数仓管理专业化指真实数据必须具备快照、字段口径、来源、窗口、脱敏和复核记录。凡是不能增强这三点的展示型扩展，默认降级排期。
 
