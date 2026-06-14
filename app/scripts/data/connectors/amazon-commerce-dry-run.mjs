@@ -4,6 +4,14 @@ import { chmodSync, existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync
 import { basename, dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { buildConnectorBacklog } from '../lib/connector-backlog.mjs';
+import {
+  buildCheck,
+  configuredPathSource,
+  findForbiddenKeys,
+  isIsoDate,
+  readJsonObject,
+  unwrapJsonObject,
+} from '../lib/connector-readiness.mjs';
 import { extractSourceRegistry, isoWeek } from '../lib/project-analysis.mjs';
 
 const connectorId = 'amazon-commerce';
@@ -147,37 +155,8 @@ function readMappings(mappingPath) {
 }
 
 function readReadinessRecord(readinessPath) {
-  if (!readinessPath) return undefined;
-
-  const payload = JSON.parse(readFileSync(resolve(process.cwd(), readinessPath), 'utf8'));
-  if (payload && typeof payload === 'object' && payload.readiness && typeof payload.readiness === 'object') return payload.readiness;
-  if (payload && typeof payload === 'object' && !Array.isArray(payload)) return payload;
-
-  throw new Error('Amazon readiness file must be an object or an object with a readiness object.');
-}
-
-function findForbiddenReadinessKeys(value, prefix = '') {
-  if (!value || typeof value !== 'object') return [];
-
-  return Object.entries(value).flatMap(([key, nestedValue]) => {
-    const path = prefix ? `${prefix}.${key}` : key;
-    const ownMatches = forbiddenReadinessKeyPattern.test(key) ? [path] : [];
-    return [...ownMatches, ...findForbiddenReadinessKeys(nestedValue, path)];
-  });
-}
-
-function isIsoDate(value) {
-  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
-}
-
-function buildCheck(id, label, ready, details, blocker) {
-  return {
-    id,
-    label,
-    status: ready ? 'ready' : 'blocked',
-    details,
-    blockers: ready || !blocker ? [] : [blocker],
-  };
+  const payload = readJsonObject(readinessPath, 'Amazon readiness file');
+  return unwrapJsonObject(payload, 'readiness');
 }
 
 function validateMapping(mapping, context) {
@@ -416,11 +395,15 @@ function archiveMappingCoverageReport(dryRun, report, archiveDir, retention) {
 
 function buildAmazonCommerceReadinessGate(dryRun, options = {}, env = process.env) {
   const readinessPath = options.readinessPath ?? env.MKT53_AMAZON_READINESS_PATH;
-  const readinessPathSource = options.readinessPath ? 'cli' : env.MKT53_AMAZON_READINESS_PATH ? 'env:MKT53_AMAZON_READINESS_PATH' : 'none';
+  const readinessPathSource = configuredPathSource({
+    explicitPath: options.readinessPath,
+    envPath: env.MKT53_AMAZON_READINESS_PATH,
+    envName: 'MKT53_AMAZON_READINESS_PATH',
+  });
   const readiness = readReadinessRecord(readinessPath);
   const expectedSnapshotTypes = snapshotContracts.map((contract) => contract.snapshotType);
   const allowedSnapshotTypes = Array.isArray(readiness?.allowedSnapshotTypes) ? readiness.allowedSnapshotTypes : [];
-  const forbiddenReadinessKeys = readiness ? findForbiddenReadinessKeys(readiness) : [];
+  const forbiddenReadinessKeys = findForbiddenKeys(readiness, [forbiddenReadinessKeyPattern]);
   const collectionWindowStartValid = isIsoDate(readiness?.collectionWindowStart);
   const collectionWindowEndValid = isIsoDate(readiness?.collectionWindowEnd);
   const collectionWindowOrderValid =
@@ -567,7 +550,11 @@ function buildAmazonCommerceReadinessGate(dryRun, options = {}, env = process.en
 export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
   const appRoot = options.appRoot ?? process.cwd();
   const mappingPath = options.mappingPath ?? env.MKT53_AMAZON_MAPPING_PATH;
-  const mappingPathSource = options.mappingPath ? 'cli' : env.MKT53_AMAZON_MAPPING_PATH ? 'env:MKT53_AMAZON_MAPPING_PATH' : 'none';
+  const mappingPathSource = configuredPathSource({
+    explicitPath: options.mappingPath,
+    envPath: env.MKT53_AMAZON_MAPPING_PATH,
+    envName: 'MKT53_AMAZON_MAPPING_PATH',
+  });
   const generatedAt = new Date().toISOString();
   const sourceRegistry = extractSourceRegistry(appRoot);
   const connectorBacklog = buildConnectorBacklog(sourceRegistry);
