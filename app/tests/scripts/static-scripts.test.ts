@@ -132,6 +132,7 @@ describe('production helper scripts', () => {
     }
 
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-backlog.mjs'), constants.R_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/connector-readiness.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/lib/source-tasks.mjs'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/public-evidence-seeds.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/amazon-commerce-dry-run.mjs'), constants.R_OK)).not.toThrow();
@@ -156,6 +157,48 @@ describe('production helper scripts', () => {
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/internal-crm-readiness-valid.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/internal-erp-readiness-valid.json'), constants.R_OK)).not.toThrow();
     expect(readFileSync(join(process.cwd(), '.gitignore'), 'utf8')).toContain('configs/private/');
+  });
+
+  it('keeps shared connector readiness helpers fail-closed and secret-aware', () => {
+    const output = execFileSync(
+      'node',
+      [
+        '--input-type=module',
+        '-e',
+        [
+          "import { buildCheck, configuredPathSource, findForbiddenKeys, isIsoDate, numberValue, stringArray } from './scripts/data/lib/connector-readiness.mjs';",
+          "const check = buildCheck('authorizationRecord', 'Authorization exists', false, { configured: false }, { type: 'missing-readiness-record' });",
+          "const forbiddenKeys = findForbiddenKeys({ readiness: { clientSecret: 'redacted', nested: { reviewText: 'redacted' }, safeField: 'ok' } }, [/secret/i, /^reviewText$/i]);",
+          "const result = { check, forbiddenKeys, cliSource: configuredPathSource({ explicitPath: 'private.json', envPath: 'ignored', envName: 'IGNORED' }), envSource: configuredPathSource({ explicitPath: undefined, envPath: 'private.json', envName: 'MKT53_PRIVATE' }), invalidNumberIsNaN: Number.isNaN(numberValue('10')), dateValid: isIsoDate('2026-06-14'), filtered: stringArray(['ds-001', 42, 'ds-002']) };",
+          'process.stdout.write(JSON.stringify(result));',
+        ].join(''),
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      },
+    );
+    const result = JSON.parse(output) as {
+      check: { status: string; blockers: Array<{ type: string }> };
+      forbiddenKeys: string[];
+      cliSource: string;
+      envSource: string;
+      invalidNumberIsNaN: boolean;
+      dateValid: boolean;
+      filtered: string[];
+    };
+
+    expect(output).not.toContain('redacted');
+    expect(result.check).toMatchObject({
+      status: 'blocked',
+      blockers: [expect.objectContaining({ type: 'missing-readiness-record' })],
+    });
+    expect(result.forbiddenKeys).toEqual(['readiness.clientSecret', 'readiness.nested.reviewText']);
+    expect(result.cliSource).toBe('cli');
+    expect(result.envSource).toBe('env:MKT53_PRIVATE');
+    expect(result.invalidNumberIsNaN).toBe(true);
+    expect(result.dateValid).toBe(true);
+    expect(result.filtered).toEqual(['ds-001', 'ds-002']);
   });
 
   it('audits data management and source registry consistency without network access', () => {
