@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-12T02:23:22.683Z",
-  "mode": "live-browser-capture",
+  "generatedAt": "2026-06-14T04:56:45.953Z",
+  "mode": "dry-run",
   "generatedRule": "Browser-assisted public evidence captures only public visible pages. It does not log in, bypass access controls, write business datasets, or replace authorized connectors.",
   "seedPath": "scripts/data/public-evidence-seeds.json",
   "publicBundlePolicy": {
@@ -12,7 +12,7 @@
   "summary": {
     "total": 12,
     "captureStatusCounts": {
-      "captured": 12
+      "planned": 12
     },
     "evidenceClassCounts": {
       "public-page-sample": 1,
@@ -23,7 +23,7 @@
       "exhibition-official-page": 4,
       "public-survey-page": 1
     },
-    "networkCalls": 12,
+    "networkCalls": 0,
     "businessDataWrites": 0
   },
   "records": [
@@ -40,11 +40,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:23:30.978Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -57,25 +57,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.amazon.com/s?k=wearable+breast+pump",
-      "httpStatus": 200,
-      "title": "Amazon.com : wearable breast pump",
-      "visibleTextLength": 24391,
-      "visibleTextHash": "e2c1b8ba61ab3aff8e24bff900a46af9edd72e7411260e22af79d10adf088a5f",
-      "matchedEvidenceTerms": [
-        "breast pump"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Amazon wearable breast pump public search sample: title captured (33 chars); matched 1/1 expected evidence terms; visible text length 24391.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/amazon-search-wearable-breast-pump-sample.txt",
-        "textArchiveBytes": 24403,
-        "screenshotPath": "tmp/public-evidence/screenshots/amazon-search-wearable-breast-pump-sample.png",
-        "screenshotHash": "be60b0d694724388744e89504443c66ae58d332f72cf608c1b99408868536307"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "momcozy-m5-official-sample",
@@ -90,11 +72,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:23:46.561Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -107,34 +89,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://momcozy.com/products/m5-smart-wearable-breast-pump-upgraded-with-app-control",
-      "httpStatus": 200,
-      "title": "M5 Smart Wearable Breast Pump – Upgraded with App Control",
-      "visibleTextLength": 6667,
-      "visibleTextHash": "2e5b6a171a9711c43a40749367df52245666b20ffb796a710223ea9af3f66b56",
-      "matchedEvidenceTerms": [
-        "M5",
-        "breast pump"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Momcozy M5 official product page sample: title captured (57 chars); matched 2/2 expected evidence terms; visible text length 6667.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/momcozy-m5-official-sample.txt",
-        "textArchiveBytes": 7873,
-        "screenshotPath": "tmp/public-evidence/screenshots/momcozy-m5-official-sample.png",
-        "screenshotHash": "610ab73f4ecdcead5a0845a30a0a21ecdbaad8827128b99011feeaeb184b7b97"
-      },
-      "warnings": [
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Failed to load resource: the server responded with a status of 404 ()",
-        "Framing 'https://shop.app/' violates the following Content Security Policy directive: \"frame-ancestors 'self' https://shop.app https://admin.shopify.com\". The request has been blocked.\n",
-        "Failed to load resource: the server responded with a status of 403 ()",
-        "Element \"input[name='selling_plan']\" not found within 5000ms",
-        "Failed to load resource: net::ERR_CONNECTION_RESET"
-      ]
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "willow-go-official-sample",
@@ -149,11 +104,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:23:58.524Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -166,31 +121,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://onewillow.com/products/willow-go-pump-kit",
-      "httpStatus": 200,
-      "title": "Willow Go® Wearable Breast Pump | #1 for Comfort & Milk Output – Willow Pump",
-      "visibleTextLength": 4734,
-      "visibleTextHash": "f354620a641dbec322dcbf20e4b58660f8bc05ae219119b98de13a1560e03f3e",
-      "matchedEvidenceTerms": [
-        "Willow Go",
-        "breast pump"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Willow Go official product page sample: title captured (76 chars); matched 2/2 expected evidence terms; visible text length 4734.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/willow-go-official-sample.txt",
-        "textArchiveBytes": 4756,
-        "screenshotPath": "tmp/public-evidence/screenshots/willow-go-official-sample.png",
-        "screenshotHash": "529e0f88383b22cf1bc386f2992b189db0f6b7638d8c243075fc1a0ff81011b5"
-      },
-      "warnings": [
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Cannot read properties of undefined (reading 'length')",
-        "Cannot read properties of undefined (reading 'unblock')"
-      ]
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "medela-pump-in-style-pro-2026-news",
@@ -205,11 +136,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:24:03.673Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -222,26 +153,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.medela.com/en/about-medela/medela-news/pump-in-style-pro-named-best-new-product-in-the-us-for-2026",
-      "httpStatus": 200,
-      "title": "Pump In Style® Pro Named Best New Product in the U.S. for 2026",
-      "visibleTextLength": 2850,
-      "visibleTextHash": "0245cec2262807bc9f77540bc7f7e39bb7d68ce3123989ebfec7daf8212f06cd",
-      "matchedEvidenceTerms": [
-        "Pump In Style",
-        "2026"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Medela Pump In Style Pro 2026 official news: title captured (62 chars); matched 2/2 expected evidence terms; visible text length 2850.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/medela-pump-in-style-pro-2026-news.txt",
-        "textArchiveBytes": 2878,
-        "screenshotPath": "tmp/public-evidence/screenshots/medela-pump-in-style-pro-2026-news.png",
-        "screenshotHash": "e63b8bddfda89031a8ad0e31891a63c5e04d508454080ba499bd052ec5658fa7"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "cpsc-nursing-pillows-rule",
@@ -256,11 +168,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:24:10.143Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -273,26 +185,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.cpsc.gov/Business--Manufacturing/Business-Education/Business-Guidance/Nursing-Pillows",
-      "httpStatus": 200,
-      "title": "Nursing Pillows Business Guidance | CPSC.gov",
-      "visibleTextLength": 7381,
-      "visibleTextHash": "d73efbd83c54883dc202c11f512627af4b5e843f27aa650ed42f555033c0cb78",
-      "matchedEvidenceTerms": [
-        "16 CFR Part 1242",
-        "April 23, 2025"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "CPSC nursing pillows rule public evidence: title captured (44 chars); matched 2/2 expected evidence terms; visible text length 7381.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/cpsc-nursing-pillows-rule.txt",
-        "textArchiveBytes": 7428,
-        "screenshotPath": "tmp/public-evidence/screenshots/cpsc-nursing-pillows-rule.png",
-        "screenshotHash": "8b7fb26a74b7fdad1ab11ad316a140422dc8d8e8d57b88b0669ed3eb92b85c51"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "mordor-wearable-breast-pumps-market",
@@ -307,11 +200,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:24:14.334Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -324,26 +217,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.mordorintelligence.com/industry-reports/wearable-breast-pumps-market",
-      "httpStatus": 200,
-      "title": "Wearable Breast Pumps Market Size & Share Outlook to 2030",
-      "visibleTextLength": 16211,
-      "visibleTextHash": "3198b4247f82a513a785c1dcbea0fe17a85f7e9710305e7e735bee0cf9edba55",
-      "matchedEvidenceTerms": [
-        "Wearable Breast Pumps",
-        "Market Size"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Mordor wearable breast pumps market public page: title captured (57 chars); matched 2/2 expected evidence terms; visible text length 16211.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/mordor-wearable-breast-pumps-market.txt",
-        "textArchiveBytes": 16226,
-        "screenshotPath": "tmp/public-evidence/screenshots/mordor-wearable-breast-pumps-market.png",
-        "screenshotHash": "f529f50ffbecc8ec195d9471e62eb993231ed79d794109e4d4736bcf40c71ad9"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "fortune-bi-breast-pump-market",
@@ -358,11 +232,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:24:24.032Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -375,32 +249,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
-      "httpStatus": 200,
-      "title": "Breast Pump Market Size, Share, Value | Growth Report [2034]",
-      "visibleTextLength": 39356,
-      "visibleTextHash": "2f1a45fea1f1c176b423d7b9b213d496ff7287226d49e9be1a745ffe231ccebb",
-      "matchedEvidenceTerms": [
-        "Breast Pump Market",
-        "Market Size"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Fortune BI breast pump market public page: title captured (60 chars); matched 2/2 expected evidence terms; visible text length 39356.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/fortune-bi-breast-pump-market.txt",
-        "textArchiveBytes": 40742,
-        "screenshotPath": "tmp/public-evidence/screenshots/fortune-bi-breast-pump-market.png",
-        "screenshotHash": "6cf6bbd4177e43ef5e1adc09270c1b303aeb61f6ac9af727dd1611cf63b495f0"
-      },
-      "warnings": [
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Failed to load resource: the server responded with a status of 404 ()",
-        "Cannot read properties of null (reading 'addEventListener')",
-        "Cannot read properties of null (reading 'add')"
-      ]
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "abc-kids-expo-2026",
@@ -415,11 +264,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:24:33.808Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -432,26 +281,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://theabcshow.com/pages/exhibitors-2024",
-      "httpStatus": 200,
-      "title": "Exhibit at 2026 ABC Kids Expo | Reach Top Baby & Juvenile Retailers",
-      "visibleTextLength": 3610,
-      "visibleTextHash": "e3d89934785338ad08fe772be4bfc78a23d43fbf027b5b85bc24e53f6405c8aa",
-      "matchedEvidenceTerms": [
-        "2026",
-        "Mandalay Bay"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "ABC Kids Expo 2026 public exhibitor page: title captured (67 chars); matched 2/2 expected evidence terms; visible text length 3610.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/abc-kids-expo-2026.txt",
-        "textArchiveBytes": 3614,
-        "screenshotPath": "tmp/public-evidence/screenshots/abc-kids-expo-2026.png",
-        "screenshotHash": "aa89c16bc34d78bb5938a668a200411ac0b1cefd5e7881673701a17fdf5f6419"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "kind-und-jugend-2026",
@@ -466,11 +296,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:24:42.227Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -483,27 +313,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.kindundjugend.com/trade-fair/kind-jugend/",
-      "httpStatus": 200,
-      "title": "Kind + Jugend | K+J",
-      "visibleTextLength": 2879,
-      "visibleTextHash": "944df8ba4d1cc21635198c9632ecf70abd91f9b6d2d31a0d886627ac041e1d29",
-      "matchedEvidenceTerms": [
-        "15",
-        "17",
-        "2026"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Kind + Jugend 2026 official page: title captured (19 chars); matched 3/3 expected evidence terms; visible text length 2879.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/kind-und-jugend-2026.txt",
-        "textArchiveBytes": 2890,
-        "screenshotPath": "tmp/public-evidence/screenshots/kind-und-jugend-2026.png",
-        "screenshotHash": "151c04b76c874a7ce1b08e9c1b0bc07ca53f9c8abb881c5808c39e850fe08b3c"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "cbme-china-2026",
@@ -518,11 +328,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:24:48.438Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -535,27 +345,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.cbmexpochina.com/about-cbme-china/",
-      "httpStatus": 200,
-      "title": "CBME China – 15-17 July 2026 | NECC, Shanghai, China",
-      "visibleTextLength": 2188,
-      "visibleTextHash": "2ce7a78cf5c9a0aa1713020c33ebc1ed47cf2ba464a8d6fce5e0b8812b5a2c94",
-      "matchedEvidenceTerms": [
-        "2026",
-        "July",
-        "NECC"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "CBME China 2026 official page: title captured (52 chars); matched 3/3 expected evidence terms; visible text length 2188.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/cbme-china-2026.txt",
-        "textArchiveBytes": 2199,
-        "screenshotPath": "tmp/public-evidence/screenshots/cbme-china-2026.png",
-        "screenshotHash": "71f5910e6e0c360db9b6d4db6cdfa328be3e32275cfe995eff4fb236f55456c4"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "tokyo-baby-kids-expo-2026",
@@ -570,11 +360,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:24:53.823Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -587,27 +377,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.lifestyle-expo.jp/summer/en-gb.html",
-      "httpStatus": 200,
-      "title": "LIFESTYLE Week TOKYO [Summer] | Japan’s Leading Lifestyle Trade Fair",
-      "visibleTextLength": 5623,
-      "visibleTextHash": "5d08fb28a298a1daeb9a38f2105a0df16224cb42ad06a3fa1ee6c9b03e9a1693",
-      "matchedEvidenceTerms": [
-        "June 24",
-        "2026",
-        "Tokyo Big Sight"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Baby & Kids Expo Tokyo Summer 2026 official page: title captured (68 chars); matched 3/3 expected evidence terms; visible text length 5623.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/tokyo-baby-kids-expo-2026.txt",
-        "textArchiveBytes": 5695,
-        "screenshotPath": "tmp/public-evidence/screenshots/tokyo-baby-kids-expo-2026.png",
-        "screenshotHash": "ae5adbce134b55bc468929357b97c7966a394752e0542b3a787d1930eb4e7801"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "mamava-medela-2025-breastfeeding-survey",
@@ -622,11 +392,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-12T02:25:01.763Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-06-14T04:56:45.953Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -639,30 +409,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.mamava.com/why-buy-blog/2025-state-of-breastfeeding-survey",
-      "httpStatus": 200,
-      "title": "The 2025 State of Breastfeeding Survey | Mamava",
-      "visibleTextLength": 7171,
-      "visibleTextHash": "48b68057750402e366372e05e317c3575eac62a6574d4ff75b9f1e4873235052",
-      "matchedEvidenceTerms": [
-        "2025 State of Breastfeeding",
-        "Medela"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Mamava / Medela 2025 breastfeeding survey public page: title captured (47 chars); matched 2/2 expected evidence terms; visible text length 7171.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/mamava-medela-2025-breastfeeding-survey.txt",
-        "textArchiveBytes": 7209,
-        "screenshotPath": "tmp/public-evidence/screenshots/mamava-medela-2025-breastfeeding-survey.png",
-        "screenshotHash": "a96b62231cffa7a8e0a729166d104af5acb445f501ecd623f1bdb39b33a95c16"
-      },
-      "warnings": [
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Failed to load resource: the server responded with a status of 403 ()"
-      ]
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     }
   ]
 }
