@@ -4,6 +4,17 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { buildConnectorBacklog } from '../lib/connector-backlog.mjs';
+import {
+  buildCheck,
+  configuredPathSource,
+  findForbiddenKeys,
+  isIsoDate,
+  numberValue,
+  readJsonObject,
+  readinessValue,
+  stringArray,
+  unwrapJsonObject,
+} from '../lib/connector-readiness.mjs';
 import { extractSourceRegistry, isoWeek } from '../lib/project-analysis.mjs';
 
 const connectorId = 'internal-erp';
@@ -100,67 +111,14 @@ function readTemplate(path) {
   return readFileSync(resolve(process.cwd(), path), 'utf8');
 }
 
-function readJsonObject(path, label) {
-  if (!path) return undefined;
-
-  const payload = JSON.parse(readFileSync(resolve(process.cwd(), path), 'utf8'));
-  if (payload && typeof payload === 'object' && !Array.isArray(payload)) return payload;
-
-  throw new Error(`${label} must be a JSON object.`);
-}
-
 function readReadinessRecord(readinessPath) {
   const payload = readJsonObject(readinessPath, 'ERP readiness file');
-  if (!payload) return undefined;
-  if (payload.readiness && typeof payload.readiness === 'object' && !Array.isArray(payload.readiness)) return payload.readiness;
-  return payload;
+  return unwrapJsonObject(payload, 'readiness');
 }
 
 function readSnapshotManifest(snapshotManifestPath) {
   const payload = readJsonObject(snapshotManifestPath, 'ERP snapshot manifest file');
-  if (!payload) return undefined;
-  if (payload.snapshotManifest && typeof payload.snapshotManifest === 'object' && !Array.isArray(payload.snapshotManifest)) {
-    return payload.snapshotManifest;
-  }
-  return payload;
-}
-
-function isIsoDate(value) {
-  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
-}
-
-function numberValue(value) {
-  return typeof value === 'number' && Number.isFinite(value) ? value : Number.NaN;
-}
-
-function stringArray(value) {
-  return Array.isArray(value) ? value.filter((item) => typeof item === 'string') : [];
-}
-
-function findForbiddenKeys(value, prefix = '') {
-  if (!value || typeof value !== 'object') return [];
-
-  return Object.entries(value).flatMap(([key, nestedValue]) => {
-    const path = prefix ? `${prefix}.${key}` : key;
-    const ownMatches = forbiddenSecretKeyPattern.test(key) || forbiddenCommercialKeyPattern.test(key) ? [path] : [];
-    return [...ownMatches, ...findForbiddenKeys(nestedValue, path)];
-  });
-}
-
-function buildCheck(id, label, ready, details, blocker) {
-  return {
-    id,
-    label,
-    status: ready ? 'ready' : 'blocked',
-    details,
-    blockers: ready || !blocker ? [] : [blocker],
-  };
-}
-
-function readinessValue(readiness, snapshotManifest, key) {
-  if (readiness && readiness[key] !== undefined) return readiness[key];
-  if (snapshotManifest && snapshotManifest[key] !== undefined) return snapshotManifest[key];
-  return undefined;
+  return unwrapJsonObject(payload, 'snapshotManifest');
 }
 
 function buildReadinessView(readiness, snapshotManifest) {
@@ -203,19 +161,24 @@ function exportFieldsAreSafe(fields) {
 function buildInternalErpReadinessGate(dryRun, options = {}, env = process.env) {
   const readinessPath = options.readinessPath ?? env.MKT53_ERP_READINESS_PATH;
   const snapshotManifestPath = options.snapshotManifestPath ?? env.MKT53_ERP_SNAPSHOT_MANIFEST_PATH;
-  const readinessPathSource = options.readinessPath ? 'cli' : env.MKT53_ERP_READINESS_PATH ? 'env:MKT53_ERP_READINESS_PATH' : 'none';
-  const snapshotManifestPathSource = options.snapshotManifestPath
-    ? 'cli'
-    : env.MKT53_ERP_SNAPSHOT_MANIFEST_PATH
-      ? 'env:MKT53_ERP_SNAPSHOT_MANIFEST_PATH'
-      : 'none';
+  const readinessPathSource = configuredPathSource({
+    explicitPath: options.readinessPath,
+    envPath: env.MKT53_ERP_READINESS_PATH,
+    envName: 'MKT53_ERP_READINESS_PATH',
+  });
+  const snapshotManifestPathSource = configuredPathSource({
+    explicitPath: options.snapshotManifestPath,
+    envPath: env.MKT53_ERP_SNAPSHOT_MANIFEST_PATH,
+    envName: 'MKT53_ERP_SNAPSHOT_MANIFEST_PATH',
+  });
   const readiness = readReadinessRecord(readinessPath);
   const snapshotManifest = readSnapshotManifest(snapshotManifestPath);
   const record = buildReadinessView(readiness, snapshotManifest);
   const expectedSnapshotTypes = snapshotContracts.map((contract) => contract.snapshotType);
   const missingSourceIds = dryRun.sourceIds.filter((sourceId) => !record.sourceIds.includes(sourceId));
   const missingSnapshotTypes = expectedSnapshotTypes.filter((snapshotType) => !record.allowedSnapshotTypes.includes(snapshotType));
-  const forbiddenKeys = [...findForbiddenKeys(readiness), ...findForbiddenKeys(snapshotManifest)];
+  const forbiddenKeyPatterns = [forbiddenSecretKeyPattern, forbiddenCommercialKeyPattern];
+  const forbiddenKeys = [...findForbiddenKeys(readiness, forbiddenKeyPatterns), ...findForbiddenKeys(snapshotManifest, forbiddenKeyPatterns)];
   const collectionWindowStartValid = isIsoDate(record.collectionWindowStart);
   const collectionWindowEndValid = isIsoDate(record.collectionWindowEnd);
   const collectionWindowOrderValid =
