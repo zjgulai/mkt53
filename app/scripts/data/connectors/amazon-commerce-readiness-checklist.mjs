@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { basename, dirname, resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { assertSafePrivatePath } from '../lib/private-path-safety.mjs';
 
 const connectorId = 'amazon-commerce';
 const mappingTemplatePath = 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json';
 const readinessTemplatePath = 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json';
-const blockedWriteSegments = new Set(['public', 'src', 'tests', 'fixtures', 'dist', 'node_modules']);
 
 function parseArgs(argv) {
   const options = {
@@ -25,19 +25,8 @@ function readJson(path) {
   return JSON.parse(readFileSync(resolve(process.cwd(), path), 'utf8'));
 }
 
-function targetSegments(path) {
-  return path.split(/[\\/]+/).filter(Boolean).map((segment) => segment.toLowerCase());
-}
-
 function assertSafeWritePath(writePath) {
-  const target = resolve(process.cwd(), writePath);
-  const segments = targetSegments(target);
-  const blockedSegment = segments.find((segment) => blockedWriteSegments.has(segment));
-  if (blockedSegment) throw new Error(`Refusing to write Amazon readiness checklist inside ${blockedSegment}: ${target}`);
-  if (!segments.includes('private') && !basename(dirname(target)).toLowerCase().includes('private')) {
-    throw new Error(`Refusing to write Amazon readiness checklist outside a private directory: ${target}`);
-  }
-  return target;
+  return assertSafePrivatePath(writePath, 'readiness checklist');
 }
 
 function checklistRow(cells) {
