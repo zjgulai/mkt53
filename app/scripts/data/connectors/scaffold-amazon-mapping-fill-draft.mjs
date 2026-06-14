@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { basename, dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { assertSafePrivatePath } from '../lib/private-path-safety.mjs';
 
 const connectorId = 'amazon-commerce';
 const defaultTargetDir = process.env.MKT53_AMAZON_PRIVATE_DIR ?? 'configs/private';
 const mappingTemplatePath = 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json';
 const defaultJsonFileName = 'amazon-commerce-mapping-fill-draft.json';
 const defaultCsvFileName = 'amazon-commerce-mapping-fill-draft.csv';
-const blockedTargetSegments = new Set(['public', 'src', 'tests', 'fixtures', 'dist', 'node_modules']);
 
 function parseArgs(argv) {
   const options = {
@@ -25,31 +25,6 @@ function parseArgs(argv) {
   }
 
   return options;
-}
-
-function pathSegments(path) {
-  return resolve(process.cwd(), path)
-    .split(/[\\/]+/)
-    .filter(Boolean)
-    .map((segment) => segment.toLowerCase());
-}
-
-function isPrivatePath(path) {
-  const target = resolve(process.cwd(), path);
-  const segments = pathSegments(path);
-  return (
-    segments.includes('private') ||
-    basename(target).toLowerCase().includes('private') ||
-    basename(dirname(target)).toLowerCase().includes('private')
-  );
-}
-
-function assertSafePrivateTarget(path, label) {
-  const target = resolve(process.cwd(), path);
-  const blockedSegment = pathSegments(target).find((segment) => blockedTargetSegments.has(segment));
-  if (blockedSegment) throw new Error(`Refusing to write Amazon ${label} inside ${blockedSegment}: ${target}`);
-  if (!isPrivatePath(target)) throw new Error(`Refusing to write Amazon ${label} outside a private directory: ${target}`);
-  return target;
 }
 
 function readMappingTemplate() {
@@ -111,9 +86,9 @@ function writePrivateFile(targetPath, content, force) {
 }
 
 export function scaffoldAmazonMappingFillDraft(options) {
-  const targetDir = assertSafePrivateTarget(options.targetDir, 'mapping fill target directory');
-  const jsonPath = assertSafePrivateTarget(options.jsonPath ?? join(targetDir, defaultJsonFileName), 'mapping JSON fill draft');
-  const csvPath = assertSafePrivateTarget(options.csvPath ?? join(targetDir, defaultCsvFileName), 'mapping CSV fill draft');
+  const targetDir = assertSafePrivatePath(options.targetDir, 'mapping fill target directory');
+  const jsonPath = assertSafePrivatePath(options.jsonPath ?? join(targetDir, defaultJsonFileName), 'mapping JSON fill draft');
+  const csvPath = assertSafePrivatePath(options.csvPath ?? join(targetDir, defaultCsvFileName), 'mapping CSV fill draft');
   const template = readMappingTemplate();
   const mappings = expandDraftMappings(template);
   const fields = [

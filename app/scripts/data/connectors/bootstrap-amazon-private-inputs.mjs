@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { basename, join, resolve } from 'node:path';
+import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { buildChecklist } from './amazon-commerce-readiness-checklist.mjs';
+import { assertSafePrivatePath } from '../lib/private-path-safety.mjs';
 
 const connectorId = 'amazon-commerce';
 const defaultTargetDir = process.env.MKT53_AMAZON_PRIVATE_DIR ?? 'configs/private';
@@ -12,7 +13,6 @@ const mappingFileName = 'amazon-commerce-mapping.json';
 const readinessFileName = 'amazon-commerce-readiness.json';
 const checklistFileName = 'amazon-commerce-readiness-checklist.md';
 const reportsDirName = 'reports';
-const blockedTargetSegments = new Set(['public', 'src', 'tests', 'fixtures', 'dist', 'node_modules']);
 
 function parseArgs(argv) {
   const options = {
@@ -25,25 +25,6 @@ function parseArgs(argv) {
   }
 
   return options;
-}
-
-function pathSegments(path) {
-  return path.split(/[\\/]+/).filter(Boolean).map((segment) => segment.toLowerCase());
-}
-
-function assertSafePrivateTargetDir(targetDir) {
-  const target = resolve(process.cwd(), targetDir);
-  const segments = pathSegments(target);
-  const blockedSegment = segments.find((segment) => blockedTargetSegments.has(segment));
-  if (blockedSegment) {
-    throw new Error(`Refusing to write Amazon private placeholders inside ${blockedSegment}: ${target}`);
-  }
-
-  if (!segments.includes('private') && !basename(target).toLowerCase().includes('private')) {
-    throw new Error(`Refusing to write Amazon private placeholders outside a private directory: ${target}`);
-  }
-
-  return target;
 }
 
 function writePrivatePlaceholder(targetPath, content, force) {
@@ -71,7 +52,7 @@ function writePrivatePlaceholder(targetPath, content, force) {
 }
 
 function bootstrapAmazonPrivateInputs(options) {
-  const targetDir = assertSafePrivateTargetDir(options.targetDir);
+  const targetDir = assertSafePrivatePath(options.targetDir, 'private placeholders');
   const reportsDir = join(targetDir, reportsDirName);
   const mappingPath = join(targetDir, mappingFileName);
   const readinessPath = join(targetDir, readinessFileName);

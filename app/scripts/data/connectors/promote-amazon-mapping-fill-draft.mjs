@@ -2,6 +2,7 @@
 import { chmodSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { assertSafePrivatePath } from '../lib/private-path-safety.mjs';
 
 const connectorId = 'amazon-commerce';
 const defaultTargetDir = process.env.MKT53_AMAZON_PRIVATE_DIR ?? 'configs/private';
@@ -9,7 +10,6 @@ const defaultInputFileName = 'amazon-commerce-mapping-fill-draft.json';
 const defaultOutputFileName = 'amazon-commerce-mapping.json';
 const defaultBackupDirName = 'backups';
 const mappingTemplatePath = 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json';
-const blockedTargetSegments = new Set(['public', 'src', 'tests', 'fixtures', 'dist', 'node_modules']);
 
 function parseArgs(argv) {
   const options = {
@@ -32,31 +32,6 @@ function parseArgs(argv) {
   }
 
   return options;
-}
-
-function pathSegments(path) {
-  return resolve(process.cwd(), path)
-    .split(/[\\/]+/)
-    .filter(Boolean)
-    .map((segment) => segment.toLowerCase());
-}
-
-function isPrivatePath(path) {
-  const target = resolve(process.cwd(), path);
-  const segments = pathSegments(path);
-  return (
-    segments.includes('private') ||
-    basename(target).toLowerCase().includes('private') ||
-    basename(dirname(target)).toLowerCase().includes('private')
-  );
-}
-
-function assertSafePrivatePath(path, label) {
-  const target = resolve(process.cwd(), path);
-  const blockedSegment = pathSegments(target).find((segment) => blockedTargetSegments.has(segment));
-  if (blockedSegment) throw new Error(`Refusing to use Amazon ${label} inside ${blockedSegment}: ${target}`);
-  if (!isPrivatePath(target)) throw new Error(`Refusing to use Amazon ${label} outside a private directory: ${target}`);
-  return target;
 }
 
 function readJson(path) {

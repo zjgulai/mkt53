@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { chmodSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { basename, dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { buildAmazonCommerceDryRun } from './amazon-commerce-dry-run.mjs';
+import { assertSafePrivatePath, isPrivatePath } from '../lib/private-path-safety.mjs';
 
 const connectorId = 'amazon-commerce';
 const mappingTemplatePath = 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json';
@@ -10,7 +11,6 @@ const readinessTemplatePath = 'scripts/data/connectors/templates/amazon-commerce
 const defaultMappingFileName = 'amazon-commerce-mapping.json';
 const defaultReadinessFileName = 'amazon-commerce-readiness.json';
 const defaultChecklistFileName = 'amazon-commerce-readiness-checklist.md';
-const blockedWriteSegments = new Set(['public', 'src', 'tests', 'fixtures', 'dist', 'node_modules']);
 const forbiddenReadinessKeyPattern = /secret|password|refreshToken|accessToken|clientSecret|privateKey|authorizationHeader/i;
 
 function parseArgs(argv) {
@@ -60,21 +60,8 @@ function isIsoDate(value) {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
 }
 
-function pathSegments(path) {
-  return resolve(process.cwd(), path).split(/[\\/]+/).filter(Boolean).map((segment) => segment.toLowerCase());
-}
-
-function isPrivatePath(path) {
-  const segments = pathSegments(path);
-  return segments.includes('private') || basename(dirname(resolve(process.cwd(), path))).toLowerCase().includes('private');
-}
-
 function assertSafeWritePath(writePath) {
-  const target = resolve(process.cwd(), writePath);
-  const blockedSegment = pathSegments(target).find((segment) => blockedWriteSegments.has(segment));
-  if (blockedSegment) throw new Error(`Refusing to write Amazon private input audit inside ${blockedSegment}: ${target}`);
-  if (!isPrivatePath(target)) throw new Error(`Refusing to write Amazon private input audit outside a private directory: ${target}`);
-  return target;
+  return assertSafePrivatePath(writePath, 'private input audit');
 }
 
 function summarizePath(path, expectedMode) {
