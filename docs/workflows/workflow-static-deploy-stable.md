@@ -5,7 +5,7 @@ module: deployment
 topic: static-deploy
 status: stable
 created: 2026-05-31
-updated: 2026-06-13
+updated: 2026-06-14
 owner: self
 source: human+ai
 ---
@@ -64,6 +64,7 @@ npm run data:deploy:semi-monthly
 ```
 
 该命令会先运行 `npm run data:refresh:semi-monthly`，再执行 `deploy:prod:verified`。受限来源会保留为 `connector-required` 或 `manual-required`，不能用脚本输出替代真实授权采集。
+该命令会在 `deploy:prod:verified` 基础上产出 `tmp/reports/semi-monthly-run-report-<period>.json`，并在完成后校验 `run report gate` 结果。
 
 需要随生产发布同步 live 浏览器公开证据样本时，显式传参：
 
@@ -81,9 +82,34 @@ npm run data:publish:semi-monthly:local
 
 该入口默认写入 `/opt/mkt53/html/`，不依赖 SSH key，不触碰 `ai_video_nginx`、宿主 landing 或其他应用目录。
 
+### 半月发布报告
+
+本地静态发布入口与生产半月发布入口执行后均应同时产出：
+
+- `tmp/reports/semi-monthly-run-report-<period>.json`
+- `tmp/reports/semi-monthly-run-report-<period>.md`
+- `tmp/data-collection/runs/<period>-report.json`
+
+验收要求：
+
+- `tmp/reports/semi-monthly-run-report-<period>.json` 存在；
+- `gate.status = pass`；
+- `checks.refresh.status = passed`；
+- `checks.deploy.status = passed`；
+- `checks.smoke.status = passed`；
+- `checks.e2eProd.status = passed` 或 `not-run`（仅本地静态发布时）；
+- `checks.dataAudit.status = passed`。
+
+需要重放或补充证据时执行：
+
+```bash
+cd app
+npm run data:semi-monthly:report -- --period 2026-06-H1 --json
+```
+
 ## 最新生产验证
 
-2026-06-13 apex DNS 恢复后，普通静态发布入口和完整宿主入口回归已完成验证：
+2026-06-14，沿用 2026-06-13 DNS 恢复后的验证链路后完成半月发布回归：
 
 | 检查项 | 结果 |
 |---|---|
@@ -91,7 +117,7 @@ npm run data:publish:semi-monthly:local
 | 发布命令 | `npm run deploy:prod:verified` 已执行；`test` 50/50、`lint`、`npm audit`、`build`、`rsync`、`smoke:prod` 均通过 |
 | DNS 复核 | `lute-tlz-dddd.top` 在 DNSPod 权威 NS、system、1.1.1.1、8.8.8.8 下均返回 `101.34.52.232`，TTL 600 |
 | 完整生产 E2E | `npm run test:e2e:prod` 14/14 通过，覆盖宿主 landing 与 mkt53 目标页桌面/移动端 |
-| 生产 manifest | `period=2026-06-H1`，`generatedAt=2026-06-12T02:23:17.911Z`，`refreshCadence=semi-monthly`，`issueCount=0` |
+| 生产 manifest | `period=2026-06-H1`，`generatedAt=2026-06-14T05:06:31.080Z`，`refreshCadence=semi-monthly`，`issueCount=0` |
 | nginx | `docker exec ai_video_nginx nginx -t` 通过；`/opt/mkt53/html/index.html` 更新时间为 `2026-06-13 13:23:36 +0800` |
 
 历史事故线索：2026-06-13 曾短暂缺失 `lute-tlz-dddd.top` apex A 记录，导致完整生产 E2E 的宿主 landing 用例失败；已通过恢复 `lute-tlz-dddd.top A 101.34.52.232` 解除。
@@ -103,8 +129,8 @@ npm run data:publish:semi-monthly:local
 | 发布命令 | `npm run data:deploy:semi-monthly -- --public-evidence-live --timeout-ms 12000 --max-attempts 2 --public-evidence-timeout-ms 30000` 通过 |
 | 生产 smoke | `npm run smoke:prod` 通过 |
 | 生产 E2E | `npm run test:e2e:prod` 14/14 通过 |
-| 生产 manifest | `period=2026-06-H1`，`generatedAt=2026-06-12T02:23:17.911Z`，`refreshCadence=semi-monthly`，`issueCount=0` |
-| 公开证据 manifest | `mode=live-browser-capture`，`generatedAt=2026-06-12T02:23:22.683Z`，12/12 captured，`businessDataWrites=0` |
+| 生产 manifest | `period=2026-06-H1`，`generatedAt=2026-06-14T05:06:31.080Z`，`refreshCadence=semi-monthly`，`issueCount=0` |
+| 公开证据 manifest | `mode=live-browser-capture`，`generatedAt=2026-06-14T05:06:37.375Z`，12/12 captured，`businessDataWrites=0` |
 | 证据边界页面 | `/#/ai-assistant`、`/#/ai-gallery`、`/#/reports`、`/#/report/r009` 已进入生产 E2E |
 | nginx | `docker exec ai_video_nginx nginx -t` 通过 |
 | 首页 | `https://mkt.lute-tlz-dddd.top` 返回 HTTP/2 200 |

@@ -195,7 +195,7 @@ export default function ReportsPage() {
         </div>
 
         <div className="flex justify-end mb-4">
-          <button onClick={() => exportToCsv(filtered, { title: "报告标题", category: "分类", date: "日期", author: "作者", pages: "页数", downloads: "下载量" }, "报告列表_" + new Date().toISOString().slice(0, 10))} className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#FBF8F5] text-xs text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all border border-[#EDE6DF]"><Download className="w-3.5 h-3.5"/>导出CSV</button>
+          <button onClick={() => exportToCsv(filtered, { title: "报告标题", category: "分类", date: "发布日期", author: "作者", pages: "页数", downloads: "下载量" }, "报告列表_" + new Date().toISOString().slice(0, 10))} className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#FBF8F5] text-xs text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all border border-[#EDE6DF]"><Download className="w-3.5 h-3.5"/>导出CSV</button>
         </div>
         {/* Category Tabs */}
         <div className="flex items-center gap-2 mb-6 flex-wrap">
@@ -239,7 +239,7 @@ export default function ReportsPage() {
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center gap-2 text-xs text-[#86868b] sm:flex-shrink-0 sm:gap-4">
-                    <div className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{report.date}</div>
+                    <div className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />发布 {report.date}</div>
                     <div className="flex items-center gap-1"><FileText className="w-3.5 h-3.5" />{report.pages}页</div>
                     <div className="flex items-center gap-1"><Download className="w-3.5 h-3.5" />{report.downloads}</div>
                     <div className="flex items-center gap-1"><Eye className="w-3.5 h-3.5" />预览</div>

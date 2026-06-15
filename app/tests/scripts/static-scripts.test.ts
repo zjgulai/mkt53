@@ -109,7 +109,11 @@ describe('production helper scripts', () => {
     expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_PRIVATE_AUDIT_REQUIRED');
     expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('data:refresh:semi-monthly -- "$@"');
     expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('Continuing public semi-monthly refresh');
-    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-and-deploy.sh'), 'utf8')).toContain('npm run deploy:prod:verified');
+    const semiMonthlyDeployScript = readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-and-deploy.sh'), 'utf8');
+    expect(semiMonthlyDeployScript).toContain('npm run deploy:prod');
+    expect(semiMonthlyDeployScript).toContain('npm run smoke:prod');
+    expect(semiMonthlyDeployScript).toContain('npm run test:e2e:prod');
+    expect(semiMonthlyDeployScript).toContain('npm run data:semi-monthly:report');
     expect(readFileSync(join(process.cwd(), 'scripts/data/install-semi-monthly-cron.sh'), 'utf8')).toContain('mkt53 weekly data refresh');
     expect(readFileSync(join(process.cwd(), 'scripts/data/install-semi-monthly-cron.sh'), 'utf8')).toContain('npm run data:publish:weekly:local');
 

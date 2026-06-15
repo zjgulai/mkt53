@@ -344,7 +344,7 @@ export default function AIGallery() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="px-2 py-0.5 rounded-md bg-[#C25B6E]/10 text-[#C25B6E] text-[10px] font-medium">{selectedImage.category}</span>
                   <span className="px-2 py-0.5 rounded-md bg-[#FBF8F5] text-[#86868b] text-[10px]">{selectedImage.model}</span>
-                  <span className="px-2 py-0.5 rounded-md bg-[#FBF8F5] text-[#86868b] text-[10px]">{selectedImage.date}</span>
+                  <span className="px-2 py-0.5 rounded-md bg-[#FBF8F5] text-[#86868b] text-[10px]">素材日期 {selectedImage.date}</span>
                   <span className="px-2 py-0.5 rounded-md bg-[#af52de]/10 text-[#af52de] text-[10px]">{selectedImage.time}</span>
                 </div>
                 <div className="flex items-start gap-1.5">

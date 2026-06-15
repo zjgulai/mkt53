@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-14T04:56:42.956Z",
+  "generatedAt": "2026-06-14T05:06:31.080Z",
   "generatedRule": "source task queue 只表达待补证和接入任务，不代表业务数据已采集。",
   "total": 42,
   "queueTypeCounts": {

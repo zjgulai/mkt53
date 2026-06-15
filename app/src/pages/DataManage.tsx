@@ -49,7 +49,7 @@ interface DataGovernance {
   owner: string;               // 数据Owner
   steward: string;             // 数据Steward
   qualityScore: number;        // 质量评分 0-100
-  freshness: string;           // 最新更新时间
+  freshness: string;           // 数据刷新状态或真实数据快照日期
   retention: string;           // 保留策略
   pii: boolean;                // 是否含PII
 }
@@ -84,50 +84,50 @@ function classifySource(scope: SourceScope) {
 
 // R5: 每个数据表的治理配置
 const tableGovernance: Record<string, DataGovernance> = {
-  t_mkt_size:     { layer: 'app', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '市场分析组', steward: '张分析师', qualityScore: 88, freshness: '2026-05-23', retention: '5年', pii: false },
-  t_mkt_trend:    { layer: 'app', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '市场分析组', steward: '张分析师', qualityScore: 85, freshness: '2026-05-23', retention: '3年', pii: false },
-  t_pest:         { layer: 'app', scope: 'external', sensitivity: 'L2-内部', status: 'pending', owner: '战略部', steward: '李研究员', qualityScore: 72, freshness: '2026-03-15', retention: '3年', pii: false },
-  t_porter:       { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'pending', owner: '战略部', steward: '李研究员', qualityScore: 78, freshness: '2026-05-20', retention: '3年', pii: false },
-  t_customs:      { layer: 'source', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '供应链组', steward: '王运营', qualityScore: 92, freshness: '2026-05-20', retention: '7年', pii: false },
-  t_category:     { layer: 'app', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '品类管理组', steward: '赵运营', qualityScore: 90, freshness: '2026-05-23', retention: '2年', pii: false },
-  t_comp_product: { layer: 'source', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '竞品情报组', steward: '刘分析师', qualityScore: 94, freshness: '2026-05-23', retention: '2年', pii: false },
-  t_new_product:  { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: '竞品情报组', steward: '刘分析师', qualityScore: 82, freshness: '2026-05-23', retention: '2年', pii: false },
-  t_region_comp:  { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: '竞品情报组', steward: '刘分析师', qualityScore: 78, freshness: '2026-05-20', retention: '2年', pii: false },
-  t_price:        { layer: 'source', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '定价组', steward: '陈分析师', qualityScore: 93, freshness: '2026-05-23', retention: '1年', pii: false },
-  t_persona:      { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: '用户研究组', steward: '孙研究员', qualityScore: 92, freshness: '2026-05-23', retention: '3年', pii: true },
-  t_social:       { layer: 'source', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '社媒组', steward: '周运营', qualityScore: 88, freshness: '2026-05-23', retention: '1年', pii: false },
-  t_comment:      { layer: 'source', scope: 'external', sensitivity: 'L3-机密', status: 'governed', owner: '用户研究组', steward: '孙研究员', qualityScore: 91, freshness: '2026-05-23', retention: '2年', pii: true },
-  t_consumer_iv:  { layer: 'source', scope: 'internal', sensitivity: 'L3-机密', status: 'governed', owner: '用户研究组', steward: '孙研究员', qualityScore: 88, freshness: '2026-05-23', retention: '5年', pii: true },
-  t_rfm:          { layer: 'app', scope: 'internal', sensitivity: 'L3-机密', status: 'governed', owner: 'CRM组', steward: '吴数据', qualityScore: 86, freshness: '2026-05-01', retention: '3年', pii: true },
-  t_policy:       { layer: 'source', scope: 'external', sensitivity: 'L1-公开', status: 'governed', owner: '合规组', steward: '郑法务', qualityScore: 90, freshness: '2026-05-23', retention: '永久', pii: false },
-  t_supply:       { layer: 'source', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '供应链组', steward: '王运营', qualityScore: 84, freshness: '2026-04-15', retention: '5年', pii: false },
-  t_ip:           { layer: 'source', scope: 'external', sensitivity: 'L1-公开', status: 'governed', owner: 'IP组', steward: '马法务', qualityScore: 95, freshness: '2026-05-15', retention: '永久', pii: false },
-  t_exhibition:   { layer: 'source', scope: 'external', sensitivity: 'L1-公开', status: 'pending', owner: '市场组', steward: '何运营', qualityScore: 85, freshness: '2026-05-23', retention: '3年', pii: false },
-  t_own_product:  { layer: 'store', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '产品组', steward: '林产品', qualityScore: 96, freshness: '2026-05-23', retention: '永久', pii: false },
-  t_price_strategy:{ layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '定价组', steward: '陈分析师', qualityScore: 92, freshness: '2026-05-23', retention: '2年', pii: false },
-  t_channel:      { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '渠道组', steward: '王运营', qualityScore: 89, freshness: '2026-05-01', retention: '3年', pii: false },
-  t_promo:        { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '市场组', steward: '何运营', qualityScore: 87, freshness: '2026-05-23', retention: '3年', pii: false },
-  t_comment_ai:   { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: 'AI组', steward: '黄算法', qualityScore: 83, freshness: '2026-05-23', retention: '1年', pii: false },
-  t_design_ai:    { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'untracked', owner: 'AI组', steward: '黄算法', qualityScore: 60, freshness: '2026-05-23', retention: '1年', pii: false },
-  t_kb:           { layer: 'store', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '知识组', steward: '冯运营', qualityScore: 88, freshness: '2026-05-23', retention: '永久', pii: false },
-  t_web_review:   { layer: 'source', scope: 'external', sensitivity: 'L3-机密', status: 'pending', owner: '爬虫组', steward: '程开发', qualityScore: 68, freshness: '2026-05-20', retention: '1年', pii: true },
+  t_mkt_size:     { layer: 'app', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '市场分析组', steward: '张分析师', qualityScore: 88, freshness: '半月manifest复核', retention: '5年', pii: false },
+  t_mkt_trend:    { layer: 'app', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '市场分析组', steward: '张分析师', qualityScore: 85, freshness: '半月manifest复核', retention: '3年', pii: false },
+  t_pest:         { layer: 'app', scope: 'external', sensitivity: 'L2-内部', status: 'pending', owner: '战略部', steward: '李研究员', qualityScore: 72, freshness: '公开来源复核中', retention: '3年', pii: false },
+  t_porter:       { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'pending', owner: '战略部', steward: '李研究员', qualityScore: 78, freshness: '人工评估待复核', retention: '3年', pii: false },
+  t_customs:      { layer: 'source', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '供应链组', steward: '王运营', qualityScore: 92, freshness: '海关凭证待接入', retention: '7年', pii: false },
+  t_category:     { layer: 'app', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '品类管理组', steward: '赵运营', qualityScore: 90, freshness: '连接器待接入', retention: '2年', pii: false },
+  t_comp_product: { layer: 'source', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '竞品情报组', steward: '刘分析师', qualityScore: 94, freshness: '连接器待接入', retention: '2年', pii: false },
+  t_new_product:  { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: '竞品情报组', steward: '刘分析师', qualityScore: 82, freshness: '连接器待接入', retention: '2年', pii: false },
+  t_region_comp:  { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: '竞品情报组', steward: '刘分析师', qualityScore: 78, freshness: '连接器待接入', retention: '2年', pii: false },
+  t_price:        { layer: 'source', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '定价组', steward: '陈分析师', qualityScore: 93, freshness: '连接器待接入', retention: '1年', pii: false },
+  t_persona:      { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: '用户研究组', steward: '孙研究员', qualityScore: 92, freshness: '人工凭证待接入', retention: '3年', pii: true },
+  t_social:       { layer: 'source', scope: 'external', sensitivity: 'L2-内部', status: 'governed', owner: '社媒组', steward: '周运营', qualityScore: 88, freshness: '连接器待接入', retention: '1年', pii: false },
+  t_comment:      { layer: 'source', scope: 'external', sensitivity: 'L3-机密', status: 'governed', owner: '用户研究组', steward: '孙研究员', qualityScore: 91, freshness: 'VOC凭证待接入', retention: '2年', pii: true },
+  t_consumer_iv:  { layer: 'source', scope: 'internal', sensitivity: 'L3-机密', status: 'governed', owner: '用户研究组', steward: '孙研究员', qualityScore: 88, freshness: '访谈凭证待接入', retention: '5年', pii: true },
+  t_rfm:          { layer: 'app', scope: 'internal', sensitivity: 'L3-机密', status: 'governed', owner: 'CRM组', steward: '吴数据', qualityScore: 86, freshness: 'CRM待接入', retention: '3年', pii: true },
+  t_policy:       { layer: 'source', scope: 'external', sensitivity: 'L1-公开', status: 'governed', owner: '合规组', steward: '郑法务', qualityScore: 90, freshness: '公开来源复核中', retention: '永久', pii: false },
+  t_supply:       { layer: 'source', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '供应链组', steward: '王运营', qualityScore: 84, freshness: 'ERP待接入', retention: '5年', pii: false },
+  t_ip:           { layer: 'source', scope: 'external', sensitivity: 'L1-公开', status: 'governed', owner: 'IP组', steward: '马法务', qualityScore: 95, freshness: '公开来源复核中', retention: '永久', pii: false },
+  t_exhibition:   { layer: 'source', scope: 'external', sensitivity: 'L1-公开', status: 'pending', owner: '市场组', steward: '何运营', qualityScore: 85, freshness: '公开来源复核中', retention: '3年', pii: false },
+  t_own_product:  { layer: 'store', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '产品组', steward: '林产品', qualityScore: 96, freshness: 'ERP待接入', retention: '永久', pii: false },
+  t_price_strategy:{ layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '定价组', steward: '陈分析师', qualityScore: 92, freshness: '人工策略待复核', retention: '2年', pii: false },
+  t_channel:      { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '渠道组', steward: '王运营', qualityScore: 89, freshness: '人工凭证待接入', retention: '3年', pii: false },
+  t_promo:        { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '市场组', steward: '何运营', qualityScore: 87, freshness: '人工策略待复核', retention: '3年', pii: false },
+  t_comment_ai:   { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: 'AI组', steward: '黄算法', qualityScore: 83, freshness: 'VOC凭证待接入', retention: '1年', pii: false },
+  t_design_ai:    { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'untracked', owner: 'AI组', steward: '黄算法', qualityScore: 60, freshness: '生成日志待接入', retention: '1年', pii: false },
+  t_kb:           { layer: 'store', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '知识组', steward: '冯运营', qualityScore: 88, freshness: '半月manifest复核', retention: '永久', pii: false },
+  t_web_review:   { layer: 'source', scope: 'external', sensitivity: 'L3-机密', status: 'pending', owner: '爬虫组', steward: '程开发', qualityScore: 68, freshness: '网页评论凭证待接入', retention: '1年', pii: true },
 };
 
-// R21: 数据变更历史日志 — 模拟数据治理操作审计
+// R21: 数据变更历史日志 — 样例治理操作审计，不代表真实数据刷新
 const changeHistory = [
-  { date: '2026-05-23', tableId: 't_persona', action: '更新', user: '孙研究员', desc: 'Q2用户画像数据刷新', before: '2025-12数据', after: '2026-05数据' },
-  { date: '2026-05-23', tableId: 't_consumer_iv', action: '更新', user: '孙研究员', desc: 'Q2消费者访谈数据导入', before: '8条记录', after: '12条记录' },
-  { date: '2026-05-20', tableId: 't_porter', action: '更新', user: '李研究员', desc: '波特五力Q2重评', before: '2026-01', after: '2026-05' },
-  { date: '2026-05-23', tableId: 't_mkt_size', action: '更新', user: '张分析师', desc: 'Q2市场规模数据更新', before: '$36.8B', after: '$38.1B' },
-  { date: '2026-05-23', tableId: 't_comp_product', action: '排队', user: '系统', desc: 'Amazon竞品价格半月复核任务，连接器待接入', before: '-', after: '15条待复核记录' },
-  { date: '2026-05-22', tableId: 't_comment', action: '清洗', user: '孙研究员', desc: '评论情感NLP重跑', before: '准确率82%', after: '准确率87%' },
-  { date: '2026-05-20', tableId: 't_customs', action: '导入', user: '王运营', desc: '4月海关数据导入', before: '缺失', after: '1,240条' },
-  { date: '2026-05-18', tableId: 't_policy', action: '复核', user: '郑法务', desc: '美国CPSC CPC/eFiling来源复核', before: '官网实时声明口径', after: '待按官方CPC/eFiling规则重审' },
-  { date: '2026-05-15', tableId: 't_social', action: '异常', user: '周运营', desc: 'TikTok API限流告警', before: '正常', after: '采集延迟6h' },
-  { date: '2026-05-10', tableId: 't_rfm', action: '计算', user: '吴数据', desc: '5月RFM模型重算', before: 'Q1数据', after: 'Q2数据' },
-  { date: '2026-05-01', tableId: 't_price', action: '更新', user: '系统', desc: 'Prime Day定价策略生效', before: '常规价', after: '促销价' },
-  { date: '2026-04-28', tableId: 't_web_review', action: '合规检查', user: '程开发', desc: 'robots.txt合规审查', before: '未检查', after: '合规' },
-  { date: '2026-04-25', tableId: 't_own_product', action: '新增', user: '林产品', desc: 'W1加热款SKU录入', before: '-', after: 'SKU: W1-NA-001' },
+  { date: '样例记录', tableId: 't_persona', action: '待接入', user: '用户研究组', desc: '用户画像需由人工凭证或CRM连接器确认', before: '未确认', after: '凭证待接入' },
+  { date: '样例记录', tableId: 't_consumer_iv', action: '待接入', user: '用户研究组', desc: '消费者访谈需导入原始访谈记录', before: '未确认', after: '访谈凭证待接入' },
+  { date: '样例记录', tableId: 't_porter', action: '待复核', user: '战略部', desc: '波特五力评估需人工复核', before: '旧评估', after: '人工评估待复核' },
+  { date: '样例记录', tableId: 't_mkt_size', action: '复核', user: '市场分析组', desc: '市场规模随半月manifest复核，不伪造快照日期', before: '静态样例', after: '半月manifest复核' },
+  { date: '样例记录', tableId: 't_comp_product', action: '排队', user: '系统', desc: 'Amazon竞品价格半月复核任务，连接器待接入', before: '-', after: '待复核记录' },
+  { date: '样例记录', tableId: 't_comment', action: '待接入', user: '用户研究组', desc: '评论情感NLP需VOC凭证或连接器输入', before: '未确认', after: 'VOC凭证待接入' },
+  { date: '样例记录', tableId: 't_customs', action: '待接入', user: '供应链组', desc: '海关数据需凭证或连接器导入', before: '未确认', after: '海关凭证待接入' },
+  { date: '样例记录', tableId: 't_policy', action: '复核', user: '合规组', desc: '政策信息按公开来源半月复核', before: '公开页', after: '公开来源复核中' },
+  { date: '样例记录', tableId: 't_social', action: '待接入', user: '社媒组', desc: '社媒声量需平台API或授权连接器', before: '未确认', after: '连接器待接入' },
+  { date: '样例记录', tableId: 't_rfm', action: '待接入', user: 'CRM组', desc: 'RFM模型需CRM连接器输入', before: '未确认', after: 'CRM待接入' },
+  { date: '样例记录', tableId: 't_price', action: '待接入', user: '定价组', desc: 'Amazon价格需授权连接器，不使用公开页替代', before: '未确认', after: '连接器待接入' },
+  { date: '样例记录', tableId: 't_web_review', action: '待接入', user: '爬虫组', desc: '网页评论需凭证、授权爬虫或VOC流程接入', before: '未确认', after: '网页评论凭证待接入' },
+  { date: '样例记录', tableId: 't_own_product', action: '待接入', user: '产品组', desc: '自有SKU和库存需ERP凭证输入', before: '未确认', after: 'ERP待接入' },
 ];
 
 // R41: 数据一致性校验规则
@@ -678,7 +678,7 @@ export default function DataManage() {
               const t = dataModules.flatMap(m => m.tables).find(t => t.id === tid);
               return { tableId: tid, tableName: t?.name || '', ...g, upstream: (t?.upstream || []).join(', '), downstream: (t?.downstream || []).join(', ') };
             }),
-            { tableId: '表ID', tableName: '表名', layer: '分层', scope: '范围', sensitivity: '敏感度', qualityScore: '质量分', status: '状态', owner: 'Owner', steward: 'Steward', freshness: '新鲜度', pii: 'PII', retention: '保留', upstream: '上游', downstream: '下游' },
+            { tableId: '表ID', tableName: '表名', layer: '分层', scope: '范围', sensitivity: '敏感度', qualityScore: '质量分', status: '状态', owner: 'Owner', steward: 'Steward', freshness: '刷新状态', pii: 'PII', retention: '保留', upstream: '上游', downstream: '下游' },
             '数据治理报告_' + new Date().toISOString().slice(0, 10)
           )} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FBF8F5] text-xs text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all border border-[#EDE6DF]"><Download className="w-3.5 h-3.5" />治理报告</button>
         </div>
@@ -788,7 +788,7 @@ export default function DataManage() {
             </div>
             <button onClick={() => exportToCsv(
               Object.entries(tableGovernance).map(([k, v]) => ({ tableId: k, ...v })),
-              { tableId: '表ID', layer: '分层', scope: '范围', sensitivity: '敏感度', status: '治理状态', owner: 'Owner', qualityScore: '质量分', freshness: '新鲜度' },
+              { tableId: '表ID', layer: '分层', scope: '范围', sensitivity: '敏感度', status: '治理状态', owner: 'Owner', qualityScore: '质量分', freshness: '刷新状态' },
               '数据治理清单_' + new Date().toISOString().slice(0, 10)
             )} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FBF8F5] text-[10px] text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all">
               <Download className="w-3 h-3" />导出
@@ -1028,7 +1028,7 @@ export default function DataManage() {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="border-b border-[#EDE6DF] bg-[#FAF8F6]">
-                      {['数据表', '分层', '范围', '敏感度', '质量分', 'Owner', 'Steward', '状态', 'PII', '保留策略'].map((h, i) => (
+                      {['数据表', '分层', '范围', '敏感度', '质量分', 'Owner', 'Steward', '状态', '刷新状态', 'PII', '保留策略'].map((h, i) => (
                         <th key={i} className="py-2.5 px-3 text-[10px] text-[#86868b] font-medium whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
@@ -1063,10 +1063,11 @@ export default function DataManage() {
                                 <span className="text-[10px] font-medium text-[#1d1d1f] truncate">{g.qualityScore}</span>
                               </div>
                             </td>
-                            <td className="py-2 px-3 text-[10px] text-[#86868b]">{g.owner}</td>
-                            <td className="py-2 px-3 text-[10px] text-[#86868b]">{g.steward}</td>
-                            <td className="py-2 px-3"><span className={`px-1.5 py-0.5 rounded text-[9px] font-medium ${g.status === 'governed' ? 'bg-[#34c759]/10 text-[#34c759]' : g.status === 'pending' ? 'bg-[#ff9500]/10 text-[#ff9500]' : 'bg-[#ff3b30]/10 text-[#ff3b30]'}`}>{g.status === 'governed' ? '已治理' : g.status === 'pending' ? '待治理' : '未追踪'}</span></td>
-                            <td className="py-2 px-3">{g.pii ? <Lock className="w-3.5 h-3.5 text-[#ff3b30]" /> : <span className="text-[10px] text-[#B5AFA8]">-</span>}</td>
+	                            <td className="py-2 px-3 text-[10px] text-[#86868b]">{g.owner}</td>
+	                            <td className="py-2 px-3 text-[10px] text-[#86868b]">{g.steward}</td>
+	                            <td className="py-2 px-3"><span className={`px-1.5 py-0.5 rounded text-[9px] font-medium ${g.status === 'governed' ? 'bg-[#34c759]/10 text-[#34c759]' : g.status === 'pending' ? 'bg-[#ff9500]/10 text-[#ff9500]' : 'bg-[#ff3b30]/10 text-[#ff3b30]'}`}>{g.status === 'governed' ? '已治理' : g.status === 'pending' ? '待治理' : '未追踪'}</span></td>
+	                            <td className="py-2 px-3"><span className="inline-flex max-w-[120px] truncate rounded bg-[#FBF8F5] px-1.5 py-0.5 text-[9px] font-medium text-[#6E625D]" title={g.freshness}>{g.freshness}</span></td>
+	                            <td className="py-2 px-3">{g.pii ? <Lock className="w-3.5 h-3.5 text-[#ff3b30]" /> : <span className="text-[10px] text-[#B5AFA8]">-</span>}</td>
                             <td className="py-2 px-3 text-[10px] text-[#86868b]">{g.retention}</td>
                           </tr>
                         );
@@ -1074,11 +1075,11 @@ export default function DataManage() {
                   </tbody>
                 </table>
               </div>
-              {/* R23: 变更历史 */}
+              {/* R23: 样例治理记录 */}
               <div className="mt-4 p-4 rounded-xl bg-[#FBF8F5] border border-[#EDE6DF]">
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-xs font-semibold text-[#1d1d1f] flex items-center gap-1.5"><FileText className="w-3.5 h-3.5 text-[#5856d6]" /> 最近变更记录</h4>
-                  <span className="text-[9px] text-[#86868b]">{changeHistory.length}条记录 · 近30天</span>
+                  <h4 className="text-xs font-semibold text-[#1d1d1f] flex items-center gap-1.5"><FileText className="w-3.5 h-3.5 text-[#5856d6]" /> 样例治理记录</h4>
+                  <span className="text-[9px] text-[#86868b]">{changeHistory.length}条记录 · 非真实刷新日志</span>
                 </div>
                 <div className="space-y-2">
                   {changeHistory.slice(0, 6).map((ch, i) => {

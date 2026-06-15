@@ -141,7 +141,7 @@ export default function ReportPreview() {
         <div className="bg-white rounded-2xl p-8 card-shadow-sm border border-[#EDE6DF] mb-6">
           <div className="flex items-center gap-2 mb-3">
             <span className="px-2 py-0.5 rounded bg-[#C25B6E]/10 text-[#C25B6E] text-xs font-medium">{report.category}</span>
-            <span className="px-2 py-0.5 rounded bg-[#FBF8F5] text-[#86868b] text-xs">{report.date}</span>
+            <span className="px-2 py-0.5 rounded bg-[#FBF8F5] text-[#86868b] text-xs">发布 {report.date}</span>
           </div>
           <h1 className="text-2xl font-bold text-[#1d1d1f] mb-5">{report.title}</h1>
           <p className="text-sm text-[#86868b] mb-6 leading-relaxed">{report.summary}</p>
@@ -149,7 +149,7 @@ export default function ReportPreview() {
             <div className="flex items-center gap-1.5"><User className="w-3.5 h-3.5" />{report.author}</div>
             <div className="flex items-center gap-1.5"><FileDigit className="w-3.5 h-3.5" />{report.pages}页</div>
             <div className="flex items-center gap-1.5"><Download className="w-3.5 h-3.5" />{report.downloads}次下载</div>
-            <div className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{report.date}</div>
+            <div className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />发布 {report.date}</div>
           </div>
           <div className="flex items-center gap-2 mt-4 flex-wrap">
             {report.tags.map((tag, t) => (
