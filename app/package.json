@@ -21,6 +21,7 @@
     "data:refresh:weekly": "node scripts/data/refresh-weekly-data.mjs",
     "data:refresh:semi-monthly": "node scripts/data/refresh-semi-monthly-data.mjs",
     "data:refresh:semi-monthly:public-evidence": "node scripts/data/refresh-semi-monthly-data.mjs --public-evidence-live",
+    "data:semi-monthly:report": "node scripts/data/build-semi-monthly-report.mjs",
     "data:connector:amazon:dry-run": "node scripts/data/connectors/amazon-commerce-dry-run.mjs",
     "data:connector:amazon:mapping:validate": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --json --no-write",
     "data:connector:amazon:mapping:template": "node scripts/data/connectors/amazon-commerce-dry-run.mjs --print-mapping-template",

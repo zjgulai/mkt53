@@ -283,7 +283,7 @@ export default function SelfInsight() {
             {/* KPI */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { l: '全球用户', v: '500万+', sub: '60国 · 截至2025.12', c: '#C25B6E', icon: <Users className="w-4 h-4" /> },
+                { l: '全球用户', v: '500万+', sub: '60国 · 样本口径待拆分', c: '#C25B6E', icon: <Users className="w-4 h-4" /> },
                 { l: '专利资产', v: '520+', sub: '授权专利+330商标', c: '#ff9500', icon: <Award className="w-4 h-4" /> },
                 { l: '行业大奖', v: '49项', sub: 'Red Dot/Best of Bump', c: '#34c759', icon: <Star className="w-4 h-4" /> },
                 { l: '全球份额', v: '19.32%', sub: '穿戴式吸奶器#1', c: '#5856d6', icon: <TrendingUp className="w-4 h-4" /> },

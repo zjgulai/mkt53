@@ -5,7 +5,7 @@ module: data-collection
 topic: semi-monthly-refresh
 status: stable
 created: 2026-06-11
-updated: 2026-06-13
+updated: 2026-06-14
 owner: self
 source: human+ai
 ---
@@ -20,13 +20,13 @@ mkt53 数据刷新节奏从周度调整为半月一次。正式计划为每月 1
 
 ## 最新验证状态
 
-2026-06-12 已完成一次带浏览器辅助公开证据的半月生产发布和线上复核：
+2026-06-14 已完成一次带浏览器辅助公开证据的半月生产发布和线上复核：
 
 | 项 | 结果 |
 |---|---|
 | 生产周期 | `2026-06-H1` |
-| 生产 manifest | `refreshCadence=semi-monthly`，`generatedAt=2026-06-12T02:23:17.911Z` |
-| 公开证据 manifest | `mode=live-browser-capture`，`generatedAt=2026-06-12T02:23:22.683Z`，12/12 captured，`businessDataWrites=0` |
+| 生产 manifest | `refreshCadence=semi-monthly`，`generatedAt=2026-06-14T05:06:31.080Z` |
+| 公开证据 manifest | `mode=live-browser-capture`，`generatedAt=2026-06-14T05:06:37.375Z`，12/12 captured，`businessDataWrites=0` |
 | 下次计划刷新 | `2026-06-16T09:00:00+08:00` |
 | 来源状态 | total 45，ok 10，connector-required 23，manual-required 12，issueCount 0 |
 | 发布命令 | `npm run data:deploy:semi-monthly -- --public-evidence-live --timeout-ms 12000 --max-attempts 2 --public-evidence-timeout-ms 30000` 已通过 |
@@ -138,9 +138,12 @@ npm run data:deploy:semi-monthly -- --public-evidence-live --timeout-ms 12000 --
 该命令依次执行：
 
 1. `npm run data:refresh:semi-monthly`
-2. `npm run deploy:prod:verified`
+2. `npm run deploy:prod`
+3. `npm run smoke:prod`
+4. `npm run test:e2e:prod`
+5. `npm run data:semi-monthly:report`
 
-`deploy:prod:verified` 内部继续执行 `deploy:prod`、`smoke:prod` 和 `test:e2e:prod`，保证半月数据发布与普通静态发布共用同一条生产回归链。
+该链路与生产静态回归链等价，新增 `data:semi-monthly:report` 用于产出半月发布闭环证据。
 
 服务器本地触发静态刷新：
 
@@ -150,6 +153,49 @@ npm run data:publish:semi-monthly:local
 ```
 
 该命令只写入 `MKT53_STATIC_HTML_DIR`，默认是 `/opt/mkt53/html`，不依赖 SSH key，不触碰宿主 landing、nginx 配置或其他应用目录。服务器存在 `MKT53_AMAZON_PRIVATE_DIR` 时，会继续生成 Amazon 私有输入交叉审计报告。
+
+## 半月发布报告（run report）
+
+`data:deploy:semi-monthly` 与 `data:publish:semi-monthly:local` 在每次执行完后会自动落盘：
+
+- `tmp/reports/semi-monthly-run-report-<period>.json`
+- `tmp/reports/semi-monthly-run-report-<period>.md`
+- `tmp/data-collection/runs/<period>-report.json`
+
+其中：
+
+- JSON 为机器可读主报表；
+- MD 为人工阅览摘要；
+- `runs/<period>-report.json` 为与 `runs/<period>.json` 同步的可追溯记录。
+
+报告内关键字段：
+
+| 字段 | 说明 |
+|---|---|
+| `gate.status` | `pass` / `block`，半月发布执行判定 |
+| `gate.reason` | 门禁不通过原因 |
+| `checks.refresh.status` | 数据刷新状态 |
+| `checks.deploy.status` | 部署状态 |
+| `checks.smoke.status` | 生产 smoke 状态 |
+| `checks.e2eProd.status` | 生产 E2E 状态 |
+| `checks.dataAudit.status` | 数据审计状态 |
+| `artifacts.logs.*.path` | 关联日志路径 |
+
+如果任一关键项为 `block`，执行链路应视为未通过，禁止直接关闭本轮任务。
+
+手工重放生成报告（用于复盘或补齐缺失日志）：
+
+```bash
+cd app
+npm run data:semi-monthly:report -- --period 2026-06-H1 --run-id 20260614_090000 --json
+```
+
+如有外部审计日志，补充参数：
+
+```bash
+cd app
+npm run data:semi-monthly:report -- --period 2026-06-H1 --source semi-monthly-deploy --refresh-log /tmp/.../refresh.log --deploy-log /tmp/.../deploy.log --smoke-log /tmp/.../smoke.log --e2e-log /tmp/.../e2e-prod.log --refresh-status 0 --deploy-status 0 --smoke-status 0 --e2e-status 0
+```
 
 ## Amazon 私有输入 sidecar
 
@@ -247,7 +293,7 @@ bash scripts/data/install-semi-monthly-cron.sh
 0 9 1,16 * *
 ```
 
-2026-06-12 线上 crontab 已确认使用该计划：
+2026-06-12 起线上 crontab 已确认使用该计划，2026-06-14 二次验证期间未变更：
 
 ```cron
 # mkt53 semi-monthly data refresh
@@ -281,12 +327,13 @@ MKT53_SEMI_MONTHLY_CRON="30 8 1,16 * *" bash scripts/data/install-semi-monthly-c
 | 静态质量门 | `npm run lint && npm audit && npm run build` |
 | 生产静态路由 | `npm run smoke:prod` |
 | 生产数据页 | `npm run test:e2e:prod` |
+| 半月发布报告 | `tmp/reports/semi-monthly-run-report-<period>.json` 中 `gate.status = pass` |
 
 禁止把私有 ASIN、SKU、授权记录、owner 信息或凭据写入 `app/public/`、`tmp/data-collection/`、测试夹具或 git。
 
 ## 服务器出口边界
 
-服务器 cron 使用服务器出口网络采集公开 URL。若公开来源返回 `403`，manifest 必须保留为 `source-error`，不得为了维持指标好看改写为 `ok`。2026-06-12 生产发布中，浏览器辅助公开证据样本 live 采集 12/12 captured；下列公开 URL 仍需在常规 public-url-check 与人工复核链路中保留边界：
+服务器 cron 使用服务器出口网络采集公开 URL。若公开来源返回 `403`，manifest 必须保留为 `source-error`，不得为了维持指标好看改写为 `ok`。2026-06-14 生产发布中，浏览器辅助公开证据样本 live 采集 12/12 captured；下列公开 URL 仍需在常规 public-url-check 与人工复核链路中保留边界：
 
 | source id | 来源 |
 |---|---|

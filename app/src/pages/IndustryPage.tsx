@@ -36,7 +36,7 @@ const policyTimeline = [
   { date: '2025-10-05', events: ['中国发布GB 6675.1-4-2025玩具安全系列新标准，全面替代2014版', '新增GB/T 46509玩具VOC释放测定、GB/T 46510水性材料游离甲醛测定', 'GB 6675.10-2025新增嗅觉棋盘游戏、化妆品套装和味觉游戏安全要求'] },
   { date: '2025-09-08', events: ['Momcozy新型号电动吸奶器BP223获得FDA 510(k)许可（K251394号），申请人：深圳Root Innovation Technology', 'Fimilla(上海)母婴用品HL-3060/F5113电动吸奶器获FDA 510(k)许可（K252630号）'] },
   { date: '2025-07-05', events: ['澳大利亚ACCC紧急召回Ezone婴儿头部支撑带（Z1451/Z1758），警告车祸中脊柱损伤或死亡风险', 'ACCC同时召回婴儿自喂养枕（Z3007/Z3008），警告窒息和吸入性肺炎风险', 'ACCC记录多起相关事件，建议消费者立即停用并安全处置'] },
-  { date: '待复核 2026-05-23', events: ['美国CPSC向获批实验室通报儿童产品检测资质审批注意事项', '16 CFR 1242哺乳枕标准和16 CFR 1243支撑垫标准实验室认可范围须严格匹配ASTM F963-23章节编号', '多家实验室因认可范围列表不完整被要求整改'] },
+  { date: '待复核（来源核验中）', events: ['美国CPSC向获批实验室通报儿童产品检测资质审批注意事项', '16 CFR 1242哺乳枕标准和16 CFR 1243支撑垫标准实验室认可范围须严格匹配ASTM F963-23章节编号', '多家实验室因认可范围列表不完整被要求整改'] },
 ];
 
 const flavorData = [
@@ -54,11 +54,11 @@ const flavorTrendData = [
 
 const newsData = [
   { title: 'Momcozy Wearable Breast Pump获得FDA 510(k)许可（K253283号），涵盖7个型号', date: '2025-10-29', source: 'FDA', tag: '产品', image: true },
-  { title: '美国CPSC 16 CFR Part 1242哺乳枕安全标准正式生效，要求更严格的安全设计', date: '待复核 2026-05-23', source: 'CPSC', tag: '法规', image: true },
+  { title: '美国CPSC 16 CFR Part 1242哺乳枕安全标准正式生效，要求更严格的安全设计', date: '待复核（来源核验中）', source: 'CPSC', tag: '法规', image: true },
   { title: 'eufy Wearable Breast Pump S1获得FDA 510(k)许可（K250207号），穿戴式吸奶器赛道竞争加剧', date: '2025-08-11', source: 'FDA', tag: '竞品', image: true },
   { title: '欧盟MDR过渡期延长至2027-2028年，吸奶器等Class IIa医疗器械需加速合规', date: '2024-12-18', source: 'EU Commission', tag: '法规', image: true },
   { title: '中国发布GB 6675-2025玩具安全系列新标准，2026年11月计划生效，新增多项化学物质限制', date: '2025-10-05', source: 'SAC China', tag: '法规', image: true },
-  { title: '全球可穿戴吸奶器市场2025年预计增长18.2%，APP智能控制成为核心差异化功能', date: '待复核 2026-05-23', source: 'MarketWatch', tag: '市场', image: true },
+  { title: '全球可穿戴吸奶器市场2025年预计增长18.2%，APP智能控制成为核心差异化功能', date: '待复核（来源核验中）', source: 'MarketWatch', tag: '市场', image: true },
 ];
 
 // Section definitions: map tab ID <-> sidebar structure
@@ -437,10 +437,10 @@ export default function IndustryPage() {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
-                      { title: 'AI驱动的婴儿监视器：哭声识别准确率突破95%', date: '待复核 2026-05-23', tag: 'AI' },
-                      { title: '可穿戴式智能吸奶器：蓝牙连接+APP数据分析成标配', date: '待复核 2026-05-23', tag: '智能硬件' },
-                      { title: 'UV-C LED消毒技术成本下降40%，加速普及到中端产品线', date: '待复核 2026-05-23', tag: '材料科技' },
-                      { title: '母婴电商平台AR试穿功能上线，文胸尺码匹配率提升30%', date: '待复核 2026-05-23', tag: '电商科技' },
+                      { title: 'AI驱动的婴儿监视器：哭声识别准确率突破95%', date: '待复核（来源核验中）', tag: 'AI' },
+                      { title: '可穿戴式智能吸奶器：蓝牙连接+APP数据分析成标配', date: '待复核（来源核验中）', tag: '智能硬件' },
+                      { title: 'UV-C LED消毒技术成本下降40%，加速普及到中端产品线', date: '待复核（来源核验中）', tag: '材料科技' },
+                      { title: '母婴电商平台AR试穿功能上线，文胸尺码匹配率提升30%', date: '待复核（来源核验中）', tag: '电商科技' },
                     ].map((item, i) => (
                       <div key={i} className="p-4 rounded-xl bg-[#FBF8F5] hover:bg-[#F5EDE8] transition-colors duration-200 cursor-pointer">
                         <span className="px-1.5 py-0.5 rounded text-[10px] text-[#5856d6] bg-[#5856d6]/10 font-medium">{item.tag}</span>

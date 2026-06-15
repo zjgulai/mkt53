@@ -55,15 +55,15 @@ const hotModules = [
   { icon: MessageSquare, title: 'AI助手', desc: '评论分析 · 设计助手', color: '#34c759', link: '/ai-assistant', badge: null },
 ];
 
-// 最新报告
+// 本期报告
 const reportTabs = ['全部', '区域宏观', '竞品情报', '新品监测', '拆机报告'];
 const latestReports = [
-  { id: 'r001', title: '2026年Q1全球母婴市场宏观洞察报告', category: '区域宏观', date: '2026-05-23', status: '最新', pages: 68 },
+  { id: 'r001', title: '2026年Q1全球母婴市场宏观洞察报告', category: '区域宏观', date: '2026-05-23', status: '本期', pages: 68 },
   { id: 'r009', title: '2026年Q1全球吸奶器市场竞争格局报告', category: '竞品情报', date: '2026-04-12', status: '热门', pages: 78 },
-  { id: 'r005', title: '2026年Q1母婴行业新品上市监测报告', category: '新品监测', date: '2026-04-20', status: '最新', pages: 45 },
+  { id: 'r005', title: '2026年Q1母婴行业新品上市监测报告', category: '新品监测', date: '2026-04-20', status: '本期', pages: 45 },
   { id: 'r010', title: 'Momcozy vs Medela vs Willow 品牌竞争力深度对比', category: '竞品情报', date: '2026-05-23', status: '热门', pages: 92 },
   { id: 'r002', title: '北美母婴护理市场深度分析（2025-2026年度）', category: '区域宏观', date: '2026-03-22', status: '已读', pages: 86 },
-  { id: 'r013', title: 'Momcozy W1 加热款拆解与BOM成本分析', category: '拆机报告', date: '2026-05-23', status: '最新', pages: 52 },
+  { id: 'r013', title: 'Momcozy W1 加热款拆解与BOM成本分析', category: '拆机报告', date: '2026-05-23', status: '本期', pages: 52 },
 ];
 
 const cpscEfilingSource = getSourceRegistryItem('policy-cpsc-efiling');
@@ -418,12 +418,12 @@ export default function HomePage() {
               </section>
             </div>
 
-            {/* ── 最新报告 ── */}
+            {/* ── 本期报告 ── */}
             <section className="bg-white rounded-2xl p-6 card-shadow-sm border border-[#EDE6DF]">
               <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2">
                   <FileText className="w-4 h-4 text-[#C25B6E]" />
-                  <h2 className="text-lg font-semibold text-[#1d1d1f]">最新报告</h2>
+                  <h2 className="text-lg font-semibold text-[#1d1d1f]">本期报告</h2>
                 </div>
                 <button onClick={() => navigate('/reports')} className="text-xs text-[#C25B6E] hover:underline flex items-center gap-1">
                   查看全部 <ChevronRight className="w-3 h-3" />
@@ -448,12 +448,12 @@ export default function HomePage() {
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-[10px] text-[#86868b]">{report.category}</span>
                           <span className="text-[10px] text-[#86868b]">{report.pages}页</span>
-                          <span className="text-[10px] text-[#86868b]">{report.date}</span>
+                          <span className="text-[10px] text-[#86868b]">发布 {report.date}</span>
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      {report.status === '最新' && <span className="px-1.5 py-0.5 rounded bg-[#ff3b30]/10 text-[#ff3b30] text-[10px] font-medium">NEW</span>}
+                      {report.status === '本期' && <span className="px-1.5 py-0.5 rounded bg-[#ff3b30]/10 text-[#ff3b30] text-[10px] font-medium">本期</span>}
                       {report.status === '热门' && <span className="px-1.5 py-0.5 rounded bg-[#ff9500]/10 text-[#ff9500] text-[10px] font-medium">HOT</span>}
                       <ChevronRight className="w-4 h-4 text-[#86868b] group-hover:text-[#C25B6E]" />
                     </div>

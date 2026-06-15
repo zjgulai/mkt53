@@ -70,7 +70,7 @@ const stores = [
     features: ['4间私密体验室', '专业泌乳顾问驻店', '月度妈妈社群活动', '线上线下库存打通', 'VIP预约制服务'],
     bestPractices: ['体验优先策略：先试用后购买，转化率78%', '社群运营：月度活动带来35%新客', '顾问式销售：泌乳顾问提升信任度+40%', 'OMO融合：线上下单门店自提占15%'],
     painPoints: ['高租金成本(占营收18%)', '专业顾问招聘困难', '高峰期排队等待', '设备维护成本高'],
-    date: '样例访谈日 2026-05-23', duration: '65min', method: '现场访谈+运营数据审计',
+    date: '样例访谈窗口：待接入（示例）', duration: '65min', method: '现场访谈+运营数据审计',
   },
   {
     id: 2, name: 'Buy Buy Baby - Momcozy Corner', city: 'New York, US', type: '店中店', health: 72,
@@ -81,7 +81,7 @@ const stores = [
     features: ['沉浸式产品展示', '扫码查看评价', '快速自提服务', '会员积分互通', '季节性主题陈列'],
     bestPractices: ['视线优化：产品在主通道视线范围内', '低介入销售：易理解产品自主选购', '扫码互动：数字化补充线下体验', '联名陈列：与互补品牌相邻提升连带率'],
     painPoints: ['陈列空间受限(仅45㎡)', '员工非专属，产品知识有限', '依赖商场客流，主动获客难', '装修调整需审批'],
-    date: '样例访谈日 2026-05-23', duration: '45min', method: '现场访谈+客流观察',
+    date: '样例访谈窗口：待接入（示例）', duration: '45min', method: '现场访谈+客流观察',
   },
   {
     id: 3, name: 'Momcozy Toronto Pop-up', city: 'Toronto, CA', type: '快闪店', health: 88,
@@ -92,7 +92,7 @@ const stores = [
     features: ['限时体验折扣', '社交媒体打卡点', '达人探店合作', '预售新品首发', '互动屏幕体验'],
     bestPractices: ['稀缺营销：限时限量创造购买紧迫感', '社交裂变：打卡点设计带动UGC传播', '达人联动：本地妈妈KOL探店引流', '新品测试：低成本验证市场反应'],
     painPoints: ['租期短(3-6个月)', '无法积累长期会员', '搭建和拆除成本高', '位置不确定性'],
-    date: '样例访谈日 2026-05-23', duration: '50min', method: '现场访谈+社交媒体分析',
+    date: '样例访谈窗口：待接入（示例）', duration: '50min', method: '现场访谈+社交媒体分析',
   },
   {
     id: 4, name: 'Momcozy London Store', city: 'London, UK', type: '品牌专卖店', health: 82,
@@ -103,7 +103,7 @@ const stores = [
     features: ['竞品对比展示区', '环保包装展示', '多语言服务(英/法/西)', 'NHS合作认证展示', '30天无忧退换'],
     bestPractices: ['信任建设：NHS认证展示提升转化率+25%', '教育营销：对比卡帮助决策困难用户', '可持续故事：环保包装吸引ESG消费者', '本地化服务：多语言覆盖欧洲游客'],
     painPoints: ['Brexit后进口成本上升', 'UKCA认证展示需更新', '欧洲游客占比下降', '冬季客流受天气影响大'],
-    date: '样例访谈日 2026-05-23', duration: '55min', method: '现场访谈+竞品暗访',
+    date: '样例访谈窗口：待接入（示例）', duration: '55min', method: '现场访谈+竞品暗访',
   },
   {
     id: 5, name: 'Momcozy Dubai Mall', city: 'Dubai, UAE', type: '高端概念店', health: 90,
@@ -114,7 +114,7 @@ const stores = [
     features: ['VIP私密体验套房', '多语言顾问(英/阿/中)', '高端礼品包装', '与月子中心合作', '预约制一对一服务'],
     bestPractices: ['高端定位：高价高服务匹配当地消费', 'VIP体验：预约制一对一提升满意度', '渠道合作：月子中心推荐带来50%高端客', '礼品市场：高端包装切入送礼场景'],
     painPoints: ['人员多语言要求高', '高温环境设备散热挑战', '当地法规合规复杂', '竞品luxury品牌压力大'],
-    date: '样例访谈日 2026-05-23', duration: '58min', method: '现场访谈+VIP客户观察',
+    date: '样例访谈窗口：待接入（示例）', duration: '58min', method: '现场访谈+VIP客户观察',
   },
 ];
 
@@ -200,7 +200,7 @@ export default function StoreInterviews() {
               interviewType="store"
               sampleSize={stores.length}
               regions={['美国', '加拿大', '英国', '阿联酋']}
-              dateRange="样例访谈日：2026-05-23 · 待门店快照复核"
+              dateRange="样例访谈窗口：待接入（示例） · 待门店快照复核"
             />
 
             {/* ═══ KPI Cards ═══ */}

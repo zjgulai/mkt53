@@ -538,7 +538,7 @@ curl https://mkt.lute-tlz-dddd.top/api/ai/images \\
                               <span className="px-1.5 py-0.5 rounded text-[10px] bg-[#FBF8F5] text-[#86868b]">{h.resolution}</span>
                             </div>
                             <div className="flex items-center justify-between text-[10px] text-[#86868b]">
-                              <span>{h.date}</span>
+                              <span>生成 {h.date}</span>
                               <span>{h.time}</span>
                               <span className="text-[#af52de]">{h.model}</span>
                             </div>
@@ -568,7 +568,7 @@ curl https://mkt.lute-tlz-dddd.top/api/ai/images \\
                               <span className="px-1.5 py-0.5 rounded text-[10px] bg-[#FBF8F5] text-[#86868b]">{h.resolution}</span>
                             </div>
                             <div className="flex items-center justify-between text-[10px] text-[#86868b]">
-                              <span>{h.date}</span>
+                              <span>采集 {h.date}</span>
                               <span className="text-[#C25B6E]">{h.model}</span>
                             </div>
                           </div>

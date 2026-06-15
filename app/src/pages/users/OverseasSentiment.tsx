@@ -36,12 +36,12 @@ const hotTopics = [
 ];
 
 const recentMentions = [
-  { platform: 'Reddit', user: 'WorkingMom2025', content: 'The M5 has been a game changer for my pumping sessions at work. Truly hands-free and discreet.', sentiment: 'positive', likes: 234, date: '样例日期 2026-05-23' },
-  { platform: 'Twitter/X', user: '@NewMomLife', content: 'Momcozy nursing bra is the most comfortable I have tried. Worth every penny!', sentiment: 'positive', likes: 189, date: '样例日期 2026-05-23' },
-  { platform: 'Instagram', user: '@mommyblogger_us', content: 'Love the new M9 design but wish the suction was a bit stronger for heavy producers.', sentiment: 'mixed', likes: 445, date: '样例日期 2026-05-23' },
-  { platform: 'Facebook', user: 'Sarah Johnson', content: 'Had an issue with the KleanPal water reservoir leaking. Customer service was helpful though.', sentiment: 'mixed', likes: 67, date: '样例日期 2026-05-23' },
-  { platform: 'TikTok', user: '@pumpreview', content: 'M5 vs Willow Go comparison - Momcozy wins on price and battery life!', sentiment: 'positive', likes: 1205, date: '样例日期 2026-05-23' },
-  { platform: 'Reddit', user: 'FTDad_Parenting', content: 'Baby carrier ergonomics are great. My back doesnt hurt even after 2 hours of wearing.', sentiment: 'positive', likes: 156, date: '样例日期 2026-05-23' },
+  { platform: 'Reddit', user: 'WorkingMom2025', content: 'The M5 has been a game changer for my pumping sessions at work. Truly hands-free and discreet.', sentiment: 'positive', likes: 234, date: '样例：采集窗口待接入（示例）' },
+  { platform: 'Twitter/X', user: '@NewMomLife', content: 'Momcozy nursing bra is the most comfortable I have tried. Worth every penny!', sentiment: 'positive', likes: 189, date: '样例：采集窗口待接入（示例）' },
+  { platform: 'Instagram', user: '@mommyblogger_us', content: 'Love the new M9 design but wish the suction was a bit stronger for heavy producers.', sentiment: 'mixed', likes: 445, date: '样例：采集窗口待接入（示例）' },
+  { platform: 'Facebook', user: 'Sarah Johnson', content: 'Had an issue with the KleanPal water reservoir leaking. Customer service was helpful though.', sentiment: 'mixed', likes: 67, date: '样例：采集窗口待接入（示例）' },
+  { platform: 'TikTok', user: '@pumpreview', content: 'M5 vs Willow Go comparison - Momcozy wins on price and battery life!', sentiment: 'positive', likes: 1205, date: '样例：采集窗口待接入（示例）' },
+  { platform: 'Reddit', user: 'FTDad_Parenting', content: 'Baby carrier ergonomics are great. My back doesnt hurt even after 2 hours of wearing.', sentiment: 'positive', likes: 156, date: '样例：采集窗口待接入（示例）' },
 ];
 
 const sidebarItems = [
