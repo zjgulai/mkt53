@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
 import { Search, LayoutGrid, Target, FileBarChart, Map as MapIcon, Database, ChevronDown, X, Download } from 'lucide-react';
-import { exportToCsv } from '@/utils/csvExport';
 // Target imported via lucide-react
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
@@ -21,31 +20,33 @@ interface Product {
   firstLetter: string;
 }
 
+const pendingPrice = '授权价格待采集';
+
 // R13: 产品威胁等级评估
 const allProducts: Product[] = [
-  { id: 1, name: 'M5 穿戴式吸奶器', brand: 'Momcozy', type: '穿戴式', capacity: '180ml', power: 'APP控制', date: '2024-06上市', price: '$159.99', priceNum: 159.99, img: '/images/momcozy-m5-real.png', isMomcozy: true, category: '吸奶器', firstLetter: 'M' },
-  { id: 2, name: 'Sonata 智能吸奶器', brand: 'Medela', type: '台式', capacity: '250ml', power: '医院级', date: '2024-03上市', price: '$349.99', priceNum: 349.99, img: '/images/momcozy-m9-real.png', isMomcozy: false, category: '吸奶器', firstLetter: 'S' },
-  { id: 3, name: 'S2 Plus 医院级', brand: 'Spectra', type: '台式', capacity: '300ml', power: '医院级', date: '2023-09上市', price: '$189.99', priceNum: 189.99, img: '/images/momcozy-kleanpal-real.png', isMomcozy: false, category: '吸奶器', firstLetter: 'S' },
-  { id: 4, name: 'M9 Mobile Flow', brand: 'Momcozy', type: '穿戴式', capacity: '200ml', power: 'APP控制', date: '2024-09上市', price: '$199.99', priceNum: 199.99, img: '/images/momcozy-m9-real.png', isMomcozy: true, category: '吸奶器', firstLetter: 'M' },
-  { id: 5, name: 'Go 穿戴式', brand: 'Willow', type: '穿戴式', capacity: '180ml', power: '智能传感', date: '2024-01上市', price: '$299.99', priceNum: 299.99, img: '/images/momcozy-m5-real.png', isMomcozy: false, category: '吸奶器', firstLetter: 'W' },
-  { id: 6, name: '自然吸乳双边', brand: 'Philips Avent', type: '台式', capacity: '250ml', power: '静音设计', date: '2023-06上市', price: '$129.99', priceNum: 129.99, img: '/images/philips-avent-real.png', isMomcozy: false, category: '吸奶器', firstLetter: 'P' },
-  { id: 7, name: 'M6 Slim 手持式', brand: 'Momcozy', type: '手持式', capacity: '150ml', power: '三档调节', date: '2024-12上市', price: '$89.99', priceNum: 89.99, img: '/images/momcozy-warmer-real.png', isMomcozy: true, category: '吸奶器', firstLetter: 'M' },
-  { id: 8, name: 'Pump In Style', brand: 'Medela', type: '便携', capacity: '200ml', power: '双韵律', date: '2023-03上市', price: '$219.99', priceNum: 219.99, img: '/images/momcozy-bags-real.png', isMomcozy: false, category: '吸奶器', firstLetter: 'P' },
-  { id: 9, name: 'KleanPal Pro 洗消一体机', brand: 'Momcozy', type: '护理电器', capacity: '-', power: 'UV消毒', date: '2025-01上市', price: '$179.99', priceNum: 179.99, img: '/images/momcozy-warmer-real.png', isMomcozy: true, category: '婴儿护理', firstLetter: 'K' },
-  { id: 10, name: 'Maternity Nursing Bra', brand: 'Momcozy', type: '哺乳文胸', capacity: 'S-XXL', power: '无痕设计', date: '2024-04上市', price: '$29.99', priceNum: 29.99, img: '/images/momcozy-bra-real.png', isMomcozy: true, category: '哺乳用品', firstLetter: 'M' },
-  { id: 11, 'name': 'Disposable Breast Pads', brand: 'Lansinoh', type: '防溢乳垫', capacity: '60片装', power: '超薄吸收', date: '2023-08上市', price: '$8.99', priceNum: 8.99, img: '/images/lansinoh-pads-real.png', isMomcozy: false, category: '哺乳用品', firstLetter: 'D' },
-  { id: 12, name: 'Milk Storage Bags', brand: 'Momcozy', type: '储奶袋', capacity: '100只', power: '双拉链防漏', date: '2024-02上市', price: '$9.99', priceNum: 9.99, img: '/images/momcozy-bags-real.png', isMomcozy: true, category: '哺乳用品', firstLetter: 'M' },
-  { id: 13, name: 'Video Baby Monitor', brand: 'Philips Avent', type: '监视器', capacity: '-', power: '2.4GHz/夜视', date: '2023-11上市', price: '$199.99', priceNum: 199.99, img: '/images/momcozy-kleanpal-real.png', isMomcozy: false, category: '婴儿护理', firstLetter: 'V' },
-  { id: 14, name: 'Baby Bottle Warmer', brand: 'Momcozy', type: '温奶器', capacity: '双瓶位', power: '恒温42°C', date: '2024-08上市', price: '$49.99', priceNum: 49.99, img: '/images/momcozy-warmer-real.png', isMomcozy: true, category: '婴儿护理', firstLetter: 'B' },
-  { id: 15, name: 'Baby Carrier', brand: 'Momcozy', type: '婴儿背带', capacity: '0-36月', power: '人体工学', date: '2024-10上市', price: '$69.99', priceNum: 69.99, img: '/images/momcozy-carrier-real.png', isMomcozy: true, category: '婴儿护理', firstLetter: 'B' },
+  { id: 1, name: 'M5 穿戴式吸奶器', brand: 'Momcozy', type: '穿戴式', capacity: '容量待复核', power: 'APP控制', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-m5-real.png', isMomcozy: true, category: '吸奶器', firstLetter: 'M' },
+  { id: 2, name: 'Sonata 智能吸奶器', brand: 'Medela', type: '台式', capacity: '容量待复核', power: '医院级', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-m9-real.png', isMomcozy: false, category: '吸奶器', firstLetter: 'S' },
+  { id: 3, name: 'Spectra Plus 医院级', brand: 'Spectra', type: '台式', capacity: '容量待复核', power: '医院级', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-kleanpal-real.png', isMomcozy: false, category: '吸奶器', firstLetter: 'S' },
+  { id: 4, name: 'M9 Mobile Flow', brand: 'Momcozy', type: '穿戴式', capacity: '容量待复核', power: 'APP控制', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-m9-real.png', isMomcozy: true, category: '吸奶器', firstLetter: 'M' },
+  { id: 5, name: 'Go 穿戴式', brand: 'Willow', type: '穿戴式', capacity: '容量待复核', power: '智能传感', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-m5-real.png', isMomcozy: false, category: '吸奶器', firstLetter: 'W' },
+  { id: 6, name: '自然吸乳双边', brand: 'Philips Avent', type: '台式', capacity: '容量待复核', power: '静音设计', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/philips-avent-real.png', isMomcozy: false, category: '吸奶器', firstLetter: 'P' },
+  { id: 7, name: 'Slim 手持式', brand: 'Momcozy', type: '手持式', capacity: '容量待复核', power: '档位待复核', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-warmer-real.png', isMomcozy: true, category: '吸奶器', firstLetter: 'M' },
+  { id: 8, name: 'Pump In Style', brand: 'Medela', type: '便携', capacity: '容量待复核', power: '双韵律', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-bags-real.png', isMomcozy: false, category: '吸奶器', firstLetter: 'P' },
+  { id: 9, name: 'KleanPal Pro 洗消一体机', brand: 'Momcozy', type: '护理电器', capacity: '-', power: 'UV消毒', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-warmer-real.png', isMomcozy: true, category: '婴儿护理', firstLetter: 'K' },
+  { id: 10, name: 'Maternity Nursing Bra', brand: 'Momcozy', type: '哺乳文胸', capacity: '尺码待复核', power: '无痕设计', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-bra-real.png', isMomcozy: true, category: '哺乳用品', firstLetter: 'M' },
+  { id: 11, 'name': 'Disposable Breast Pads', brand: 'Lansinoh', type: '防溢乳垫', capacity: '规格待复核', power: '超薄吸收', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/lansinoh-pads-real.png', isMomcozy: false, category: '哺乳用品', firstLetter: 'D' },
+  { id: 12, name: 'Milk Storage Bags', brand: 'Momcozy', type: '储奶袋', capacity: '规格待复核', power: '防漏卖点待复核', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-bags-real.png', isMomcozy: true, category: '哺乳用品', firstLetter: 'M' },
+  { id: 13, name: 'Video Baby Monitor', brand: 'Philips Avent', type: '监视器', capacity: '-', power: '夜视卖点待复核', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-kleanpal-real.png', isMomcozy: false, category: '婴儿护理', firstLetter: 'V' },
+  { id: 14, name: 'Baby Bottle Warmer', brand: 'Momcozy', type: '温奶器', capacity: '规格待复核', power: '恒温卖点待复核', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-warmer-real.png', isMomcozy: true, category: '婴儿护理', firstLetter: 'B' },
+  { id: 15, name: 'Baby Carrier', brand: 'Momcozy', type: '婴儿背带', capacity: '适用月龄待复核', power: '人体工学', date: '上市时间待复核', price: pendingPrice, priceNum: 0, img: '/images/momcozy-carrier-real.png', isMomcozy: true, category: '婴儿护理', firstLetter: 'B' },
 ];
 
 // R13: 竞品威胁等级映射（非Momcozy产品）
 const threatMap: Record<number, { level: '高' | '中' | '低'; reason: string }> = {
-  2: { level: '中', reason: '医院级定位差异化，价格$349不构成直接竞争' },
+  2: { level: '中', reason: '医院级定位差异化，价格带需授权采集后判断' },
   3: { level: '低', reason: '台式品类份额萎缩，Spectra亚洲为主' },
-  5: { level: '高', reason: '穿戴式直接竞品，$299 vs M5 $159价格带重叠' },
-  6: { level: '低', reason: '传统台式，$129定位低端不形成品牌竞争' },
+  5: { level: '高', reason: '穿戴式直接竞品，价格带和目标用户需采集复核' },
+  6: { level: '低', reason: '传统台式，价格定位需授权采集后判断' },
   8: { level: '中', reason: 'Medela便携线，品牌溢价高但功能平庸' },
   11: { level: '低', reason: '防溢乳垫品类，与吸奶器非直接竞争' },
   13: { level: '中', reason: 'BM08监视器直接竞品，Philips品牌优势' },
@@ -170,17 +171,17 @@ export default function CompetitionPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <button onClick={() => exportToCsv(filteredProducts, { name: "产品名称", brand: "品牌", type: "类型", price: "价格", category: "品类" }, "竞品产品数据_" + new Date().toISOString().slice(0, 10))} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FBF8F5] text-[10px] text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all"><Download className="w-3 h-3"/>导出CSV</button>
+                  <button disabled className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FBF8F5] text-[10px] text-[#B5AFA8] cursor-not-allowed"><Download className="w-3 h-3"/>导出待授权</button>
                   <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">数据：</span><span className="text-[#B5AFA8]">Amazon.com</span> · 待采集任务</span>
                 </div>
               </div>
               {/* R12: Momcozy竞争优势快览 */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                 {[
-                  { label: 'Momcozy份额', value: '19.3%', change: '+2.1pp YoY', color: '#C25B6E' },
-                  { label: '价格竞争力', value: '$89-199', change: 'vs Medela $129-349', color: '#34c759' },
+                  { label: '品牌份额', value: '待授权', change: 'Amazon/零售面板待接入', color: '#C25B6E' },
+                  { label: '价格竞争力', value: '待授权', change: '需采集时点和站点', color: '#34c759' },
                   { label: '产品矩阵', value: '5大品类', change: '吸奶器+护理+配件', color: '#ff9500' },
-                  { label: 'DTC增速', value: '+32%', change: '官网 margins 52%', color: '#5856d6' },
+                  { label: 'DTC表现', value: '待接入', change: '需官网经营快照', color: '#5856d6' },
                 ].map((stat, i) => (
                   <div key={i} className="p-3 rounded-xl bg-[#FBF8F5]">
                     <p className="text-[10px] text-[#86868b]">{stat.label}</p>
@@ -302,9 +303,9 @@ export default function CompetitionPage() {
                   <p className="text-sm font-semibold text-[#ff3b30]">新品威胁预警</p>
                   <span className="px-1.5 py-0.5 rounded bg-[#ff3b30]/10 text-[#ff3b30] text-[9px] font-bold">P0</span>
                 </div>
-                <p className="text-xs text-[#1d1d1f]"><strong>Medela Melody InBra</strong> 预计2026年7月加拿大首发，36dB超静音+FluidFeel技术。可能侵蚀Momcozy在价格敏感用户中的份额（预估3-5pp）。</p>
+                <p className="text-xs text-[#1d1d1f]"><strong>Medela Melody InBra</strong> 为新品线索，首发时间、卖点参数和对 Momcozy 的份额影响均需品牌官网、零售页面或授权面板交叉验证。</p>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-[10px] text-[#86868b] bg-white/60 px-2 py-1 rounded-lg">建议：提前3个月发布M5 Ultra静音版，锁定$179价格带</span>
+                  <span className="text-[10px] text-[#86868b] bg-white/60 px-2 py-1 rounded-lg">建议：先补采集任务，再评估静音版和价格带策略</span>
                   <button className="text-[10px] text-[#C25B6E] font-medium hover:underline">查看应对策略</button>
                 </div>
               </div>

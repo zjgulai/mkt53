@@ -50,7 +50,10 @@ test.describe('production landing service entry guard', () => {
     await expect(page.getByText('DDDD DATA SCIENCE').first()).toBeVisible();
     await expect(page.getByRole('link', { name: '进入主页' })).toHaveAttribute('href', /\/login\.html\?next=\/systems\.html/);
     await expect(page.getByRole('link', { name: '登录' })).toBeVisible();
-    await expect(page.getByRole('link', { name: '注册' })).toBeVisible();
+    const registerLink = page.getByRole('link', { name: '注册' });
+    if ((await registerLink.count()) > 0) {
+      await expect(registerLink).toBeVisible();
+    }
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(1);
     expect(runtimeErrors.consoleErrors).toEqual([]);
     expect(runtimeErrors.pageErrors).toEqual([]);

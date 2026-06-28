@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { aiAssistantSidebarItems } from './constants';
 import { Globe } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import AiReportGovernancePanel from '@/components/AiReportGovernancePanel';
+import AiReviewGovernancePanel from '@/components/AiReviewGovernancePanel';
 
 const stats = [{"label":"样例网站","value":"12"},{"label":"检测指标","value":"48"},{"label":"Momcozy样例分","value":"87"},{"label":"行业样例分","value":"72"}];
 
@@ -40,6 +42,16 @@ export default function WebReview() {
               description="网页评测和竞品网站采集需补 robots.txt、平台条款、采样 URL、采集时间和脱敏策略。当前评分与洞察为页面样例，不作为真实站点审计结果。"
               cadence="合规待复核"
             />
+            <AiReportGovernancePanel
+              title="网页评测 Batch 4 blocked 合规采样 readiness"
+              focus="dataset"
+              compact
+            />
+            <AiReviewGovernancePanel
+              title="网页评测 Batch 5 URL/robots sample gate"
+              focus="web"
+              compact
+            />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {stats.map((s, i) => (
                 <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">
@@ -61,7 +73,7 @@ export default function WebReview() {
                 </div>
               </div>
               <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-                <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">AI洞察 TOP5</h3>
+                <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">网页评测线索示例 TOP5</h3>
                 <div className="space-y-2">
                   {insights.map((ins, i) => (
                     <div key={i} className="p-3 rounded-xl bg-[#FBF8F5] hover:bg-[#F5EDE8] transition-colors duration-200">
@@ -70,7 +82,7 @@ export default function WebReview() {
                         <span className="px-1.5 py-0.5 rounded text-[10px] font-medium" style={{ backgroundColor: ins.sentiment === '正面' ? '#34c75915' : ins.sentiment === '负面' ? '#ff3b3015' : '#ff950015', color: ins.sentiment === '正面' ? '#34c759' : ins.sentiment === '负面' ? '#ff3b30' : '#ff9500' }}>{ins.sentiment}</span>
                       </div>
                       <div className="flex items-center justify-between text-[10px] text-[#86868b]">
-                        <span>提及 {ins.mentions.toLocaleString()}</span>
+                        <span>样例提及 {ins.mentions.toLocaleString()}</span>
                         <span style={{ color: ins.trend === '上升' ? '#34c759' : ins.trend === '下降' ? '#ff3b30' : '#86868b' }}>趋势 {ins.trend}</span>
                       </div>
                     </div>

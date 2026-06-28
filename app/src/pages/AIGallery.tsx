@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Image, Sparkles, Download, ZoomIn, X, Wand2, Clock, Tag, CheckCircle, Copy, Check } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import AiReportGovernancePanel from '@/components/AiReportGovernancePanel';
+import AiDesignGovernancePanel from '@/components/AiDesignGovernancePanel';
 
 interface GalleryImage {
   id: string;
@@ -91,7 +93,7 @@ const galleryImages: GalleryImage[] = [
   { id: 's2', src: '/images/ai-gallery/sterilizer-dryer-pink-10.jpg', title: '消毒烘干器 · 柔粉', prompt: 'Compact bottle sterilizer dryer combo in blush pink, countertop square design, touch control panel, fits 6 bottles', category: '消毒器', model: 'Kimi Image Generation', date: '2026-05-23', time: '12.5s', resolution: '1K', ratio: '1:1' },
   { id: 's3', src: '/images/ai-gallery/sterilizer-microwave-mint-11.jpg', title: '蒸汽消毒袋 · 薄荷绿', prompt: 'Microwave steam sterilizer bag set in mint green, reusable BPA-free silicone bags with steam vent valves, set of 3', category: '消毒器', model: 'Kimi Image Generation', date: '2026-05-23', time: '11.2s', resolution: '1K', ratio: '1:1' },
   { id: 's4', src: '/images/ai-gallery/sterilizer-white-01.jpg', title: '蒸汽消毒器 · 经典白', prompt: 'Electric steam sterilizer in pure white, large capacity for 6 bottles, quick 6-minute cycle, BPA-free construction', category: '消毒器', model: 'Kimi Image Generation', date: '2026-05-23', time: '11.0s', resolution: '1K', ratio: '1:1' },
-  { id: 's5', src: '/images/ai-gallery/sterilizer-pink-02.jpg', title: 'UV消毒器 · 柔粉', prompt: 'UV-C LED bottle sterilizer in blush pink, compact desktop design, kills 99.9% of germs, auto shut-off', category: '消毒器', model: 'Kimi Image Generation', date: '2026-05-23', time: '12.0s', resolution: '1K', ratio: '1:1' },
+  { id: 's5', src: '/images/ai-gallery/sterilizer-pink-02.jpg', title: 'UV消毒器 · 柔粉', prompt: 'UV-C LED bottle sterilizer in blush pink, compact desktop design, auto shut-off', category: '消毒器', model: 'Kimi Image Generation', date: '2026-05-23', time: '12.0s', resolution: '1K', ratio: '1:1' },
   { id: 's6', src: '/images/ai-gallery/sterilizer-portable-03.jpg', title: '便携消毒器 · 旅行款', prompt: 'Portable UV sterilizer wand in white, foldable compact design for travel, USB rechargeable, 3-minute sterilization', category: '消毒器', model: 'Kimi Image Generation', date: '2026-05-23', time: '10.5s', resolution: '1K', ratio: '1:1' },
   { id: 's7', src: '/images/ai-gallery/sterilizer-dome-08.jpg', title: '穹顶消毒器 · 大容量', prompt: 'Large capacity dome sterilizer in white, fits bottles plus breast pump parts, drying function included', category: '消毒器', model: 'Kimi Image Generation', date: '2026-05-23', time: '13.2s', resolution: '1K', ratio: '1:1' },
   { id: 's8', src: '/images/ai-gallery/sterilizer-mini-10.jpg', title: '迷你消毒器 · 紧凑款', prompt: 'Mini bottle sterilizer in soft cream, single bottle capacity, perfect for small spaces, quick 3-minute cycle', category: '消毒器', model: 'Kimi Image Generation', date: '2026-05-23', time: '9.8s', resolution: '1K', ratio: '1:1' },
@@ -239,6 +241,18 @@ export default function AIGallery() {
           title="AI图库素材口径"
           description="图库中的日期是素材生成或入库日期，不代表市场数据快照或半月业务数据更新。生成请求、模型版本、供应商成本和人工审核记录尚未接入。"
           cadence="素材库状态"
+        />
+
+        <AiReportGovernancePanel
+          title="AI图库 Batch 4 生成资产审核 readiness"
+          focus="review"
+          compact
+        />
+
+        <AiDesignGovernancePanel
+          title="AI图库 Batch 6 asset hash/cost/commercial gate"
+          focus="gallery"
+          compact
         />
 
         {/* Stats */}

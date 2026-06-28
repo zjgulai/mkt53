@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { aiAssistantSidebarItems } from './constants';
 import { Youtube } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import AiReportGovernancePanel from '@/components/AiReportGovernancePanel';
+import AiReviewGovernancePanel from '@/components/AiReviewGovernancePanel';
 
 const stats = [{"label":"样例视频","value":"486"},{"label":"样例观看量","value":"28.5M"},{"label":"样例达人","value":"72"},{"label":"评分待复核","value":"4.6"}];
 
@@ -40,6 +42,16 @@ export default function YoutubeReview() {
               description="视频、观看量、达人和评分指标为演示口径，尚未绑定 YouTube Data API 采集任务、查询词、视频 ID 清单、授权额度和采集时间。"
               cadence="API待接入"
             />
+            <AiReportGovernancePanel
+              title="YouTube Batch 4 dataset/API readiness"
+              focus="dataset"
+              compact
+            />
+            <AiReviewGovernancePanel
+              title="YouTube Batch 5 video/comment sample gate"
+              focus="youtube"
+              compact
+            />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {stats.map((s, i) => (
                 <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">
@@ -61,7 +73,7 @@ export default function YoutubeReview() {
                 </div>
               </div>
               <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-                <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">AI洞察 TOP5</h3>
+                <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">测评线索示例 TOP5</h3>
                 <div className="space-y-2">
                   {insights.map((ins, i) => (
                     <div key={i} className="p-3 rounded-xl bg-[#FBF8F5] hover:bg-[#F5EDE8] transition-colors duration-200">
@@ -70,7 +82,7 @@ export default function YoutubeReview() {
                         <span className="px-1.5 py-0.5 rounded text-[10px] font-medium" style={{ backgroundColor: ins.sentiment === '正面' ? '#34c75915' : ins.sentiment === '负面' ? '#ff3b3015' : '#ff950015', color: ins.sentiment === '正面' ? '#34c759' : ins.sentiment === '负面' ? '#ff3b30' : '#ff9500' }}>{ins.sentiment}</span>
                       </div>
                       <div className="flex items-center justify-between text-[10px] text-[#86868b]">
-                        <span>提及 {ins.mentions.toLocaleString()}</span>
+                        <span>样例提及 {ins.mentions.toLocaleString()}</span>
                         <span style={{ color: ins.trend === '上升' ? '#34c759' : ins.trend === '下降' ? '#ff3b30' : '#86868b' }}>趋势 {ins.trend}</span>
                       </div>
                     </div>

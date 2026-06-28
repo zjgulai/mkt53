@@ -17,24 +17,24 @@ interface SearchResult {
 
 const allSearchData: SearchResult[] = [
   // 产品
-  { id: 'sp-01', title: 'M5 穿戴式吸奶器', category: '产品', path: '/competition', desc: '$159.99 · 4.5星 · 2024-06上市 · Momcozy旗舰', icon: Target, color: '#C25B6E' },
-  { id: 'sp-02', title: 'M9 Mobile Flow', category: '产品', path: '/competition', desc: '$199.99 · 4.7星 · 2024-09上市 · 高端定位', icon: Target, color: '#C25B6E' },
-  { id: 'sp-03', title: 'W1 加热款', category: '产品', path: '/competition', desc: '$219.99 · 4.6星 · 2025-01上市 · 加热功能', icon: Target, color: '#ff9500' },
-  { id: 'sp-04', title: 'KleanPal Pro 洗消一体机', category: '产品', path: '/competition', desc: '$179.99 · 4.4星 · UV消毒技术', icon: Target, color: '#34c759' },
+  { id: 'sp-01', title: 'M5 穿戴式吸奶器', category: '产品', path: '/competition', desc: 'Momcozy产品线索 · 价格/评分/上市时间需授权采集复核', icon: Target, color: '#C25B6E' },
+  { id: 'sp-02', title: 'M9 Mobile Flow', category: '产品', path: '/competition', desc: 'Momcozy产品线索 · Amazon评分和价格需连接器验证', icon: Target, color: '#C25B6E' },
+  { id: 'sp-03', title: 'W1 加热款', category: '产品', path: '/competition', desc: '新品线索 · 发布节奏和销售影响需内部计划确认', icon: Target, color: '#ff9500' },
+  { id: 'sp-04', title: 'KleanPal Pro 洗消一体机', category: '产品', path: '/competition', desc: '产品线索 · 技术参数与零售表现需来源复核', icon: Target, color: '#34c759' },
   // 报告
-  { id: 'sr-01', title: 'Momcozy vs Medela vs Willow 品牌竞争力深度对比', category: '报告', path: '/reports', desc: '92页 · 竞品情报 · 发布 2026-03-15 · CEO必读', icon: FileText, color: '#C25B6E' },
-  { id: 'sr-02', title: '2026年Q1全球吸奶器市场竞争格局报告', category: '报告', path: '/reports', desc: '78页 · 竞品情报 · 发布 2026-03-22', icon: FileText, color: '#C25B6E' },
-  { id: 'sr-03', title: 'Momcozy W1 加热款拆解与BOM成本分析', category: '报告', path: '/reports', desc: '52页 · 拆机报告 · 发布 2026-04-18', icon: FileText, color: '#ff9500' },
-  { id: 'sr-04', title: '北美母婴护理市场深度分析（2025-2026年度）', category: '报告', path: '/reports', desc: '86页 · 区域宏观 · 发布 2026-03-22', icon: FileText, color: '#5856d6' },
+  { id: 'sr-01', title: 'Momcozy vs Medela vs Willow 品牌竞争力深度对比', category: '报告', path: '/reports', desc: '报告目录条目 · 页数/发布日期需内部报告库复核', icon: FileText, color: '#C25B6E' },
+  { id: 'sr-02', title: '全球吸奶器市场竞争格局报告', category: '报告', path: '/reports', desc: '报告目录条目 · 竞争数据需来源矩阵确认', icon: FileText, color: '#C25B6E' },
+  { id: 'sr-03', title: 'Momcozy W1 加热款拆解与BOM成本分析', category: '报告', path: '/reports', desc: '报告目录条目 · BOM成本需内部授权文件支撑', icon: FileText, color: '#ff9500' },
+  { id: 'sr-04', title: '北美母婴护理市场深度分析', category: '报告', path: '/reports', desc: '报告目录条目 · 区域宏观引用需绑定 source registry', icon: FileText, color: '#5856d6' },
   // 政策法规
-  { id: 'sl-01', title: 'CPSC CPC/eFiling：证书数据要求复核', category: '法规', path: '/industry/regulation', desc: '美国 · 生效 2026-07-08 · 合规复核 · 影响高', icon: Shield, color: '#ff3b30' },
-  { id: 'sl-02', title: 'EU MDR 2017/745 过渡安排复核', category: '法规', path: '/industry/regulation', desc: '欧盟 · 适用期 2027-2028 · 医疗器械 · 重点复核', icon: Shield, color: '#5856d6' },
-  { id: 'sl-03', title: '日本新《消费品安全法》：PSC标志适用性复核', category: '法规', path: '/industry/regulation', desc: '日本 · 生效 2025-12 · 认证路径 · 重点复核', icon: Shield, color: '#0077b6' },
-  { id: 'sl-04', title: 'GB 46523-2025儿童用品通用安全要求', category: '法规', path: '/industry/regulation', desc: '中国 · 实施 2026-11-01 · 国标实施', icon: Shield, color: '#ff3b30' },
+  { id: 'sl-01', title: 'CPSC CPC/eFiling：证书数据要求复核', category: '法规', path: '/industry/regulation', desc: '美国 · 官方规则可公开复核 · SKU影响待确认', icon: Shield, color: '#ff3b30' },
+  { id: 'sl-02', title: 'EU MDR 2017/745 过渡安排复核', category: '法规', path: '/industry/regulation', desc: '欧盟 · 医疗器械路径需按产品适用性确认', icon: Shield, color: '#5856d6' },
+  { id: 'sl-03', title: '日本《消费品安全法》：PSC标志适用性复核', category: '法规', path: '/industry/regulation', desc: '日本 · 认证路径和日期需官方/合规台账确认', icon: Shield, color: '#0077b6' },
+  { id: 'sl-04', title: 'GB 46523-2025儿童用品通用安全要求', category: '法规', path: '/industry/regulation', desc: '中国 · 国标实施信息需官方文本绑定', icon: Shield, color: '#ff3b30' },
   // 市场数据
-  { id: 'sm-01', title: '全球吸奶器市场规模 TAM/SAM/SOM', category: '市场', path: '/market', desc: '$38.1B SAM · CAGR 8.52% · Precedence Research', icon: BarChart3, color: '#C25B6E' },
-  { id: 'sm-02', title: '品牌份额趋势 2022-2026E', category: '市场', path: '/market', desc: 'Momcozy 19.3% · Medela 26.1% · Philips 18.5%', icon: TrendingUp, color: '#ff9500' },
-  { id: 'sm-03', title: '穿戴式吸奶器细分市场', category: '市场', path: '/market', desc: '$6.69B · CAGR 8.56% · Grand View Research', icon: BarChart3, color: '#34c759' },
+  { id: 'sm-01', title: '全球吸奶器市场规模与份额分母', category: '市场', path: '/market', desc: '$3.81B 品类TAM · CAGR 8.52% · Precedence Research · ds-001', icon: BarChart3, color: '#C25B6E' },
+  { id: 'sm-02', title: '品牌份额趋势待授权', category: '市场', path: '/market', desc: '需Amazon Brand Analytics/零售面板接入，不使用示例份额', icon: TrendingUp, color: '#ff9500' },
+  { id: 'sm-03', title: '穿戴式吸奶器细分市场', category: '市场', path: '/market', desc: '$233M · CAGR 15.08% · Fortune BI · ds-045', icon: BarChart3, color: '#34c759' },
 ];
 
 const recentSearches = ['M5', 'CPSC复核', '市场份额', 'W1加热款', 'Medela'];

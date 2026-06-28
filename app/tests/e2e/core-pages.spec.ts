@@ -67,7 +67,7 @@ test.describe('core pages visual guard', () => {
       }
 
       if (pageConfig.path === '/#/market/customs') {
-        await expect(page.getByText('海关数据示例口径')).toBeVisible();
+        await expect(page.getByText('海关数据连接器待接入')).toBeVisible();
       }
 
       if (pageConfig.path === '/#/competition') {
@@ -91,11 +91,11 @@ test.describe('core pages visual guard', () => {
       }
 
       if (pageConfig.path === '/#/industry/regulation') {
-        await expect(page.getByText('法规详情复核边界')).toBeVisible();
+        await expect(page.getByText('法规条目逐项复核中')).toBeVisible();
       }
 
       if (pageConfig.path === '/#/industry/supply') {
-        await expect(page.getByText('供应链数据示例口径')).toBeVisible();
+        await expect(page.getByText('供应链数据授权阻断')).toBeVisible();
       }
 
       if (pageConfig.path === '/#/self') {
@@ -123,7 +123,7 @@ test.describe('core pages visual guard', () => {
       }
 
       if (pageConfig.path === '/#/ai-assistant/comment-data') {
-        await expect(page.getByText('评论数据模型复核口径')).toBeVisible();
+        await expect(page.getByText('评论数据待接入')).toBeVisible();
       }
 
       if (pageConfig.path === '/#/ai-assistant/web-review') {
@@ -136,12 +136,12 @@ test.describe('core pages visual guard', () => {
 
       if (pageConfig.path === '/#/reports') {
         await expect(page.getByText('报告目录元数据口径')).toBeVisible();
-        await expect(page.getByText('半月精选2-3份报告线索推送')).toBeVisible();
+        await expect(page.getByText('报告目录已降级为元数据与补证队列，未复核正文不作为事实导出。')).toBeVisible();
       }
 
       if (pageConfig.path === '/#/report/r009') {
         await expect(page.getByText('报告内容来源边界')).toBeVisible();
-        await expect(page.getByText(/公开页样例与待采集任务复核/)).toBeVisible();
+        await expect(page.getByText('Amazon公开页样例不能外推为平台级份额')).toBeVisible();
       }
 
       await page.screenshot({

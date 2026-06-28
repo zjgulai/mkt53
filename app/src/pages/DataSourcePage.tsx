@@ -11,6 +11,7 @@ import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 type DataSource = SourceRegistryItem;
 
 type DataSourceTabId = 'sources' | 'divergence' | 'models';
+type FactDisplayFilter = 'all' | 'displayable' | 'gated' | 'private';
 
 const dataSources: DataSource[] = [...sourceRegistry];
 
@@ -33,7 +34,7 @@ const divergenceData = [
 
 // 测算模型说明
 const calcModels = [
-  { name: 'TAM/SAM/SOM', icon: BarChart3, desc: '三级市场漏斗模型', method: 'TAM=行业总规模(Precedence) → SAM=电动细分(49%) → SOM=Momcozy可获(穿戴式$6.69B)', source: 'Precedence Research 2026-04' },
+  { name: '市场层级/TAM边界', icon: BarChart3, desc: '份额分母与可服务市场边界', method: '全球婴童用品=上层TAM；全球吸奶器=品类TAM；穿戴式吸奶器=细分TAM。SAM需叠加地域/渠道/SKU/合规可服务范围，SOM需Momcozy可获份额假设。', source: '公开报告交叉验证 + 内部服务范围待补' },
   { name: '波特五力', icon: Target, desc: '行业竞争强度定量评分', method: '5维度1-5分评分：供应商(3) + 买方(4) + 新进入者(3) + 替代品(2) + 竞争(4)', source: 'Mordor Intelligence框架' },
   { name: '海关HS编码', icon: Globe, desc: '国际贸易商品分类', method: 'HS 9018.11(breast pumps) / 9018.90(medical instruments) / 美国HTS 9018.90.7500', source: 'WCO / USITC 2025' },
   { name: 'BCG矩阵', icon: TrendingUp, desc: '产品组合增长-份额分析', method: '市场增长率×相对市场份额 → 明星/现金牛/问题/瘦狗四象限', source: 'Boston Consulting Group经典模型' },
@@ -62,9 +63,37 @@ function getDisplaySourceType(source: DataSource) {
   return source.sourceType;
 }
 
+function getPrivacyLevel(source: DataSource) {
+  if (source.privacyLevel) return source.privacyLevel;
+  if (source.sourceType.includes('内部') || /ERP|CRM|内部/i.test(`${source.sourceName} ${source.note}`)) return 'private/internal';
+  return 'public';
+}
+
+function getEvidenceGrade(source: DataSource) {
+  if (source.evidenceGrade) return source.evidenceGrade;
+  if (source.verificationStatus === 'example') return 'LO-S-synthetic';
+  if (source.verificationStatus === 'verified' && (source.sourceType === '代码资产' || source.sourceUrl)) return 'L1-public-or-runtime';
+  if (source.verificationStatus === 'verified') return 'L2-fixture-or-dry-run';
+  return 'L0-unverified';
+}
+
+function getCanDisplayAsFact(source: DataSource) {
+  if (typeof source.canDisplayAsFact === 'boolean') return source.canDisplayAsFact;
+  return source.verificationStatus === 'verified' && getEvidenceGrade(source) === 'L1-public-or-runtime' && getPrivacyLevel(source) === 'public';
+}
+
+function getBlockingReason(source: DataSource) {
+  if (source.blockingReason) return source.blockingReason;
+  if (getCanDisplayAsFact(source)) return '';
+  if (source.verificationStatus === 'example') return 'example-data-must-not-display-as-fact';
+  if (getPrivacyLevel(source) === 'private/internal') return 'authorized-connector-or-private-snapshot-required';
+  return source.gap || 'source-evidence-required';
+}
+
 export default function DataSourcePage() {
   const [activeTab, setActiveTab] = useState<DataSourceTabId>('sources');
   const [filterModule, setFilterModule] = useState('全部');
+  const [factFilter, setFactFilter] = useState<FactDisplayFilter>('all');
   const {
     manifest: collectionManifest,
     path: collectionManifestPath,
@@ -77,7 +106,13 @@ export default function DataSourcePage() {
   } = usePeriodicManifest();
 
   const modules = ['全部', ...Array.from(new Set(dataSources.map(d => d.module)))];
-  const filtered = filterModule === '全部' ? dataSources : dataSources.filter(d => d.module === filterModule);
+  const moduleFiltered = filterModule === '全部' ? dataSources : dataSources.filter(d => d.module === filterModule);
+  const filtered = moduleFiltered.filter((source) => {
+    if (factFilter === 'displayable') return getCanDisplayAsFact(source);
+    if (factFilter === 'gated') return !getCanDisplayAsFact(source);
+    if (factFilter === 'private') return getPrivacyLevel(source) === 'private/internal';
+    return true;
+  });
 
   // R17: 内外部数据分类
   const scopeStats = {
@@ -103,6 +138,9 @@ export default function DataSourcePage() {
     critical: gapPriority.p0,
     needsReview: dataSources.filter(d => d.verificationStatus === 'needs-review').length,
     verified: dataSources.filter(d => d.verificationStatus === 'verified').length,
+    displayable: dataSources.filter(getCanDisplayAsFact).length,
+    gated: dataSources.filter(d => !getCanDisplayAsFact(d)).length,
+    privateInternal: dataSources.filter(d => getPrivacyLevel(d) === 'private/internal').length,
   };
   const requestErrorTotal = (collectionTotals['source-error'] ?? 0) + (collectionTotals['fetch-error'] ?? 0);
   const connectorRequiredTotal = collectionTotals['connector-required'] ?? collectionManifest?.connectorBacklog?.total ?? 0;
@@ -226,6 +264,22 @@ export default function DataSourcePage() {
           ))}
         </div>
 
+        {/* Evidence gate overview */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          {[
+            { label: '可展示事实', value: stats.displayable, color: '#34c759', desc: 'public fact或公开复核来源' },
+            { label: 'Gated来源', value: stats.gated, color: '#ff9500', desc: '待复核/样例/内部权限' },
+            { label: '内部来源', value: stats.privateInternal, color: '#0A84FF', desc: 'ERP/CRM/内部系统' },
+            { label: 'Source总数', value: stats.total, color: '#1d1d1f', desc: 'source registry登记项' },
+          ].map((s, i) => (
+            <div key={i} className="bg-white rounded-2xl p-4 shadow-sm border border-[#EDE6DF]">
+              <span className="text-xs text-[#86868b]">{s.label}</span>
+              <p className="text-xl font-bold mt-0.5" style={{ color: s.color }}>{s.value}</p>
+              <p className="text-[10px] text-[#86868b]">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[
@@ -280,6 +334,17 @@ export default function DataSourcePage() {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${filterModule === m ? 'bg-[#5856d6] text-white' : 'text-[#86868b] hover:bg-[#FBF8F5]'}`}>{m}</button>
               ))}
             </div>
+            <div className="flex items-center gap-2 mb-5 flex-wrap">
+              {([
+                { id: 'all', label: '全部展示状态' },
+                { id: 'displayable', label: '可展示事实' },
+                { id: 'gated', label: 'Gated/待复核' },
+                { id: 'private', label: 'Private/Internal' },
+              ] satisfies Array<{ id: FactDisplayFilter; label: string }>).map(item => (
+                <button key={item.id} onClick={() => setFactFilter(item.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${factFilter === item.id ? 'bg-[#0A84FF] text-white' : 'text-[#86868b] hover:bg-[#FBF8F5]'}`}>{item.label}</button>
+              ))}
+            </div>
 
             {/* Table */}
             <div className="bg-white rounded-2xl shadow-sm border border-[#EDE6DF] overflow-hidden">
@@ -287,7 +352,7 @@ export default function DataSourcePage() {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="border-b border-[#EDE6DF] bg-[#FAF8F6]">
-                      {['ID', '模块/页面', '数据指标', '来源机构', '类型', '年份', '可信度', '复核状态', '数据缺口', '补全动作'].map((h, i) => (
+                      {['ID', '模块/页面', '数据指标', '来源机构', '类型', '年份', '可信度', '复核状态', '隐私层', '证据等级', '展示门禁', '阻断原因', '数据缺口', '补全动作'].map((h, i) => (
                         <th key={i} className="py-3 px-3 text-[10px] text-[#86868b] font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
@@ -328,6 +393,22 @@ export default function DataSourcePage() {
                             );
                           })()}
                         </td>
+                        <td className="py-2.5 px-3">
+                          <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${getPrivacyLevel(ds) === 'private/internal' ? 'bg-[#0A84FF]/10 text-[#0A84FF]' : 'bg-[#34c759]/10 text-[#34c759]'}`}>
+                            {getPrivacyLevel(ds)}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-3">
+                          <span className="px-1.5 py-0.5 rounded text-[10px] bg-[#FBF8F5] text-[#1d1d1f]">{getEvidenceGrade(ds)}</span>
+                        </td>
+                        <td className="py-2.5 px-3">
+                          {getCanDisplayAsFact(ds) ? (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#34c759]/10 text-[#34c759]">可展示事实</span>
+                          ) : (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#ff9500]/10 text-[#a85f00]">gated</span>
+                          )}
+                        </td>
+                        <td className="py-2.5 px-3 text-[10px] text-[#86868b]">{getBlockingReason(ds)}</td>
                         <td className="py-2.5 px-3">
                           {ds.gap ? (
                             <span className={`text-[10px] ${ds.verificationStatus === 'example' ? 'text-[#ff3b30]' : ds.verificationStatus === 'needs-review' ? 'text-[#ff9500]' : 'text-[#86868b]'}`}>{ds.gap}</span>
