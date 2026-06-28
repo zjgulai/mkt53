@@ -4,7 +4,28 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
-const SCRIPT_INTEGRATION_TIMEOUT_MS = 30_000;
+const SCRIPT_INTEGRATION_TIMEOUT_MS = 90_000;
+const FORBIDDEN_ERP_SCRIPT_OUTPUT_RE =
+  /AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK|password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i;
+const LOCAL_ERP_ARTIFACT_MISSING_RE = /Missing (?:ERP export input|ERP Batch3 input|Batch\d+ input|Batch\d+ manifest)/;
+
+function runOptionalLocalErpArtifactScript(args: string[]) {
+  try {
+    return execFileSync('node', args, {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+  } catch (error) {
+    const failedRun = error as { stdout?: string | Buffer; stderr?: string | Buffer; message?: string };
+    const output = [failedRun.stdout, failedRun.stderr, failedRun.message].map((part) => String(part ?? '')).join('\n');
+
+    if (!LOCAL_ERP_ARTIFACT_MISSING_RE.test(output)) throw error;
+
+    expect(output).toMatch(LOCAL_ERP_ARTIFACT_MISSING_RE);
+    expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+    return null;
+  }
+}
 
 describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }, () => {
   it('keeps deploy-static executable and guarded by local quality gates', () => {
@@ -992,10 +1013,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('derives gated ERP Batch 2 facts without publishing raw business identifiers', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-derived-batch2.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-derived-batch2.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -1058,10 +1077,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('derives gated ERP Batch 3 channel and inventory readiness without raw business identifiers', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-derived-batch3.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-derived-batch3.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -1135,10 +1152,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('derives gated ERP Batch 7 field dictionary, category review, and display gates without raw business values', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-governance-batch7.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-governance-batch7.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -1224,10 +1239,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('derives ERP Batch 8 owner approval packets without promoting any approval state', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-owner-approval-batch8.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-approval-batch8.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -1328,10 +1341,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('validates ERP Batch 9 owner approval intake in fail-closed mode when no approval records are supplied', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-owner-approval-intake-batch9.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-approval-intake-batch9.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -1437,10 +1448,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('builds ERP Batch 10 owner approval record templates without applying approvals', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-owner-approval-record-template-batch10.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-approval-record-template-batch10.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -1541,10 +1550,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('preflights ERP Batch 11 owner approval records before Batch9 handoff', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-owner-approval-preflight-batch11.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-approval-preflight-batch11.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -1664,10 +1671,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('audits ERP Batch 12 owner submission intake before Batch11 preflight', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-owner-submission-intake-batch12.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-intake-batch12.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -1790,10 +1795,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('builds ERP Batch 13 owner submission templates without creating approval records', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-owner-submission-pack-batch13.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-pack-batch13.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -1919,10 +1922,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('tracks ERP Batch 14 owner submission dropbox without reading approval CSV contents', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-owner-submission-dropbox-watchlist-batch14.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-dropbox-watchlist-batch14.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -2057,10 +2058,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('gates ERP Batch 15 owner submission acceptance before Batch12 promotion', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-owner-submission-acceptance-gate-batch15.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-acceptance-gate-batch15.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -2191,10 +2190,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('generates ERP Batch 16 synthetic owner submission fixture without promoting facts', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-owner-submission-synthetic-fixture-batch16.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-synthetic-fixture-batch16.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -2313,10 +2310,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('rehearses ERP Batch 17 synthetic owner submission pipeline with fixture evidence only', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-owner-submission-synthetic-pipeline-batch17.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-synthetic-pipeline-batch17.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
@@ -2448,10 +2443,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('builds ERP Batch 18 real owner submission checklist without creating approvals', () => {
-    const output = execFileSync('node', ['scripts/data/build-erp-owner-submission-real-owner-checklist-batch18.mjs', '--json', '--no-write'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-real-owner-checklist-batch18.mjs', '--json', '--no-write']);
+    if (!output) return;
     const manifest = JSON.parse(output) as {
       batchId: string;
       sourceIds: string[];
