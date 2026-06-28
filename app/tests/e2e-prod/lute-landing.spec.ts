@@ -100,7 +100,8 @@ test.describe('production landing service entry guard', () => {
     }
 
     await page.goto(`${marketUrl}/#/report/r009`, { waitUntil: 'networkidle' });
-    await expect(page.getByText(/公开页样例与待采集任务复核/)).toBeVisible();
+    await expect(page.getByText('报告内容来源边界')).toBeVisible();
+    await expect(page.getByText('Amazon公开页样例不能外推为平台级份额')).toBeVisible();
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(1);
     expect(runtimeErrors.consoleErrors).toEqual([]);
     expect(runtimeErrors.pageErrors).toEqual([]);
