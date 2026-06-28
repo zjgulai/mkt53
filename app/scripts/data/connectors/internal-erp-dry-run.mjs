@@ -376,9 +376,9 @@ export function buildInternalErpDryRun(options = {}, env = process.env) {
   const sourceRegistry = extractSourceRegistry(appRoot);
   const connectorBacklog = buildConnectorBacklog(sourceRegistry);
   const erpBacklog = connectorBacklog.groups.find((group) => group.connectorId === connectorId);
-  const backlogItems = connectorBacklog.items.filter((item) => item.connectorId === connectorId);
-  const sourceIds = erpBacklog?.sourceIds ?? [];
-  const sourceCount = erpBacklog?.sourceCount ?? 0;
+  const backlogItems = connectorBacklog.items.filter((item) => item.connectorId === connectorId && item.page === 'SupplyChain');
+  const sourceIds = backlogItems.map((item) => item.id);
+  const sourceCount = sourceIds.length;
   const blockers = [
     ...(sourceCount === 0 ? [{ type: 'missing-internal-erp-backlog' }] : []),
     { type: 'missing-private-erp-readiness-record' },

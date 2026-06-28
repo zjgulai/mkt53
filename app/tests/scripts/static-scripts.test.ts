@@ -4,9 +4,30 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
-const SCRIPT_INTEGRATION_TIMEOUT_MS = 30_000;
+const SCRIPT_INTEGRATION_TIMEOUT_MS = 90_000;
+const FORBIDDEN_ERP_SCRIPT_OUTPUT_RE =
+  /AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK|password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i;
+const LOCAL_ERP_ARTIFACT_MISSING_RE = /Missing (?:ERP export input|ERP Batch3 input|Batch\d+ input|Batch\d+ manifest)/;
 
-describe('production helper scripts', () => {
+function runOptionalLocalErpArtifactScript(args: string[]) {
+  try {
+    return execFileSync('node', args, {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+  } catch (error) {
+    const failedRun = error as { stdout?: string | Buffer; stderr?: string | Buffer; message?: string };
+    const output = [failedRun.stdout, failedRun.stderr, failedRun.message].map((part) => String(part ?? '')).join('\n');
+
+    if (!LOCAL_ERP_ARTIFACT_MISSING_RE.test(output)) throw error;
+
+    expect(output).toMatch(LOCAL_ERP_ARTIFACT_MISSING_RE);
+    expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+    return null;
+  }
+}
+
+describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }, () => {
   it('keeps deploy-static executable and guarded by local quality gates', () => {
     const scriptPath = join(process.cwd(), 'scripts/deploy-static.sh');
     const script = readFileSync(scriptPath, 'utf8');
@@ -48,6 +69,9 @@ describe('production helper scripts', () => {
     const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as { scripts: Record<string, string> };
 
     expect(packageJson.scripts['data:audit']).toContain('scripts/data/audit-consistency.mjs');
+    expect(packageJson.scripts['data:audit:deep']).toContain('scripts/data/audit-deep.mjs');
+    expect(packageJson.scripts['data:audit:deep:json']).toContain('--json --no-write');
+    expect(packageJson.scripts['data:audit:deep:summary']).toContain('--summary-json --no-write');
     expect(packageJson.scripts['data:collect:weekly']).toContain('scripts/data/collect-weekly-sources.mjs');
     expect(packageJson.scripts['data:public-evidence:dry-run']).toContain('scripts/data/collect-public-evidence.mjs');
     expect(packageJson.scripts['data:public-evidence:dry-run']).toContain('--dry-run');
@@ -85,6 +109,23 @@ describe('production helper scripts', () => {
     expect(packageJson.scripts['data:connector:erp:readiness']).toContain('--readiness-gate');
     expect(packageJson.scripts['data:connector:erp:readiness:template']).toContain('--print-readiness-template');
     expect(packageJson.scripts['data:connector:erp:snapshot:template']).toContain('--print-snapshot-manifest-template');
+    expect(packageJson.scripts['data:erp:derive-batch2']).toContain('scripts/data/build-erp-derived-batch2.mjs');
+    expect(packageJson.scripts['data:erp:derive-batch3']).toContain('scripts/data/build-erp-derived-batch3.mjs');
+    expect(packageJson.scripts['data:erp:governance-batch7']).toContain('scripts/data/build-erp-governance-batch7.mjs');
+    expect(packageJson.scripts['data:erp:owner-approval-batch8']).toContain('scripts/data/build-erp-owner-approval-batch8.mjs');
+    expect(packageJson.scripts['data:erp:owner-approval-intake-batch9']).toContain('scripts/data/build-erp-owner-approval-intake-batch9.mjs');
+    expect(packageJson.scripts['data:erp:owner-approval-template-batch10']).toContain('scripts/data/build-erp-owner-approval-record-template-batch10.mjs');
+    expect(packageJson.scripts['data:erp:owner-approval-preflight-batch11']).toContain('scripts/data/build-erp-owner-approval-preflight-batch11.mjs');
+    expect(packageJson.scripts['data:erp:owner-submission-intake-batch12']).toContain('scripts/data/build-erp-owner-submission-intake-batch12.mjs');
+    expect(packageJson.scripts['data:erp:owner-submission-pack-batch13']).toContain('scripts/data/build-erp-owner-submission-pack-batch13.mjs');
+    expect(packageJson.scripts['data:erp:owner-submission-dropbox-batch14']).toContain('scripts/data/build-erp-owner-submission-dropbox-watchlist-batch14.mjs');
+    expect(packageJson.scripts['data:erp:owner-submission-acceptance-batch15']).toContain('scripts/data/build-erp-owner-submission-acceptance-gate-batch15.mjs');
+    expect(packageJson.scripts['data:erp:owner-submission-synthetic-batch16']).toContain('scripts/data/build-erp-owner-submission-synthetic-fixture-batch16.mjs');
+    expect(packageJson.scripts['data:erp:owner-submission-synthetic-pipeline-batch17']).toContain('scripts/data/build-erp-owner-submission-synthetic-pipeline-batch17.mjs');
+    expect(packageJson.scripts['data:erp:owner-submission-real-owner-checklist-batch18']).toContain('scripts/data/build-erp-owner-submission-real-owner-checklist-batch18.mjs');
+    expect(packageJson.scripts['data:ai-report:governance-batch4']).toContain('scripts/data/build-ai-report-governance-batch4.mjs');
+    expect(packageJson.scripts['data:ai-review:governance-batch5']).toContain('scripts/data/build-ai-review-governance-batch5.mjs');
+    expect(packageJson.scripts['data:ai-design:governance-batch6']).toContain('scripts/data/build-ai-design-governance-batch6.mjs');
     expect(packageJson.scripts['data:deploy:weekly']).toContain('scripts/data/weekly-refresh-and-deploy.sh');
     expect(packageJson.scripts['data:publish:weekly:local']).toContain('scripts/data/weekly-refresh-local-static.sh');
     expect(packageJson.scripts['data:deploy:semi-monthly']).toContain('scripts/data/semi-monthly-refresh-and-deploy.sh');
@@ -119,6 +160,7 @@ describe('production helper scripts', () => {
 
     for (const script of [
       'scripts/data/audit-consistency.mjs',
+      'scripts/data/audit-deep.mjs',
       'scripts/data/build-source-tasks.mjs',
       'scripts/data/collect-public-evidence.mjs',
       'scripts/data/collect-weekly-sources.mjs',
@@ -147,6 +189,23 @@ describe('production helper scripts', () => {
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/voc-nlp-dry-run.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/internal-crm-dry-run.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/internal-erp-dry-run.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-derived-batch2.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-derived-batch3.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-governance-batch7.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-owner-approval-batch8.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-owner-approval-intake-batch9.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-owner-approval-record-template-batch10.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-owner-approval-preflight-batch11.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-owner-submission-intake-batch12.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-owner-submission-pack-batch13.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-owner-submission-dropbox-watchlist-batch14.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-owner-submission-acceptance-gate-batch15.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-owner-submission-synthetic-fixture-batch16.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-owner-submission-synthetic-pipeline-batch17.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-erp-owner-submission-real-owner-checklist-batch18.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-ai-report-governance-batch4.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-ai-review-governance-batch5.mjs'), constants.X_OK)).not.toThrow();
+    expect(() => accessSync(join(process.cwd(), 'scripts/data/build-ai-design-governance-batch6.mjs'), constants.X_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/amazon-commerce-readiness-template.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'scripts/data/connectors/templates/voc-nlp-readiness-template.json'), constants.R_OK)).not.toThrow();
@@ -222,9 +281,9 @@ describe('production helper scripts', () => {
       };
     };
 
-    expect(audit.summary.tableCount).toBe(27);
-    expect(audit.summary.sourceRegistryCount).toBe(45);
-    expect(audit.summary.tableGovernanceCount).toBe(27);
+    expect(audit.summary.tableCount).toBe(107);
+    expect(audit.summary.sourceRegistryCount).toBe(53);
+    expect(audit.summary.tableGovernanceCount).toBe(107);
     expect(audit.summary.pagesWithStaticDataWithoutRegistry).toBe(0);
     expect(audit.summary.issueCount).toBe(0);
     expect(audit.summary.criticalIssueCount).toBe(0);
@@ -232,6 +291,52 @@ describe('production helper scripts', () => {
     expect(audit.summary.collectionMethods['connector-required']).toBeGreaterThan(0);
     expect(audit.summary.collectionMethods['public-url-check']).toBeGreaterThan(0);
   });
+
+  it('deep-audits visible data claims without provider calls or production writes', () => {
+    const output = execFileSync('node', ['scripts/data/audit-deep.mjs', '--summary-json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const audit = JSON.parse(output) as {
+      boundaries: {
+        productionWrites: boolean;
+        providerCalls: boolean;
+        publicEvidenceLiveCapture: boolean;
+        restrictedConnectorAccess: boolean;
+      };
+      summary: {
+        pageCount: number;
+        tableCount: number;
+        sourceRegistryCount: number;
+        claimCount: number;
+        csvExportClaimCount: number;
+        highRiskClaimCount: number;
+        sourceGapCount: number;
+        issueCounts: Record<string, number>;
+      };
+      highRiskClaimSamples: Array<{ risk: string; issue_code: string; source_coverage: string }>;
+      sourceGapMatrix: Array<{ source_id: string; can_display_as_fact: boolean; recommended_collection_lane: string }>;
+    };
+
+    expect(audit.boundaries).toMatchObject({
+      productionWrites: false,
+      providerCalls: false,
+      publicEvidenceLiveCapture: false,
+      restrictedConnectorAccess: false,
+    });
+    expect(audit.summary.pageCount).toBe(43);
+    expect(audit.summary.tableCount).toBe(107);
+    expect(audit.summary.sourceRegistryCount).toBe(53);
+    expect(audit.summary.claimCount).toBeGreaterThan(0);
+    expect(audit.summary.csvExportClaimCount).toBeGreaterThan(0);
+    expect(audit.summary.highRiskClaimCount).toBe(0);
+    expect(audit.summary.sourceGapCount).toBeGreaterThan(0);
+    expect(audit.summary.issueCounts['no-displayable-source-evidence'] ?? 0).toBe(0);
+    expect(audit.summary.issueCounts['gated-source-disclosure'] ?? 0).toBeGreaterThan(0);
+    expect(audit.highRiskClaimSamples).toHaveLength(0);
+    expect(audit.sourceGapMatrix.some((source) => !source.can_display_as_fact)).toBe(true);
+    expect(audit.sourceGapMatrix.some((source) => source.recommended_collection_lane === 'connector-readiness-or-authorized-private-snapshot')).toBe(true);
+  }, 30_000);
 
   it('builds a connector backlog without claiming restricted sources were collected', () => {
     const output = execFileSync('node', ['scripts/data/collect-weekly-sources.mjs', '--json', '--no-network'], {
@@ -248,14 +353,17 @@ describe('production helper scripts', () => {
       totals: Record<string, number>;
     };
 
-    expect(manifest.connectorBacklog.total).toBe(23);
+    expect(manifest.connectorBacklog.total).toBe(28);
     expect(manifest.connectorBacklog.groupCount).toBeGreaterThanOrEqual(8);
     expect(manifest.connectorBacklog.groups.find((group) => group.connectorId === 'amazon-commerce')?.sourceCount).toBeGreaterThan(0);
     expect(manifest.connectorBacklog.groups.find((group) => group.connectorId === 'review-nlp')?.sourceIds).toEqual(
       expect.arrayContaining(['ds-021', 'ds-030', 'ds-032', 'ds-033']),
     );
     expect(manifest.connectorBacklog.items.every((item) => item.blockedReason.includes('不得伪造'))).toBe(true);
-    expect(manifest.totals['connector-required']).toBe(23);
+    expect(manifest.connectorBacklog.groups.find((group) => group.connectorId === 'internal-erp')?.sourceIds).toEqual(
+      expect.arrayContaining(['ds-035', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']),
+    );
+    expect(manifest.totals['connector-required']).toBe(28);
   });
 
   it('builds a source task queue for connector, manual, and public review work', () => {
@@ -279,10 +387,10 @@ describe('production helper scripts', () => {
       };
     };
 
-    expect(manifest.sourceTaskQueue.total).toBe(42);
-    expect(manifest.sourceTaskQueue.queueTypeCounts['connector-readiness']).toBe(23);
+    expect(manifest.sourceTaskQueue.total).toBe(49);
+    expect(manifest.sourceTaskQueue.queueTypeCounts['connector-readiness']).toBe(28);
     expect(manifest.sourceTaskQueue.queueTypeCounts['manual-evidence']).toBe(12);
-    expect(manifest.sourceTaskQueue.queueTypeCounts['public-source-review']).toBe(7);
+    expect(manifest.sourceTaskQueue.queueTypeCounts['public-source-review']).toBe(9);
     expect(manifest.sourceTaskQueue.priorityCounts.P0).toBeGreaterThan(0);
     expect(manifest.sourceTaskQueue.ownerTeamCounts['market-research']).toBeGreaterThan(0);
     expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'manual-evidence:ds-003')).toBe(true);
@@ -389,7 +497,7 @@ describe('production helper scripts', () => {
     expect(manifest.windowStart).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(manifest.windowEnd).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(manifest.nextScheduledAt).toMatch(/^\d{4}-\d{2}-\d{2}T09:00:00\+08:00$/);
-    expect(manifest.totals.total).toBe(45);
+    expect(manifest.totals.total).toBe(53);
   });
 
   it('checks code asset sources from local files without external network access', () => {
@@ -902,6 +1010,1798 @@ describe('production helper scripts', () => {
       'supplier_master_snapshot',
       'supply_cost_snapshot',
     ]);
+  });
+
+  it('derives gated ERP Batch 2 facts without publishing raw business identifiers', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-derived-batch2.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        rawSkuIncluded: boolean;
+        rawProductNameIncluded: boolean;
+        rawCustomerIncluded: boolean;
+        rawOperatorIncluded: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        salesMonthlyFactRows: number;
+        afterSalesMonthlyFactRows: number;
+        retailMonthlyFactRows: number;
+        skuHashRows: number;
+        categoryMappingRows: number;
+        combinedCategoryMonthlyRows: number;
+        breastPumpProxySkuRows: number;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器/);
+    expect(manifest.batchId).toBe('erp-derived-batch2-20260625');
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049']);
+    expect(manifest.evidenceGrade).toBe('L3-production-read-only');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      rawSkuIncluded: false,
+      rawProductNameIncluded: false,
+      rawCustomerIncluded: false,
+      rawOperatorIncluded: false,
+    });
+    expect(manifest.outputs['erp_product_sku_dim.csv'].headers).toEqual(
+      expect.arrayContaining(['sku_hash', 'product_name_hash', 'category_proxy', 'can_display_as_fact']),
+    );
+    expect(manifest.outputs['erp_category_mapping.csv'].headers).toEqual(
+      expect.arrayContaining(['category_proxy', 'source_keyword_rule', 'source_ids', 'review_status']),
+    );
+    expect(manifest.outputs['erp_category_monthly_proxy.csv'].headers).toEqual(
+      expect.arrayContaining(['internal_mix_proxy_pct', 'source_ids', 'note']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.salesMonthlyFactRows).toBe(12);
+    expect(manifest.summary.afterSalesMonthlyFactRows).toBe(12);
+    expect(manifest.summary.retailMonthlyFactRows).toBe(12);
+    expect(manifest.summary.skuHashRows).toBeGreaterThan(0);
+    expect(manifest.summary.categoryMappingRows).toBeGreaterThan(0);
+    expect(manifest.summary.combinedCategoryMonthlyRows).toBe(12);
+    expect(manifest.summary.breastPumpProxySkuRows).toBeGreaterThan(0);
+  });
+
+  it('derives gated ERP Batch 3 channel and inventory readiness without raw business identifiers', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-derived-batch3.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        rawSkuIncluded: boolean;
+        rawProductNameIncluded: boolean;
+        rawCustomerIncluded: boolean;
+        rawWarehouseIncluded: boolean;
+        rawOperatorIncluded: boolean;
+        inventoryValuesIncluded: boolean;
+        pseudonymizedNotAnonymized: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        growthSnapshotRows: number;
+        targetAttainmentRows: number;
+        channelCustomerHashRows: number;
+        destinationMonthlyRows: number;
+        inventoryReadinessRows: number;
+        topChannelCustomerVisibleProxyUnits: number;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器/);
+    expect(manifest.batchId).toBe('erp-derived-batch3-20260625');
+    expect(manifest.sourceIds).toEqual(['ds-035', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L3-production-read-only');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      rawSkuIncluded: false,
+      rawProductNameIncluded: false,
+      rawCustomerIncluded: false,
+      rawWarehouseIncluded: false,
+      rawOperatorIncluded: false,
+      inventoryValuesIncluded: false,
+      pseudonymizedNotAnonymized: true,
+    });
+    expect(manifest.outputs['erp_channel_growth_snapshot.csv'].headers).toEqual(
+      expect.arrayContaining(['actual_sales_cny', 'sales_growth_pct', 'source_id', 'can_display_as_fact']),
+    );
+    expect(manifest.outputs['erp_channel_target_attainment.csv'].headers).toEqual(
+      expect.arrayContaining(['sales_attainment_pct', 'units_attainment_pct', 'target_sales_cny', 'can_display_as_fact']),
+    );
+    expect(manifest.outputs['erp_channel_customer_dim.csv'].headers).toEqual(
+      expect.arrayContaining(['channel_customer_hash', 'destination_warehouse_hash', 'operator_hash', 'visible_proxy_units']),
+    );
+    expect(manifest.outputs['erp_inventory_snapshot_readiness.csv'].headers).toEqual(
+      expect.arrayContaining(['field_name', 'readiness_status', 'source_id', 'can_display_as_fact']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.growthSnapshotRows).toBe(1);
+    expect(manifest.summary.targetAttainmentRows).toBe(1);
+    expect(manifest.summary.channelCustomerHashRows).toBeGreaterThan(0);
+    expect(manifest.summary.destinationMonthlyRows).toBeGreaterThan(0);
+    expect(manifest.summary.inventoryReadinessRows).toBe(10);
+    expect(manifest.summary.topChannelCustomerVisibleProxyUnits).toBeGreaterThan(0);
+  });
+
+  it('derives gated ERP Batch 7 field dictionary, category review, and display gates without raw business values', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-governance-batch7.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        rawBusinessValuesIncluded: boolean;
+        rawSkuValuesIncluded: boolean;
+        rawProductNameValuesIncluded: boolean;
+        rawCustomerValuesIncluded: boolean;
+        rawOperatorValuesIncluded: boolean;
+        rawWarehouseValuesIncluded: boolean;
+        fieldNamesIncluded: boolean;
+        displayApprovalGranted: boolean;
+        categoryApprovalGranted: boolean;
+        subtotalBehaviorApproved: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        fieldDictionaryRows: number;
+        categoryReviewRows: number;
+        subtotalReconciliationRows: number;
+        displayApprovalRows: number;
+        blockedRows: number;
+        p0CategoryReviewRows: number;
+        unresolvedSubtotalRows: number;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(manifest.batchId).toBe('erp-governance-batch7-20260625');
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L3-production-read-only');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      rawBusinessValuesIncluded: false,
+      rawSkuValuesIncluded: false,
+      rawProductNameValuesIncluded: false,
+      rawCustomerValuesIncluded: false,
+      rawOperatorValuesIncluded: false,
+      rawWarehouseValuesIncluded: false,
+      fieldNamesIncluded: true,
+      displayApprovalGranted: false,
+      categoryApprovalGranted: false,
+      subtotalBehaviorApproved: false,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['erp_field_dictionary_readiness.csv'].headers).toEqual(
+      expect.arrayContaining(['source_id', 'field_name', 'unit', 'hidden_column_behavior', 'dictionary_status']),
+    );
+    expect(manifest.outputs['erp_category_review_queue.csv'].headers).toEqual(
+      expect.arrayContaining(['review_task_id', 'category_proxy', 'priority', 'approval_status']),
+    );
+    expect(manifest.outputs['erp_subtotal_reconciliation_queue.csv'].headers).toEqual(
+      expect.arrayContaining(['reconciliation_id', 'observed_delta_units', 'reconciliation_status']),
+    );
+    expect(manifest.outputs['erp_display_approval_gate.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_gate_id', 'forbidden_display', 'can_export', 'can_display_as_fact']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.fieldDictionaryRows).toBe(61);
+    expect(manifest.summary.categoryReviewRows).toBe(5);
+    expect(manifest.summary.subtotalReconciliationRows).toBe(4);
+    expect(manifest.summary.displayApprovalRows).toBe(9);
+    expect(manifest.summary.blockedRows).toBe(79);
+    expect(manifest.summary.p0CategoryReviewRows).toBe(3);
+    expect(manifest.summary.unresolvedSubtotalRows).toBe(2);
+  });
+
+  it('derives ERP Batch 8 owner approval packets without promoting any approval state', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-approval-batch8.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      upstreamBatch: { batchId: string; blockedRows: number };
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        rawBusinessValuesIncluded: boolean;
+        rawSkuValuesIncluded: boolean;
+        rawProductNameValuesIncluded: boolean;
+        rawCustomerValuesIncluded: boolean;
+        rawOperatorValuesIncluded: boolean;
+        rawWarehouseValuesIncluded: boolean;
+        approvalRecordsApplied: number;
+        approvalsGranted: boolean;
+        fieldDictionaryApproved: boolean;
+        categoryApprovalGranted: boolean;
+        subtotalBehaviorApproved: boolean;
+        displayApprovalGranted: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        fieldOwnerPackets: number;
+        categoryOwnerPackets: number;
+        subtotalOwnerPackets: number;
+        displayApprovalTemplates: number;
+        approvalBacklogRows: number;
+        p0ApprovalRows: number;
+        p1ApprovalRows: number;
+        approvalRecordsApplied: number;
+        readyToDisplayRows: number;
+        remainingBlockedRows: number;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(manifest.batchId).toBe('erp-owner-approval-batch8-20260625');
+    expect(manifest.upstreamBatch).toMatchObject({ batchId: 'erp-governance-batch7-20260625', blockedRows: 79 });
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L3-production-read-only');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      rawBusinessValuesIncluded: false,
+      rawSkuValuesIncluded: false,
+      rawProductNameValuesIncluded: false,
+      rawCustomerValuesIncluded: false,
+      rawOperatorValuesIncluded: false,
+      rawWarehouseValuesIncluded: false,
+      approvalRecordsApplied: 0,
+      approvalsGranted: false,
+      fieldDictionaryApproved: false,
+      categoryApprovalGranted: false,
+      subtotalBehaviorApproved: false,
+      displayApprovalGranted: false,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['erp_field_owner_approval_packet.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_packet_id', 'owner_role', 'editable_decision_fields', 'approval_status']),
+    );
+    expect(manifest.outputs['erp_category_owner_approval_packet.csv'].headers).toEqual(
+      expect.arrayContaining(['required_decision', 'editable_decision_fields', 'approval_status']),
+    );
+    expect(manifest.outputs['erp_subtotal_owner_explanation_packet.csv'].headers).toEqual(
+      expect.arrayContaining(['observed_delta_units', 'editable_decision_fields', 'approval_status']),
+    );
+    expect(manifest.outputs['erp_display_approval_record_template.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_decision', 'approver_name_hash', 'approval_record_uri', 'record_status']),
+    );
+    expect(manifest.outputs['erp_owner_approval_backlog.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_lane', 'required_evidence', 'editable_packet', 'can_display_as_fact']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.fieldOwnerPackets).toBe(5);
+    expect(manifest.summary.categoryOwnerPackets).toBe(5);
+    expect(manifest.summary.subtotalOwnerPackets).toBe(4);
+    expect(manifest.summary.displayApprovalTemplates).toBe(9);
+    expect(manifest.summary.approvalBacklogRows).toBe(23);
+    expect(manifest.summary.p0ApprovalRows).toBe(9);
+    expect(manifest.summary.p1ApprovalRows).toBe(14);
+    expect(manifest.summary.approvalRecordsApplied).toBe(0);
+    expect(manifest.summary.readyToDisplayRows).toBe(0);
+    expect(manifest.summary.remainingBlockedRows).toBe(23);
+  });
+
+  it('validates ERP Batch 9 owner approval intake in fail-closed mode when no approval records are supplied', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-approval-intake-batch9.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      upstreamBatch: { batchId: string; approvalBacklogRows: number };
+      approvalRecordsInput: { provided: boolean; rowCount: number };
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        rawBusinessValuesIncluded: boolean;
+        rawSkuValuesIncluded: boolean;
+        rawProductNameValuesIncluded: boolean;
+        rawCustomerValuesIncluded: boolean;
+        rawOperatorValuesIncluded: boolean;
+        rawWarehouseValuesIncluded: boolean;
+        approvalRecordsApplied: number;
+        approvalsFabricated: boolean;
+        automaticPromotionApplied: boolean;
+        fieldDictionaryApproved: boolean;
+        categoryApprovalGranted: boolean;
+        subtotalBehaviorApproved: boolean;
+        displayApprovalGranted: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        intakeContractRows: number;
+        approvalBacklogRows: number;
+        approvalRecordsInputRows: number;
+        validationRows: number;
+        passedValidationRows: number;
+        blockedValidationRows: number;
+        releaseGateRows: number;
+        readyReleaseGateRows: number;
+        promotionCandidateRows: number;
+        readyToDisplayRows: number;
+        readyToExportRows: number;
+        validationPassed: boolean;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(manifest.batchId).toBe('erp-owner-approval-intake-batch9-20260626');
+    expect(manifest.upstreamBatch).toMatchObject({ batchId: 'erp-owner-approval-batch8-20260625', approvalBacklogRows: 23 });
+    expect(manifest.approvalRecordsInput).toMatchObject({ provided: false, rowCount: 0 });
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L3-production-read-only');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      rawBusinessValuesIncluded: false,
+      rawSkuValuesIncluded: false,
+      rawProductNameValuesIncluded: false,
+      rawCustomerValuesIncluded: false,
+      rawOperatorValuesIncluded: false,
+      rawWarehouseValuesIncluded: false,
+      approvalRecordsApplied: 0,
+      approvalsFabricated: false,
+      automaticPromotionApplied: false,
+      fieldDictionaryApproved: false,
+      categoryApprovalGranted: false,
+      subtotalBehaviorApproved: false,
+      displayApprovalGranted: false,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['erp_owner_approval_intake_contract.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_lane', 'required_fields', 'decision_vocab', 'fail_closed_rule']),
+    );
+    expect(manifest.outputs['erp_owner_approval_validation_result.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_record_present', 'validation_status', 'validation_messages', 'can_promote']),
+    );
+    expect(manifest.outputs['erp_owner_approval_release_gate.csv'].headers).toEqual(
+      expect.arrayContaining(['release_status', 'passed_validation_rows', 'required_next_step']),
+    );
+    expect(manifest.outputs['erp_owner_approval_promotion_manifest.csv'].headers).toEqual(
+      expect.arrayContaining(['promotion_candidate_id', 'promotion_status', 'can_display_as_fact']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.intakeContractRows).toBe(4);
+    expect(manifest.summary.approvalBacklogRows).toBe(23);
+    expect(manifest.summary.approvalRecordsInputRows).toBe(0);
+    expect(manifest.summary.validationRows).toBe(23);
+    expect(manifest.summary.passedValidationRows).toBe(0);
+    expect(manifest.summary.blockedValidationRows).toBe(23);
+    expect(manifest.summary.releaseGateRows).toBe(9);
+    expect(manifest.summary.readyReleaseGateRows).toBe(0);
+    expect(manifest.summary.promotionCandidateRows).toBe(0);
+    expect(manifest.summary.readyToDisplayRows).toBe(0);
+    expect(manifest.summary.readyToExportRows).toBe(0);
+    expect(manifest.summary.validationPassed).toBe(false);
+  });
+
+  it('builds ERP Batch 10 owner approval record templates without applying approvals', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-approval-record-template-batch10.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      upstreamBatches: Array<{ batchId: string; approvalBacklogRows?: number; validationRows?: number; blockedValidationRows?: number }>;
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        rawBusinessValuesIncluded: boolean;
+        rawSkuValuesIncluded: boolean;
+        rawProductNameValuesIncluded: boolean;
+        rawCustomerValuesIncluded: boolean;
+        rawOperatorValuesIncluded: boolean;
+        rawWarehouseValuesIncluded: boolean;
+        approvalRecordsApplied: number;
+        approvalsFabricated: boolean;
+        automaticPromotionApplied: boolean;
+        ownerRecordTemplateOnly: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        ownerPacketIndexRows: number;
+        approvalRecordTemplateRows: number;
+        requiredEvidenceRows: number;
+        submissionReadinessRows: number;
+        prefilledApprovalItemIds: number;
+        blankDecisionRows: number;
+        submittedOwnerRecords: number;
+        readyToValidateRows: number;
+        readyToDisplayRows: number;
+        readyToExportRows: number;
+        validationPassed: boolean;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(manifest.batchId).toBe('erp-owner-approval-record-template-batch10-20260626');
+    expect(manifest.upstreamBatches).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ batchId: 'erp-owner-approval-batch8-20260625', approvalBacklogRows: 23 }),
+        expect.objectContaining({ batchId: 'erp-owner-approval-intake-batch9-20260626', validationRows: 23, blockedValidationRows: 0 }),
+      ]),
+    );
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L3-production-read-only');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      rawBusinessValuesIncluded: false,
+      rawSkuValuesIncluded: false,
+      rawProductNameValuesIncluded: false,
+      rawCustomerValuesIncluded: false,
+      rawOperatorValuesIncluded: false,
+      rawWarehouseValuesIncluded: false,
+      approvalRecordsApplied: 0,
+      approvalsFabricated: false,
+      automaticPromotionApplied: false,
+      ownerRecordTemplateOnly: true,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['erp_owner_approval_owner_packet_index.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_lane', 'editable_packet', 'backlog_items', 'required_fields']),
+    );
+    expect(manifest.outputs['erp_owner_approval_record_input_template.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_item_id', 'approval_decision', 'approver_name_hash', 'approval_record_uri', 'next_validator_command']),
+    );
+    expect(manifest.outputs['erp_owner_approval_required_evidence_matrix.csv'].headers).toEqual(
+      expect.arrayContaining(['required_evidence', 'acceptance_criteria', 'required_uri_scheme', 'forbidden_raw_values']),
+    );
+    expect(manifest.outputs['erp_owner_approval_submission_readiness.csv'].headers).toEqual(
+      expect.arrayContaining(['required_owner_records', 'submitted_owner_records', 'missing_owner_records', 'current_release_status']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.ownerPacketIndexRows).toBe(4);
+    expect(manifest.summary.approvalRecordTemplateRows).toBe(23);
+    expect(manifest.summary.requiredEvidenceRows).toBe(23);
+    expect(manifest.summary.submissionReadinessRows).toBe(9);
+    expect(manifest.summary.prefilledApprovalItemIds).toBe(23);
+    expect(manifest.summary.blankDecisionRows).toBe(23);
+    expect(manifest.summary.submittedOwnerRecords).toBe(0);
+    expect(manifest.summary.readyToValidateRows).toBe(0);
+    expect(manifest.summary.readyToDisplayRows).toBe(0);
+    expect(manifest.summary.readyToExportRows).toBe(0);
+    expect(manifest.summary.validationPassed).toBe(false);
+  });
+
+  it('preflights ERP Batch 11 owner approval records before Batch9 handoff', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-approval-preflight-batch11.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      upstreamBatch: {
+        batchId: string;
+        approvalRecordTemplateRows: number;
+        submittedOwnerRecords: number;
+      };
+      approvalRecordsInput: {
+        provided: boolean;
+        path: string;
+        rowCount: number;
+      };
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        rawBusinessValuesIncluded: boolean;
+        rawSkuValuesIncluded: boolean;
+        rawProductNameValuesIncluded: boolean;
+        rawCustomerValuesIncluded: boolean;
+        rawOperatorValuesIncluded: boolean;
+        rawWarehouseValuesIncluded: boolean;
+        approvalRecordsApplied: number;
+        approvalsFabricated: boolean;
+        automaticPromotionApplied: boolean;
+        ownerRecordPreflightOnly: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        preflightRulebookRows: number;
+        approvalRecordRows: number;
+        preflightRows: number;
+        readyForBatch9Rows: number;
+        blockedPreflightRows: number;
+        forbiddenScanRows: number;
+        forbiddenHitRows: number;
+        releasePreflightRows: number;
+        batch9HandoffRows: number;
+        readyToDisplayRows: number;
+        readyToExportRows: number;
+        validationPassed: boolean;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(output).not.toMatch(/password|client_secret|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i);
+    expect(manifest.batchId).toBe('erp-owner-approval-preflight-batch11-20260626');
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L3-production-read-only');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.upstreamBatch).toMatchObject({
+      batchId: 'erp-owner-approval-record-template-batch10-20260626',
+      approvalRecordTemplateRows: 23,
+      submittedOwnerRecords: 0,
+    });
+    expect(manifest.approvalRecordsInput).toEqual({
+      provided: false,
+      path: 'tmp/exports/erp-owner-approval-record-template-batch10-20260626/erp_owner_approval_record_input_template.csv',
+      rowCount: 23,
+    });
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      rawBusinessValuesIncluded: false,
+      rawSkuValuesIncluded: false,
+      rawProductNameValuesIncluded: false,
+      rawCustomerValuesIncluded: false,
+      rawOperatorValuesIncluded: false,
+      rawWarehouseValuesIncluded: false,
+      approvalRecordsApplied: 0,
+      approvalsFabricated: false,
+      automaticPromotionApplied: false,
+      ownerRecordPreflightOnly: true,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['erp_owner_approval_preflight_rulebook.csv'].headers).toEqual(
+      expect.arrayContaining(['rule_id', 'required_condition', 'failure_status']),
+    );
+    expect(manifest.outputs['erp_owner_approval_preflight_result.csv'].headers).toEqual(
+      expect.arrayContaining(['preflight_status', 'preflight_messages', 'ready_for_batch9_validator']),
+    );
+    expect(manifest.outputs['erp_owner_approval_forbidden_value_scan.csv'].headers).toEqual(
+      expect.arrayContaining(['forbidden_pattern_hits', 'scan_status', 'redaction_action']),
+    );
+    expect(manifest.outputs['erp_owner_approval_batch9_handoff_queue.csv'].headers).toEqual(
+      expect.arrayContaining(['handoff_status', 'batch9_validator_command']),
+    );
+    expect(manifest.outputs['erp_owner_approval_release_preflight_summary.csv'].headers).toEqual(
+      expect.arrayContaining(['preflight_ready_rows', 'handoff_status']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.preflightRulebookRows).toBe(6);
+    expect(manifest.summary.approvalRecordRows).toBe(23);
+    expect(manifest.summary.preflightRows).toBe(23);
+    expect(manifest.summary.readyForBatch9Rows).toBe(0);
+    expect(manifest.summary.blockedPreflightRows).toBe(23);
+    expect(manifest.summary.forbiddenScanRows).toBe(23);
+    expect(manifest.summary.forbiddenHitRows).toBe(0);
+    expect(manifest.summary.releasePreflightRows).toBe(9);
+    expect(manifest.summary.batch9HandoffRows).toBe(0);
+    expect(manifest.summary.readyToDisplayRows).toBe(0);
+    expect(manifest.summary.readyToExportRows).toBe(0);
+    expect(manifest.summary.validationPassed).toBe(false);
+  });
+
+  it('audits ERP Batch 12 owner submission intake before Batch11 preflight', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-intake-batch12.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      upstreamBatches: Array<{ batchId: string; approvalRecordTemplateRows?: number; readyForBatch9Rows?: number; batch9HandoffRows?: number }>;
+      submissionInput: {
+        provided: boolean;
+        path: string;
+        directoryExists: boolean;
+        csvFileCount: number;
+      };
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        rawBusinessValuesIncluded: boolean;
+        rawSkuValuesIncluded: boolean;
+        rawProductNameValuesIncluded: boolean;
+        rawCustomerValuesIncluded: boolean;
+        rawOperatorValuesIncluded: boolean;
+        rawWarehouseValuesIncluded: boolean;
+        rawApprovalValuesEchoed: boolean;
+        approvalRecordsApplied: number;
+        approvalsFabricated: boolean;
+        automaticPromotionApplied: boolean;
+        ownerSubmissionIntakeOnly: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        inventoryRows: number;
+        submissionCsvFiles: number;
+        expectedApprovalRecords: number;
+        submittedApprovalRecords: number;
+        schemaAuditRows: number;
+        schemaReadyRows: number;
+        redactionAuditRows: number;
+        forbiddenHitRows: number;
+        batch11QueueRows: number;
+        releaseReadinessRows: number;
+        readyToDisplayRows: number;
+        readyToExportRows: number;
+        validationPassed: boolean;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(output).not.toMatch(/password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i);
+    expect(manifest.batchId).toBe('erp-owner-submission-intake-batch12-20260626');
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L3-production-read-only');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.upstreamBatches).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ batchId: 'erp-owner-approval-record-template-batch10-20260626', approvalRecordTemplateRows: 23 }),
+        expect.objectContaining({ batchId: 'erp-owner-approval-preflight-batch11-20260626', readyForBatch9Rows: 23, batch9HandoffRows: 1 }),
+      ]),
+    );
+    expect(manifest.submissionInput).toEqual({
+      provided: true,
+      path: 'tmp/inputs/erp-owner-approval-submissions-batch12',
+      directoryExists: true,
+      csvFileCount: 1,
+    });
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      rawBusinessValuesIncluded: false,
+      rawSkuValuesIncluded: false,
+      rawProductNameValuesIncluded: false,
+      rawCustomerValuesIncluded: false,
+      rawOperatorValuesIncluded: false,
+      rawWarehouseValuesIncluded: false,
+      rawApprovalValuesEchoed: false,
+      approvalRecordsApplied: 0,
+      approvalsFabricated: false,
+      automaticPromotionApplied: false,
+      ownerSubmissionIntakeOnly: true,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['erp_owner_submission_intake_inventory.csv'].headers).toEqual(
+      expect.arrayContaining(['submission_dir', 'inventory_status', 'blocking_reason']),
+    );
+    expect(manifest.outputs['erp_owner_submission_schema_audit.csv'].headers).toEqual(
+      expect.arrayContaining(['source_ids', 'missing_required_fields', 'schema_status', 'ready_for_batch11_preflight']),
+    );
+    expect(manifest.outputs['erp_owner_submission_redaction_audit.csv'].headers).toEqual(
+      expect.arrayContaining(['forbidden_pattern_hits', 'redaction_status', 'redaction_action']),
+    );
+    expect(manifest.outputs['erp_owner_submission_batch11_queue.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_records_path', 'batch11_preflight_command', 'queue_status']),
+    );
+    expect(manifest.outputs['erp_owner_submission_release_readiness.csv'].headers).toEqual(
+      expect.arrayContaining(['submitted_owner_records', 'schema_ready_records', 'batch11_queue_rows', 'readiness_status']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.inventoryRows).toBe(1);
+    expect(manifest.summary.submissionCsvFiles).toBe(1);
+    expect(manifest.summary.expectedApprovalRecords).toBe(23);
+    expect(manifest.summary.submittedApprovalRecords).toBe(23);
+    expect(manifest.summary.schemaAuditRows).toBe(23);
+    expect(manifest.summary.schemaReadyRows).toBe(23);
+    expect(manifest.summary.redactionAuditRows).toBe(23);
+    expect(manifest.summary.forbiddenHitRows).toBe(0);
+    expect(manifest.summary.batch11QueueRows).toBe(1);
+    expect(manifest.summary.releaseReadinessRows).toBe(9);
+    expect(manifest.summary.readyToDisplayRows).toBe(0);
+    expect(manifest.summary.readyToExportRows).toBe(0);
+    expect(manifest.summary.validationPassed).toBe(false);
+  });
+
+  it('builds ERP Batch 13 owner submission templates without creating approval records', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-pack-batch13.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      upstreamBatches: Array<{ batchId: string; approvalRecordTemplateRows?: number; submissionCsvFiles?: number; batch11QueueRows?: number }>;
+      templateOutput: {
+        targetSubmissionDir: string;
+        templateDir: string;
+        templateFiles: Record<string, { path: string; rowCount: number; sha256: string; approvalLane: string }>;
+      };
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        rawBusinessValuesIncluded: boolean;
+        rawSkuValuesIncluded: boolean;
+        rawProductNameValuesIncluded: boolean;
+        rawCustomerValuesIncluded: boolean;
+        rawOperatorValuesIncluded: boolean;
+        rawWarehouseValuesIncluded: boolean;
+        rawApprovalValuesEchoed: boolean;
+        approvalRecordsApplied: number;
+        approvalsFabricated: boolean;
+        automaticPromotionApplied: boolean;
+        ownerSubmissionPackOnly: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        packetIndexRows: number;
+        templateManifestRows: number;
+        templateFiles: number;
+        combinedTemplateRows: number;
+        laneTemplateRows: number;
+        checklistRows: number;
+        releasePacketRows: number;
+        handoffGuideRows: number;
+        readyForBatch12Rows: number;
+        submittedApprovalRecords: number;
+        readyToDisplayRows: number;
+        readyToExportRows: number;
+        validationPassed: boolean;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(output).not.toMatch(/password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i);
+    expect(manifest.batchId).toBe('erp-owner-submission-pack-batch13-20260626');
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L3-production-read-only');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.upstreamBatches).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ batchId: 'erp-owner-approval-record-template-batch10-20260626', approvalRecordTemplateRows: 23 }),
+        expect.objectContaining({ batchId: 'erp-owner-submission-intake-batch12-20260626', submissionCsvFiles: 1, batch11QueueRows: 1 }),
+      ]),
+    );
+    expect(manifest.templateOutput).toMatchObject({
+      targetSubmissionDir: 'tmp/inputs/erp-owner-approval-submissions-batch12',
+      templateDir: 'tmp/exports/erp-owner-submission-pack-batch13-20260626/owner-submission-templates',
+    });
+    expect(manifest.templateOutput.templateFiles['combined_owner_submission_template.csv']).toMatchObject({ rowCount: 23, approvalLane: 'all_owner_lanes' });
+    expect(manifest.templateOutput.templateFiles['category_owner_approval_submission_template.csv']).toMatchObject({ rowCount: 5 });
+    expect(manifest.templateOutput.templateFiles['display_approval_record_submission_template.csv']).toMatchObject({ rowCount: 9 });
+    expect(manifest.templateOutput.templateFiles['field_dictionary_owner_approval_submission_template.csv']).toMatchObject({ rowCount: 5 });
+    expect(manifest.templateOutput.templateFiles['subtotal_behavior_owner_approval_submission_template.csv']).toMatchObject({ rowCount: 4 });
+    expect(Object.values(manifest.templateOutput.templateFiles).every((template) => template.sha256.length === 64)).toBe(true);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      rawBusinessValuesIncluded: false,
+      rawSkuValuesIncluded: false,
+      rawProductNameValuesIncluded: false,
+      rawCustomerValuesIncluded: false,
+      rawOperatorValuesIncluded: false,
+      rawWarehouseValuesIncluded: false,
+      rawApprovalValuesEchoed: false,
+      approvalRecordsApplied: 0,
+      approvalsFabricated: false,
+      automaticPromotionApplied: false,
+      ownerSubmissionPackOnly: true,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['erp_owner_submission_packet_index.csv'].headers).toEqual(
+      expect.arrayContaining(['packet_id', 'template_file', 'target_submission_dir', 'next_batch12_command']),
+    );
+    expect(manifest.outputs['erp_owner_submission_template_manifest.csv'].headers).toEqual(
+      expect.arrayContaining(['template_id', 'template_file', 'editable_fields', 'sha256']),
+    );
+    expect(manifest.outputs['erp_owner_submission_field_completion_checklist.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_item_id', 'blank_fields_to_complete', 'required_uri_scheme', 'owner_action']),
+    );
+    expect(manifest.outputs['erp_owner_submission_release_packet_matrix.csv'].headers).toEqual(
+      expect.arrayContaining(['release_gate_id', 'submission_template_file', 'target_submission_dir', 'next_batch12_command']),
+    );
+    expect(manifest.outputs['erp_owner_submission_handoff_guide.csv'].headers).toEqual(
+      expect.arrayContaining(['step_id', 'step_order', 'next_command', 'current_status']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.packetIndexRows).toBe(5);
+    expect(manifest.summary.templateManifestRows).toBe(5);
+    expect(manifest.summary.templateFiles).toBe(5);
+    expect(manifest.summary.combinedTemplateRows).toBe(23);
+    expect(manifest.summary.laneTemplateRows).toBe(23);
+    expect(manifest.summary.checklistRows).toBe(23);
+    expect(manifest.summary.releasePacketRows).toBe(9);
+    expect(manifest.summary.handoffGuideRows).toBe(5);
+    expect(manifest.summary.readyForBatch12Rows).toBe(0);
+    expect(manifest.summary.submittedApprovalRecords).toBe(0);
+    expect(manifest.summary.readyToDisplayRows).toBe(0);
+    expect(manifest.summary.readyToExportRows).toBe(0);
+    expect(manifest.summary.validationPassed).toBe(false);
+  });
+
+  it('tracks ERP Batch 14 owner submission dropbox without reading approval CSV contents', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-dropbox-watchlist-batch14.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      upstreamBatches: Array<{ batchId: string; templateFiles?: number; checklistRows?: number; submissionCsvFiles?: number; batch11QueueRows?: number }>;
+      dropboxInput: {
+        targetSubmissionDir: string;
+        directoryExists: boolean;
+        csvFileCount: number;
+        csvFileNameHashes: string[];
+        rawCsvContentsRead: boolean;
+        inputDirectoryCreated: boolean;
+      };
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        inputDirectoryCreated: boolean;
+        rawCsvContentsRead: boolean;
+        rawBusinessValuesIncluded: boolean;
+        rawSkuValuesIncluded: boolean;
+        rawProductNameValuesIncluded: boolean;
+        rawCustomerValuesIncluded: boolean;
+        rawOperatorValuesIncluded: boolean;
+        rawWarehouseValuesIncluded: boolean;
+        rawApprovalValuesEchoed: boolean;
+        approvalRecordsApplied: number;
+        approvalsFabricated: boolean;
+        automaticPromotionApplied: boolean;
+        ownerSubmissionWatchlistOnly: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        dropboxStatusRows: number;
+        ownerActionRows: number;
+        templateDistributionRows: number;
+        releaseWatchlistRows: number;
+        commandRunbookRows: number;
+        batch13TemplateFiles: number;
+        batch13ChecklistRows: number;
+        batch13HandoffRows: number;
+        submissionCsvFiles: number;
+        submittedApprovalRecords: number;
+        readyForBatch12Rows: number;
+        batch11QueueRows: number;
+        readyToDisplayRows: number;
+        readyToExportRows: number;
+        validationPassed: boolean;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(output).not.toMatch(/password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i);
+    expect(manifest.batchId).toBe('erp-owner-submission-dropbox-watchlist-batch14-20260627');
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L3-production-read-only');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.upstreamBatches).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ batchId: 'erp-owner-submission-pack-batch13-20260626', templateFiles: 5, checklistRows: 23 }),
+        expect.objectContaining({ batchId: 'erp-owner-submission-intake-batch12-20260626', submissionCsvFiles: 1, batch11QueueRows: 1 }),
+      ]),
+    );
+    expect(manifest.dropboxInput).toMatchObject({
+      targetSubmissionDir: 'tmp/inputs/erp-owner-approval-submissions-batch12',
+      directoryExists: true,
+      csvFileCount: 1,
+      rawCsvContentsRead: false,
+      inputDirectoryCreated: false,
+    });
+    expect(manifest.dropboxInput.csvFileNameHashes).toHaveLength(1);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      inputDirectoryCreated: false,
+      rawCsvContentsRead: false,
+      rawBusinessValuesIncluded: false,
+      rawSkuValuesIncluded: false,
+      rawProductNameValuesIncluded: false,
+      rawCustomerValuesIncluded: false,
+      rawOperatorValuesIncluded: false,
+      rawWarehouseValuesIncluded: false,
+      rawApprovalValuesEchoed: false,
+      approvalRecordsApplied: 0,
+      approvalsFabricated: false,
+      automaticPromotionApplied: false,
+      ownerSubmissionWatchlistOnly: true,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['erp_owner_submission_dropbox_status.csv'].headers).toEqual(
+      expect.arrayContaining(['target_submission_dir', 'directory_exists', 'csv_file_count', 'current_status']),
+    );
+    expect(manifest.outputs['erp_owner_submission_owner_action_queue.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_item_id', 'template_file', 'blank_fields_to_complete', 'next_batch12_command']),
+    );
+    expect(manifest.outputs['erp_owner_submission_template_distribution.csv'].headers).toEqual(
+      expect.arrayContaining(['template_id', 'template_file', 'sha256', 'distribution_status']),
+    );
+    expect(manifest.outputs['erp_owner_submission_release_watchlist.csv'].headers).toEqual(
+      expect.arrayContaining(['release_gate_id', 'submitted_owner_records', 'ready_for_batch12_rows', 'batch11_queue_rows']),
+    );
+    expect(manifest.outputs['erp_owner_submission_command_runbook.csv'].headers).toEqual(
+      expect.arrayContaining(['step_id', 'step_order', 'command', 'prerequisite', 'current_status']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.dropboxStatusRows).toBe(1);
+    expect(manifest.summary.ownerActionRows).toBe(23);
+    expect(manifest.summary.templateDistributionRows).toBe(5);
+    expect(manifest.summary.releaseWatchlistRows).toBe(9);
+    expect(manifest.summary.commandRunbookRows).toBe(5);
+    expect(manifest.summary.batch13TemplateFiles).toBe(5);
+    expect(manifest.summary.batch13ChecklistRows).toBe(23);
+    expect(manifest.summary.batch13HandoffRows).toBe(5);
+    expect(manifest.summary.submissionCsvFiles).toBe(1);
+    expect(manifest.summary.submittedApprovalRecords).toBe(0);
+    expect(manifest.summary.readyForBatch12Rows).toBe(0);
+    expect(manifest.summary.batch11QueueRows).toBe(1);
+    expect(manifest.summary.readyToDisplayRows).toBe(0);
+    expect(manifest.summary.readyToExportRows).toBe(0);
+    expect(manifest.summary.validationPassed).toBe(false);
+  });
+
+  it('gates ERP Batch 15 owner submission acceptance before Batch12 promotion', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-acceptance-gate-batch15.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      upstreamBatches: Array<{ batchId: string; submissionCsvFiles?: number; ownerActionRows?: number; templateFiles?: number; checklistRows?: number }>;
+      acceptanceInput: {
+        targetSubmissionDir: string;
+        submissionCsvFiles: number;
+        rawCsvContentsRead: boolean;
+        inputDirectoryCreated: boolean;
+        commandRunbookRows: number;
+      };
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        inputDirectoryCreated: boolean;
+        rawCsvContentsRead: boolean;
+        rawBusinessValuesIncluded: boolean;
+        rawSkuValuesIncluded: boolean;
+        rawProductNameValuesIncluded: boolean;
+        rawCustomerValuesIncluded: boolean;
+        rawOperatorValuesIncluded: boolean;
+        rawWarehouseValuesIncluded: boolean;
+        rawApprovalValuesEchoed: boolean;
+        approvalRecordsApplied: number;
+        approvalsFabricated: boolean;
+        automaticPromotionApplied: boolean;
+        ownerSubmissionAcceptanceOnly: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        acceptanceRulebookRows: number;
+        acceptanceResultRows: number;
+        evidenceUriContractRows: number;
+        releaseAcceptanceRows: number;
+        escalationRows: number;
+        ownerActionRows: number;
+        submissionCsvFiles: number;
+        submittedApprovalRecords: number;
+        acceptedOwnerRecords: number;
+        readyForBatch12Rows: number;
+        batch11QueueRows: number;
+        readyToDisplayRows: number;
+        readyToExportRows: number;
+        validationPassed: boolean;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(output).not.toMatch(/password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i);
+    expect(manifest.batchId).toBe('erp-owner-submission-acceptance-gate-batch15-20260627');
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L3-production-read-only');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.upstreamBatches).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ batchId: 'erp-owner-submission-dropbox-watchlist-batch14-20260627', submissionCsvFiles: 0, ownerActionRows: 23 }),
+        expect.objectContaining({ batchId: 'erp-owner-submission-pack-batch13-20260626', templateFiles: 5, checklistRows: 23 }),
+      ]),
+    );
+    expect(manifest.acceptanceInput).toEqual({
+      targetSubmissionDir: 'tmp/inputs/erp-owner-approval-submissions-batch12',
+      submissionCsvFiles: 0,
+      rawCsvContentsRead: false,
+      inputDirectoryCreated: false,
+      commandRunbookRows: 5,
+    });
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      inputDirectoryCreated: false,
+      rawCsvContentsRead: false,
+      rawBusinessValuesIncluded: false,
+      rawSkuValuesIncluded: false,
+      rawProductNameValuesIncluded: false,
+      rawCustomerValuesIncluded: false,
+      rawOperatorValuesIncluded: false,
+      rawWarehouseValuesIncluded: false,
+      rawApprovalValuesEchoed: false,
+      approvalRecordsApplied: 0,
+      approvalsFabricated: false,
+      automaticPromotionApplied: false,
+      ownerSubmissionAcceptanceOnly: true,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['erp_owner_submission_acceptance_rulebook.csv'].headers).toEqual(
+      expect.arrayContaining(['rule_id', 'required_condition', 'acceptance_status', 'next_check']),
+    );
+    expect(manifest.outputs['erp_owner_submission_acceptance_result.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_item_id', 'acceptance_status', 'missing_acceptance_inputs', 'next_batch12_command']),
+    );
+    expect(manifest.outputs['erp_owner_submission_evidence_uri_contract.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_lane', 'required_uri_scheme', 'forbidden_values_policy', 'current_status']),
+    );
+    expect(manifest.outputs['erp_owner_submission_release_acceptance_matrix.csv'].headers).toEqual(
+      expect.arrayContaining(['release_gate_id', 'accepted_owner_records', 'ready_for_batch12_rows', 'acceptance_status']),
+    );
+    expect(manifest.outputs['erp_owner_submission_escalation_queue.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_item_id', 'escalation_status', 'next_command']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.acceptanceRulebookRows).toBe(6);
+    expect(manifest.summary.acceptanceResultRows).toBe(23);
+    expect(manifest.summary.evidenceUriContractRows).toBe(4);
+    expect(manifest.summary.releaseAcceptanceRows).toBe(9);
+    expect(manifest.summary.escalationRows).toBe(23);
+    expect(manifest.summary.ownerActionRows).toBe(23);
+    expect(manifest.summary.submissionCsvFiles).toBe(0);
+    expect(manifest.summary.submittedApprovalRecords).toBe(0);
+    expect(manifest.summary.acceptedOwnerRecords).toBe(0);
+    expect(manifest.summary.readyForBatch12Rows).toBe(0);
+    expect(manifest.summary.batch11QueueRows).toBe(0);
+    expect(manifest.summary.readyToDisplayRows).toBe(0);
+    expect(manifest.summary.readyToExportRows).toBe(0);
+    expect(manifest.summary.validationPassed).toBe(false);
+  });
+
+  it('generates ERP Batch 16 synthetic owner submission fixture without promoting facts', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-synthetic-fixture-batch16.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      blockingReason: string;
+      dryRun: boolean;
+      upstreamBatches: Array<{ batchId: string; approvalRecordTemplateRows?: number; acceptanceResultRows?: number; acceptedOwnerRecords?: number }>;
+      syntheticInput: { directory: string; recordFile: string; rowCount: number; sha256: string };
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        writesSyntheticInputDir: boolean;
+        writesRealBatch12InputDir: boolean;
+        rawBusinessValuesIncluded: boolean;
+        rawSkuValuesIncluded: boolean;
+        rawProductNameValuesIncluded: boolean;
+        rawCustomerValuesIncluded: boolean;
+        rawOperatorValuesIncluded: boolean;
+        rawWarehouseValuesIncluded: boolean;
+        realApprovalRecordsApplied: number;
+        realApprovalsFabricated: boolean;
+        syntheticApprovalRecordsGenerated: number;
+        automaticPromotionApplied: boolean;
+        syntheticOwnerRecordsOnly: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        syntheticRecordRows: number;
+        fixtureCsvFiles: number;
+        fixtureIndexRows: number;
+        recordFillAuditRows: number;
+        gatePlanRows: number;
+        readyForSyntheticBatch12DryRun: boolean;
+        readyForSyntheticBatch11DryRun: boolean;
+        readyForSyntheticBatch9DryRun: boolean;
+        realApprovalRecordsApplied: number;
+        readyToDisplayRows: number;
+        readyToExportRows: number;
+        validationPassed: boolean;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(output).not.toMatch(/password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i);
+    expect(manifest.batchId).toBe('erp-owner-submission-synthetic-fixture-batch16-20260627');
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L2-fixture-or-dry-run');
+    expect(manifest.privacyLevel).toBe('synthetic/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.blockingReason).toBe('synthetic-fixture-not-owner-approval');
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.upstreamBatches).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ batchId: 'erp-owner-approval-record-template-batch10-20260626', approvalRecordTemplateRows: 23 }),
+        expect.objectContaining({ batchId: 'erp-owner-submission-acceptance-gate-batch15-20260627', acceptanceResultRows: 23, acceptedOwnerRecords: 0 }),
+      ]),
+    );
+    expect(manifest.syntheticInput).toMatchObject({
+      directory: 'tmp/inputs/erp-owner-approval-submissions-batch12-synthetic',
+      recordFile: 'tmp/inputs/erp-owner-approval-submissions-batch12-synthetic/synthetic_owner_approval_records_batch16.csv',
+      rowCount: 23,
+    });
+    expect(manifest.syntheticInput.sha256).toHaveLength(64);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      writesSyntheticInputDir: true,
+      writesRealBatch12InputDir: false,
+      rawBusinessValuesIncluded: false,
+      rawSkuValuesIncluded: false,
+      rawProductNameValuesIncluded: false,
+      rawCustomerValuesIncluded: false,
+      rawOperatorValuesIncluded: false,
+      rawWarehouseValuesIncluded: false,
+      realApprovalRecordsApplied: 0,
+      realApprovalsFabricated: false,
+      syntheticApprovalRecordsGenerated: 23,
+      automaticPromotionApplied: false,
+      syntheticOwnerRecordsOnly: true,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['synthetic_owner_approval_records_batch16.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_item_id', 'approval_decision', 'approver_name_hash', 'approval_record_uri', 'can_display_as_fact_decision', 'evidence_grade']),
+    );
+    expect(manifest.outputs['erp_owner_submission_synthetic_fixture_index.csv'].headers).toEqual(
+      expect.arrayContaining(['synthetic_input_dir', 'record_file_path', 'fixture_scope', 'can_display_as_fact']),
+    );
+    expect(manifest.outputs['erp_owner_submission_synthetic_record_fill_audit.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_item_id', 'approver_hash_present', 'synthetic_marker', 'can_display_as_fact']),
+    );
+    expect(manifest.outputs['erp_owner_submission_synthetic_gate_plan.csv'].headers).toEqual(
+      expect.arrayContaining(['gate', 'command', 'expected_synthetic_result', 'can_write_real_gate']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.syntheticRecordRows).toBe(23);
+    expect(manifest.summary.fixtureCsvFiles).toBe(1);
+    expect(manifest.summary.fixtureIndexRows).toBe(1);
+    expect(manifest.summary.recordFillAuditRows).toBe(23);
+    expect(manifest.summary.gatePlanRows).toBe(4);
+    expect(manifest.summary.readyForSyntheticBatch12DryRun).toBe(true);
+    expect(manifest.summary.readyForSyntheticBatch11DryRun).toBe(true);
+    expect(manifest.summary.readyForSyntheticBatch9DryRun).toBe(true);
+    expect(manifest.summary.realApprovalRecordsApplied).toBe(0);
+    expect(manifest.summary.readyToDisplayRows).toBe(0);
+    expect(manifest.summary.readyToExportRows).toBe(0);
+    expect(manifest.summary.validationPassed).toBe(false);
+  });
+
+  it('rehearses ERP Batch 17 synthetic owner submission pipeline with fixture evidence only', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-synthetic-pipeline-batch17.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      blockingReason: string;
+      dryRun: boolean;
+      upstreamBatches: Array<{ batchId: string; evidenceGrade?: string; fixtureMode?: boolean; syntheticRecordRows?: number }>;
+      syntheticInput: { directory: string; recordFile: string; rowCount: number; sha256: string; runtimePathIsTemporary: boolean };
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        childRunsNoWrite: boolean;
+        fixtureMode: boolean;
+        allChildEvidenceGradesL2: boolean;
+        allChildFixtureModes: boolean;
+        writesSyntheticInputDir: boolean;
+        writesRealBatch12InputDir: boolean;
+        rawBusinessValuesIncluded: boolean;
+        rawSkuValuesIncluded: boolean;
+        rawProductNameValuesIncluded: boolean;
+        rawCustomerValuesIncluded: boolean;
+        rawOperatorValuesIncluded: boolean;
+        rawWarehouseValuesIncluded: boolean;
+        realApprovalRecordsApplied: number;
+        realApprovalsFabricated: boolean;
+        syntheticApprovalRecordsGenerated: number;
+        automaticPromotionApplied: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        syntheticRecordRows: number;
+        pipelineStageRows: number;
+        releaseGateRows: number;
+        boundaryAuditRows: number;
+        batch12SchemaReadyRows: number;
+        batch12QueueRows: number;
+        batch11ReadyRows: number;
+        batch11HandoffRows: number;
+        batch9PassedValidationRows: number;
+        batch9ReadyReleaseGateRows: number;
+        promotionCandidateRows: number;
+        readyToDisplayRows: number;
+        readyToExportRows: number;
+        validationPassed: boolean;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(output).not.toMatch(/password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i);
+    expect(manifest.batchId).toBe('erp-owner-submission-synthetic-pipeline-batch17-20260627');
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L2-fixture-or-dry-run');
+    expect(manifest.privacyLevel).toBe('synthetic/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.blockingReason).toBe('synthetic-fixture-not-owner-approval');
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.upstreamBatches).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ batchId: 'erp-owner-submission-synthetic-fixture-batch16-20260627', syntheticRecordRows: 23 }),
+        expect.objectContaining({ batchId: 'erp-owner-submission-intake-batch12-20260626', evidenceGrade: 'L2-fixture-or-dry-run', fixtureMode: true }),
+        expect.objectContaining({ batchId: 'erp-owner-approval-preflight-batch11-20260626', evidenceGrade: 'L2-fixture-or-dry-run', fixtureMode: true }),
+        expect.objectContaining({ batchId: 'erp-owner-approval-intake-batch9-20260626', evidenceGrade: 'L2-fixture-or-dry-run', fixtureMode: true }),
+      ]),
+    );
+    expect(manifest.syntheticInput).toMatchObject({
+      directory: 'tmp/inputs/erp-owner-approval-submissions-batch12-synthetic',
+      recordFile: 'tmp/inputs/erp-owner-approval-submissions-batch12-synthetic/synthetic_owner_approval_records_batch16.csv',
+      rowCount: 23,
+      runtimePathIsTemporary: true,
+    });
+    expect(manifest.syntheticInput.sha256).toHaveLength(64);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      childRunsNoWrite: true,
+      fixtureMode: true,
+      allChildEvidenceGradesL2: true,
+      allChildFixtureModes: true,
+      writesSyntheticInputDir: false,
+      writesRealBatch12InputDir: false,
+      rawBusinessValuesIncluded: false,
+      rawSkuValuesIncluded: false,
+      rawProductNameValuesIncluded: false,
+      rawCustomerValuesIncluded: false,
+      rawOperatorValuesIncluded: false,
+      rawWarehouseValuesIncluded: false,
+      realApprovalRecordsApplied: 0,
+      realApprovalsFabricated: false,
+      syntheticApprovalRecordsGenerated: 23,
+      automaticPromotionApplied: false,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['erp_owner_submission_synthetic_pipeline_run_matrix.csv']).toMatchObject({ rowCount: 5 });
+    expect(manifest.outputs['erp_owner_submission_synthetic_release_gate_matrix.csv']).toMatchObject({ rowCount: 9 });
+    expect(manifest.outputs['erp_owner_submission_synthetic_boundary_audit.csv']).toMatchObject({ rowCount: 4 });
+    expect(manifest.outputs['erp_owner_submission_synthetic_pipeline_run_matrix.csv'].headers).toEqual(
+      expect.arrayContaining(['stage_id', 'observed_evidence_grade', 'can_display_as_fact', 'can_export']),
+    );
+    expect(manifest.outputs['erp_owner_submission_synthetic_release_gate_matrix.csv'].headers).toEqual(
+      expect.arrayContaining(['release_gate_id', 'synthetic_validation_status', 'ready_for_manual_review', 'can_export']),
+    );
+    expect(manifest.outputs['erp_owner_submission_synthetic_boundary_audit.csv'].headers).toEqual(
+      expect.arrayContaining(['checked_item', 'expected_value', 'observed_value', 'boundary_status']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.syntheticRecordRows).toBe(23);
+    expect(manifest.summary.pipelineStageRows).toBe(5);
+    expect(manifest.summary.releaseGateRows).toBe(9);
+    expect(manifest.summary.boundaryAuditRows).toBe(4);
+    expect(manifest.summary.batch12SchemaReadyRows).toBe(23);
+    expect(manifest.summary.batch12QueueRows).toBe(1);
+    expect(manifest.summary.batch11ReadyRows).toBe(23);
+    expect(manifest.summary.batch11HandoffRows).toBe(1);
+    expect(manifest.summary.batch9PassedValidationRows).toBe(23);
+    expect(manifest.summary.batch9ReadyReleaseGateRows).toBe(9);
+    expect(manifest.summary.promotionCandidateRows).toBe(0);
+    expect(manifest.summary.readyToDisplayRows).toBe(0);
+    expect(manifest.summary.readyToExportRows).toBe(0);
+    expect(manifest.summary.validationPassed).toBe(false);
+  });
+
+  it('builds ERP Batch 18 real owner submission checklist without creating approvals', () => {
+    const output = runOptionalLocalErpArtifactScript(['scripts/data/build-erp-owner-submission-real-owner-checklist-batch18.mjs', '--json', '--no-write']);
+    if (!output) return;
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      blockingReason: string;
+      dryRun: boolean;
+      targetSubmissionDir: string;
+      syntheticReferenceDir: string;
+      upstreamBatches: Array<{ batchId: string; approvalRecordTemplateRows?: number; acceptanceResultRows?: number; acceptedOwnerRecords?: number; pipelineStageRows?: number; allChildEvidenceGradesL2?: boolean }>;
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        writesRealBatch12InputDir: boolean;
+        readsRealBatch12InputDir: boolean;
+        writesSyntheticInputDir: boolean;
+        realOwnerRecordsGenerated: number;
+        realApprovalRecordsApplied: number;
+        syntheticApprovalRecordsApplied: number;
+        automaticPromotionApplied: boolean;
+        exportEnabled: boolean;
+        displayEnabled: boolean;
+        manualReleaseReviewCompleted: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        fieldChecklistRows: number;
+        releaseGateChecklistRows: number;
+        swapRunbookRows: number;
+        boundaryAuditRows: number;
+        requiredApprovalLanes: number;
+        requiredSourceIds: number;
+        uriContractRows: number;
+        syntheticPipelineRows: number;
+        realOwnerRecordsAccepted: number;
+        readyToRunBatch12Rows: number;
+        readyToRunBatch11Rows: number;
+        readyToRunBatch9Rows: number;
+        readyToDisplayRows: number;
+        readyToExportRows: number;
+        validationPassed: boolean;
+      };
+    };
+
+    expect(output).not.toMatch(/AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK/i);
+    expect(output).not.toMatch(/password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i);
+    expect(manifest.batchId).toBe('erp-owner-submission-real-owner-checklist-batch18-20260627');
+    expect(manifest.sourceIds).toEqual(['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']);
+    expect(manifest.evidenceGrade).toBe('L2-fixture-or-dry-run');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.blockingReason).toBe('real-owner-submission-required');
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.targetSubmissionDir).toBe('tmp/inputs/erp-owner-approval-submissions-batch12');
+    expect(manifest.syntheticReferenceDir).toBe('tmp/inputs/erp-owner-approval-submissions-batch12-synthetic');
+    expect(manifest.upstreamBatches).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ batchId: 'erp-owner-approval-record-template-batch10-20260626', approvalRecordTemplateRows: 23 }),
+        expect.objectContaining({ batchId: 'erp-owner-submission-acceptance-gate-batch15-20260627', acceptanceResultRows: 23, acceptedOwnerRecords: 0 }),
+        expect.objectContaining({ batchId: 'erp-owner-submission-synthetic-pipeline-batch17-20260627', pipelineStageRows: 5, allChildEvidenceGradesL2: true }),
+      ]),
+    );
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      writesRealBatch12InputDir: false,
+      readsRealBatch12InputDir: false,
+      writesSyntheticInputDir: false,
+      realOwnerRecordsGenerated: 0,
+      realApprovalRecordsApplied: 0,
+      syntheticApprovalRecordsApplied: 0,
+      automaticPromotionApplied: false,
+      exportEnabled: false,
+      displayEnabled: false,
+      manualReleaseReviewCompleted: false,
+    });
+    expect(manifest.outputs['erp_owner_real_submission_field_checklist.csv']).toMatchObject({ rowCount: 23 });
+    expect(manifest.outputs['erp_owner_real_submission_release_gate_checklist.csv']).toMatchObject({ rowCount: 9 });
+    expect(manifest.outputs['erp_owner_real_submission_swap_runbook.csv']).toMatchObject({ rowCount: 7 });
+    expect(manifest.outputs['erp_owner_real_submission_boundary_audit.csv']).toMatchObject({ rowCount: 6 });
+    expect(manifest.outputs['erp_owner_real_submission_field_checklist.csv'].headers).toEqual(
+      expect.arrayContaining(['approval_item_id', 'required_fields', 'required_uri_scheme', 'real_owner_record_status']),
+    );
+    expect(manifest.outputs['erp_owner_real_submission_release_gate_checklist.csv'].headers).toEqual(
+      expect.arrayContaining(['release_gate_id', 'required_owner_records', 'next_batch12_command', 'can_export']),
+    );
+    expect(manifest.outputs['erp_owner_real_submission_swap_runbook.csv'].headers).toEqual(
+      expect.arrayContaining(['step_id', 'runbook_step', 'command_or_action', 'can_write_real_gate']),
+    );
+    expect(manifest.outputs['erp_owner_real_submission_boundary_audit.csv'].headers).toEqual(
+      expect.arrayContaining(['checked_item', 'observed_value', 'boundary_status']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.fieldChecklistRows).toBe(23);
+    expect(manifest.summary.releaseGateChecklistRows).toBe(9);
+    expect(manifest.summary.swapRunbookRows).toBe(7);
+    expect(manifest.summary.boundaryAuditRows).toBe(6);
+    expect(manifest.summary.requiredApprovalLanes).toBe(4);
+    expect(manifest.summary.requiredSourceIds).toBe(5);
+    expect(manifest.summary.uriContractRows).toBe(4);
+    expect(manifest.summary.syntheticPipelineRows).toBe(5);
+    expect(manifest.summary.realOwnerRecordsAccepted).toBe(0);
+    expect(manifest.summary.readyToRunBatch12Rows).toBe(0);
+    expect(manifest.summary.readyToRunBatch11Rows).toBe(0);
+    expect(manifest.summary.readyToRunBatch9Rows).toBe(0);
+    expect(manifest.summary.readyToDisplayRows).toBe(0);
+    expect(manifest.summary.readyToExportRows).toBe(0);
+    expect(manifest.summary.validationPassed).toBe(false);
+  });
+
+  it('derives gated AI/report Batch 4 readiness without model calls or customer content', () => {
+    const output = execFileSync('node', ['scripts/data/build-ai-report-governance-batch4.mjs', '--json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        modelCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        rawReviewTextIncluded: boolean;
+        rawPromptIncluded: boolean;
+        credentialsIncluded: boolean;
+        customerDataIncluded: boolean;
+        reportConclusionsGenerated: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        datasetManifestRows: number;
+        modelRunManifestRows: number;
+        humanReviewGateRows: number;
+        reportQueueRows: number;
+        erpBridgeRows: number;
+        blockedRows: number;
+      };
+    };
+
+    expect(output).not.toMatch(/password|client_secret|cookie|raw_review_text|customer_email|SHOULD_NOT_LEAK/i);
+    expect(manifest.batchId).toBe('ai-report-governance-batch4-20260625');
+    expect(manifest.sourceIds).toEqual(
+      expect.arrayContaining(['ds-021', 'ds-022', 'ds-023', 'ds-024', 'ds-025', 'ds-026', 'ds-029', 'ds-030', 'ds-031', 'ds-035', 'ds-047', 'ds-049', 'ds-050', 'ds-051']),
+    );
+    expect(manifest.evidenceGrade).toBe('L2-fixture-or-dry-run');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      modelCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      rawReviewTextIncluded: false,
+      rawPromptIncluded: false,
+      credentialsIncluded: false,
+      customerDataIncluded: false,
+      reportConclusionsGenerated: false,
+    });
+    expect(manifest.outputs['ai_dataset_manifest.csv'].headers).toEqual(
+      expect.arrayContaining(['dataset_id', 'source_ids', 'required_artifacts', 'can_display_as_fact']),
+    );
+    expect(manifest.outputs['ai_model_run_manifest.csv'].headers).toEqual(
+      expect.arrayContaining(['model_run_id', 'model_name_status', 'prompt_version_status', 'human_review_required']),
+    );
+    expect(manifest.outputs['ai_human_review_gate.csv'].headers).toEqual(
+      expect.arrayContaining(['review_gate_id', 'approval_state', 'can_display_as_fact']),
+    );
+    expect(manifest.outputs['report_generation_queue.csv'].headers).toEqual(
+      expect.arrayContaining(['report_id', 'can_generate', 'can_display_as_fact']),
+    );
+    expect(manifest.outputs['ai_erp_context_bridge.csv'].headers).toEqual(
+      expect.arrayContaining(['bridge_id', 'allowed_use', 'forbidden_use']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.datasetManifestRows).toBe(7);
+    expect(manifest.summary.modelRunManifestRows).toBe(7);
+    expect(manifest.summary.humanReviewGateRows).toBe(5);
+    expect(manifest.summary.reportQueueRows).toBe(5);
+    expect(manifest.summary.erpBridgeRows).toBe(5);
+    expect(manifest.summary.blockedRows).toBe(29);
+  });
+
+  it('derives gated AI review Batch 5 sample and review queues without live connector access', () => {
+    const output = execFileSync('node', ['scripts/data/build-ai-review-governance-batch5.mjs', '--json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        modelCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        reviewBodyIncluded: boolean;
+        promptBodyIncluded: boolean;
+        credentialsIncluded: boolean;
+        customerIdentifiersIncluded: boolean;
+        platformPersonalDataIncluded: boolean;
+        publishEnabled: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        sampleManifestRows: number;
+        evalQueueRows: number;
+        humanReviewRows: number;
+        publishGateRows: number;
+        blockedRows: number;
+      };
+    };
+
+    expect(output).not.toMatch(/password|client_secret|cookie|raw_review_text|customer_email|SHOULD_NOT_LEAK/i);
+    expect(manifest.batchId).toBe('ai-review-governance-batch5-20260625');
+    expect(manifest.sourceIds).toEqual(expect.arrayContaining(['ds-021', 'ds-023', 'ds-030', 'ds-031', 'ds-032', 'ds-033']));
+    expect(manifest.evidenceGrade).toBe('L2-fixture-or-dry-run');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      modelCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      reviewBodyIncluded: false,
+      promptBodyIncluded: false,
+      credentialsIncluded: false,
+      customerIdentifiersIncluded: false,
+      platformPersonalDataIncluded: false,
+      publishEnabled: false,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['ai_review_sample_manifest.csv'].headers).toEqual(
+      expect.arrayContaining(['sample_manifest_id', 'source_ids', 'raw_text_policy', 'can_display_as_fact']),
+    );
+    expect(manifest.outputs['ai_review_eval_queue.csv'].headers).toEqual(
+      expect.arrayContaining(['eval_queue_id', 'metric_contract', 'model_version_status', 'golden_set_status']),
+    );
+    expect(manifest.outputs['ai_review_human_queue.csv'].headers).toEqual(
+      expect.arrayContaining(['review_task_id', 'approval_state', 'can_publish', 'can_display_as_fact']),
+    );
+    expect(manifest.outputs['ai_review_publish_gate.csv'].headers).toEqual(
+      expect.arrayContaining(['publish_gate_id', 'blocked_claim_types', 'can_export', 'can_display_as_fact']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.sampleManifestRows).toBe(6);
+    expect(manifest.summary.evalQueueRows).toBe(6);
+    expect(manifest.summary.humanReviewRows).toBe(6);
+    expect(manifest.summary.publishGateRows).toBe(6);
+    expect(manifest.summary.blockedRows).toBe(24);
+  });
+
+  it('derives gated AI design Batch 6 request, asset, cost, and commercial-review queues without model calls', () => {
+    const output = execFileSync('node', ['scripts/data/build-ai-design-governance-batch6.mjs', '--json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const manifest = JSON.parse(output) as {
+      batchId: string;
+      sourceIds: string[];
+      evidenceGrade: string;
+      privacyLevel: string;
+      canDisplayAsFact: boolean;
+      dryRun: boolean;
+      boundaries: {
+        networkCalls: number;
+        providerCalls: boolean;
+        modelCalls: boolean;
+        productionWrites: boolean;
+        browserLogin: boolean;
+        liveConnectorAccess: boolean;
+        requestIdIncluded: boolean;
+        promptBodyIncluded: boolean;
+        generatedImageBytesIncluded: boolean;
+        credentialsIncluded: boolean;
+        invoiceDetailsIncluded: boolean;
+        costCharged: boolean;
+        commercialUseApproved: boolean;
+        publishEnabled: boolean;
+        exportEnabled: boolean;
+      };
+      outputs: Record<string, { rowCount: number; headers: string[]; sha256: string }>;
+      summary: {
+        designRunRows: number;
+        assetHashRows: number;
+        costQueueRows: number;
+        commercialReviewRows: number;
+        blockedRows: number;
+      };
+    };
+
+    expect(output).not.toMatch(/password|client_secret|cookie|raw_prompt|prompt_body|generated_image_bytes|customer_email|SHOULD_NOT_LEAK/i);
+    expect(manifest.batchId).toBe('ai-design-governance-batch6-20260625');
+    expect(manifest.sourceIds).toEqual(expect.arrayContaining(['ds-024', 'ds-026', 'ds-029', 'ds-047', 'ds-049']));
+    expect(manifest.evidenceGrade).toBe('L2-fixture-or-dry-run');
+    expect(manifest.privacyLevel).toBe('private/internal');
+    expect(manifest.canDisplayAsFact).toBe(false);
+    expect(manifest.dryRun).toBe(true);
+    expect(manifest.boundaries).toMatchObject({
+      networkCalls: 0,
+      providerCalls: false,
+      modelCalls: false,
+      productionWrites: false,
+      browserLogin: false,
+      liveConnectorAccess: false,
+      requestIdIncluded: false,
+      promptBodyIncluded: false,
+      generatedImageBytesIncluded: false,
+      credentialsIncluded: false,
+      invoiceDetailsIncluded: false,
+      costCharged: false,
+      commercialUseApproved: false,
+      publishEnabled: false,
+      exportEnabled: false,
+    });
+    expect(manifest.outputs['ai_design_run_manifest.csv'].headers).toEqual(
+      expect.arrayContaining(['design_run_id', 'request_id_status', 'model_version_status', 'can_display_as_fact']),
+    );
+    expect(manifest.outputs['ai_design_asset_hash_manifest.csv'].headers).toEqual(
+      expect.arrayContaining(['asset_manifest_id', 'asset_hash_status', 'prompt_hash_status', 'storage_policy']),
+    );
+    expect(manifest.outputs['ai_design_cost_queue.csv'].headers).toEqual(
+      expect.arrayContaining(['cost_queue_id', 'provider_invoice_status', 'unit_cost_status', 'cost_charged']),
+    );
+    expect(manifest.outputs['ai_design_commercial_review_gate.csv'].headers).toEqual(
+      expect.arrayContaining(['review_gate_id', 'rights_status', 'can_use_commercially', 'can_publish']),
+    );
+    expect(Object.values(manifest.outputs).every((outputFile) => outputFile.sha256.length === 64)).toBe(true);
+    expect(manifest.summary.designRunRows).toBe(5);
+    expect(manifest.summary.assetHashRows).toBe(5);
+    expect(manifest.summary.costQueueRows).toBe(5);
+    expect(manifest.summary.commercialReviewRows).toBe(5);
+    expect(manifest.summary.blockedRows).toBe(20);
   });
 
   it('prints private ERP readiness templates without credentials or supplier commercial details', () => {

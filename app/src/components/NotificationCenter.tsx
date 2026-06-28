@@ -10,6 +10,7 @@ import {
 
 interface Notification {
   id: number;
+  sourceId?: string;
   title: string;
   desc: string;
   time: string;
@@ -23,12 +24,12 @@ interface Notification {
 }
 
 const initialNotifications: Notification[] = [
-  { id: 1, title: 'W1加热款北美上市倒计时', desc: '距离ABC Kids Expo发布还有18天', time: '2小时前', type: 'urgent', icon: Cpu, impact: '营收影响', impactDesc: '预计Q3贡献$2.1M收入', priority: 'P0', read: false, path: '/competition/new' },
-  { id: 2, title: 'Medela Melody InBra 7月加拿大首发', desc: '超静音差异化竞争预警', time: '5小时前', type: 'warning', icon: Target, impact: '竞争威胁', impactDesc: '可能侵蚀3-5%价格敏感用户', priority: 'P1', read: false, path: '/competition/new' },
-  { id: 3, title: 'Q2竞品价格监测报告待审', desc: '报告中心有1份报告待审批', time: '1天前', type: 'normal', icon: FileText, impact: '决策支持', impactDesc: '支撑Q3定价策略制定', priority: 'P2', read: true, path: '/reports' },
-  { id: 4, title: '日本PSC认证续期提醒', desc: '证书将于2026-08到期', time: '2天前', type: 'warning', icon: Shield, impact: '合规风险', impactDesc: '逾期未续期将暂停日本销售', priority: 'P1', read: false, path: '/industry/regulation' },
+  { id: 1, title: 'W1加热款北美上市节点待复核', desc: '展会和上市日程需官方页面或内部发布计划确认', time: '2小时前', type: 'urgent', icon: Cpu, impact: '待授权评估', impactDesc: '营收影响需ERP/广告/销售快照接入后计算', priority: 'P0', read: false, path: '/competition/new' },
+  { id: 2, title: 'Medela新品竞争线索待采集', desc: '超静音卖点和首发市场需公开页或零售面板交叉验证', time: '5小时前', type: 'warning', icon: Target, impact: '竞争复核', impactDesc: '价格敏感用户影响暂不展示为事实', priority: 'P1', read: false, path: '/competition/new' },
+  { id: 3, sourceId: 'ds-009', title: '竞品价格源接入待办', desc: '报告中心存在待审批条目，价格源仍需接入', time: '1天前', type: 'normal', icon: FileText, impact: '决策待证据', impactDesc: '定价策略需授权价格快照支撑', priority: 'P2', read: true, path: '/reports' },
+  { id: 4, title: '日本PSC认证续期信息待复核', desc: '证书到期日需合规台账或官方证书确认', time: '2天前', type: 'warning', icon: Shield, impact: '合规待确认', impactDesc: '销售影响需SKU适用性和证书状态复核', priority: 'P1', read: false, path: '/industry/regulation' },
   { id: 5, title: 'CPSC规则源需复核', desc: '官网实时声明要求未找到官方依据', time: '3天前', type: 'warning', icon: Shield, impact: '合规风险', impactDesc: '需按CPC/eFiling官方规则重审SKU影响', priority: 'P1', read: false, path: '/industry/regulation' },
-  { id: 6, title: 'M9产品评分升至4.7星', desc: 'Amazon评分连续3周上升', time: '4天前', type: 'success', icon: TrendingUp, impact: '品牌利好', impactDesc: '预计转化率提升2-3pp', priority: 'P3', read: true, path: '/competition' },
+  { id: 6, sourceId: 'ds-009', title: '产品评分源接入待办', desc: 'Amazon评分和评论变化需采集任务复核', time: '4天前', type: 'success', icon: TrendingUp, impact: '待复核线索', impactDesc: '转化率影响需广告/站内分析数据确认', priority: 'P3', read: true, path: '/competition' },
 ];
 
 const typeConfig = {

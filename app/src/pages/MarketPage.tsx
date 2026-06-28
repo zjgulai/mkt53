@@ -3,26 +3,19 @@ import { LayoutDashboard, TrendingUp, ArrowUpRight, ArrowDownRight, Package, Dol
 import { exportToCsv } from '@/utils/csvExport';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
-
-// ── TAM/SAM/SOM Market Sizing Model ──
-const tamSamSom = [
-  { label: 'TAM', sublabel: '全球母婴护理', value: 1267, unit: '$B', color: '#C25B6E', desc: '全球母婴护理产品总市场（2026E）', opportunity: 3, opportunityText: '增速稳健但泛化，建议聚焦细分赛道', focus: '母婴电器细分' },
-  { label: 'SAM', sublabel: '吸奶器市场', value: 38.1, unit: '$B', color: '#ff9500', desc: '全球吸奶器市场2026（CAGR 8.52%）', opportunity: 4, opportunityText: 'CAGR 8.52%高于TAM，结构性增长机会', focus: '电动+穿戴式双主线' },
-  { label: 'SOM', sublabel: '穿戴式核心', value: 6.69, unit: '$B', color: '#34c759', desc: '穿戴式吸奶器2026（CAGR 8.56%）', opportunity: 5, opportunityText: '增速最快+Momcozy已有领先优势', focus: 'M9/W1/Air1三驾马车' },
-];
-
-const marketTrendData = [
-  { year: '2021', tam: 892, sam: 28.4, som: 4.2 },
-  { year: '2022', tam: 948, sam: 30.1, som: 4.6 },
-  { year: '2023', tam: 1015, sam: 32.5, som: 5.1 },
-  { year: '2024', tam: 1092, sam: 35.2, som: 5.8 },
-  { year: '2025', tam: 1178, sam: 38.1, som: 6.2 },
-  { year: '2026E', tam: 1255, sam: 41.3, som: 6.69 },
-  { year: '2027E', tam: 1338, sam: 44.8, som: 7.26 },
-  { year: '2028E', tam: 1428, sam: 48.7, som: 7.92 },
-  { year: '2029E', tam: 1525, sam: 52.9, som: 8.64 },
-  { year: '2030E', tam: 1628, sam: 57.5, som: 9.42 },
-];
+import {
+  brandShareAccessItems,
+  erpInternalMonthlyTrendData,
+  erpInternalTrendNotes,
+  erpInternalTrendSourceIds,
+  marketDenominatorBoundary,
+  marketEvidenceSourceIds,
+  marketMonthlyTrendData,
+  marketRegionalShareData,
+  marketSizeTrendData,
+  marketSizingFunnel,
+  marketTopStats,
+} from '@/data/market-insight-data';
 
 const categoryOverview = [
   { name: '电动吸奶器', value: 38, momcozyShare: 32, growth: 15.3, color: '#C25B6E', market: '$1.33B', sub: '含穿戴式/双边' },
@@ -44,21 +37,7 @@ const categoryPositioning = [
   { category: '储奶袋', position: '配件机会', action: '高复购低客单，套装捆绑提升LTV', priority: 'P2' },
 ];
 
-const regionShareData = [
-  { region: '北美', share: 45.05, growth: 8.76, revenue: '$1.72B', color: '#5856d6', key: '美国$1.3B·Fortune BI 2025' },
-  { region: '欧洲', share: 28.52, growth: 7.20, revenue: '$1.09B', color: '#34c759', key: '德国$0.16B·英国$0.11B' },
-  { region: '亚太', share: 20.41, growth: 10.50, revenue: '$0.78B', color: '#C25B6E', key: '中国$0.13B·日本$0.11B' },
-  { region: '拉美', share: 4.02, growth: 8.50, revenue: '$0.15B', color: '#ff9500', key: '巴西·中产崛起' },
-  { region: '中东非', share: 2.00, growth: 9.20, revenue: '$0.08B', color: '#af52de', key: 'UAE/沙特·高消费' },
-];
-
-const brandTrendData = [
-  { year: '2022', Momcozy: 12, Medela: 35, Philips: 18, Willow: 10, Spectra: 14, Others: 11 },
-  { year: '2023', Momcozy: 14, Medela: 33, Philips: 17, Willow: 10, Spectra: 14, Others: 12 },
-  { year: '2024', Momcozy: 17, Medela: 31, Philips: 16, Willow: 11, Spectra: 13, Others: 12 },
-  { year: '2025', Momcozy: 20, Medela: 28, Philips: 15, Willow: 12, Spectra: 13, Others: 12 },
-  { year: '2026E', Momcozy: 23, Medela: 26, Philips: 14, Willow: 13, Spectra: 12, Others: 12 },
-];
+const statIcons = { DollarSign, Globe, Package, TrendingUp };
 
 const sidebarItems = [
   {
@@ -92,22 +71,46 @@ export default function MarketPage() {
                   </div>
                   <div>
                     <h1 className="text-lg font-semibold text-[#1d1d1f]">市场总览</h1>
-                    <p className="text-xs text-[#86868b]">全球母婴喂养电器市场 · TAM/SAM/SOM分析框架</p>
+                    <p className="text-xs text-[#86868b]">全球母婴喂养电器市场 · 市场层级与份额分母口径</p>
                   </div>
                 </div>
-                <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">数据状态：</span>半月复核 · 人工凭证待补</span>
+                <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg"><span className="text-[#B5AFA8]">数据状态：</span>公开TAM复核 · ERP内部代理Batch19已放行</span>
               </div>
             </div>
 
             <PageEvidenceNotice
-              sourceIds={['ds-001', 'ds-002']}
+              sourceIds={marketEvidenceSourceIds}
               title="市场总览来源口径"
-              description="TAM/SAM/SOM 使用 Precedence Research 口径；区域份额来自 Fortune BI，服务器自动化可能返回 403，需保留人工访问或采购报告凭证。"
+              description="全球婴童用品为上层TAM；全球吸奶器为品类TAM，可作为品牌份额主分母；穿戴式吸奶器为细分TAM，可作为细分份额分母。SAM/SOM需额外叠加地域、渠道、SKU、合规可服务范围和Momcozy可获份额假设；月度趋势为Wikimedia公开兴趣代理，不代表GMV或销量。"
             />
 
-            {/* TAM/SAM/SOM Cards — flex layout + min-w-0 */}
+            <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
+              <div className="flex items-center justify-between gap-4 flex-wrap mb-4">
+                <div>
+                  <h2 className="text-sm font-semibold text-[#1d1d1f]">TAM / SAM / SOM 口径复核</h2>
+                  <p className="text-[10px] text-[#86868b] mt-1">已将原图表中的 SAM/SOM 字段改为三层 TAM；SAM/SOM 需要另建可服务范围和可获份额模型。</p>
+                </div>
+                <span className="rounded-lg bg-[#FBF8F5] px-3 py-1.5 text-[10px] font-medium text-[#86868b]">source ids: ds-001 / ds-044 / ds-045 / ds-047 / ds-049 / ds-050 / ds-051</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                {marketDenominatorBoundary.map((item) => (
+                  <div key={item.label} className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <p className="text-xs font-semibold text-[#1d1d1f]">{item.label}</p>
+                      <span className={`rounded-full px-2 py-0.5 text-[9px] font-medium ${item.canDisplayAsFact ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+                        {item.canDisplayAsFact ? 'TAM事实' : '阻断'}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-[#86868b] mb-1">{item.scope}</p>
+                    <p className="text-[10px] leading-relaxed text-[#1d1d1f]">{item.denominatorUse}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Market denominator cards — flex layout + min-w-0 */}
             <div className="flex gap-3">
-              {tamSamSom.map((t, i) => (
+              {marketSizingFunnel.map((t, i) => (
                 <div key={i} className="flex-1 min-w-0 min-w-0 rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF] relative overflow-hidden" style={{ backgroundColor: `${t.color}08` }}>
                   <div className="absolute top-0 left-0 w-1 h-full" style={{ backgroundColor: t.color }} />
                   <div className="flex items-baseline gap-2 mb-1">
@@ -139,9 +142,9 @@ export default function MarketPage() {
             {/* Market Sizing Trend — LineChart (not stacked AreaChart) */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-sm font-semibold text-[#1d1d1f]">市场规模预测 · TAM/SAM/SOM趋势（2021-2030E）</h3>
+                <h3 className="text-sm font-semibold text-[#1d1d1f]">市场规模预测 · 三层TAM份额分母趋势（2025-2030E）</h3>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => exportToCsv(marketTrendData, { year: '年份', tam: 'TAM($B)', sam: 'SAM($B)', som: 'SOM($B)' }, '市场规模趋势_2021-2030E')} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FBF8F5] text-[10px] text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all">
+                  <button onClick={() => exportToCsv(marketSizeTrendData, { year: '年份', upperTam: '上层TAM($B)', categoryTam: '吸奶器品类TAM($B)', wearableTam: '穿戴式细分TAM($B)', type: '类型' }, '市场规模趋势_2025-2030E')} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FBF8F5] text-[10px] text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all">
                     <Download className="w-3 h-3" />导出
                   </button>
                   <span className="text-[10px] text-[#86868B] bg-[#FBF8F5] px-2 py-1 rounded-lg">单位：$B</span>
@@ -149,43 +152,102 @@ export default function MarketPage() {
               </div>
               <div className="h-56">
                 <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
-                  <LineChart data={marketTrendData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                  <LineChart data={marketSizeTrendData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
                     <XAxis dataKey="year" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
                     <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: '11px' }} />
                     <Legend iconType="circle" wrapperStyle={{ fontSize: '10px' }} />
-                    <Line type="monotone" dataKey="tam" name="TAM 全球母婴" stroke="#C25B6E" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
-                    <Line type="monotone" dataKey="sam" name="SAM 喂养电器" stroke="#ff9500" strokeWidth={2} dot={{ r: 3 }} />
-                    <Line type="monotone" dataKey="som" name="SOM 吸奶器" stroke="#34c759" strokeWidth={2} dot={{ r: 3 }} />
+                    <Line type="monotone" dataKey="upperTam" name="上层TAM 全球婴童用品" stroke="#C25B6E" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+                    <Line type="monotone" dataKey="categoryTam" name="品类TAM 全球吸奶器" stroke="#ff9500" strokeWidth={2} dot={{ r: 3 }} />
+                    <Line type="monotone" dataKey="wearableTam" name="细分TAM 穿戴式吸奶器" stroke="#34c759" strokeWidth={2} dot={{ r: 3 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
               {/* Key findings */}
               <div className="mt-4 p-4 rounded-xl bg-[#C25B6E]/5 border border-[#C25B6E]/10">
-                <p className="text-[10px] text-[#C25B6E] font-semibold mb-1.5">关键发现 · 三层漏斗持续扩大</p>
+                <p className="text-[10px] text-[#C25B6E] font-semibold mb-1.5">关键发现 · 三层份额分母持续扩大</p>
                 <div className="space-y-1.5">
                   <div className="flex items-start gap-2">
                     <span className="w-1 h-1 rounded-full bg-[#C25B6E] mt-1.5 flex-shrink-0" />
-                    <p className="text-xs text-[#1d1d1f]">SOM增速(8.56%) {'>'} SAM(8.52%) {'>'} TAM隐含增速，说明穿戴式正在结构性替代传统台式</p>
+                    <p className="text-xs text-[#1d1d1f]">穿戴式细分TAM增速(15.08%) {'>'} 吸奶器品类TAM(8.52%) {'>'} 婴童用品上层TAM(6.4%)，说明穿戴式是吸奶器赛道内的高弹性细分。</p>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="w-1 h-1 rounded-full bg-[#ff9500] mt-1.5 flex-shrink-0" />
-                    <p className="text-xs text-[#1d1d1f]">2030年SOM预计达$9.42B，当前窗口期（2026-2028）是品牌卡位的关键3年</p>
+                    <p className="text-xs text-[#1d1d1f]">2030E穿戴式吸奶器公开报告外推约$409M；品牌份额和真实GMV月趋势仍需Amazon/零售面板或内部ERP快照。</p>
                   </div>
                 </div>
               </div>
             </div>
 
+            {/* Monthly Public Trend */}
+            <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h3 className="text-sm font-semibold text-[#1d1d1f]">月度趋势 · 公开兴趣代理（2025-06 至 2026-06）</h3>
+                  <p className="text-[10px] text-[#86868b] mt-1">Wikimedia en.wikipedia Breast_pump 月浏览量指数化；非GMV、非销量、非Amazon数据。</p>
+                </div>
+                <button onClick={() => exportToCsv(marketMonthlyTrendData, { month: '月份', interestIndex: '公开兴趣指数', pageviews: '页面浏览量', note: '备注' }, '公开月度趋势_Breast_pump_Pageviews_2025-06_2026-06')} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FBF8F5] text-[10px] text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all">
+                  <Download className="w-3 h-3" />导出
+                </button>
+              </div>
+              <div className="h-52">
+                <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
+                  <LineChart data={marketMonthlyTrendData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
+                    <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} domain={[0, 110]} />
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: '11px' }} />
+                    <Line type="monotone" dataKey="interestIndex" name="公开兴趣指数" stroke="#5856d6" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <PageEvidenceNotice
+              sourceIds={erpInternalTrendSourceIds}
+              title="ERP内部月度趋势代理"
+              description="电商、售后、零售与渠道三条ERP来源已完成本地只读取证，并经Batch19 manual release review放行页面展示与CSV导出；当前仅作为private/internal销量代理，不代表GMV、销售额、市场份额、TAM、SAM或SOM。"
+            />
+
+            {/* Internal ERP Proxy Trend */}
+            <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
+              <div className="flex flex-col gap-3 mb-5 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <h3 className="text-sm font-semibold text-[#1d1d1f]">ERP内部月度趋势代理 · Batch19已放行</h3>
+                  <p className="text-[10px] text-[#86868b] mt-1">2026-01 至 2026-06-24 · 电商销售统计 + 售后销量统计 + 零售与渠道可见月度销量列 · 本地展示/CSV已放行，生产部署未执行</p>
+                </div>
+                <button onClick={() => exportToCsv(erpInternalMonthlyTrendData, { month: '月份', ecommerce: '电商销售统计', afterSales: '售后销量统计', retailChannel: '零售与渠道', totalProxy: '三源合计代理', pumpKeywordProxy: '吸奶器关键词代理', note: '备注' }, 'ERP内部月度趋势代理_Batch19_2026-01_2026-06-24')} className="flex items-center gap-1 self-start px-2.5 py-1 rounded-lg bg-[#FBF8F5] text-[10px] text-[#86868b] hover:bg-[#C25B6E]/10 hover:text-[#C25B6E] transition-all">
+                  <Download className="w-3 h-3" />导出
+                </button>
+              </div>
+              <div className="h-56">
+                <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
+                  <LineChart data={erpInternalMonthlyTrendData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
+                    <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: '11px' }} />
+                    <Legend iconType="circle" wrapperStyle={{ fontSize: '10px' }} />
+                    <Line type="monotone" dataKey="totalProxy" name="三源合计代理" stroke="#C25B6E" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+                    <Line type="monotone" dataKey="pumpKeywordProxy" name="吸奶器关键词代理" stroke="#5856d6" strokeWidth={2} dot={{ r: 3 }} />
+                    <Line type="monotone" dataKey="retailChannel" name="零售与渠道" stroke="#34c759" strokeWidth={2} dot={{ r: 3 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="mt-4 grid grid-cols-1 gap-2 md:grid-cols-2">
+                {erpInternalTrendNotes.map((note) => (
+                  <div key={note} className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                    <p className="text-xs leading-relaxed text-[#1d1d1f]">{note}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Top Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { label: '全球吸奶器市场', value: '$3.51B', change: '+8.52% CAGR', up: true, icon: DollarSign, color: '#C25B6E' },
-                { label: 'Momcozy市场份额', value: '20%', change: '+3pp YoY', up: true, icon: TrendingUp, color: '#34c759' },
-                { label: '穿戴式细分市场', value: '53.4%', change: '北美占比', up: true, icon: Package, color: '#ff9500' },
-                { label: '覆盖国家/地区', value: '120+', change: '6大洲', up: true, icon: Globe, color: '#5856d6' },
-              ].map((stat, i) => {
-                const IconComp = stat.icon;
+              {marketTopStats.map((stat, i) => {
+                const IconComp = statIcons[stat.icon as keyof typeof statIcons];
                 return (
                   <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">
                     <div className="flex items-center gap-2 mb-2">
@@ -207,7 +269,7 @@ export default function MarketPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Category Breakdown */}
               <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-                <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">品类细分（$3.51B 吸奶器及相关市场）</h3>
+                <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">品类细分（待接入授权类目份额）</h3>
                 <div className="space-y-3">
                   {categoryOverview.map((cat, i) => (
                     <div key={i} className="flex items-center gap-3">
@@ -254,36 +316,31 @@ export default function MarketPage() {
               </div>
             </div>
 
-            {/* Brand Share Trend */}
+            {/* Brand Share Access Gate */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-              <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">品牌份额趋势（2022-2026E）</h3>
-              <div className="h-56">
-                <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
-                  <LineChart data={brandTrendData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" />
-                    <XAxis dataKey="year" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 10, fill: '#86868b' }} axisLine={false} tickLine={false} unit="%" />
-                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: '11px' }} />
-                    <Legend iconType="circle" wrapperStyle={{ fontSize: '10px' }} />
-                    <Line type="monotone" dataKey="Momcozy" stroke="#C25B6E" strokeWidth={3} dot={{ r: 3 }} />
-                    <Line type="monotone" dataKey="Medela" stroke="#34c759" strokeWidth={2} dot={{ r: 3 }} />
-                    <Line type="monotone" dataKey="Philips" stroke="#5856d6" strokeWidth={2} dot={{ r: 3 }} />
-                    <Line type="monotone" dataKey="Willow" stroke="#af52de" strokeWidth={2} dot={{ r: 3 }} />
-                    <Line type="monotone" dataKey="Spectra" stroke="#ff9500" strokeWidth={2} dot={{ r: 3 }} />
-                  </LineChart>
-                </ResponsiveContainer>
+              <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">品牌份额趋势 · 待授权接入</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {brandShareAccessItems.map((item) => (
+                  <div key={item.label} className="p-4 rounded-xl bg-[#FBF8F5] border border-[#EDE6DF]">
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <p className="text-xs font-semibold text-[#1d1d1f]">{item.label}</p>
+                      <span className="text-[10px] text-[#ff9500] bg-[#ff9500]/10 px-2 py-0.5 rounded-full">{item.status}</span>
+                    </div>
+                    <p className="text-xs text-[#86868b] leading-relaxed">{item.note}</p>
+                  </div>
+                ))}
               </div>
               <div className="mt-4 p-3 rounded-xl bg-[#ff9500]/5 border border-[#ff9500]/10">
-                <p className="text-[10px] text-[#ff9500] font-semibold mb-1">竞争态势判断</p>
-                <p className="text-xs text-[#1d1d1f]">Momcozy份额从12%→23%（2022-2026E），Medela从35%→26%持续流失。Momcozy已超越Philips成为第二，预计2027年有望挑战第一。关键窗口期：趁Medela Melody上市前（2026.07）加速北美DTC渗透。</p>
+                <p className="text-[10px] text-[#ff9500] font-semibold mb-1">边界说明</p>
+                <p className="text-xs text-[#1d1d1f]">当前公开行业报告可支撑区域份额和品类市场规模；品牌份额、Momcozy份额和月度GMV趋势需要授权渠道数据或零售面板，页面不再使用旧示例折线替代真实数据。</p>
               </div>
             </div>
 
             {/* Regional Breakdown */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
               <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">区域市场份额 · 吸奶器全球市场</h3>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                {regionShareData.map((r, i) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {marketRegionalShareData.map((r, i) => (
                   <div key={i} className="p-4 rounded-xl bg-[#FBF8F5]">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: r.color }} />
@@ -291,7 +348,7 @@ export default function MarketPage() {
                     </div>
                     <p className="text-2xl font-bold" style={{ color: r.color }}>{r.share}<span className="text-sm">%</span></p>
                     <p className="text-xs text-[#86868b]">{r.revenue}</p>
-                    <p className="text-xs text-[#34c759] font-medium">CAGR {r.growth}%</p>
+                    <p className="text-xs text-[#34c759] font-medium">{r.status}</p>
                     <p className="text-[10px] text-[#86868b] mt-1">{r.key}</p>
                   </div>
                 ))}
@@ -303,16 +360,16 @@ export default function MarketPage() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div className="p-3 rounded-lg bg-white/60">
-                    <p className="text-xs text-[#ff3b30] font-bold">P0 · 北美 $1.72B</p>
-                    <p className="text-xs text-[#1d1d1f] mt-1">最大市场+最高增速(8.76%)。建议：加大Target/Walmart线下，推出本土化M5 USA版</p>
+                    <p className="text-xs text-[#ff3b30] font-bold">P0 · 北美 $0.96B</p>
+                    <p className="text-xs text-[#1d1d1f] mt-1">公开报告确认北美为最大区域市场；需要叠加渠道授权数据后再判断品牌份额。</p>
                   </div>
                   <div className="p-3 rounded-lg bg-white/60">
-                    <p className="text-xs text-[#ff9500] font-bold">P1 · 亚太 $0.78B</p>
-                    <p className="text-xs text-[#1d1d1f] mt-1">增速最快(10.50%)。建议：TikTok Shop东南亚首发，日本PSC认证续期</p>
+                    <p className="text-xs text-[#ff9500] font-bold">P1 · 非北美 $1.18B</p>
+                    <p className="text-xs text-[#1d1d1f] mt-1">欧洲、亚太、拉美和MEA目前只保留合计派生值；细分拆分需完整报告或零售面板。</p>
                   </div>
                   <div className="p-3 rounded-lg bg-white/60">
-                    <p className="text-xs text-[#34c759] font-bold">P2 · 欧洲 $1.09B</p>
-                    <p className="text-xs text-[#1d1d1f] mt-1">增速平稳(7.20%)。建议：MDR合规先行，Boots渠道准入突破</p>
+                    <p className="text-xs text-[#34c759] font-bold">P2 · 月度趋势</p>
+                    <p className="text-xs text-[#1d1d1f] mt-1">公开月度趋势已接入兴趣代理；业务月趋势仍需Amazon、ERP或广告平台快照。</p>
                   </div>
                 </div>
               </div>
@@ -323,9 +380,9 @@ export default function MarketPage() {
               <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">市场关键洞察</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                  { title: '增长驱动力', color: '#34c759', items: ['职业母亲比例持续上升（全球67%增长）', 'CDC/WHO/ABM母乳喂养推广运动', '智能穿戴式吸奶器CAGR增长最快', 'Favorable保险报销政策（尤其北美）'] },
-                  { title: '技术趋势', color: '#5856d6', items: ['APP互联+实时奶量追踪成标配', '电池驱动便携式设计 dominate', '噪音<40dB成为核心差异化指标', 'UV-C消毒技术从医院级下沉到家用'] },
-                  { title: '竞争信号', color: '#C25B6E', items: ['Momcozy份额从12%→20%（2022-2025）', 'Medela 2025年推出Motion InBra反击', 'Ameda GLO获2025 Baby Innovation Award', 'IP诉讼加剧（Elvie vs Momcozy等）'] },
+                  { title: '规模口径', color: '#34c759', items: ['全球吸奶器2026E为$3.81B（Precedence Research），当前按品类TAM展示', 'Fortune BI与GVR对吸奶器总盘给出较低口径，需保留机构差异', '全球婴童用品$375.8B（GVR 2026E）仅作为上层TAM，不作吸奶器份额分母', 'SAM/SOM待服务范围和可获份额假设补齐后再启用'] },
+                  { title: '趋势口径', color: '#5856d6', items: ['穿戴式吸奶器2026E为$233M（Fortune BI）', '穿戴式CAGR 15.08%，高于整体吸奶器CAGR 8.52%', '公开月趋势来自Wikimedia Pageviews指数', '2026-06为非完整月，不做环比结论'] },
+                  { title: '待授权项', color: '#C25B6E', items: ['Momcozy品牌份额需Amazon Brand Analytics或零售面板', '月度GMV/销量趋势需Amazon、ERP或广告平台快照', '欧洲/亚太/拉美细分份额需完整报告拆分', '公开兴趣数据不能替代交易数据'] },
                 ].map((s, i) => (
                   <div key={i} className="p-4 rounded-xl bg-[#FBF8F5]">
                     <div className="flex items-center gap-2 mb-3">

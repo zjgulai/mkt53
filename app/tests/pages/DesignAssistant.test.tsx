@@ -1,50 +1,34 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import DesignAssistant from '@/pages/ai-assistant/DesignAssistant';
 
-const mockNavigate = vi.hoisted(() => vi.fn());
-
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
-});
+function renderDesignAssistant() {
+  render(
+    <MemoryRouter>
+      <DesignAssistant />
+    </MemoryRouter>
+  );
+}
 
 describe('DesignAssistant', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    mockNavigate.mockReset();
-  });
-
   afterEach(() => {
-    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
-  it('keeps demo generation disabled until a prompt is entered', () => {
-    render(<DesignAssistant />);
+  it('shows the evidence gate instead of the local demo generator', () => {
+    renderDesignAssistant();
 
-    expect(screen.getByRole('button', { name: /演示生成/ })).toBeDisabled();
+    expect(screen.getByRole('heading', { name: '产品设计助手' })).toBeInTheDocument();
+    expect(screen.getByText('设计助手代理与审核边界')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /演示生成/ })).not.toBeInTheDocument();
   });
 
-  it('generates a local demo image without making browser API calls', async () => {
+  it('does not make browser provider calls while rendering the gate', () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
-    render(<DesignAssistant />);
+    renderDesignAssistant();
 
-    fireEvent.change(screen.getByPlaceholderText(/请详细描述产品外观/), {
-      target: { value: 'Momcozy M5 wearable breast pump soft pink studio photo' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /演示生成/ }));
-
-    expect(screen.getByRole('button', { name: /生成中/ })).toBeDisabled();
-
-    await act(async () => {
-      vi.advanceTimersByTime(1200);
-    });
-
-    expect(screen.getByAltText('Generated')).toHaveAttribute('src', '/images/ai-gallery/m5-pink.jpg');
+    expect(screen.getAllByText(/服务端代理/).length).toBeGreaterThan(0);
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 });

@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Label } from 'recharts';
 import { Star, Zap, TrendingUp, BarChart3, Users, Shield, FileText, Cpu, Globe, Award, Bell, ChevronRight, Target, ShoppingBag, MessageSquare, Lightbulb, BookOpen, MapPin, ExternalLink, CheckCircle } from 'lucide-react';
 import { getSourceRegistryItem } from '@/data/source-registry';
+import {
+  brandShareAccessItems,
+  marketCagrLines,
+  marketQuickInsights,
+  marketSizeTrendData,
+} from '@/data/market-insight-data';
 import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -10,46 +16,13 @@ import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 // 核心定位：工作台入口 · 功能导航 · 数据概览 · 情报推送
 // ═══════════════════════════════════════════════════════════════════
 
-// R1: 行业最佳实践 — 年度TAM/SAM/SOM趋势数据（2021-2030E）
-// 数据来源: Precedence Research 2026-04 / Grand View Research 2025 / Fortune BI 2025
-// 实线=历史(2021-2025) 虚线=预测(2026-2030E)
-const marketTrendData = [
-  { year: '2021', tam: 892, sam: 28.4, som: 4.2, type: '历史' },
-  { year: '2022', tam: 948, sam: 30.1, som: 4.6, type: '历史' },
-  { year: '2023', tam: 1015, sam: 32.5, som: 5.1, type: '历史' },
-  { year: '2024', tam: 1092, sam: 35.2, som: 5.8, type: '历史' },
-  { year: '2025', tam: 1178, sam: 38.1, som: 6.2, type: '历史' },
-  { year: '2026', tam: 1255, sam: 41.3, som: 6.69, type: '预测' },
-  { year: '2027', tam: 1338, sam: 44.8, som: 7.26, type: '预测' },
-  { year: '2028', tam: 1428, sam: 48.7, som: 7.92, type: '预测' },
-  { year: '2029', tam: 1525, sam: 52.9, som: 8.64, type: '预测' },
-  { year: '2030', tam: 1628, sam: 57.5, som: 9.42, type: '预测' },
-];
-
-// R5: CAGR参考线数据点
-const cagrLines = [
-  { label: 'TAM CAGR 6.2%', color: '#C25B6E' },
-  { label: 'SAM CAGR 8.52%', color: '#ff9500' },
-  { label: 'SOM CAGR 8.56%', color: '#34c759' },
-];
-
-// 竞品份额动态
-const shareData = [
-  { brand: 'Momcozy', share: 19.3, change: '+2.1', color: '#C25B6E' },
-  { brand: 'Medela', share: 15.2, change: '-0.8', color: '#86868b' },
-  { brand: 'Willow', share: 12.8, change: '+0.5', color: '#ff9500' },
-  { brand: 'Elvie', share: 11.5, change: '-1.2', color: '#af52de' },
-  { brand: 'Spectra', share: 9.4, change: '-0.3', color: '#34c759' },
-  { brand: '其他', share: 31.8, change: '-0.3', color: '#d1d1d6' },
-];
-
 // 热门板块（8个核心工作台入口）
 const hotModules = [
-  { icon: BarChart3, title: '市场数据看板', desc: 'TAM/SAM/SOM · PEST · 波特五力', color: '#C25B6E', link: '/market/trend', badge: null },
+  { icon: BarChart3, title: '市场数据看板', desc: '市场层级 · PEST · 波特五力', color: '#C25B6E', link: '/market/trend', badge: null },
   { icon: Target, title: '竞品库', desc: '8品牌25款 · Amazon连接器待接入', color: '#ff9500', link: '/competition', badge: '8品牌' },
   { icon: Cpu, title: '新品监测', desc: '2026新品追踪 · 威胁评估', color: '#34c759', link: '/competition/new', badge: '15款' },
   { icon: Users, title: '用户画像', desc: '6类画像 · 8大人群聚类', color: '#af52de', link: '/users/regional', badge: null },
-  { icon: Shield, title: '政策法规', desc: '7国政策 · 合规追踪', color: '#5856d6', link: '/industry', badge: '7国' },
+  { icon: Shield, title: '政策法规', desc: '多国政策 · 合规追踪', color: '#5856d6', link: '/industry', badge: '复核' },
   { icon: FileText, title: '报告中心', desc: '16份报告 · 4大分类', color: '#ff3b30', link: '/reports', badge: 'NEW' },
   { icon: Lightbulb, title: '看自己', desc: '营销4P · BCG矩阵', color: '#C25B6E', link: '/self', badge: null },
   { icon: MessageSquare, title: 'AI助手', desc: '评论分析 · 设计助手', color: '#34c759', link: '/ai-assistant', badge: null },
@@ -58,12 +31,12 @@ const hotModules = [
 // 本期报告
 const reportTabs = ['全部', '区域宏观', '竞品情报', '新品监测', '拆机报告'];
 const latestReports = [
-  { id: 'r001', title: '2026年Q1全球母婴市场宏观洞察报告', category: '区域宏观', date: '2026-05-23', status: '本期', pages: 68 },
-  { id: 'r009', title: '2026年Q1全球吸奶器市场竞争格局报告', category: '竞品情报', date: '2026-04-12', status: '热门', pages: 78 },
-  { id: 'r005', title: '2026年Q1母婴行业新品上市监测报告', category: '新品监测', date: '2026-04-20', status: '本期', pages: 45 },
-  { id: 'r010', title: 'Momcozy vs Medela vs Willow 品牌竞争力深度对比', category: '竞品情报', date: '2026-05-23', status: '热门', pages: 92 },
-  { id: 'r002', title: '北美母婴护理市场深度分析（2025-2026年度）', category: '区域宏观', date: '2026-03-22', status: '已读', pages: 86 },
-  { id: 'r013', title: 'Momcozy W1 加热款拆解与BOM成本分析', category: '拆机报告', date: '2026-05-23', status: '本期', pages: 52 },
+  { id: 'r001', sourceId: 'ds-024', title: '2026年Q1全球母婴市场宏观洞察报告', category: '区域宏观', date: '2026-05-23', status: '本期', pages: 68 },
+  { id: 'r009', sourceId: 'ds-024', title: '2026年Q1全球吸奶器市场竞争格局报告', category: '竞品情报', date: '2026-04-12', status: '热门', pages: 78 },
+  { id: 'r005', sourceId: 'ds-024', title: '2026年Q1母婴行业新品上市监测报告', category: '新品监测', date: '2026-04-20', status: '本期', pages: 45 },
+  { id: 'r010', sourceId: 'ds-024', title: 'Momcozy vs Medela vs Willow 品牌竞争力深度对比', category: '竞品情报', date: '2026-05-23', status: '热门', pages: 92 },
+  { id: 'r002', sourceId: 'ds-024', title: '北美母婴护理市场深度分析（2025-2026年度）', category: '区域宏观', date: '2026-03-22', status: '已读', pages: 86 },
+  { id: 'r013', sourceId: 'ds-024', title: '产品拆解与BOM成本分析目录条目', category: '拆机报告', date: '2026-05-23', status: '本期', pages: 52 },
 ];
 
 const cpscEfilingSource = getSourceRegistryItem('policy-cpsc-efiling');
@@ -133,27 +106,25 @@ type PolicyTimelineItem = (typeof policyTimeline)[number];
 
 // 待办通知 — R2: 添加业务影响评估和优先级标签
 const notifications = [
-  { id: 1, title: 'W1加热款北美上市倒计时', desc: '距离ABC Kids Expo发布还有18天', time: '2小时前', type: 'urgent', icon: Cpu, impact: '营收影响', impactDesc: '预计Q3贡献$2.1M收入', priority: 'P0' },
-  { id: 2, title: 'Medela Melody InBra 7月加拿大首发', desc: '超静音差异化竞争预警', time: '5小时前', type: 'warning', icon: Target, impact: '竞争威胁', impactDesc: '可能侵蚀3-5%价格敏感用户', priority: 'P1' },
-  { id: 3, title: 'Q2竞品价格监测报告待审', desc: '报告中心有1份报告待审批', time: '1天前', type: 'normal', icon: FileText, impact: '决策支持', impactDesc: '支撑Q3定价策略制定', priority: 'P2' },
-  { id: 4, title: '日本PSC认证续期提醒', desc: '证书将于2026-08到期', time: '2天前', type: 'warning', icon: Shield, impact: '合规风险', impactDesc: '逾期未续期将暂停日本销售', priority: 'P1' },
+  { id: 1, sourceId: 'ds-009', title: 'W1加热款上市节点待复核', desc: '展会和上市日程需官方页面或内部发布计划确认', time: '2小时前', type: 'urgent', icon: Cpu, impact: '待授权评估', impactDesc: '营收影响需ERP/广告/销售快照接入后计算', priority: 'P0' },
+  { id: 2, sourceId: 'ds-007', title: 'Medela新品竞争线索待采集', desc: '卖点、首发市场和价格需公开页或零售面板交叉验证', time: '5小时前', type: 'warning', icon: Target, impact: '竞争复核', impactDesc: '用户影响暂不展示为事实', priority: 'P1' },
+  { id: 3, sourceId: 'ds-009', title: '竞品价格源接入待办', desc: '报告中心存在待审批条目，价格源仍需接入', time: '1天前', type: 'normal', icon: FileText, impact: '决策待证据', impactDesc: '定价策略需授权价格快照支撑', priority: 'P2' },
+  { id: 4, sourceId: 'policy-cpsc-efiling', title: 'CPSC规则源需复核', desc: 'CPC/eFiling字段和SKU适用性需按官方页面重审', time: '2天前', type: 'warning', icon: Shield, impact: '合规待确认', impactDesc: '销售影响需SKU适用性和证书状态复核', priority: 'P1' },
 ];
 
 // 本期关键洞察 — 驱动行动的顶层结论
 // 模板: [数据发现] + [业务含义] + [建议行动]
 const periodInsights = [
-  { icon: TrendingUp, title: '穿戴式增速领先', value: '+18.2%', desc: '穿戴式细分增速超行业均值2.1x，建议Q3加大M9/W1产能投入', color: '#C25B6E', action: '查看产品规划' },
-  { icon: Target, title: 'Medela份额下滑', value: '-0.8pp', desc: 'Medela连续2季份额流失，窗口期建议加速北美渠道扩张', color: '#ff9500', action: '查看竞争策略' },
-  { icon: Shield, title: 'CPSC规则复核', value: '7月8日', desc: 'CPC/eFiling要求需法务复核；未确认官网实时声明强制要求', color: '#ff3b30', action: '查看合规要求' },
+  { icon: TrendingUp, title: '穿戴式增速领先', value: '+15.08%', desc: 'Fortune BI 2026E穿戴式吸奶器$233M，增速高于整体吸奶器市场 · ds-045', color: '#C25B6E', action: '查看市场总览' },
+  { icon: Target, title: '北美份额最大', value: '45.05%', desc: 'Fortune BI 2025确认北美为最大公开区域市场，品牌份额仍需授权数据 · ds-002', color: '#ff9500', action: '查看区域份额' },
+  { icon: Shield, title: '月度趋势边界', value: '代理', desc: '当前接入Wikimedia公开兴趣指数；GMV/销量月趋势需Amazon或ERP快照 · ds-046', color: '#ff3b30', action: '查看数据口径' },
 ];
 
-// 快捷数据洞察
-// 数据来源: Precedence Research 2026-04 / Fortune BI 2025 / Momcozy内部CRM 2026 Q1
-const quickInsights = [
-  { label: '全球吸奶器市场', value: '$38.1B', change: '+8.52% CAGR', trend: 'up', meaning: 'Precedence Research 2026-04 · SAM口径' },
-  { label: '北美市场份额', value: '45.05%', change: '2025年', trend: 'up', meaning: 'Fortune BI 2025 · 最大区域市场' },
-  { label: '穿戴式市场', value: '$6.69B', change: '+8.56% CAGR', trend: 'up', meaning: 'Grand View Research 2025 · SOM核心赛道' },
-  { label: 'Momcozy全球份额', value: '19.3%', change: '+2.1% YoY', trend: 'up', meaning: 'Amazon Brand Analytics 2026 Q1 · 连续3季增长' },
+const homeEvidenceGroups = [
+  { label: 'Public facts', value: '3', desc: 'TAM、北美区域份额、穿戴式细分TAM', color: '#34c759', sourceIds: 'ds-001 / ds-002 / ds-045' },
+  { label: 'Public proxy', value: '1', desc: 'Wikimedia公开兴趣指数，非GMV或销量', color: '#5856d6', sourceIds: 'ds-046' },
+  { label: 'Internal gated', value: '5', desc: 'ERP销售、售后、零售渠道、全渠道增长和目标达成候选源', color: '#0A84FF', sourceIds: 'ds-047 / ds-048 / ds-049 / ds-050 / ds-051' },
+  { label: 'Sample/demo', value: '隔离', desc: '未复核页面只展示治理状态，不进入首页KPI', color: '#ff9500', sourceIds: 'deep audit backlog' },
 ];
 
 // R2: 国家政策颜色映射
@@ -255,7 +226,7 @@ export default function HomePage() {
 
         {/* ═══════════ KPI快速洞察 ═══════════ */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          {quickInsights.map((ins, i) => (
+          {marketQuickInsights.map((ins, i) => (
             <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF] card-shadow cursor-pointer" onClick={() => navigate('/self')}>
               <p className="text-xs text-[#86868b] mb-1">{ins.label}</p>
               <div className="flex items-end gap-2">
@@ -263,6 +234,19 @@ export default function HomePage() {
                 <span className="text-xs text-[#34c759] font-medium mb-1">{ins.change}</span>
               </div>
               <p className="text-[9px] text-[#B5AFA8] mt-1.5">{ins.meaning}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
+          {homeEvidenceGroups.map((item) => (
+            <div key={item.label} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-xs font-semibold text-[#1d1d1f]">{item.label}</p>
+                <span className="text-sm font-bold" style={{ color: item.color }}>{item.value}</span>
+              </div>
+              <p className="text-[10px] text-[#86868b] mt-1 leading-relaxed">{item.desc}</p>
+              <p className="text-[9px] text-[#B5AFA8] mt-2">{item.sourceIds}</p>
             </div>
           ))}
         </div>
@@ -332,22 +316,22 @@ export default function HomePage() {
               <section className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                 <div className="flex items-center justify-between mb-2">
                   <div>
-                    <h3 className="text-sm font-semibold text-[#1d1d1f]">全球母婴市场规模趋势（2021-2030E）</h3>
-                    <p className="text-[10px] text-[#86868b] mt-0.5">数据来源: Precedence Research / Grand View Research · 实线=历史 · 虚线=预测</p>
+                    <h3 className="text-sm font-semibold text-[#1d1d1f]">全球婴童/吸奶器市场规模趋势（2025-2030E）</h3>
+                    <p className="text-[10px] text-[#86868b] mt-0.5">数据来源: ds-001 / ds-002 / ds-045；SAM/SOM需另有可服务范围和可获份额假设，2026后为CAGR外推</p>
                   </div>
                   <button onClick={() => navigate('/market/trend')} className="text-xs text-[#C25B6E] hover:underline flex-shrink-0">查看详情 →</button>
                 </div>
 
-                {/* R2: 双Y轴复合图表 + R3: 实线/虚线区分历史vs预测 + R4: SOM层 + R7: 关键里程碑 */}
+                {/* R2: 双Y轴复合图表 + R3: 实线/虚线区分历史vs预测 + R4: 细分TAM层 + R7: 关键里程碑 */}
                 <div className="h-56">
                   <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
-                    <ComposedChart data={marketTrendData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                    <ComposedChart data={marketSizeTrendData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#EDE6DF" vertical={false} />
                       <XAxis dataKey="year" tick={{ fontSize: 10, fill: '#86868b' }} axisLine={{ stroke: '#EDE6DF' }} tickLine={false} />
-                      {/* 左Y轴: TAM ($B) */}
-                      <YAxis yAxisId="tam" tick={{ fontSize: 9, fill: '#86868b' }} axisLine={false} tickLine={false} domain={[800, 1700]} tickFormatter={(v) => `$${v}B`} width={45} />
-                      {/* 右Y轴: SAM/SOM ($B) */}
-                      <YAxis yAxisId="sam" orientation="right" tick={{ fontSize: 9, fill: '#86868b' }} axisLine={false} tickLine={false} domain={[0, 65]} tickFormatter={(v) => `$${v}B`} width={45} />
+                      {/* 左Y轴: 上层TAM ($B) */}
+                      <YAxis yAxisId="tam" tick={{ fontSize: 9, fill: '#86868b' }} axisLine={false} tickLine={false} domain={[300, 520]} tickFormatter={(v) => `$${v}B`} width={45} />
+                      {/* 右Y轴: 品类TAM/细分TAM ($B) */}
+                      <YAxis yAxisId="sam" orientation="right" tick={{ fontSize: 9, fill: '#86868b' }} axisLine={false} tickLine={false} domain={[0, 6]} tickFormatter={(v) => `$${v}B`} width={45} />
                       <Tooltip
                         contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: '11px' }}
                         formatter={(value: string | number | readonly (string | number)[] | undefined, name: string | number | undefined) => [`$${value ?? '-'}B`, name ?? '指标']}
@@ -356,22 +340,22 @@ export default function HomePage() {
 
                       {/* R7: 2025→2026 历史/预测分隔线 */}
                       <ReferenceLine x="2025" yAxisId="tam" stroke="#B5AFA8" strokeDasharray="4 4" strokeWidth={1}>
-                        <Label value="← 历史 │ 预测 →" position="top" fontSize={9} fill="#B5AFA8" />
+                        <Label value="2026后为预测" position="top" fontSize={9} fill="#B5AFA8" />
                       </ReferenceLine>
 
-                      {/* R3: TAM — 实线(历史) + 虚线(预测) */}
-                      <Line yAxisId="tam" type="monotone" dataKey="tam" name="TAM 全球母婴护理" stroke="#C25B6E" strokeWidth={2.5} dot={{ r: 3, fill: '#C25B6E', strokeWidth: 0 }} activeDot={{ r: 5 }} connectNulls />
-                      {/* R3: SAM — 实线(历史) + 虚线(预测) */}
-                      <Line yAxisId="sam" type="monotone" dataKey="sam" name="SAM 吸奶器市场" stroke="#ff9500" strokeWidth={2} dot={{ r: 3, fill: '#ff9500', strokeWidth: 0 }} activeDot={{ r: 5 }} />
-                      {/* R4: SOM — 穿戴式细分 */}
-                      <Line yAxisId="sam" type="monotone" dataKey="som" name="SOM 穿戴式核心" stroke="#34c759" strokeWidth={2} dot={{ r: 3, fill: '#34c759', strokeWidth: 0 }} activeDot={{ r: 5 }} />
+                      {/* R3: 上层TAM — 实线(历史) + 虚线(预测) */}
+                      <Line yAxisId="tam" type="monotone" dataKey="tam" name="上层TAM 全球婴童用品" stroke="#C25B6E" strokeWidth={2.5} dot={{ r: 3, fill: '#C25B6E', strokeWidth: 0 }} activeDot={{ r: 5 }} connectNulls />
+                      {/* R3: 品类TAM — 实线(历史) + 虚线(预测) */}
+                      <Line yAxisId="sam" type="monotone" dataKey="sam" name="品类TAM 全球吸奶器" stroke="#ff9500" strokeWidth={2} dot={{ r: 3, fill: '#ff9500', strokeWidth: 0 }} activeDot={{ r: 5 }} />
+                      {/* R4: 细分TAM — 穿戴式细分 */}
+                      <Line yAxisId="sam" type="monotone" dataKey="som" name="细分TAM 穿戴式吸奶器" stroke="#34c759" strokeWidth={2} dot={{ r: 3, fill: '#34c759', strokeWidth: 0 }} activeDot={{ r: 5 }} />
                     </ComposedChart>
                   </ResponsiveContainer>
                 </div>
 
                 {/* R6: 图例 + CAGR标注 */}
                 <div className="flex items-center gap-3 mt-2 flex-wrap">
-                  {cagrLines.map((c, i) => (
+                  {marketCagrLines.map((c, i) => (
                     <span key={i} className="flex items-center gap-1 text-[10px]">
                       <span className="w-5 h-0.5 rounded" style={{ backgroundColor: c.color }} />
                       <span style={{ color: c.color }} className="font-medium">{c.label}</span>
@@ -384,34 +368,32 @@ export default function HomePage() {
                 <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
                   <div className="p-3 rounded-xl bg-[#C25B6E]/5 border border-[#C25B6E]/10">
                     <p className="text-[10px] text-[#C25B6E] font-semibold mb-1">三层漏斗加速扩大</p>
-                    <p className="text-[11px] text-[#1d1d1f]">SOM增速(8.56%) {'>'} SAM(8.52%) {'>'} TAM(6.2%)，穿戴式正在结构性替代传统台式，2026-2028是品牌卡位关键窗口期</p>
+                    <p className="text-[11px] text-[#1d1d1f]">穿戴式细分TAM增速(15.08%) {'>'} 吸奶器品类TAM(8.52%) {'>'} 婴童用品上层TAM(6.4%)，穿戴式是当前公开报告中增速最高的相关细分。</p>
                   </div>
                   <div className="p-3 rounded-xl bg-[#ff9500]/5 border border-[#ff9500]/10">
                     <p className="text-[10px] text-[#ff9500] font-semibold mb-1">Momcozy定位建议</p>
-                    <p className="text-[11px] text-[#1d1d1f]">SOM 2030年预计$9.42B。建议维持M5现金牛，加大M9/W1明星投入，Air1需重新定位，窗口期仅剩2年</p>
+                    <p className="text-[11px] text-[#1d1d1f]">品牌份额和月度GMV趋势未用示例数替代，需Amazon Brand Analytics、零售面板或ERP快照接入后再下业务结论。</p>
                   </div>
                 </div>
               </section>
 
               <section className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-semibold text-[#1d1d1f]">竞品市场份额动态</h3>
+                  <h3 className="text-sm font-semibold text-[#1d1d1f]">品牌份额数据接入状态</h3>
                   <button onClick={() => navigate('/competition')} className="text-xs text-[#C25B6E] hover:underline">查看详情</button>
                 </div>
-                {/* R5: 竞争态势判断 */}
                 <div className="mb-4 p-3 rounded-xl bg-[#C25B6E]/5 border border-[#C25B6E]/10">
-                  <p className="text-[10px] text-[#C25B6E] font-medium">态势判断</p>
-                  <p className="text-[11px] text-[#1d1d1f] mt-0.5">Momcozy以19.3%领跑，Medela持续流失(-0.8pp)。建议窗口期加速北美DTC渠道投入，锁定价格敏感迁移用户</p>
+                  <p className="text-[10px] text-[#C25B6E] font-medium">边界说明</p>
+                  <p className="text-[11px] text-[#1d1d1f] mt-0.5">当前已更新公开市场规模和区域份额；品牌份额、Momcozy份额、竞品份额变化仍需授权渠道数据，不再使用旧示例数展示。</p>
                 </div>
                 <div className="space-y-2.5">
-                  {shareData.map((s, i) => (
-                    <div key={i} className="flex items-center gap-4">
-                      <span className="text-xs text-[#86868b] w-16">{s.brand}</span>
-                      <div className="flex-1 min-w-0 h-3 bg-[#FBF8F5] rounded-full overflow-hidden">
-                        <div className="h-full rounded-full transition-all" style={{ width: `${s.share}%`, backgroundColor: s.color }} />
+                  {brandShareAccessItems.map((item) => (
+                    <div key={item.label} className="p-3 rounded-xl bg-[#FBF8F5] border border-[#EDE6DF]">
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <span className="text-xs font-medium text-[#1d1d1f]">{item.label}</span>
+                        <span className="text-[10px] text-[#ff9500] bg-[#ff9500]/10 px-2 py-0.5 rounded-full">{item.status}</span>
                       </div>
-                      <span className="text-xs font-medium text-[#1d1d1f] truncate w-10 text-right">{s.share}%</span>
-                      <span className={`text-[10px] w-8 text-right ${s.change.startsWith('+') ? 'text-[#34c759]' : 'text-[#ff3b30]'}`}>{s.change}</span>
+                      <p className="text-[10px] text-[#86868b] leading-relaxed">{item.note}</p>
                     </div>
                   ))}
                 </div>
@@ -622,15 +604,15 @@ export default function HomePage() {
                   </div>
                   <h3 className="text-sm font-semibold text-[#1d1d1f]">活跃先锋</h3>
                 </div>
-                <span className="text-[10px] text-[#86868b] bg-white/60 px-2 py-0.5 rounded-full">本期</span>
+                <span className="text-[10px] text-[#86868b] bg-white/60 px-2 py-0.5 rounded-full">示例</span>
               </div>
               <div className="space-y-2">
                 {[
-                  { name: '李萌桢', score: 1043, rank: 1, trend: '+12%', avatar: '李' },
-                  { name: '吴润泽', score: 365, rank: 2, trend: '+5%', avatar: '吴' },
-                  { name: '李海鑫', score: 358, rank: 3, trend: '+8%', avatar: '李' },
-                  { name: '王海天', score: 271, rank: 4, trend: '+3%', avatar: '王' },
-                  { name: '盛效广', score: 234, rank: 5, trend: '+2%', avatar: '盛' },
+                  { name: '成员A', score: '待接入', rank: 1, trend: '待验证', avatar: 'A' },
+                  { name: '成员B', score: '待接入', rank: 2, trend: '待验证', avatar: 'B' },
+                  { name: '成员C', score: '待接入', rank: 3, trend: '待验证', avatar: 'C' },
+                  { name: '成员D', score: '待接入', rank: 4, trend: '待验证', avatar: 'D' },
+                  { name: '成员E', score: '待接入', rank: 5, trend: '待验证', avatar: 'E' },
                 ].map((user) => (
                   <div key={user.rank} className="flex items-center gap-4 p-2 rounded-xl bg-white/70 hover:bg-white transition-all cursor-pointer group">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0 ${user.rank === 1 ? 'bg-gradient-to-br from-[#ff9500] to-[#ff3b30] shadow-sm shadow-[#ff9500]/30' : user.rank === 2 ? 'bg-gradient-to-br from-[#af52de] to-[#5856d6] shadow-sm shadow-[#af52de]/30' : user.rank === 3 ? 'bg-gradient-to-br from-[#C25B6E] to-[#ff3b30] shadow-sm shadow-[#C25B6E]/30' : 'bg-[#EDE6DF] text-[#86868b]'}`}>

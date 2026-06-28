@@ -15,12 +15,15 @@ describe('source registry', () => {
     expect(getSourceRegistryItem('ds-001').sourceName).toBe('Precedence Research');
   });
 
-  it('marks every CPSC eFiling item as needs-review until legal owner signs off', () => {
+  it('marks CPSC eFiling as verified official entry while keeping SKU legality gated', () => {
     const cpscItems = sourceRegistry.filter((item) => /CPSC|eFiling/i.test(`${item.metric} ${item.sourceName} ${item.note}`));
+    const cpscEntry = getSourceRegistryItem('policy-cpsc-efiling');
 
     expect(cpscItems.length).toBeGreaterThan(0);
-    expect(cpscItems.every((item) => item.verificationStatus === 'needs-review')).toBe(true);
-    expect(cpscItems.some((item) => item.note.includes('官网实时声明'))).toBe(true);
+    expect(cpscEntry.verificationStatus).toBe('verified');
+    expect(cpscEntry.note).toContain('CPSC官方页面已复核');
+    expect(cpscEntry.gap).toContain('不支撑SKU适用范围');
+    expect(cpscEntry.action).toContain('法务SKU矩阵');
   });
 
   it('does not label needs-review data as verified source text', () => {
@@ -46,7 +49,7 @@ describe('source registry', () => {
     expect(mamava.note).toContain('不应与QuestMobile');
   });
 
-  it('keeps public report URLs specific when automated access is blocked by challenge pages', () => {
+  it('keeps public report URLs specific and separates blocked reports from verified survey evidence', () => {
     const fortune = getSourceRegistryItem('ds-002');
     const mordor = getSourceRegistryItem('ds-004');
     const mamava = getSourceRegistryItem('ds-043');
@@ -55,7 +58,10 @@ describe('source registry', () => {
     expect(fortune.action).toContain('人工复核凭证');
     expect(mordor.sourceUrl).toBe('https://www.mordorintelligence.com/industry-reports/breast-pumps-market');
     expect(mordor.verificationStatus).toBe('example');
-    expect([fortune, mordor, mamava].every((item) => item.note.includes('Cloudflare challenge'))).toBe(true);
+    expect([fortune, mordor].every((item) => item.note.includes('Cloudflare challenge'))).toBe(true);
+    expect(mamava.verificationStatus).toBe('verified');
+    expect(mamava.note).toContain('2,842份回复');
+    expect(mamava.gap).toContain('不支撑全球用户画像');
   });
 
   it('binds every static-data page from the weekly audit backlog to a registry item', () => {
@@ -110,5 +116,21 @@ describe('source registry', () => {
 
     expect(gatedItems.length).toBe(evidenceGatedPages.length);
     expect(gatedItems.every((item) => item.verificationStatus !== 'verified')).toBe(true);
+  });
+
+  it('keeps ERP internal operating sources private, connector-backed, and Batch19 approved', () => {
+    const erpSourceIds = ['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'];
+    const erpSources = erpSourceIds.map((id) => getSourceRegistryItem(id));
+
+    expect(getSourceRegistryItemsByModule('ERP内部经营数据').map((item) => item.id)).toEqual(['ds-050', 'ds-051']);
+    expect(erpSources.every((item) => item.privacyLevel === 'private/internal')).toBe(true);
+    expect(erpSources.every((item) => item.collectionMethod === 'connector-required')).toBe(true);
+    expect(erpSources.every((item) => item.evidenceGrade === 'L3-production-read-only')).toBe(true);
+    expect(erpSources.every((item) => item.verificationStatus === 'verified')).toBe(true);
+    expect(erpSources.every((item) => item.canDisplayAsFact === true)).toBe(true);
+    expect(erpSources.every((item) => item.blockingReason === 'approved-internal-proxy-display-export; connector-refresh-still-required')).toBe(true);
+    expect(erpSources.map((item) => item.note).join(' ')).toContain('Batch19');
+    expect(erpSources.every((item) => item.evidenceArtifactPath && item.evidenceArtifactPath.length > 20)).toBe(true);
+    expect(erpSources.map((item) => item.claimScope).join(' ')).toContain('internal');
   });
 });

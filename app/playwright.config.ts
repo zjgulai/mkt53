@@ -2,6 +2,8 @@ import { defineConfig, devices } from '@playwright/test';
 
 const e2ePort = Number(process.env.MKT53_E2E_PORT ?? 3000);
 const baseURL = `http://127.0.0.1:${e2ePort}`;
+const e2eWorkers = Number(process.env.MKT53_E2E_WORKERS ?? 2);
+const e2eTimeout = Number(process.env.MKT53_E2E_TIMEOUT_MS ?? 60_000);
 const reuseExistingServer =
   process.env.MKT53_E2E_REUSE_EXISTING === '0' ? false : process.env.MKT53_E2E_REUSE_EXISTING === '1' ? true : !process.env.CI;
 
@@ -11,7 +13,8 @@ export default defineConfig({
   reporter: [['list'], ['html', { outputFolder: './tmp/playwright-report', open: 'never' }]],
   fullyParallel: true,
   retries: 0,
-  timeout: 30_000,
+  workers: e2eWorkers,
+  timeout: e2eTimeout,
   expect: {
     timeout: 8_000,
   },

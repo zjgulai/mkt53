@@ -2,8 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import { aiAssistantSidebarItems } from './constants';
 import { BookOpen } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import AiReportGovernancePanel from '@/components/AiReportGovernancePanel';
 
-const stats = [{"label":"知识条目","value":"8,560"},{"label":"法规文档","value":"342"},{"label":"竞品资料","value":"1,280"},{"label":"检索评估版本","value":"v0.9"}];
+const stats = [{"label":"目录条目候选","value":"8,560"},{"label":"法规文档候选","value":"342"},{"label":"竞品资料候选","value":"1,280"},{"label":"检索评估待补","value":"v0.9"}];
 
 const features = ["全球母婴法规标准知识图谱","竞品产品参数与技术规格库","用户痛点与需求知识库","智能问答与自然语言检索","文档自动摘要与关键信息提取"];
 
@@ -40,6 +41,11 @@ export default function KnowledgeBase() {
               description="知识库为内部维护资产，可作为检索入口展示；检索准确率需要随版本、评测集和人工抽检记录持续复核，不再作为无上下文固定准确率展示。"
               cadence="内部维护"
             />
+            <AiReportGovernancePanel
+              title="知识库 Batch 4 检索评估 readiness"
+              focus="model"
+              compact
+            />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {stats.map((s, i) => (
                 <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">
@@ -61,7 +67,7 @@ export default function KnowledgeBase() {
                 </div>
               </div>
               <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
-                <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">AI洞察 TOP5</h3>
+                <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">检索线索示例 TOP5</h3>
                 <div className="space-y-2">
                   {insights.map((ins, i) => (
                     <div key={i} className="p-3 rounded-xl bg-[#FBF8F5] hover:bg-[#F5EDE8] transition-colors duration-200">
@@ -70,7 +76,7 @@ export default function KnowledgeBase() {
                         <span className="px-1.5 py-0.5 rounded text-[10px] font-medium" style={{ backgroundColor: ins.sentiment === '正面' ? '#34c75915' : ins.sentiment === '负面' ? '#ff3b3015' : '#ff950015', color: ins.sentiment === '正面' ? '#34c759' : ins.sentiment === '负面' ? '#ff3b30' : '#ff9500' }}>{ins.sentiment}</span>
                       </div>
                       <div className="flex items-center justify-between text-[10px] text-[#86868b]">
-                        <span>提及 {ins.mentions.toLocaleString()}</span>
+                        <span>样例提及 {ins.mentions.toLocaleString()}</span>
                         <span style={{ color: ins.trend === '上升' ? '#34c759' : ins.trend === '下降' ? '#ff3b30' : '#86868b' }}>趋势 {ins.trend}</span>
                       </div>
                     </div>

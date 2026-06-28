@@ -164,6 +164,8 @@ export function listPageComponents(appRoot = process.cwd()) {
 }
 
 export function classifyCollectionMethod(source) {
+  if (source.collectionMethod) return source.collectionMethod;
+
   const text = `${source.sourceType ?? ''} ${source.sourceName ?? ''} ${source.note ?? ''}`.toLowerCase();
   const url = source.sourceUrl ? new URL(source.sourceUrl) : undefined;
   const sourceName = source.sourceName ?? '';
