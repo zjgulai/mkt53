@@ -69,6 +69,7 @@ export const aiErpContextBridgeRows = [
   { bridgeId: 'category_prioritization_bridge', surface: '知识库/AI助手', allowedUse: '把检索上下文路由到 SKU/category 治理主题', forbiddenUse: '不能暴露原始 SKU、客户、运营或仓库标识', sourceIds: ['ds-047', 'ds-049'] },
 ];
 
+// audit-source: ds-021 ds-023 ds-025 ds-026 ds-029 ds-030 ds-031 ds-032 ds-033 ds-035 ds-009 ds-010
 export const aiReportBatch4DisplayPolicy = [
   'Batch 4 只生成 AI/报告治理 private/internal gated readiness，不包含真实评论、模型输出、生成图片调用日志、客户数据或报告结论。',
   'dataset_manifest、model_run_manifest、human_review_status 和 report_generation_queue 均为 private/internal L2 gate，canDisplayAsFact=false。',

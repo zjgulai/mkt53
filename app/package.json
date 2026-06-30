@@ -17,6 +17,13 @@
     "data:audit:deep": "node scripts/data/audit-deep.mjs",
     "data:audit:deep:json": "node scripts/data/audit-deep.mjs --json --no-write",
     "data:audit:deep:summary": "node scripts/data/audit-deep.mjs --summary-json --no-write",
+    "data:source-gaps:prioritize": "node scripts/data/prioritize-source-gaps.mjs",
+    "data:source-gaps:readiness-packets": "node scripts/data/build-source-gap-readiness-packets.mjs",
+    "data:source-gaps:owner-intake": "node scripts/data/build-source-gap-owner-intake.mjs",
+    "data:source-gaps:owner-intake:prefill": "node scripts/data/prefill-source-gap-owner-intake.mjs",
+    "data:source-gaps:owner-chat-intake-pack": "node scripts/data/build-source-gap-owner-chat-intake-pack.mjs",
+    "data:source-gaps:owner-chat-merge": "node scripts/data/merge-source-gap-owner-chat-answers.mjs",
+    "data:source-gaps:owner-intake:validate": "node scripts/data/validate-source-gap-owner-intake.mjs",
     "data:collect:weekly": "node scripts/data/collect-weekly-sources.mjs",
     "data:public-evidence:dry-run": "node scripts/data/collect-public-evidence.mjs --json --dry-run",
     "data:public-evidence:live": "node scripts/data/collect-public-evidence.mjs --live --write-public --write tmp/public-evidence/latest.json",
@@ -76,7 +83,8 @@
     "preview": "vite preview",
     "deploy:prod": "bash scripts/deploy-static.sh",
     "deploy:prod:verified": "bash scripts/deploy-static-and-verify.sh",
-    "smoke:prod": "bash scripts/smoke-prod.sh"
+    "smoke:prod": "bash scripts/smoke-prod.sh",
+    "smoke:prod:routes": "node scripts/smoke-prod-routes.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

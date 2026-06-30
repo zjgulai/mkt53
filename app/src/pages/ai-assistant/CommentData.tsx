@@ -32,12 +32,14 @@ export default function CommentData() {
       ]}
       internalFactSummary={
         <div className="space-y-5">
+          {/* audit-source: ds-021 */}
           <AiReportGovernancePanel
             title="评论数据 Batch 4 gated dataset manifest readiness"
             focus="dataset"
             compact
             framed={false}
           />
+          {/* audit-source: ds-021 */}
           <AiReviewGovernancePanel
             title="评论数据 Batch 5 授权样本清单 gate"
             focus="comments"

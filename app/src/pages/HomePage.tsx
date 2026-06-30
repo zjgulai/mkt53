@@ -367,6 +367,7 @@ export default function HomePage() {
                 {/* R9: 关键发现 — 行业洞察 */}
                 <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
                   <div className="p-3 rounded-xl bg-[#C25B6E]/5 border border-[#C25B6E]/10">
+                    {/* audit-source: ds-044 ds-001 ds-045 */}
                     <p className="text-[10px] text-[#C25B6E] font-semibold mb-1">三层漏斗加速扩大</p>
                     <p className="text-[11px] text-[#1d1d1f]">穿戴式细分TAM增速(15.08%) {'>'} 吸奶器品类TAM(8.52%) {'>'} 婴童用品上层TAM(6.4%)，穿戴式是当前公开报告中增速最高的相关细分。</p>
                   </div>

@@ -28,10 +28,11 @@ export default function CategoryAnalysis() {
       subtitle="品类规模 · 增速 · 毛利口径 · 竞争强度"
       icon={FileBarChart}
       accent="#C25B6E"
-      sourceIds={['ds-038', 'ds-047', 'ds-048', 'ds-049']}
+      sourceIds={['ds-038']}
       evidenceTitle="品类分析待补测算依据"
-      evidenceDescription="品类规模、增长、利润率、竞争强度和 Momcozy 排名仍需要补齐权重公式、BSR 快照、行业报告来源和字段口径；ERP三源已被Batch19放行为内部 SKU、渠道和售后趋势代理，可展示内部代理值，但不能替代外部规模、份额或排名。"
+      evidenceDescription="品类规模、增长、利润率、竞争强度和 Momcozy 排名仍需要补齐权重公式、BSR 快照、行业报告来源和字段口径；外部规模、份额或排名仍不得用内部代理替代。"
       gateStatus={{
+        sourceIds: ['ds-047', 'ds-048', 'ds-049'],
         label: 'ERP内部代理已放行，外部品类结论待复核',
         tone: 'approved',
         description: '已放行的ERP品类/SKU代理可展示并导出CSV；品类规模、毛利、竞争强度、品牌份额和排名仍需公开报告、平台快照或授权连接器补证后再展示。',

@@ -144,6 +144,7 @@ export default function RegionCompetition() {
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
               <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
                 <div>
+                  {/* audit-source: ds-050 ds-051 */}
                   <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP区域份额 numerator · Batch19已放行</h2>
                   <p className="text-[10px] text-[#86868b] mt-1">
                     {erpDerivedBatch3Artifact.batchId}；source ids: {erpChannelGrowthSnapshot.sourceIds.join(' / ')} / {erpChannelTargetAttainment.sourceIds.join(' / ')}；private/internal L3；canDisplayAsFact=true；仅限内部proxy。

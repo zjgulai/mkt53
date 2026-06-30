@@ -32,10 +32,11 @@ export default function BreastPump() {
       subtitle="品类拆分 · 品牌格局 · 产品矩阵 · 型号对比 · 功能需求"
       icon={Droplets}
       accent="#C25B6E"
-      sourceIds={['ds-005', 'ds-047', 'ds-049']}
+      sourceIds={['ds-005']}
       evidenceTitle="吸奶器品类测算待复核"
-      evidenceDescription="公开品类拆分仍缺少公式、权重和原始报告页证据；ERP销售统计与零售渠道快照已被Batch19放行为内部SKU销量代理和品类映射，可展示内部代理趋势，品牌份额、产品价格、评分和型号参数仍不得展示为真实全渠道结论。"
+      evidenceDescription="公开品类拆分仍缺少公式、权重和原始报告页证据；品牌份额、产品价格、评分和型号参数仍不得展示为真实全渠道结论。"
       gateStatus={{
+        sourceIds: ['ds-047', 'ds-049'],
         label: 'ERP吸奶器代理已放行，公开份额待复核',
         tone: 'approved',
         description: '吸奶器关键词代理、SKU hash覆盖和月度内部代理量可按private/internal proxy展示并导出；公开品牌份额、均价、评分和型号对比仍需外部来源或授权平台快照。',

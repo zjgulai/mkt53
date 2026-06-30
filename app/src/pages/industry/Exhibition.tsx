@@ -6,6 +6,7 @@ import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 const exhibitions = [
   {
     id: 1,
+    sourceIds: ['ds-018'],
     name: 'ABC Kids Expo 2026',
     location: 'Las Vegas, US · Mandalay Bay',
     date: '2026-05-13 ~ 05-15',
@@ -19,6 +20,7 @@ const exhibitions = [
   },
   {
     id: 2,
+    sourceIds: ['ds-018'],
     name: 'Kind + Jugend 2026',
     location: 'Cologne, Germany',
     date: '2026-09-15 ~ 09-17',
@@ -32,6 +34,7 @@ const exhibitions = [
   },
   {
     id: 3,
+    sourceIds: ['ds-018'],
     name: 'CBME China 2026',
     location: 'Shanghai, China · NECC',
     date: '2026-07-15 ~ 07-17',
@@ -45,6 +48,7 @@ const exhibitions = [
   },
   {
     id: 4,
+    sourceIds: ['ds-018'],
     name: 'Pueri Expo 2026',
     location: 'São Paulo, Brazil · Expo Center Norte',
     date: '2026-04-26 ~ 04-28',
@@ -58,6 +62,7 @@ const exhibitions = [
   },
   {
     id: 5,
+    sourceIds: ['ds-018'],
     name: 'Baby & Kids Expo Tokyo Summer 2026',
     location: 'Tokyo, Japan · Tokyo Big Sight',
     date: '2026-06-24 ~ 06-26',

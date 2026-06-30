@@ -11,7 +11,26 @@ const gatedDisclosurePattern =
   /(?:gated|gate|readiness|manifest|governance|canDisplayAsFact=false|private\/internal|private|internal|proxy|connector|required|authorized|blocked|artifact|publish|no model call|no provider call|no connector access|待复核|待授权|待审批|需复核|需授权|需审批|展示审批|字段字典|事实表|拆入|页面读取|候选源|候选|代理|不能写成|不可替代|保留|接入|证据|来源|权限|脱敏|样例|示例|治理|门禁|阻断|不包含|不得|不可作为|仅登记)/i;
 const numericPattern = /(?:[$￥]?\d+(?:,\d{3})*(?:\.\d+)?\s*(?:%|[KMB]|万|亿|千|美元|USD|usd|分|星|页|条|个|件|天|周|月|年|mAh|mmHg)?|20\d{2}(?:[-/年.]\d{1,2})?)/g;
 const sourceIdPattern = /\b(?:ds-\d{3}|policy-[a-z0-9-]+)\b/g;
-const jsxAttributeSkip = new Set(['className', 'style', 'src', 'href', 'to', 'path', 'id', 'key', 'color', 'fill', 'stroke', 'viewBox']);
+const jsxAttributeSkip = new Set([
+  'className',
+  'style',
+  'src',
+  'href',
+  'to',
+  'path',
+  'id',
+  'key',
+  'color',
+  'fill',
+  'stroke',
+  'viewBox',
+  'width',
+  'height',
+  'minWidth',
+  'maxWidth',
+  'minHeight',
+  'maxHeight',
+]);
 const objectPropertySkip = new Set([
   'className',
   'style',
@@ -158,36 +177,125 @@ function nearestObjectLiteral(node) {
   return undefined;
 }
 
-function sourceIdsFromObject(node, knownSourceIds) {
-  const object = nearestObjectLiteral(node);
-  if (!object) return [];
+function nearestJsxAttribute(node) {
+  let current = node.parent;
+
+  while (current) {
+    if (ts.isJsxAttribute(current)) return current;
+    if (ts.isSourceFile(current) || ts.isJsxElement(current) || ts.isJsxSelfClosingElement(current) || ts.isFunctionLike(current)) return undefined;
+    current = current.parent;
+  }
+
+  return undefined;
+}
+
+function isInsideSkippedJsxAttribute(node) {
+  const attr = nearestJsxAttribute(node);
+  return Boolean(attr && ts.isIdentifier(attr.name) && jsxAttributeSkip.has(attr.name.text));
+}
+
+function sourceIdsFromInitializer(initializer, knownSourceIds, sourceIdConstants, seen = new Set()) {
+  if (!initializer) return [];
+
+  if (ts.isStringLiteral(initializer) || ts.isNoSubstitutionTemplateLiteral(initializer)) {
+    return knownSourceIds.has(initializer.text) ? [initializer.text] : [];
+  }
+
+  if (ts.isIdentifier(initializer)) {
+    if (seen.has(initializer.text)) return [];
+    seen.add(initializer.text);
+    return sourceIdConstants.get(initializer.text) ?? [];
+  }
+
+  if (ts.isAsExpression(initializer) || ts.isSatisfiesExpression?.(initializer)) {
+    return sourceIdsFromInitializer(initializer.expression, knownSourceIds, sourceIdConstants, seen);
+  }
+
+  if (!ts.isArrayLiteralExpression(initializer)) return [];
 
   const ids = [];
-  for (const prop of object.properties) {
-    if (!ts.isPropertyAssignment(prop)) continue;
-    const key = propertyNameText(prop.name);
-    if (key !== 'sourceId' && key !== 'sourceIds') continue;
-
-    const initializer = prop.initializer;
-    if (ts.isStringLiteral(initializer) || ts.isNoSubstitutionTemplateLiteral(initializer)) {
-      ids.push(initializer.text);
-    } else if (ts.isArrayLiteralExpression(initializer)) {
-      for (const element of initializer.elements) {
-        if (ts.isStringLiteral(element) || ts.isNoSubstitutionTemplateLiteral(element)) ids.push(element.text);
-      }
+  for (const element of initializer.elements) {
+    if (ts.isSpreadElement(element)) {
+      ids.push(...sourceIdsFromInitializer(element.expression, knownSourceIds, sourceIdConstants, seen));
+    } else {
+      ids.push(...sourceIdsFromInitializer(element, knownSourceIds, sourceIdConstants, seen));
     }
   }
 
   return unique(ids).filter((id) => knownSourceIds.has(id));
 }
 
-function nodeSourceIds(node, sourceText, sourceFile, knownSourceIds) {
-  const recordIds = sourceIdsFromObject(node, knownSourceIds);
+function collectSourceIdConstants(sourceFile, knownSourceIds) {
+  const constants = new Map();
+
+  function visit(node) {
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) {
+      const ids = sourceIdsFromInitializer(node.initializer, knownSourceIds, constants);
+      if (ids.length > 0) constants.set(node.name.text, ids);
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+  return constants;
+}
+
+function sourceIdsFromSingleObject(object, knownSourceIds, sourceIdConstants) {
+  const ids = [];
+  for (const prop of object.properties) {
+    if (!ts.isPropertyAssignment(prop)) continue;
+    const key = propertyNameText(prop.name);
+    if (key !== 'sourceId' && key !== 'sourceIds') continue;
+
+    ids.push(...sourceIdsFromInitializer(prop.initializer, knownSourceIds, sourceIdConstants));
+  }
+
+  return unique(ids).filter((id) => knownSourceIds.has(id));
+}
+
+function sourceIdsFromObject(node, knownSourceIds, sourceIdConstants) {
+  let object = nearestObjectLiteral(node);
+
+  while (object) {
+    const ids = sourceIdsFromSingleObject(object, knownSourceIds, sourceIdConstants);
+    if (ids.length > 0) return ids;
+    object = nearestObjectLiteral(object);
+  }
+
+  return [];
+}
+
+function sourceIdsFromAuditSourceComment(lineText, knownSourceIds) {
+  const marker = lineText.match(/audit-source:\s*([^*}\n]+)/i);
+  if (!marker) return [];
+
+  return unique([...(marker[1].match(sourceIdPattern) ?? [])]).filter((id) => knownSourceIds.has(id));
+}
+
+function nearestPrecedingAuditSourceIds(line, lines, knownSourceIds, lookback = 12) {
+  const startIndex = Math.min(lines.length - 1, Math.max(0, line - 1));
+  const stopIndex = Math.max(0, line - lookback);
+
+  for (let index = startIndex; index >= stopIndex; index -= 1) {
+    const ids = sourceIdsFromAuditSourceComment(lines[index], knownSourceIds);
+    if (ids.length > 0) return ids;
+  }
+
+  return [];
+}
+
+function nodeSourceIds(node, sourceText, sourceFile, knownSourceIds, sourceIdConstants) {
+  const recordIds = sourceIdsFromObject(node, knownSourceIds, sourceIdConstants);
   if (recordIds.length > 0) return { ids: recordIds, coverage: 'record-level' };
 
   const line = lineNumber(sourceFile, node);
   const lines = sourceText.split(/\r?\n/);
-  const nearby = lines.slice(Math.max(0, line - 5), Math.min(lines.length, line + 4)).join('\n');
+
+  const auditCommentIds = nearestPrecedingAuditSourceIds(line, lines, knownSourceIds);
+  if (auditCommentIds.length > 0) return { ids: auditCommentIds, coverage: 'near-line' };
+
+  const nearby = lines.slice(Math.max(0, line - 5), Math.min(lines.length, line + 1)).join('\n');
   const nearbyIds = unique([...(nearby.match(sourceIdPattern) ?? [])]).filter((id) => knownSourceIds.has(id));
   if (nearbyIds.length > 0) return { ids: nearbyIds, coverage: 'near-line' };
 
@@ -329,7 +437,9 @@ function riskForClaim({ text, sourceIds, coverage, sourceById }) {
 
   const displayable = rows.filter((source) => source.can_display_as_fact);
   const isGatedDisclosure = isTextualGatedDisclosure && rows.some((source) => !source.can_display_as_fact);
+  const hasClaimLevelSource = coverage === 'record-level' || coverage === 'near-line';
   if (displayable.length === 0 && isGatedDisclosure) {
+    if (hasClaimLevelSource) return { risk: 'low', issueCode: 'claim-is-explicit-gated-disclosure' };
     return { risk: 'medium', issueCode: 'gated-source-disclosure' };
   }
   if (displayable.length === 0) return { risk: 'high', issueCode: 'no-displayable-source-evidence' };
@@ -350,6 +460,7 @@ function scanClaimsForFile(appRoot, path, routes, sourceRegistry, sourceById) {
   const component = componentForFile(appRoot, path);
   const pageRoutes = impliedRoutes(component, routes);
   const knownSourceIds = new Set(sourceRegistry.map((source) => source.id));
+  const sourceIdConstants = collectSourceIdConstants(sourceFile, knownSourceIds);
   const pageSourceIds = collectFileSourceIds(path, sourceText, component, sourceRegistry, knownSourceIds);
   const filePath = relative(appRoot, path);
   const claims = [];
@@ -359,7 +470,7 @@ function scanClaimsForFile(appRoot, path, routes, sourceRegistry, sourceById) {
     const text = normalizeText(rawText);
     if (!forceKeep && !shouldKeepText(text)) return;
 
-    const sourceLink = explicitSource ?? nodeSourceIds(node, sourceText, sourceFile, knownSourceIds);
+    const sourceLink = explicitSource ?? nodeSourceIds(node, sourceText, sourceFile, knownSourceIds, sourceIdConstants);
     const sourceIds = unique(sourceLink.ids.length > 0 ? sourceLink.ids : pageSourceIds);
     const coverage = sourceLink.ids.length > 0 ? sourceLink.coverage : pageSourceIds.length > 0 ? 'page-level' : 'none';
     const line = lineNumber(sourceFile, node);
@@ -398,18 +509,20 @@ function scanClaimsForFile(appRoot, path, routes, sourceRegistry, sourceById) {
       addClaim(node, 'jsx_text', node.getText(sourceFile));
     } else if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) {
       if (ts.isImportDeclaration(node.parent) || ts.isExportDeclaration(node.parent)) return;
-      if (ts.isJsxAttribute(node.parent) && jsxAttributeSkip.has(node.parent.name.text)) return;
+      if (isInsideSkippedJsxAttribute(node)) return;
       if (ts.isPropertyAssignment(node.parent) && objectPropertySkip.has(propertyNameText(node.parent.name))) return;
       addClaim(node, 'string_literal', node.text);
     } else if (ts.isNumericLiteral(node)) {
+      if (isInsideSkippedJsxAttribute(node)) return;
       if (ts.isPropertyAssignment(node.parent) && numericPropertySkip.has(propertyNameText(node.parent.name))) return;
       const variableName = nearestVariableName(node);
       if (!variableName) return;
       addClaim(node, 'numeric_literal', node.getText(sourceFile));
     } else if (ts.isTemplateExpression(node)) {
+      if (isInsideSkippedJsxAttribute(node)) return;
       addClaim(node, 'template_literal', node.getText(sourceFile).replace(/[`${}]/g, ' '));
     } else if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'exportToCsv') {
-      const sourceLink = nodeSourceIds(node, sourceText, sourceFile, knownSourceIds);
+      const sourceLink = nodeSourceIds(node, sourceText, sourceFile, knownSourceIds, sourceIdConstants);
       const [dataArg, headersArg, filenameArg] = node.arguments;
       const text = [
         `CSV export data=${dataArg?.getText(sourceFile) ?? 'unknown'}`,

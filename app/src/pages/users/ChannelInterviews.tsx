@@ -57,9 +57,14 @@ export default function ChannelInterviews() {
             </div>
 
             <PageEvidenceNotice
-              sourceIds={['ds-041', 'ds-049']}
+              sourceIds={['ds-041']}
               title="渠道访谈复核口径"
-              description="渠道访谈和渠道健康判断仍缺脱敏证据与授权说明；ERP ds-049 已经Batch19放行，可补渠道/客户hash维表和代理量覆盖度，但不能替代访谈原文、授权记录、渠道利润或渠道评分。"
+              description="渠道访谈和渠道健康判断仍缺脱敏证据与授权说明；访谈原文、授权记录、渠道利润或渠道评分不得由内部代理替代。"
+            />
+            <PageEvidenceNotice
+              sourceIds={['ds-049']}
+              title="ERP渠道辅助源"
+              description="ERP ds-049 已经Batch19放行，可补渠道/客户hash维表和代理量覆盖度，仅作为 private/internal proxy。"
             />
 
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">

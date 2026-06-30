@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { accessSync, chmodSync, constants, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { accessSync, chmodSync, constants, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
@@ -55,6 +55,9 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   it('keeps production smoke checks focused on routing, assets, and known leak markers', () => {
     const scriptPath = join(process.cwd(), 'scripts/smoke-prod.sh');
     const script = readFileSync(scriptPath, 'utf8');
+    const routeSmokeScriptPath = join(process.cwd(), 'scripts/smoke-prod-routes.mjs');
+    const routeSmokeScript = readFileSync(routeSmokeScriptPath, 'utf8');
+    const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as { scripts: Record<string, string> };
 
     expect(() => accessSync(scriptPath, constants.X_OK)).not.toThrow();
     expect(script).toContain('/market/trend');
@@ -63,6 +66,11 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(script).toContain('react-simple-maps');
     expect(script).toContain('2026-08452');
     expect(script).toContain('/images/world-map.jpg');
+    expect(packageJson.scripts['smoke:prod:routes']).toContain('scripts/smoke-prod-routes.mjs');
+    expect(routeSmokeScript).toContain("channel: 'chrome'");
+    expect(routeSmokeScript).toContain("boundary: 'production-read-only'");
+    expect(routeSmokeScript).toContain('/#/data-source');
+    expect(routeSmokeScript).toContain('full_route_chrome_smoke.json');
   });
 
   it('keeps periodic data collection scripts discoverable from npm', () => {
@@ -72,6 +80,17 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(packageJson.scripts['data:audit:deep']).toContain('scripts/data/audit-deep.mjs');
     expect(packageJson.scripts['data:audit:deep:json']).toContain('--json --no-write');
     expect(packageJson.scripts['data:audit:deep:summary']).toContain('--summary-json --no-write');
+    expect(packageJson.scripts['data:source-gaps:prioritize']).toContain('scripts/data/prioritize-source-gaps.mjs');
+    expect(packageJson.scripts['data:source-gaps:readiness-packets']).toContain('scripts/data/build-source-gap-readiness-packets.mjs');
+    expect(packageJson.scripts['data:source-gaps:owner-intake']).toContain('scripts/data/build-source-gap-owner-intake.mjs');
+    expect(packageJson.scripts['data:source-gaps:owner-intake:prefill']).toContain('scripts/data/prefill-source-gap-owner-intake.mjs');
+    expect(packageJson.scripts['data:source-gaps:owner-chat-intake-pack']).toContain(
+      'scripts/data/build-source-gap-owner-chat-intake-pack.mjs',
+    );
+    expect(packageJson.scripts['data:source-gaps:owner-chat-merge']).toContain(
+      'scripts/data/merge-source-gap-owner-chat-answers.mjs',
+    );
+    expect(packageJson.scripts['data:source-gaps:owner-intake:validate']).toContain('scripts/data/validate-source-gap-owner-intake.mjs');
     expect(packageJson.scripts['data:collect:weekly']).toContain('scripts/data/collect-weekly-sources.mjs');
     expect(packageJson.scripts['data:public-evidence:dry-run']).toContain('scripts/data/collect-public-evidence.mjs');
     expect(packageJson.scripts['data:public-evidence:dry-run']).toContain('--dry-run');
@@ -161,6 +180,13 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     for (const script of [
       'scripts/data/audit-consistency.mjs',
       'scripts/data/audit-deep.mjs',
+      'scripts/data/prioritize-source-gaps.mjs',
+      'scripts/data/build-source-gap-readiness-packets.mjs',
+      'scripts/data/build-source-gap-owner-intake.mjs',
+      'scripts/data/prefill-source-gap-owner-intake.mjs',
+      'scripts/data/build-source-gap-owner-chat-intake-pack.mjs',
+      'scripts/data/merge-source-gap-owner-chat-answers.mjs',
+      'scripts/data/validate-source-gap-owner-intake.mjs',
       'scripts/data/build-source-tasks.mjs',
       'scripts/data/collect-public-evidence.mjs',
       'scripts/data/collect-weekly-sources.mjs',
@@ -220,6 +246,750 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/internal-crm-readiness-valid.json'), constants.R_OK)).not.toThrow();
     expect(() => accessSync(join(process.cwd(), 'tests/fixtures/internal-erp-readiness-valid.json'), constants.R_OK)).not.toThrow();
     expect(readFileSync(join(process.cwd(), '.gitignore'), 'utf8')).toContain('configs/private/');
+  });
+
+  it('prioritizes source gaps as a no-write governance queue', () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-priority-'));
+    const sourcePath = join(tempDir, 'source_gap_matrix.csv');
+    const outDir = join(tempDir, 'out');
+    const header =
+      'source_id,module,page,metric,source_name,source_type,verification_status,reliability,last_verified,collection_method,evidence_grade,can_display_as_fact,blocking_reason,privacy_level,evidence_artifact_path,claim_scope,source_url,action,gap,recommended_collection_lane';
+    const rows = [
+      'ds-visible,看市场,MarketPage,displayable metric,Public Source,行业报告,verified,A,2026-06-30,public-url-check,L1-public-or-runtime,true,,public,,,https://example.com,OK,,agent-reach-web-or-public-evidence-capture',
+      'ds-connector,看竞争,CompetitionPage,竞品销量,Amazon API,平台API,needs-review,A,2026-06-30,connector-required,L0-unverified,false,authorized-connector-or-private-snapshot-required,private/internal,,,,补采集任务记录,,connector-readiness-or-authorized-private-snapshot',
+      'ds-manual,看用户,ConsumerInterviews,访谈样本,定性研究,定性,needs-review,B,2026-06-30,manual-required,L0-unverified,false,manual-evidence-artifact-required,public,,,,补充样本量说明,样本量未标注,manual-review-artifact',
+      'ds-public,看行业,IPAnalysis,专利数据,WIPO,官方数据库,needs-review,B,2026-06-30,public-url-check,L0-unverified,false,public-source-needs-review,public,,,https://www.wipo.int,需更新WIPO数据,2025数据缺失,agent-reach-web-or-public-evidence-capture',
+    ];
+    writeFileSync(sourcePath, `${header}\n${rows.join('\n')}\n`);
+
+    const output = execFileSync('node', ['scripts/data/prioritize-source-gaps.mjs', '--source', sourcePath, '--out', outDir, '--json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    });
+    const result = JSON.parse(output) as {
+      summary: {
+        totalRegistryRows: number;
+        totalGaps: number;
+        byCollectionMethod: Record<string, number>;
+        byPriority: Record<string, number>;
+        boundaries: Record<string, boolean>;
+      };
+      priorityRows: Array<{ priority: string; owner_lane: string; next_action: string; smallest_evidence_needed: string }>;
+    };
+
+    expect(result.summary.totalRegistryRows).toBe(4);
+    expect(result.summary.totalGaps).toBe(3);
+    expect(result.summary.byCollectionMethod['connector-required']).toBe(1);
+    expect(result.summary.byCollectionMethod['manual-required']).toBe(1);
+    expect(result.summary.byCollectionMethod['public-url-check']).toBe(1);
+    expect(result.summary.boundaries.providerCalls).toBe(false);
+    expect(result.summary.boundaries.productionWrites).toBe(false);
+    expect(result.summary.boundaries.productionDeploy).toBe(false);
+    expect(result.summary.boundaries.factPromotion).toBe(false);
+    expect(result.priorityRows.every((row) => row.priority && row.owner_lane && row.next_action && row.smallest_evidence_needed)).toBe(true);
+    expect(Object.values(result.summary.byPriority).reduce((sum, count) => sum + count, 0)).toBe(result.summary.totalGaps);
+    expect(existsSync(outDir)).toBe(false);
+    expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    rmSync(tempDir, { recursive: true, force: true });
+  });
+
+  it('builds P0 readiness packets without provider or production side effects', () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-packets-'));
+    const sourcePath = join(tempDir, 'source_gap_priority_matrix.csv');
+    const outDir = join(tempDir, 'out');
+    const header =
+      'priority,priority_reason,owner_lane,recommended_collection_lane,source_id,module,page,metric,source_name,source_type,collection_method,evidence_grade,verification_status,privacy_level,allowed_current_display_state,can_display_as_fact_current,next_action,smallest_evidence_needed,blocking_reason,gap,source_url,evidence_artifact_path,last_verified,action';
+    const rows = [
+      'P0,Core connector gap,amazon_connector_owner,connector-readiness-or-authorized-private-snapshot,ds-007,看竞争,CompetitionPage,竞品概览,Amazon.com 实时采集,平台API,connector-required,L0-unverified,needs-review,private/internal,display_as_gate_only,false,Create connector readiness record,Authorized read-only export or connector readiness artifact,authorized-connector-or-private-snapshot-required,,,,2026-06-30,补采集任务记录',
+      'P0,Core connector gap,voc_nlp_connector_owner,connector-readiness-or-authorized-private-snapshot,ds-032,看行业,FlavorMap,VOC功能趋势地图,VOC NLP,AI模型,connector-required,L0-unverified,needs-review,private/internal,display_as_gate_only,false,Create connector readiness record,Authorized read-only export or connector readiness artifact,authorized-connector-or-private-snapshot-required,缺少VOC样本窗口,,,2026-06-30,补运行记录',
+      'P1,Manual gap,business_owner_manual_review,manual-review-artifact,ds-014,看用户,ConsumerInterviews,消费者访谈,定性研究,定性,manual-required,L0-unverified,needs-review,public,display_as_gate_only,false,Create manual review artifact,Manual evidence artifact signed by business owner,manual-evidence-artifact-required,样本量未标注,,,2026-06-30,补充样本量说明',
+    ];
+    writeFileSync(sourcePath, `${header}\n${rows.join('\n')}\n`);
+
+    const output = execFileSync(
+      'node',
+      ['scripts/data/build-source-gap-readiness-packets.mjs', '--source', sourcePath, '--out', outDir, '--json', '--no-write'],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      },
+    );
+    const result = JSON.parse(output) as {
+      summary: {
+        sourceRowCount: number;
+        packetCount: number;
+        questionCount: number;
+        byOwnerLane: Record<string, number>;
+        boundaries: Record<string, boolean>;
+      };
+      packets: Array<{ packet_id: string; priority: string; owner_lane: string; required_artifact_fields: string; forbidden_claims: string }>;
+      questions: Array<{ packet_id: string; question_id: string }>;
+    };
+
+    expect(result.summary.sourceRowCount).toBe(2);
+    expect(result.summary.packetCount).toBe(2);
+    expect(result.summary.questionCount).toBe(12);
+    expect(result.summary.byOwnerLane.amazon_connector_owner).toBe(1);
+    expect(result.summary.byOwnerLane.voc_nlp_connector_owner).toBe(1);
+    expect(result.summary.boundaries.providerCalls).toBe(false);
+    expect(result.summary.boundaries.restrictedConnectorAccess).toBe(false);
+    expect(result.summary.boundaries.productionWrites).toBe(false);
+    expect(result.summary.boundaries.factPromotion).toBe(false);
+    expect(result.packets.every((packet) => packet.priority === 'P0')).toBe(true);
+    expect(result.packets.some((packet) => packet.required_artifact_fields.includes('field_dictionary_path'))).toBe(true);
+    expect(result.packets.some((packet) => packet.forbidden_claims.includes('Amazon platform-level'))).toBe(true);
+    expect(result.questions.every((question) => question.packet_id && question.question_id)).toBe(true);
+    expect(existsSync(outDir)).toBe(false);
+    expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    rmSync(tempDir, { recursive: true, force: true });
+  });
+
+  it('builds P1 manual and public evidence packets without mixing connector gaps', () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-p1-packets-'));
+    const sourcePath = join(tempDir, 'source_gap_priority_matrix.csv');
+    const outDir = join(tempDir, 'out');
+    const header =
+      'priority,priority_reason,owner_lane,recommended_collection_lane,source_id,module,page,metric,source_name,source_type,collection_method,evidence_grade,verification_status,privacy_level,allowed_current_display_state,can_display_as_fact_current,next_action,smallest_evidence_needed,blocking_reason,gap,source_url,evidence_artifact_path,last_verified,action';
+    const rows = [
+      'P1,Manual evidence gap,business_owner_manual_review,manual-review-artifact,ds-003,看市场,MarketTrend,PEST分析,WHO/FDA/各国政府,官方数据,manual-required,L0-unverified,needs-review,public,display_as_gate_only,false,Create manual review artifact,Manual evidence artifact signed by business owner,manual-evidence-artifact-required,来源组合需拆分,,,2026-06-30,拆分到具体来源URL',
+      'P1,Public source gap,public_research_owner,agent-reach-web-or-public-evidence-capture,ds-011,看用户,UsersPage,中国有孩家庭用户画像,QuestMobile,行业报告,public-url-check,L0-unverified,needs-review,public,display_as_gate_only,false,Capture public evidence,One primary public source or two independent public sources,public-source-needs-review,页面仍需拆分地域,https://example.com,,2026-06-30,拆分地域口径',
+      'P1,Connector gap,amazon_connector_owner,connector-readiness-or-authorized-private-snapshot,ds-037,看市场,BabyCare,婴儿护理品类规模,Amazon品类采集,推算,connector-required,LO-S-synthetic,example,private/internal,sample_only_excluded_from_fact_and_csv,false,Keep page wording as sample,Authorized read-only export or connector readiness artifact,example-data-must-not-display-as-fact,缺少采集窗口,,,2026-06-30,补采集窗口',
+    ];
+    writeFileSync(sourcePath, `${header}\n${rows.join('\n')}\n`);
+
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/build-source-gap-readiness-packets.mjs',
+        '--source',
+        sourcePath,
+        '--out',
+        outDir,
+        '--priority',
+        'P1',
+        '--collection-method',
+        'manual-required,public-url-check',
+        '--json',
+        '--no-write',
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      },
+    );
+    const result = JSON.parse(output) as {
+      summary: {
+        sourceRowCount: number;
+        packetCount: number;
+        questionCount: number;
+        selectedCollectionMethods: string[];
+        byCollectionMethod: Record<string, number>;
+        byOwnerLane: Record<string, number>;
+        boundaries: Record<string, boolean>;
+      };
+      packets: Array<{ packet_id: string; priority: string; owner_lane: string; collection_methods: string; required_artifact_fields: string }>;
+    };
+
+    expect(result.summary.sourceRowCount).toBe(2);
+    expect(result.summary.packetCount).toBe(2);
+    expect(result.summary.questionCount).toBe(12);
+    expect(result.summary.selectedCollectionMethods).toEqual(['manual-required', 'public-url-check']);
+    expect(result.summary.byCollectionMethod['manual-required']).toBe(1);
+    expect(result.summary.byCollectionMethod['public-url-check']).toBe(1);
+    expect(result.summary.byCollectionMethod['connector-required'] ?? 0).toBe(0);
+    expect(result.summary.byOwnerLane.business_owner_manual_review).toBe(1);
+    expect(result.summary.byOwnerLane.public_research_owner).toBe(1);
+    expect(result.summary.boundaries.providerCalls).toBe(false);
+    expect(result.summary.boundaries.restrictedConnectorAccess).toBe(false);
+    expect(result.summary.boundaries.productionWrites).toBe(false);
+    expect(result.summary.boundaries.factPromotion).toBe(false);
+    expect(result.packets.every((packet) => packet.priority === 'P1')).toBe(true);
+    expect(result.packets.every((packet) => !packet.collection_methods.includes('connector-required'))).toBe(true);
+    expect(result.packets.some((packet) => packet.required_artifact_fields.includes('business_owner_signoff'))).toBe(true);
+    expect(result.packets.some((packet) => packet.required_artifact_fields.includes('source_url'))).toBe(true);
+    expect(existsSync(outDir)).toBe(false);
+    expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    rmSync(tempDir, { recursive: true, force: true });
+  });
+
+  it('builds source gap owner intake templates without promoting approvals', () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-owner-intake-'));
+    const packetDir = join(tempDir, 'packets');
+    const outDir = join(tempDir, 'out');
+    mkdirSync(packetDir, { recursive: true });
+
+    const coveragePath = join(tempDir, 'source_gap_readiness_coverage.csv');
+    const coverageHeader =
+      'source_id,priority,module,page,metric,collection_method,evidence_grade,verification_status,owner_lane,covered_by_packet,packet_id,packet_dir,allowed_current_display_state,can_display_as_fact_current,next_action,blocking_reason';
+    const coverageRows = [
+      `ds-007,P0,看竞争,CompetitionPage,竞品概览,connector-required,L0-unverified,needs-review,amazon_connector_owner,yes,p0-amazon-connector-owner-01,${packetDir},display_as_gate_only,false,Create connector readiness record,authorized-connector-or-private-snapshot-required`,
+      `ds-014,P1,看用户,ConsumerInterviews,消费者访谈,manual-required,L0-unverified,needs-review,business_owner_manual_review,yes,p1-business-owner-manual-review-01,${packetDir},display_as_gate_only,false,Create manual review artifact,manual-evidence-artifact-required`,
+    ];
+    writeFileSync(coveragePath, `${coverageHeader}\n${coverageRows.join('\n')}\n`);
+
+    const packetHeader =
+      'packet_id,priority,owner_lane,source_count,source_ids,pages,collection_methods,current_max_evidence_grade,target_min_evidence_grade,decision_boundary,blocked_fact_display_until,required_artifact_fields,acceptance_gate,forbidden_claims';
+    const packetRows = [
+      'p0-amazon-connector-owner-01,P0,amazon_connector_owner,1,ds-007,CompetitionPage,connector-required,L0-unverified,L3-production-read-only or L4-authorized-live,readiness_packet_only; no provider call; no restricted connector access; no production write; no fact promotion,required evidence artifact is created,artifact_id|owner_alias|evidence_file_path|evidence_hash|display_decision|export_decision,Owner provides authorized read-only snapshot,Do not display these rows as verified facts.',
+      'p1-business-owner-manual-review-01,P1,business_owner_manual_review,1,ds-014,ConsumerInterviews,manual-required,L0-unverified,L1-public-or-runtime plus signed manual artifact,readiness_packet_only; no provider call; no restricted connector access; no production write; no fact promotion,required evidence artifact is created,artifact_id|owner_alias|evidence_file_path|evidence_hash|business_owner_signoff,Business owner provides signed review artifact,Do not export these rows as factual CSV data.',
+    ];
+    writeFileSync(join(packetDir, 'readiness_packets.csv'), `${packetHeader}\n${packetRows.join('\n')}\n`);
+
+    const questionHeader = 'packet_id,question_id,owner_lane,source_ids,question,expected_answer_format,required_for_promotion';
+    const questionRows = [
+      'p0-amazon-connector-owner-01,Q1,amazon_connector_owner,ds-007,Who owns this source packet?,owner_alias / owner_role,yes',
+      'p0-amazon-connector-owner-01,Q2,amazon_connector_owner,ds-007,Where is the evidence file?,path or URI / sha256,yes',
+      'p1-business-owner-manual-review-01,Q1,business_owner_manual_review,ds-014,Who owns this source packet?,owner_alias / owner_role,yes',
+      'p1-business-owner-manual-review-01,Q2,business_owner_manual_review,ds-014,Where is the evidence file?,path or URI / sha256,yes',
+    ];
+    writeFileSync(join(packetDir, 'owner_questionnaire.csv'), `${questionHeader}\n${questionRows.join('\n')}\n`);
+
+    const output = execFileSync(
+      'node',
+      ['scripts/data/build-source-gap-owner-intake.mjs', '--coverage', coveragePath, '--out', outDir, '--json', '--no-write'],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      },
+    );
+    const result = JSON.parse(output) as {
+      summary: {
+        sourceGapCount: number;
+        packetCount: number;
+        questionCount: number;
+        releaseGateCount: number;
+        byOwnerLane: Record<string, number>;
+        boundaries: Record<string, boolean>;
+      };
+      manifest: {
+        outputs: Record<string, { rowCount: number; headers: string[] }>;
+        boundaries: Record<string, boolean>;
+      };
+      samplePacketQueue: Array<{ intake_status: string; ready_for_fact_display: string; ready_for_csv_export: string }>;
+      sampleQuestionnaire: Array<{ answer_status: string; owner_answer: string; evidence_hash: string }>;
+      sampleReleaseGate: Array<{ gate_status: string; can_write_source_registry: string; can_update_page_display: string }>;
+    };
+
+    expect(result.summary.sourceGapCount).toBe(2);
+    expect(result.summary.packetCount).toBe(2);
+    expect(result.summary.questionCount).toBe(4);
+    expect(result.summary.releaseGateCount).toBe(2);
+    expect(result.summary.byOwnerLane.amazon_connector_owner).toBe(1);
+    expect(result.summary.byOwnerLane.business_owner_manual_review).toBe(1);
+    expect(result.summary.boundaries.providerCalls).toBe(false);
+    expect(result.summary.boundaries.restrictedConnectorAccess).toBe(false);
+    expect(result.summary.boundaries.productionWrites).toBe(false);
+    expect(result.summary.boundaries.factPromotion).toBe(false);
+    expect(result.summary.boundaries.sourceRegistryWrites).toBe(false);
+    expect(result.manifest.outputs['owner_intake_questionnaire.csv']).toMatchObject({ rowCount: 4 });
+    expect(result.manifest.outputs['owner_intake_release_gate.csv'].headers).toEqual(
+      expect.arrayContaining(['can_write_source_registry', 'can_update_page_display', 'can_export_as_fact_csv']),
+    );
+    expect(result.samplePacketQueue.every((packet) => packet.intake_status === 'awaiting_owner_submission')).toBe(true);
+    expect(result.samplePacketQueue.every((packet) => packet.ready_for_fact_display === 'false')).toBe(true);
+    expect(result.samplePacketQueue.every((packet) => packet.ready_for_csv_export === 'false')).toBe(true);
+    expect(result.sampleQuestionnaire.every((question) => question.answer_status === 'missing')).toBe(true);
+    expect(result.sampleQuestionnaire.every((question) => question.owner_answer === '' && question.evidence_hash === '')).toBe(true);
+    expect(result.sampleReleaseGate.every((gate) => gate.gate_status === 'blocked_owner_submission_required')).toBe(true);
+    expect(result.sampleReleaseGate.every((gate) => gate.can_write_source_registry === 'false' && gate.can_update_page_display === 'false')).toBe(true);
+    expect(existsSync(outDir)).toBe(false);
+    expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    rmSync(tempDir, { recursive: true, force: true });
+  });
+
+  it('validates source gap owner intake submissions without promoting them', () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-owner-intake-validation-'));
+    const intakeDir = join(tempDir, 'intake');
+    const outDir = join(tempDir, 'out');
+    const evidenceHash = 'a'.repeat(64);
+    mkdirSync(intakeDir, { recursive: true });
+
+    const sourceHeader =
+      'source_id,priority,module,page,metric,collection_method,evidence_grade,verification_status,owner_lane,packet_id,packet_dir,current_display_state,can_display_as_fact_current,intake_status,promotion_state,owner_answer_required,evidence_required,next_action,blocking_reason';
+    const sourceRows = [
+      'ds-007,P0,看竞争,CompetitionPage,竞品概览,connector-required,L0-unverified,needs-review,amazon_connector_owner,p0-amazon-connector-owner-01,tmp/audits/packets,display_as_gate_only,false,awaiting_owner_submission,blocked_until_owner_evidence_validated,yes,yes,Create connector readiness record,authorized-connector-or-private-snapshot-required',
+      'ds-014,P1,看用户,ConsumerInterviews,消费者访谈,manual-required,L0-unverified,needs-review,business_owner_manual_review,p1-business-owner-manual-review-01,tmp/audits/packets,display_as_gate_only,false,awaiting_owner_submission,blocked_until_owner_evidence_validated,yes,yes,Create manual review artifact,manual-evidence-artifact-required',
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_source_matrix.csv'), `${sourceHeader}\n${sourceRows.join('\n')}\n`);
+
+    const packetHeader =
+      'packet_id,priority,owner_lane,source_count,source_ids,pages,collection_methods,current_max_evidence_grade,target_min_evidence_grade,required_artifact_fields,acceptance_gate,forbidden_claims,intake_status,submitted_owner_answers,required_owner_answers,ready_for_registry_binding,ready_for_fact_display,ready_for_csv_export';
+    const packetRows = [
+      'p0-amazon-connector-owner-01,P0,amazon_connector_owner,1,ds-007,CompetitionPage,connector-required,L0-unverified,L3-production-read-only,artifact_id|owner_alias|evidence_file_path|evidence_hash,Owner provides authorized read-only snapshot,Do not display these rows as verified facts.,awaiting_owner_submission,0,2,false,false,false',
+      'p1-business-owner-manual-review-01,P1,business_owner_manual_review,1,ds-014,ConsumerInterviews,manual-required,L0-unverified,L1-public-or-runtime,artifact_id|owner_alias|evidence_file_path|evidence_hash,Owner provides signed review artifact,Do not export these rows as factual CSV data.,awaiting_owner_submission,0,2,false,false,false',
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_packet_queue.csv'), `${packetHeader}\n${packetRows.join('\n')}\n`);
+
+    const questionHeader =
+      'packet_id,question_id,owner_lane,source_ids,question,expected_answer_format,required_for_promotion,answer_status,owner_answer,evidence_uri_or_path,evidence_hash,answered_by,answered_at,validation_note';
+    const questionRows = [
+      `p0-amazon-connector-owner-01,Q1,amazon_connector_owner,ds-007,Who owns this source packet?,owner_alias / owner_role,yes,answered,pray owner,tmp/evidence/p0-owner.json,${evidenceHash},pray,2026-06-30,ready for manual review`,
+      `p0-amazon-connector-owner-01,Q2,amazon_connector_owner,ds-007,Where is the evidence file?,path or URI / sha256,yes,answered,tmp evidence snapshot,tmp/evidence/p0-owner.json,sha256:${evidenceHash},pray,2026-06-30,ready for manual review`,
+      'p1-business-owner-manual-review-01,Q1,business_owner_manual_review,ds-014,Who owns this source packet?,owner_alias / owner_role,yes,missing,,,,,,Owner answer and evidence are required.',
+      'p1-business-owner-manual-review-01,Q2,business_owner_manual_review,ds-014,Where is the evidence file?,path or URI / sha256,yes,missing,,,,,,Owner answer and evidence are required.',
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_questionnaire.csv'), `${questionHeader}\n${questionRows.join('\n')}\n`);
+
+    const releaseHeader =
+      'release_gate_id,packet_id,owner_lane,priority,source_ids,required_question_count,submitted_question_count,submitted_evidence_count,missing_required_questions,gate_status,can_write_source_registry,can_update_page_display,can_export_as_fact_csv,blocking_reason,next_command_after_owner_submission';
+    const releaseRows = [
+      'owner-intake-gate:p0-amazon-connector-owner-01,p0-amazon-connector-owner-01,amazon_connector_owner,P0,ds-007,2,0,0,2,blocked_owner_submission_required,false,false,false,owner answers required,future validation batch only',
+      'owner-intake-gate:p1-business-owner-manual-review-01,p1-business-owner-manual-review-01,business_owner_manual_review,P1,ds-014,2,0,0,2,blocked_owner_submission_required,false,false,false,owner answers required,future validation batch only',
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_release_gate.csv'), `${releaseHeader}\n${releaseRows.join('\n')}\n`);
+
+    const output = execFileSync(
+      'node',
+      ['scripts/data/validate-source-gap-owner-intake.mjs', '--intake', intakeDir, '--out', outDir, '--json', '--no-write'],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      },
+    );
+    const result = JSON.parse(output) as {
+      summary: {
+        sourceGapCount: number;
+        packetCount: number;
+        questionCount: number;
+        answeredQuestionCount: number;
+        missingRequiredQuestionCount: number;
+        packetReadyForManualReviewCount: number;
+        packetBlockedCount: number;
+        sourceReadyForManualReviewCount: number;
+        sourceBlockedCount: number;
+        validationStatusCounts: Record<string, number>;
+        boundaries: Record<string, boolean>;
+      };
+      samplePacketValidation: Array<{
+        packet_id: string;
+        packet_validation_status: string;
+        ready_for_manual_review: string;
+        can_write_source_registry: string;
+        can_update_page_display: string;
+        can_export_as_fact_csv: string;
+      }>;
+      sampleQuestionValidation: Array<{ validation_status: string; hash_validation_status: string; blockers: string }>;
+    };
+
+    expect(result.summary.sourceGapCount).toBe(2);
+    expect(result.summary.packetCount).toBe(2);
+    expect(result.summary.questionCount).toBe(4);
+    expect(result.summary.answeredQuestionCount).toBe(2);
+    expect(result.summary.missingRequiredQuestionCount).toBe(2);
+    expect(result.summary.packetReadyForManualReviewCount).toBe(1);
+    expect(result.summary.packetBlockedCount).toBe(1);
+    expect(result.summary.sourceReadyForManualReviewCount).toBe(1);
+    expect(result.summary.sourceBlockedCount).toBe(1);
+    expect(result.summary.validationStatusCounts.ready_for_manual_review).toBe(1);
+    expect(result.summary.validationStatusCounts.blocked_owner_submission_incomplete).toBe(1);
+    expect(result.summary.boundaries.providerCalls).toBe(false);
+    expect(result.summary.boundaries.restrictedConnectorAccess).toBe(false);
+    expect(result.summary.boundaries.productionWrites).toBe(false);
+    expect(result.summary.boundaries.factPromotion).toBe(false);
+    expect(result.summary.boundaries.sourceRegistryWrites).toBe(false);
+    expect(result.summary.boundaries.pageWrites).toBe(false);
+    expect(result.summary.boundaries.csvFactExport).toBe(false);
+    expect(result.samplePacketValidation.every((packet) => packet.can_write_source_registry === 'false')).toBe(true);
+    expect(result.samplePacketValidation.every((packet) => packet.can_update_page_display === 'false')).toBe(true);
+    expect(result.samplePacketValidation.every((packet) => packet.can_export_as_fact_csv === 'false')).toBe(true);
+    expect(result.samplePacketValidation.find((packet) => packet.packet_id === 'p0-amazon-connector-owner-01')).toMatchObject({
+      packet_validation_status: 'ready_for_manual_review',
+      ready_for_manual_review: 'true',
+    });
+    expect(result.samplePacketValidation.find((packet) => packet.packet_id === 'p1-business-owner-manual-review-01')).toMatchObject({
+      packet_validation_status: 'blocked_owner_submission_incomplete',
+      ready_for_manual_review: 'false',
+    });
+    expect(result.sampleQuestionValidation.filter((question) => question.hash_validation_status === 'valid_sha256')).toHaveLength(2);
+    expect(result.sampleQuestionValidation.some((question) => question.blockers.includes('missing-required-answer'))).toBe(true);
+    expect(existsSync(outDir)).toBe(false);
+    expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    rmSync(tempDir, { recursive: true, force: true });
+  });
+
+  it('prefills source gap owner intake from local evidence while keeping release gates closed', () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-owner-intake-prefill-'));
+    const intakeDir = join(tempDir, 'intake');
+    const evidenceDir = join(tempDir, 'evidence');
+    const outDir = join(tempDir, 'out');
+    mkdirSync(intakeDir, { recursive: true });
+    mkdirSync(evidenceDir, { recursive: true });
+    writeFileSync(join(evidenceDir, 'ds-public.txt'), 'public source evidence for ds-public');
+
+    const sourceHeader =
+      'source_id,priority,module,page,metric,collection_method,evidence_grade,verification_status,owner_lane,packet_id,packet_dir,current_display_state,can_display_as_fact_current,intake_status,promotion_state,owner_answer_required,evidence_required,next_action,blocking_reason';
+    const sourceRows = [
+      'ds-public,P1,看行业,IPAnalysis,专利入口,public-url-check,L0-unverified,needs-review,public_research_owner,p1-public-research-owner-01,tmp/audits/packets,display_as_gate_only,false,awaiting_owner_submission,blocked_until_owner_evidence_validated,yes,yes,Capture public evidence,public-source-needs-review',
+      'ds-manual,P1,看用户,ConsumerInterviews,访谈样本,manual-required,L0-unverified,needs-review,business_owner_manual_review,p1-business-owner-manual-review-01,tmp/audits/packets,display_as_gate_only,false,awaiting_owner_submission,blocked_until_owner_evidence_validated,yes,yes,Create manual review artifact,manual-evidence-artifact-required',
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_source_matrix.csv'), `${sourceHeader}\n${sourceRows.join('\n')}\n`);
+
+    const packetHeader =
+      'packet_id,priority,owner_lane,source_count,source_ids,pages,collection_methods,current_max_evidence_grade,target_min_evidence_grade,required_artifact_fields,acceptance_gate,forbidden_claims,intake_status,submitted_owner_answers,required_owner_answers,ready_for_registry_binding,ready_for_fact_display,ready_for_csv_export';
+    const packetRows = [
+      'p1-public-research-owner-01,P1,public_research_owner,1,ds-public,IPAnalysis,public-url-check,L0-unverified,L1-public-or-runtime,artifact_id|owner_alias|evidence_file_path|evidence_hash,Public evidence capture records URL and hash,Do not promote without manual review,awaiting_owner_submission,0,6,false,false,false',
+      'p1-business-owner-manual-review-01,P1,business_owner_manual_review,1,ds-manual,ConsumerInterviews,manual-required,L0-unverified,L1-public-or-runtime,artifact_id|owner_alias|evidence_file_path|evidence_hash,Business owner provides signed review artifact,Do not promote without manual review,awaiting_owner_submission,0,6,false,false,false',
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_packet_queue.csv'), `${packetHeader}\n${packetRows.join('\n')}\n`);
+
+    const questionHeader =
+      'packet_id,question_id,owner_lane,source_ids,question,expected_answer_format,required_for_promotion,answer_status,owner_answer,evidence_uri_or_path,evidence_hash,answered_by,answered_at,validation_note';
+    const questionRows = [
+      ...['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6'].map(
+        (questionId) =>
+          `p1-public-research-owner-01,${questionId},public_research_owner,ds-public,Question ${questionId},answer format,yes,missing,,,,,,Owner answer and evidence are required.`,
+      ),
+      ...['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6'].map(
+        (questionId) =>
+          `p1-business-owner-manual-review-01,${questionId},business_owner_manual_review,ds-manual,Question ${questionId},answer format,yes,missing,,,,,,Owner answer and evidence are required.`,
+      ),
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_questionnaire.csv'), `${questionHeader}\n${questionRows.join('\n')}\n`);
+
+    const releaseHeader =
+      'release_gate_id,packet_id,owner_lane,priority,source_ids,required_question_count,submitted_question_count,submitted_evidence_count,missing_required_questions,gate_status,can_write_source_registry,can_update_page_display,can_export_as_fact_csv,blocking_reason,next_command_after_owner_submission';
+    const releaseRows = [
+      'owner-intake-gate:p1-public-research-owner-01,p1-public-research-owner-01,public_research_owner,P1,ds-public,6,0,0,6,blocked_owner_submission_required,false,false,false,owner answers required,future validation batch only',
+      'owner-intake-gate:p1-business-owner-manual-review-01,p1-business-owner-manual-review-01,business_owner_manual_review,P1,ds-manual,6,0,0,6,blocked_owner_submission_required,false,false,false,owner answers required,future validation batch only',
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_release_gate.csv'), `${releaseHeader}\n${releaseRows.join('\n')}\n`);
+
+    const sourceCrossPath = join(tempDir, 'source_cross_validation_matrix.csv');
+    const sourceCrossHeader =
+      'source_id,page,source_name,url,primary_capture_status,secondary_capture_status,evidence_artifacts,evidence_grade,max_supported_claim,blocked_claims,display_decision,next_action';
+    const sourceCrossRows = [
+      'ds-public,IPAnalysis,WIPO,https://example.com,captured:200,not-needed,evidence/ds-public.txt,L1-public-or-runtime,Public entry page exists,Product-level patent claims remain pending,blocked,Run query-specific patent search',
+    ];
+    writeFileSync(sourceCrossPath, `${sourceCrossHeader}\n${sourceCrossRows.join('\n')}\n`);
+
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/prefill-source-gap-owner-intake.mjs',
+        '--intake',
+        intakeDir,
+        '--out',
+        outDir,
+        '--source-cross-matrix',
+        sourceCrossPath,
+        '--data-point-matrix',
+        join(tempDir, 'missing_data_point_matrix.csv'),
+        '--json',
+        '--no-write',
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      },
+    );
+    const result = JSON.parse(output) as {
+      summary: {
+        sourceGapCount: number;
+        packetCount: number;
+        questionCount: number;
+        usableEvidenceRowCount: number;
+        prefilledQuestionCount: number;
+        prefilledReadyPacketCount: number;
+        chatQuestionPacketCount: number;
+        boundaries: Record<string, boolean>;
+      };
+      readyPackets: Array<{
+        packet_id: string;
+        intake_status: string;
+        submitted_owner_answers: number;
+        ready_for_registry_binding: string;
+        ready_for_fact_display: string;
+        ready_for_csv_export: string;
+      }>;
+      chatQuestions: Array<{ packet_id: string; missing_source_ids: string }>;
+    };
+
+    expect(result.summary.sourceGapCount).toBe(2);
+    expect(result.summary.packetCount).toBe(2);
+    expect(result.summary.questionCount).toBe(12);
+    expect(result.summary.usableEvidenceRowCount).toBe(1);
+    expect(result.summary.prefilledQuestionCount).toBe(6);
+    expect(result.summary.prefilledReadyPacketCount).toBe(1);
+    expect(result.summary.chatQuestionPacketCount).toBe(1);
+    expect(result.summary.boundaries.providerCalls).toBe(false);
+    expect(result.summary.boundaries.productionWrites).toBe(false);
+    expect(result.summary.boundaries.factPromotion).toBe(false);
+    expect(result.summary.boundaries.sourceRegistryWrites).toBe(false);
+    expect(result.summary.boundaries.pageWrites).toBe(false);
+    expect(result.summary.boundaries.csvFactExport).toBe(false);
+    expect(result.readyPackets).toHaveLength(1);
+    expect(result.readyPackets[0]).toMatchObject({
+      packet_id: 'p1-public-research-owner-01',
+      intake_status: 'prefilled_ready_for_validator',
+      submitted_owner_answers: 6,
+      ready_for_registry_binding: 'false',
+      ready_for_fact_display: 'false',
+      ready_for_csv_export: 'false',
+    });
+    expect(result.chatQuestions).toEqual([
+      expect.objectContaining({
+        packet_id: 'p1-business-owner-manual-review-01',
+        missing_source_ids: 'ds-manual',
+      }),
+    ]);
+    expect(existsSync(outDir)).toBe(false);
+    expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    rmSync(tempDir, { recursive: true, force: true });
+  });
+
+  it('builds owner chat intake batches from remaining source gap packets without merging answers', () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-owner-chat-intake-'));
+    const chatQueuePath = join(tempDir, 'owner_intake_prefill_chat_questions.csv');
+    const outDir = join(tempDir, 'out');
+
+    const header =
+      'packet_id,priority,owner_lane,source_ids,pages,missing_source_ids,suggested_question_batch,chat_prompt,blocking_reason';
+    const rows = [
+      'p1-manual-owner-01,P1,business_owner_manual_review,ds-manual,ConsumerInterviews,ds-manual,Q1-Q6,Answer Q1-Q6 for p1-manual-owner-01,source-level evidence artifact is missing',
+      'p0-connector-owner-01,P0,amazon_connector_owner,ds-amz-a|ds-amz-b,CompetitionPage|ProductManage,ds-amz-a|ds-amz-b,Q1-Q6,Answer Q1-Q6 for p0-connector-owner-01,source-level evidence artifact is missing',
+      'p2-public-owner-01,P2,public_research_owner,ds-public,IndustryNews,ds-public,Q1-Q6,Answer Q1-Q6 for p2-public-owner-01,source-level evidence artifact is missing',
+    ];
+    writeFileSync(chatQueuePath, `${header}\n${rows.join('\n')}\n`);
+
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/build-source-gap-owner-chat-intake-pack.mjs',
+        '--chat-queue',
+        chatQueuePath,
+        '--out',
+        outDir,
+        '--batch-size',
+        '2',
+        '--json',
+        '--no-write',
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      },
+    );
+    const result = JSON.parse(output) as {
+      summary: {
+        batchCount: number;
+        packetCount: number;
+        questionCount: number;
+        sourceCount: number;
+        byPriority: Record<string, number>;
+        byOwnerLane: Record<string, number>;
+        boundaries: Record<string, boolean>;
+      };
+      manifest: {
+        outputs: Record<string, { rowCount: number; headers: string[] }>;
+      };
+      sampleBatches: Array<{ batch_id: string; priority_mix: string; packet_count: number; question_count: number }>;
+      samplePackets: Array<{ batch_id: string; packet_id: string; answer_status: string; merge_target: string }>;
+      sampleQuestions: Array<{ packet_id: string; question_id: string; response_key: string; required_for_manual_review: string }>;
+    };
+
+    expect(result.summary.batchCount).toBe(2);
+    expect(result.summary.packetCount).toBe(3);
+    expect(result.summary.questionCount).toBe(18);
+    expect(result.summary.sourceCount).toBe(4);
+    expect(result.summary.byPriority.P0).toBe(1);
+    expect(result.summary.byPriority.P1).toBe(1);
+    expect(result.summary.byPriority.P2).toBe(1);
+    expect(result.summary.byOwnerLane.amazon_connector_owner).toBe(1);
+    expect(result.summary.boundaries.providerCalls).toBe(false);
+    expect(result.summary.boundaries.restrictedConnectorAccess).toBe(false);
+    expect(result.summary.boundaries.productionWrites).toBe(false);
+    expect(result.summary.boundaries.factPromotion).toBe(false);
+    expect(result.summary.boundaries.sourceRegistryWrites).toBe(false);
+    expect(result.summary.boundaries.pageWrites).toBe(false);
+    expect(result.summary.boundaries.csvFactExport).toBe(false);
+    expect(result.summary.boundaries.answerMerge).toBe(false);
+    expect(result.manifest.outputs['owner_chat_intake_questions.csv']).toMatchObject({ rowCount: 18 });
+    expect(result.manifest.outputs['owner_chat_answer_template.json'].headers).toEqual(['answerBatches']);
+    expect(result.sampleBatches[0]).toMatchObject({
+      batch_id: 'owner-chat-batch-01-p0',
+      packet_count: 2,
+      question_count: 12,
+    });
+    expect(result.sampleBatches[0].priority_mix).toContain('P0:1');
+    expect(result.samplePackets.every((packet) => packet.answer_status === 'awaiting_chat_owner_answer')).toBe(true);
+    expect(result.samplePackets.every((packet) => packet.merge_target === 'owner_intake_questionnaire.csv')).toBe(true);
+    expect(result.sampleQuestions.map((question) => question.question_id)).toEqual(['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6']);
+    expect(result.sampleQuestions.every((question) => question.required_for_manual_review === 'yes')).toBe(true);
+    expect(result.sampleQuestions[0].response_key).toBe('p0-connector-owner-01.Q1');
+    expect(existsSync(outDir)).toBe(false);
+    expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    rmSync(tempDir, { recursive: true, force: true });
+  });
+
+  it('merges owner chat answers into intake CSVs while keeping release gates closed', () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-owner-chat-merge-'));
+    const intakeDir = join(tempDir, 'intake');
+    const chatPackDir = join(tempDir, 'chat-pack');
+    const answersPath = join(tempDir, 'answers.json');
+    const outDir = join(tempDir, 'out');
+    const evidenceHash = 'b'.repeat(64);
+    mkdirSync(intakeDir, { recursive: true });
+    mkdirSync(chatPackDir, { recursive: true });
+
+    const questionHeader =
+      'packet_id,question_id,owner_lane,source_ids,question,expected_answer_format,required_for_promotion,answer_status,owner_answer,evidence_uri_or_path,evidence_hash,answered_by,answered_at,validation_note';
+    const questionRows = [
+      'p0-owner-01,Q1,amazon_connector_owner,ds-a,Who owns this source packet?,owner_alias / owner_role,yes,missing,,,,,,Owner answer and evidence are required.',
+      'p0-owner-01,Q2,amazon_connector_owner,ds-a,Where is the evidence file?,path or URI / sha256,yes,missing,,,,,,Owner answer and evidence are required.',
+      'p1-owner-01,Q1,business_owner_manual_review,ds-b,Who owns this source packet?,owner_alias / owner_role,yes,missing,,,,,,Owner answer and evidence are required.',
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_questionnaire.csv'), `${questionHeader}\n${questionRows.join('\n')}\n`);
+
+    const packetHeader =
+      'packet_id,priority,owner_lane,source_count,source_ids,pages,collection_methods,current_max_evidence_grade,target_min_evidence_grade,required_artifact_fields,acceptance_gate,forbidden_claims,intake_status,submitted_owner_answers,required_owner_answers,ready_for_registry_binding,ready_for_fact_display,ready_for_csv_export';
+    const packetRows = [
+      'p0-owner-01,P0,amazon_connector_owner,1,ds-a,CompetitionPage,connector-required,L0-unverified,L3-production-read-only,artifact_id|owner_alias|evidence_file_path|evidence_hash,Owner provides authorized read-only snapshot,Do not promote without manual review,awaiting_owner_submission,0,2,false,false,false',
+      'p1-owner-01,P1,business_owner_manual_review,1,ds-b,ConsumerInterviews,manual-required,L0-unverified,L1-public-or-runtime,artifact_id|owner_alias|evidence_file_path|evidence_hash,Business owner provides signed review artifact,Do not promote without manual review,awaiting_owner_submission,0,1,false,false,false',
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_packet_queue.csv'), `${packetHeader}\n${packetRows.join('\n')}\n`);
+
+    const releaseHeader =
+      'release_gate_id,packet_id,owner_lane,priority,source_ids,required_question_count,submitted_question_count,submitted_evidence_count,missing_required_questions,gate_status,can_write_source_registry,can_update_page_display,can_export_as_fact_csv,blocking_reason,next_command_after_owner_submission';
+    const releaseRows = [
+      'owner-intake-gate:p0-owner-01,p0-owner-01,amazon_connector_owner,P0,ds-a,2,0,0,2,blocked_owner_submission_required,false,false,false,owner answers required,future validation batch only',
+      'owner-intake-gate:p1-owner-01,p1-owner-01,business_owner_manual_review,P1,ds-b,1,0,0,1,blocked_owner_submission_required,false,false,false,owner answers required,future validation batch only',
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_release_gate.csv'), `${releaseHeader}\n${releaseRows.join('\n')}\n`);
+
+    const sourceHeader =
+      'source_id,priority,module,page,metric,collection_method,evidence_grade,verification_status,owner_lane,packet_id,packet_dir,current_display_state,can_display_as_fact_current,intake_status,promotion_state,owner_answer_required,evidence_required,next_action,blocking_reason';
+    const sourceRows = [
+      'ds-a,P0,看竞争,CompetitionPage,竞品概览,connector-required,L0-unverified,needs-review,amazon_connector_owner,p0-owner-01,tmp/audits/packets,display_as_gate_only,false,awaiting_owner_submission,blocked_until_owner_evidence_validated,yes,yes,Create connector readiness record,authorized-connector-or-private-snapshot-required',
+      'ds-b,P1,看用户,ConsumerInterviews,访谈样本,manual-required,L0-unverified,needs-review,business_owner_manual_review,p1-owner-01,tmp/audits/packets,display_as_gate_only,false,awaiting_owner_submission,blocked_until_owner_evidence_validated,yes,yes,Create manual review artifact,manual-evidence-artifact-required',
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_source_matrix.csv'), `${sourceHeader}\n${sourceRows.join('\n')}\n`);
+
+    const chatPacketHeader =
+      'batch_id,packet_id,priority,owner_lane,source_ids,pages,missing_source_ids,suggested_question_batch,blocking_reason,question_count,answer_status,merge_target';
+    const chatPacketRows = [
+      'owner-chat-batch-01-p0,p0-owner-01,P0,amazon_connector_owner,ds-a,CompetitionPage,ds-a,Q1-Q2,source-level evidence artifact is missing,2,awaiting_chat_owner_answer,owner_intake_questionnaire.csv',
+    ];
+    writeFileSync(join(chatPackDir, 'owner_chat_intake_packets.csv'), `${chatPacketHeader}\n${chatPacketRows.join('\n')}\n`);
+
+    const chatQuestionHeader =
+      'batch_id,packet_id,question_id,priority,owner_lane,source_ids,pages,prompt,expected_answer_format,response_key,required_for_manual_review';
+    const chatQuestionRows = [
+      'owner-chat-batch-01-p0,p0-owner-01,Q1,P0,amazon_connector_owner,ds-a,CompetitionPage,Confirm owner,owner_alias / owner_role,p0-owner-01.Q1,yes',
+      'owner-chat-batch-01-p0,p0-owner-01,Q2,P0,amazon_connector_owner,ds-a,CompetitionPage,Confirm source,source_system / scope,p0-owner-01.Q2,yes',
+    ];
+    writeFileSync(join(chatPackDir, 'owner_chat_intake_questions.csv'), `${chatQuestionHeader}\n${chatQuestionRows.join('\n')}\n`);
+
+    writeFileSync(
+      answersPath,
+      `${JSON.stringify(
+        {
+          schemaVersion: 1,
+          batchId: 'owner-chat-batch-01-p0',
+          answeredBy: 'pray',
+          answeredAt: '2026-06-30',
+          packets: [
+            {
+              packet_id: 'p0-owner-01',
+              evidence_uri_or_path: 'tmp/audits/evidence/p0-owner-01.json',
+              evidence_hash: evidenceHash,
+              answers: {
+                Q1: 'pray / market data owner / connector-readiness packet scope only',
+                Q2: '2026-06-01..2026-06-30 / authorized read-only snapshot / CompetitionPage scope',
+              },
+            },
+          ],
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/merge-source-gap-owner-chat-answers.mjs',
+        '--intake',
+        intakeDir,
+        '--chat-pack',
+        chatPackDir,
+        '--answers',
+        answersPath,
+        '--out',
+        outDir,
+        '--batch-id',
+        'owner-chat-batch-01-p0',
+        '--json',
+        '--no-write',
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      },
+    );
+    const result = JSON.parse(output) as {
+      summary: {
+        packetCount: number;
+        questionCount: number;
+        answerPacketCount: number;
+        selectedQuestionCount: number;
+        mergedQuestionCount: number;
+        missingQuestionCount: number;
+        needsUpdateQuestionCount: number;
+        readyCandidatePacketCount: number;
+        boundaries: Record<string, boolean>;
+      };
+      sampleMergedQuestions: Array<{
+        packet_id: string;
+        question_id: string;
+        answer_status: string;
+        evidence_hash: string;
+        answered_by: string;
+      }>;
+      samplePacketQueue: Array<{
+        packet_id: string;
+        intake_status: string;
+        submitted_owner_answers: number;
+        ready_for_fact_display: string;
+        ready_for_csv_export: string;
+      }>;
+    };
+
+    expect(result.summary.packetCount).toBe(1);
+    expect(result.summary.questionCount).toBe(2);
+    expect(result.summary.answerPacketCount).toBe(1);
+    expect(result.summary.selectedQuestionCount).toBe(2);
+    expect(result.summary.mergedQuestionCount).toBe(2);
+    expect(result.summary.missingQuestionCount).toBe(0);
+    expect(result.summary.needsUpdateQuestionCount).toBe(0);
+    expect(result.summary.readyCandidatePacketCount).toBe(1);
+    expect(result.summary.boundaries.providerCalls).toBe(false);
+    expect(result.summary.boundaries.productionWrites).toBe(false);
+    expect(result.summary.boundaries.factPromotion).toBe(false);
+    expect(result.summary.boundaries.sourceRegistryWrites).toBe(false);
+    expect(result.summary.boundaries.pageWrites).toBe(false);
+    expect(result.summary.boundaries.csvFactExport).toBe(false);
+    expect(result.sampleMergedQuestions).toHaveLength(2);
+    expect(result.sampleMergedQuestions.every((question) => question.answer_status === 'answered')).toBe(true);
+    expect(result.sampleMergedQuestions.every((question) => question.evidence_hash === evidenceHash)).toBe(true);
+    expect(result.sampleMergedQuestions.every((question) => question.answered_by === 'pray')).toBe(true);
+    expect(result.samplePacketQueue[0]).toMatchObject({
+      packet_id: 'p0-owner-01',
+      intake_status: 'chat_answers_merged_pending_validator',
+      submitted_owner_answers: 2,
+      ready_for_fact_display: 'false',
+      ready_for_csv_export: 'false',
+    });
+    expect(existsSync(outDir)).toBe(false);
+    expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    rmSync(tempDir, { recursive: true, force: true });
   });
 
   it('keeps shared connector readiness helpers fail-closed and secret-aware', () => {
@@ -311,6 +1081,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
         claimCount: number;
         csvExportClaimCount: number;
         highRiskClaimCount: number;
+        unsupportedClaimCount: number;
         sourceGapCount: number;
         issueCounts: Record<string, number>;
       };
@@ -330,9 +1101,11 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(audit.summary.claimCount).toBeGreaterThan(0);
     expect(audit.summary.csvExportClaimCount).toBeGreaterThan(0);
     expect(audit.summary.highRiskClaimCount).toBe(0);
+    expect(audit.summary.unsupportedClaimCount).toBe(0);
     expect(audit.summary.sourceGapCount).toBeGreaterThan(0);
     expect(audit.summary.issueCounts['no-displayable-source-evidence'] ?? 0).toBe(0);
-    expect(audit.summary.issueCounts['gated-source-disclosure'] ?? 0).toBeGreaterThan(0);
+    expect(audit.summary.issueCounts['gated-source-disclosure'] ?? 0).toBe(0);
+    expect(audit.summary.issueCounts['claim-is-explicit-gated-disclosure'] ?? 0).toBeGreaterThan(0);
     expect(audit.highRiskClaimSamples).toHaveLength(0);
     expect(audit.sourceGapMatrix.some((source) => !source.can_display_as_fact)).toBe(true);
     expect(audit.sourceGapMatrix.some((source) => source.recommended_collection_lane === 'connector-readiness-or-authorized-private-snapshot')).toBe(true);
@@ -387,10 +1160,10 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       };
     };
 
-    expect(manifest.sourceTaskQueue.total).toBe(49);
+    expect(manifest.sourceTaskQueue.total).toBe(48);
     expect(manifest.sourceTaskQueue.queueTypeCounts['connector-readiness']).toBe(28);
     expect(manifest.sourceTaskQueue.queueTypeCounts['manual-evidence']).toBe(12);
-    expect(manifest.sourceTaskQueue.queueTypeCounts['public-source-review']).toBe(9);
+    expect(manifest.sourceTaskQueue.queueTypeCounts['public-source-review']).toBe(8);
     expect(manifest.sourceTaskQueue.priorityCounts.P0).toBeGreaterThan(0);
     expect(manifest.sourceTaskQueue.ownerTeamCounts['market-research']).toBeGreaterThan(0);
     expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'manual-evidence:ds-003')).toBe(true);

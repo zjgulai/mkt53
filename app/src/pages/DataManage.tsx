@@ -13,16 +13,19 @@ import { exportToCsv } from '@/utils/csvExport';
 
 interface DataField {
   name: string; type: string; desc: string; source: string; required: boolean;
+  sourceIds?: string[];
 }
 
 interface DataTable {
   id: string; name: string; desc: string; fields: DataField[];
   upstream?: string[]; downstream?: string[]; updateFreq: string;
+  sourceIds?: string[];
 }
 
 interface DataModule {
   id: string; name: string; icon: typeof Table; color: string; page: string;
   desc: string; tables: DataTable[];
+  sourceIds?: string[];
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -52,7 +55,11 @@ interface DataGovernance {
   freshness: string;           // 数据刷新状态或真实数据快照日期
   retention: string;           // 保留策略
   pii: boolean;                // 是否含PII
+  sourceIds?: string[];        // 目录或治理记录来源
 }
+
+const dataCatalogSourceIds = ['ds-027'];
+const erpGovernanceSourceIds = ['ds-027', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'];
 
 // R2: 数据分层架构元数据
 const layerMeta: Record<DataLayer, { label: string; color: string; desc: string; icon: string }> = {
@@ -118,7 +125,7 @@ const tableGovernance: Record<string, DataGovernance> = {
   t_ai_review_publish_gate: { layer: 'app', scope: 'hybrid', sensitivity: 'L3-机密', status: 'pending', owner: '数据治理组', steward: '业务复核人', qualityScore: 72, freshness: 'Batch5发布门禁已生成', retention: '5年', pii: false },
   t_ai_design_run_manifest: { layer: 'app', scope: 'hybrid', sensitivity: 'L3-机密', status: 'pending', owner: 'AI组', steward: '黄算法', qualityScore: 68, freshness: 'Batch6生成run gate已生成', retention: '2年', pii: false },
   t_ai_design_asset_hash_manifest: { layer: 'clean', scope: 'hybrid', sensitivity: 'L3-机密', status: 'pending', owner: '创意组', steward: '数据治理组', qualityScore: 70, freshness: 'Batch6资产hash gate已生成', retention: '3年', pii: false },
-  t_ai_design_cost_queue: { layer: 'app', scope: 'internal', sensitivity: 'L3-机密', status: 'pending', owner: 'AI组', steward: '财务/数据治理组', qualityScore: 66, freshness: 'Batch6成本队列已生成', retention: '5年', pii: false },
+  t_ai_design_cost_queue: { layer: 'app', scope: 'internal', sensitivity: 'L3-机密', status: 'pending', owner: 'AI组', steward: '财务/数据治理组', qualityScore: 66, freshness: 'Batch6成本队列已生成', retention: '5年', pii: false, sourceIds: dataCatalogSourceIds },
   t_ai_design_commercial_review_gate: { layer: 'app', scope: 'internal', sensitivity: 'L3-机密', status: 'pending', owner: '品牌组', steward: '法务/创意负责人', qualityScore: 69, freshness: 'Batch6商用审核门禁已生成', retention: '5年', pii: false },
   t_comment_ai:   { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: 'AI组', steward: '黄算法', qualityScore: 83, freshness: 'VOC凭证待接入', retention: '1年', pii: false },
   t_design_ai:    { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'untracked', owner: 'AI组', steward: '黄算法', qualityScore: 60, freshness: '生成日志待接入', retention: '1年', pii: false },
@@ -187,10 +194,10 @@ const tableGovernance: Record<string, DataGovernance> = {
   t_erp_owner_real_submission_release_gate_checklist: { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'pending', owner: '数据治理组', steward: '业务数据Owner', qualityScore: 66, freshness: 'Batch18 real owner release gate checklist已生成', retention: '180天', pii: false },
   t_erp_owner_real_submission_swap_runbook: { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'pending', owner: '数据治理组', steward: '业务数据Owner', qualityScore: 66, freshness: 'Batch18 real owner swap runbook已生成', retention: '180天', pii: false },
   t_erp_owner_real_submission_boundary_audit: { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'pending', owner: '数据治理组', steward: '业务数据Owner', qualityScore: 66, freshness: 'Batch18 real owner boundary audit已生成', retention: '180天', pii: false },
-  t_erp_manual_release_review_record: { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '数据治理组', steward: '业务数据Owner', qualityScore: 88, freshness: 'Batch19 manual release review已记录', retention: '5年', pii: false },
-  t_erp_manual_release_review_decision_matrix: { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: '数据治理组', steward: '业务数据Owner', qualityScore: 88, freshness: 'Batch19 decision matrix已生成', retention: '5年', pii: false },
-  t_erp_manual_release_review_swap_queue: { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: '数据治理组', steward: '数据产品', qualityScore: 86, freshness: 'Batch19 site data swap queue已生成', retention: '5年', pii: false },
-  t_erp_manual_release_review_boundary_audit: { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '数据治理组', steward: '业务数据Owner', qualityScore: 90, freshness: 'Batch19 boundary audit已通过', retention: '5年', pii: false },
+  t_erp_manual_release_review_record: { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '数据治理组', steward: '业务数据Owner', qualityScore: 88, freshness: 'Batch19 manual release review已记录', retention: '5年', pii: false, sourceIds: erpGovernanceSourceIds },
+  t_erp_manual_release_review_decision_matrix: { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: '数据治理组', steward: '业务数据Owner', qualityScore: 88, freshness: 'Batch19 decision matrix已生成', retention: '5年', pii: false, sourceIds: erpGovernanceSourceIds },
+  t_erp_manual_release_review_swap_queue: { layer: 'app', scope: 'hybrid', sensitivity: 'L2-内部', status: 'governed', owner: '数据治理组', steward: '数据产品', qualityScore: 86, freshness: 'Batch19 site data swap queue已生成', retention: '5年', pii: false, sourceIds: erpGovernanceSourceIds },
+  t_erp_manual_release_review_boundary_audit: { layer: 'app', scope: 'internal', sensitivity: 'L2-内部', status: 'governed', owner: '数据治理组', steward: '业务数据Owner', qualityScore: 90, freshness: 'Batch19 boundary audit已通过', retention: '5年', pii: false, sourceIds: erpGovernanceSourceIds },
 };
 
 // R21: 数据变更历史日志 — 样例治理操作审计，不代表真实数据刷新
@@ -225,6 +232,7 @@ const dataModules: DataModule[] = [
   {
     id: 'mkt', name: '市场洞察数据', icon: BarChart3, color: '#C25B6E', page: '/market',
     desc: '看市场模块所需全部数据，覆盖市场规模、趋势、PEST分析、波特五力、海关、品类分析',
+    sourceIds: dataCatalogSourceIds,
 
     tables: [
       {
@@ -322,6 +330,7 @@ const dataModules: DataModule[] = [
   {
     id: 'comp', name: '竞争情报数据', icon: Target, color: '#ff9500', page: '/competition',
     desc: '看竞争模块所需全部数据，覆盖竞品产品、新品监测、区域竞争、价格、品牌份额',
+    sourceIds: dataCatalogSourceIds,
 
     tables: [
       {
@@ -393,6 +402,7 @@ const dataModules: DataModule[] = [
   {
     id: 'user', name: '用户研究数据', icon: Users, color: '#af52de', page: '/users',
     desc: '看用户模块所需全部数据，覆盖用户画像、社交声量、评论、消费者/渠道/店铺访谈',
+    sourceIds: dataCatalogSourceIds,
 
     tables: [
       {
@@ -489,6 +499,7 @@ const dataModules: DataModule[] = [
   {
     id: 'ind', name: '行业动态数据', icon: Shield, color: '#5856d6', page: '/industry',
     desc: '看行业模块所需全部数据，覆盖政策法规、供应链、IP专利、展会、宏观',
+    sourceIds: dataCatalogSourceIds,
     tables: [
       {
         id: 't_policy', name: 'policy_regulations', desc: '政策法规数据库',
@@ -557,6 +568,7 @@ const dataModules: DataModule[] = [
   {
     id: 'self', name: '品牌自研数据', icon: Eye, color: '#34c759', page: '/self',
     desc: '看自己模块所需全部数据，覆盖产品、定价、渠道、推广（营销4P）',
+    sourceIds: dataCatalogSourceIds,
     tables: [
       {
         id: 't_own_product', name: 'momcozy_products', desc: 'Momcozy自有产品数据库',
@@ -625,6 +637,7 @@ const dataModules: DataModule[] = [
   {
     id: 'erp', name: 'ERP内部经营数据', icon: HardDrive, color: '#0A84FF', page: '/data',
     desc: 'ERP/BI内部经营数据治理层，沉淀source artifact、SKU维表、月度事实、目标达成、库存快照、字段字典、品类映射和Batch19 release review；已放行项按private/internal proxy展示',
+    sourceIds: dataCatalogSourceIds,
     tables: [
       {
         id: 't_erp_artifact', name: 'erp_source_artifacts', desc: 'ERP导出与只读采集证据总账',
@@ -1511,6 +1524,7 @@ const dataModules: DataModule[] = [
   {
     id: 'ai', name: 'AI辅助数据', icon: Sparkles, color: '#af52de', page: '/ai-assistant',
     desc: 'AI助手模块所需全部数据，覆盖dataset manifest、model run manifest、评论/VOC样本清单、eval队列、设计/图库run、资产hash、成本队列、商用审核门禁、报告队列、评论分析、设计助手、知识库、数据评论',
+    sourceIds: dataCatalogSourceIds,
     tables: [
       {
         id: 't_ai_dataset_manifest', name: 'ai_dataset_manifest', desc: 'AI与报告输入数据集治理清单；Batch4仅为readiness gate',
@@ -1821,6 +1835,7 @@ const dataLineage = [
   { from: 'erp_owner_approval_backlog', to: 'erp_owner_approval_validation_result', type: '审批记录校验' },
   { from: 'erp_owner_approval_validation_result', to: 'erp_owner_approval_release_gate', type: '发布门禁校验' },
   { from: 'erp_owner_approval_release_gate', to: 'erp_owner_approval_promotion_manifest', type: '事实升级候选' },
+  // audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
   { from: 'erp_owner_approval_release_gate', to: 'erp_manual_release_review_record', type: 'Batch19人工release review' },
   { from: 'erp_owner_approval_promotion_manifest', to: 'erp_manual_release_review_decision_matrix', type: 'Batch19逐表决策' },
   { from: 'erp_manual_release_review_record', to: 'erp_manual_release_review_decision_matrix', type: 'manual review记录' },
@@ -2080,13 +2095,15 @@ export default function DataManage() {
             </div>
             {/* R13: 血缘路径说明 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {/* audit-source: ds-001 ds-002 ds-044 ds-045 ds-046 ds-027 */}
               <div className="p-3 rounded-xl bg-[#ff3b30]/5 border border-[#ff3b30]/10">
                 <p className="text-[10px] text-[#ff3b30] font-semibold mb-1">关键路径：市场规模测算</p>
                 <p className="text-[10px] text-[#86868b]">外部研报 → market_size_global → market_trend_monthly → dashboard_kpi<br/>此路径影响首页KPI和市场层级/份额分母展示，优先级P0</p>
               </div>
+              {/* audit-source: ds-007 ds-009 ds-010 */}
               <div className="p-3 rounded-xl bg-[#ff9500]/5 border border-[#ff9500]/10">
                 <p className="text-[10px] text-[#ff9500] font-semibold mb-1">关键路径：竞品情报</p>
-                <p className="text-[10px] text-[#86868b]">Amazon API → competitor_products → price_analysis + new_product_tracker<br/>此路径影响竞品库和价格监测，优先级P0</p>
+                <p className="text-[10px] text-[#86868b]">Amazon API → competitor_products → price_analysis + new_product_tracker<br/>此路径影响竞品库和价格监测，优先级P0；采集任务、时间戳和平台授权待复核。</p>
               </div>
             </div>
           </div>
@@ -2445,6 +2462,7 @@ export default function DataManage() {
 
         {/* MECE说明 */}
         <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF] mt-5">
+          {/* audit-source: ds-027 */}
           <h3 className="text-sm font-semibold text-[#1d1d1f] mb-3 flex items-center gap-2">
             <Info className="w-4 h-4 text-[#5856d6]" /> MECE数据架构说明
           </h3>

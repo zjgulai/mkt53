@@ -32,12 +32,14 @@ export default function ReviewAnalysis() {
       ]}
       internalFactSummary={
         <div className="space-y-5">
+          {/* audit-source: ds-030 */}
           <AiReportGovernancePanel
             title="评论分析 Batch 4 blocked 模型运行 readiness"
             focus="model"
             compact
             framed={false}
           />
+          {/* audit-source: ds-030 */}
           <AiReviewGovernancePanel
             title="评论分析 Batch 5 样本/eval/人工复核 gate"
             focus="comments"

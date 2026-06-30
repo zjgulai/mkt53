@@ -21,6 +21,7 @@ interface MarketDataGateProps {
     label: string;
     description: ReactNode;
     tone: 'blocked' | 'approved';
+    sourceIds?: string[];
   };
 }
 

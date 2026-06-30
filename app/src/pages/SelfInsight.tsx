@@ -104,7 +104,10 @@ export default function SelfInsight() {
               </div>
               <div>
                 <h1 className="text-lg font-semibold text-[#1d1d1f]">看自己</h1>
-                <p className="text-xs text-[#86868b]">ERP内部代理已通过Batch19 · 公开份额、平台数据与主观测算仍待拆分</p>
+                {/* audit-source: ds-047 ds-050 ds-051 */}
+                <p className="text-xs text-[#86868b]">ERP内部代理已通过Batch19</p>
+                {/* audit-source: ds-019 ds-020 */}
+                <p className="text-[10px] text-[#B5AFA8]">公开份额、平台数据与主观测算仍待拆分</p>
               </div>
             </div>
             <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg">
@@ -127,9 +130,14 @@ export default function SelfInsight() {
         </div>
 
         <PageEvidenceNotice
-          sourceIds={['ds-019', 'ds-020', 'ds-047', 'ds-050', 'ds-051']}
-          title="自我诊断来源口径"
-          description="营销组合诊断混合内部经营、平台信息和主观测算；ERP销售统计、全渠道增长和目标达成已通过Batch19作为 private/internal proxy 展示和导出。公开市场份额、竞品份额、投放表现和主观象限仍需单独证据。"
+          sourceIds={['ds-047', 'ds-050', 'ds-051']}
+          title="自我诊断来源口径 · ERP内部代理"
+          description="ERP销售统计、全渠道增长和目标达成已通过Batch19作为 private/internal proxy 展示和导出。"
+        />
+        <PageEvidenceNotice
+          sourceIds={['ds-019', 'ds-020']}
+          title="自我诊断待补证边界"
+          description="公开市场份额、竞品份额、投放表现和主观象限仍需单独证据；营销组合诊断不得把平台信息和主观测算展示为已验证经营事实。"
         />
 
         <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
@@ -970,6 +978,7 @@ export default function SelfInsight() {
         <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
           <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
             <div>
+              {/* audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051 */}
               <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP Batch 19 manual release review</h2>
               <p className="text-[10px] text-[#86868b] mt-1 break-all">
                 {erpManualReleaseReviewBatch19Artifact.manifestPath}；ownerRecords {erpManualReleaseReviewBatch19Artifact.ownerRecordsPath}；reviewRecord {erpManualReleaseReviewBatch19Artifact.reviewRecordPath}。

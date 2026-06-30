@@ -62,6 +62,7 @@ export const aiDesignCommercialReviewRows = [
   { reviewGateId: 'commercial_release_final_review', surface: 'AIGallery', approvalState: 'not_approved', canUseCommercially: false, canPublish: false },
 ];
 
+// audit-source: ds-026 ds-029
 export const aiDesignBatch6DisplayPolicy = [
   'Batch 6 只生成设计助手/AI图库治理队列，不包含真实 requestId、提示词正文、生成图片二进制、provider invoice、密钥或商用批准。',
   'design run、asset hash、cost queue 和 commercial review gate 均为 private/internal L2 gate，canDisplayAsFact=false。',

@@ -57,9 +57,14 @@ export default function StoreInterviews() {
             </div>
 
             <PageEvidenceNotice
-              sourceIds={['ds-042', 'ds-049']}
+              sourceIds={['ds-042']}
               title="门店访谈复核口径"
-              description="门店访谈、运营快照和现场观察仍需授权与证据 artifact；ERP ds-049 已经Batch19放行，可补客户/目的仓hash维度和代理量覆盖度，但不能替代转化率、坪效、NPS 或访谈原话。"
+              description="门店访谈、运营快照和现场观察仍需授权与证据 artifact；转化率、坪效、NPS 或访谈原话不得由内部代理替代。"
+            />
+            <PageEvidenceNotice
+              sourceIds={['ds-049']}
+              title="ERP门店辅助源"
+              description="ERP ds-049 已经Batch19放行，可补客户/目的仓hash维度和代理量覆盖度，仅作为 private/internal proxy。"
             />
 
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">

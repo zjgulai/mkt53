@@ -37,6 +37,7 @@ export default function AIAssistantPage() {
             focus="all"
             framed={false}
           />
+          {/* audit-source: ds-025 */}
           <AiReviewGovernancePanel
             title="AI助手 Batch 5 评论/VOC样本治理 readiness"
             focus="all"

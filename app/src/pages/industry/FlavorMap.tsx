@@ -61,6 +61,7 @@ export default function FlavorMap() {
         '导出必须绑定同一份 VOC 样本与模型复核记录。',
       ]}
       internalFactSummary={
+        /* audit-source: ds-032 */
         <AiReviewGovernancePanel
           title="VOC趋势地图 Batch 5 关键词样本/eval gate"
           focus="voc"

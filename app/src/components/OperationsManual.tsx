@@ -138,6 +138,7 @@ const pageGuides = [
     icon: Eye,
     color: '#34c759',
     path: '/self',
+    sourceIds: ['ds-047', 'ds-050', 'ds-051'],
     purpose: '品牌自研产品分析、定价策略、渠道表现、推广效果——营销4P全景视图',
     audience: '产品总监、定价经理、渠道总监、市场总监',
     howToUse: [
@@ -161,10 +162,11 @@ const pageGuides = [
     icon: Sparkles,
     color: '#af52de',
     path: '/ai-assistant',
+    sourceIds: ['ds-021', 'ds-023', 'ds-025', 'ds-030', 'ds-031', 'ds-032', 'ds-033'],
     purpose: 'AI驱动的评论分析、设计助手、知识库问答、数据评论自动生成',
     audience: '所有业务人员、产品设计师、数据分析师',
     howToUse: [
-      '评论分析：选择产品和时间范围，AI自动提取Top10痛点和情感趋势',
+      '评论分析：待接入授权样本、模型版本和人工复核后，再提取Top10痛点和情感趋势',
       '设计助手：输入产品概念描述，AI生成产品设计参考图',
       '知识库问答：自然语言提问获取市场/竞品/用户洞察',
       '数据评论：选择数据图表，AI自动生成分析评论和Action建议'
@@ -217,6 +219,7 @@ const insightStories = [
     title: '周围发生了什么？——五维环境扫描',
     icon: Zap,
     color: '#ff9500',
+    sourceIds: ['ds-015', 'policy-cpsc-efiling', 'ds-008', 'ds-018'],
     narrative: '政治维度：美国吸奶器合规同时涉及FDA医疗器械路径与CPSC消费品证书/eFiling要求，不能把CPSC规则等同于FDA 510(k)认证。经济维度、技术维度和竞争维度目前以线索队列呈现，关税、智能款上市、竞品促销频率和份额变化都需要官方文本、品牌官网、零售页面或授权面板交叉验证。',
     dataPoints: ['CPSC CPC/eFiling需复核', '关税变化需官方税则', '智能款价格需零售页证据', '竞品促销频率待采集'],
     action: '优先级矩阵：P0-复核FDA/CPSC适用边界 / P1-评估供应链证据缺口 / P2-建立新品与技术线索采集队列'
@@ -226,6 +229,7 @@ const insightStories = [
     title: '我们看不见什么？——反直觉洞察',
     icon: AlertTriangle,
     color: '#ff3b30',
+    sourceIds: ['ds-021', 'ds-013', 'ds-014', 'ds-030', 'ds-032', 'ds-033'],
     narrative: '三个待验证盲区：(1)背奶妈妈是否具有更高满意度和复购价值，需要问卷/VOC样本验证。(2)"清洁不便"是否为首要痛点，需要评论语料和访谈原文支撑。(3)TikTok声量与情感分是否背离，需要授权API或公开代理指标说明口径后再判断。',
     dataPoints: ['人群满意度待样本复核', '清洁痛点排名待语料验证', '社媒声量与情感分待API接入'],
     action: '先补VOC样本、评论语料和社媒口径，再决定预算调整、功能优先级和投放节奏'
@@ -441,6 +445,7 @@ export default function OperationsManual() {
               <Clock className="w-4 h-4 text-[#af52de]" /> 达尔文进化轮迭代记录
             </h3>
             <div className="space-y-1.5">
+              {/* audit-source: ds-027 */}
               {[
                 { round: 'R1-R5', focus: 'MECE架构设计', desc: '8大页面→6大数据模块→48张表→完整字段定义', status: '完成' },
                 { round: 'R6-R10', focus: '数据血缘关系', desc: '11条血缘链路→上下游追踪→关键路径标注', status: '完成' },
