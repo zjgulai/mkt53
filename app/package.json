@@ -19,6 +19,7 @@
     "data:audit:deep:summary": "node scripts/data/audit-deep.mjs --summary-json --no-write",
     "data:source-gaps:prioritize": "node scripts/data/prioritize-source-gaps.mjs",
     "data:source-gaps:readiness-packets": "node scripts/data/build-source-gap-readiness-packets.mjs",
+    "data:source-gaps:readiness-coverage": "node scripts/data/build-source-gap-readiness-coverage.mjs",
     "data:source-gaps:owner-intake": "node scripts/data/build-source-gap-owner-intake.mjs",
     "data:source-gaps:owner-intake:prefill": "node scripts/data/prefill-source-gap-owner-intake.mjs",
     "data:source-gaps:owner-chat-intake-pack": "node scripts/data/build-source-gap-owner-chat-intake-pack.mjs",

@@ -273,6 +273,33 @@ function sourceIdsFromAuditSourceComment(lineText, knownSourceIds) {
   return unique([...(marker[1].match(sourceIdPattern) ?? [])]).filter((id) => knownSourceIds.has(id));
 }
 
+function auditSourceContextFromComment(commentText, knownSourceIds) {
+  const ids = sourceIdsFromAuditSourceComment(commentText, knownSourceIds);
+  if (ids.length === 0) return undefined;
+
+  return {
+    ids,
+    coverage: 'near-line',
+    gated: gatedDisclosurePattern.test(commentText),
+  };
+}
+
+function nearestLeadingAuditSourceContext(node, sourceText, knownSourceIds) {
+  let current = node;
+
+  while (current && !ts.isSourceFile(current)) {
+    const commentRanges = ts.getLeadingCommentRanges(sourceText, current.getFullStart()) ?? [];
+    for (let index = commentRanges.length - 1; index >= 0; index -= 1) {
+      const commentText = sourceText.slice(commentRanges[index].pos, commentRanges[index].end);
+      const context = auditSourceContextFromComment(commentText, knownSourceIds);
+      if (context) return context;
+    }
+    current = current.parent;
+  }
+
+  return undefined;
+}
+
 function nearestPrecedingAuditSourceIds(line, lines, knownSourceIds, lookback = 12) {
   const startIndex = Math.min(lines.length - 1, Math.max(0, line - 1));
   const stopIndex = Math.max(0, line - lookback);
@@ -287,19 +314,23 @@ function nearestPrecedingAuditSourceIds(line, lines, knownSourceIds, lookback = 
 
 function nodeSourceIds(node, sourceText, sourceFile, knownSourceIds, sourceIdConstants) {
   const recordIds = sourceIdsFromObject(node, knownSourceIds, sourceIdConstants);
-  if (recordIds.length > 0) return { ids: recordIds, coverage: 'record-level' };
+  if (recordIds.length > 0) return { ids: recordIds, coverage: 'record-level', gated: false };
+
+  const leadingAuditContext = nearestLeadingAuditSourceContext(node, sourceText, knownSourceIds);
+  if (leadingAuditContext) return leadingAuditContext;
 
   const line = lineNumber(sourceFile, node);
   const lines = sourceText.split(/\r?\n/);
 
-  const auditCommentIds = nearestPrecedingAuditSourceIds(line, lines, knownSourceIds);
-  if (auditCommentIds.length > 0) return { ids: auditCommentIds, coverage: 'near-line' };
+  const auditCommentText = lines.slice(Math.max(0, line - 12), Math.min(lines.length, line + 1)).join('\n');
+  const auditCommentContext = auditSourceContextFromComment(auditCommentText, knownSourceIds);
+  if (auditCommentContext) return auditCommentContext;
 
   const nearby = lines.slice(Math.max(0, line - 5), Math.min(lines.length, line + 1)).join('\n');
   const nearbyIds = unique([...(nearby.match(sourceIdPattern) ?? [])]).filter((id) => knownSourceIds.has(id));
-  if (nearbyIds.length > 0) return { ids: nearbyIds, coverage: 'near-line' };
+  if (nearbyIds.length > 0) return { ids: nearbyIds, coverage: 'near-line', gated: false };
 
-  return { ids: [], coverage: 'page-level' };
+  return { ids: [], coverage: 'page-level', gated: false };
 }
 
 function shouldKeepText(text) {
@@ -425,10 +456,10 @@ function impliedMeceCategory(path, component, text) {
   return 'navigation_misc';
 }
 
-function riskForClaim({ text, sourceIds, coverage, sourceById }) {
+function riskForClaim({ text, sourceIds, coverage, sourceById, gatedByContext = false }) {
   const highImpact = highImpactPattern.test(text);
   if (!highImpact) return { risk: 'low', issueCode: 'low-impact-numeric-reference' };
-  const isTextualGatedDisclosure = gatedDisclosurePattern.test(text);
+  const isTextualGatedDisclosure = gatedDisclosurePattern.test(text) || gatedByContext;
   if (sourceIds.length === 0 && isTextualGatedDisclosure) return { risk: 'medium', issueCode: 'gated-source-disclosure' };
   if (sourceIds.length === 0) return { risk: 'high', issueCode: 'missing-source-id' };
 
@@ -478,7 +509,7 @@ function scanClaimsForFile(appRoot, path, routes, sourceRegistry, sourceById) {
     if (seen.has(key)) return;
     seen.add(key);
 
-    const risk = riskForClaim({ text, sourceIds, coverage, sourceById });
+    const risk = riskForClaim({ text, sourceIds, coverage, sourceById, gatedByContext: Boolean(sourceLink.gated) });
     const sources = sourceIds.map((id) => sourceById.get(id)).filter(Boolean);
     const grades = unique(sources.map((source) => source.evidence_grade));
     const methods = unique(sources.map((source) => source.collection_method));

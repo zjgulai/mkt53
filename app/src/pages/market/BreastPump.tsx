@@ -22,6 +22,24 @@ function priorityLabel(priority?: string) {
   return priority === 'P0' ? 'urgent review' : 'standard review';
 }
 
+const publicCategorySplitEvidence = [
+  {
+    source: 'Mordor Intelligence',
+    detail: '2026全球吸奶器市场约USD 3.93B；closed-system与electric segment可作为品类拆分锚点。',
+    sourceIds: ['ds-005'],
+  },
+  {
+    source: 'Precedence Research',
+    detail: '2026全球吸奶器市场约USD 3.81B；electric pumps为2025技术拆分交叉锚点。',
+    sourceIds: ['ds-005'],
+  },
+  {
+    source: 'Fortune Business Insights',
+    detail: '2026全球吸奶器市场约USD 2.31B；北美45.05%用于区域TAM交叉校验。',
+    sourceIds: ['ds-005'],
+  },
+];
+
 export default function BreastPump() {
   const breastPumpProxy = erpCategoryProxySummary.find((item) => item.categoryProxy === 'breast_pump_keyword_proxy');
   const breastPumpReview = erpCategoryReviewQueueSummary.find((item) => item.categoryProxy === 'breast_pump_keyword_proxy');
@@ -33,33 +51,54 @@ export default function BreastPump() {
       icon={Droplets}
       accent="#C25B6E"
       sourceIds={['ds-005']}
-      evidenceTitle="吸奶器品类测算待复核"
-      evidenceDescription="公开品类拆分仍缺少公式、权重和原始报告页证据；品牌份额、产品价格、评分和型号参数仍不得展示为真实全渠道结论。"
+      evidenceTitle="吸奶器品类测算复核边界"
+      evidenceDescription="公开报告已支撑全球TAM和segment-TAM品类拆分口径；SAM、SOM、品牌份额、SKU价格、评分和型号参数仍不得展示为真实全渠道结论。"
       gateStatus={{
         sourceIds: ['ds-047', 'ds-049'],
-        label: 'ERP吸奶器代理已放行，公开份额待复核',
+        label: 'ERP代理与公开TAM口径已放行',
         tone: 'approved',
-        description: '吸奶器关键词代理、SKU hash覆盖和月度内部代理量可按private/internal proxy展示并导出；公开品牌份额、均价、评分和型号对比仍需外部来源或授权平台快照。',
+        description: '吸奶器关键词代理、SKU hash覆盖和月度内部代理量可按private/internal proxy展示并导出；公开报告只支撑TAM/segment-TAM，不支撑SAM、品牌份额、均价、评分和型号对比。',
       }}
       tabs={['市场规模', '品牌格局', '产品矩阵', '型号对比', '功能需求']}
       blockedItems={[
-        '品类拆分需要公开报告原始口径和权重公式。',
+        'SAM 需要另补地域、渠道、SKU和合规可服务范围证据。',
         '品牌份额需要 Amazon Brand Analytics 或零售面板授权数据。',
         '型号价格、评分和功能参数需要公开页采集时间戳与 SKU 映射。',
       ]}
       collectionPlan={[
-        '补齐 Precedence、Technavio 或同类报告的口径截图和 URL。',
+        '保留 Mordor、Precedence、Fortune 报告页证据和hash。',
         '为每个品牌和 SKU 建立 source_id、采集窗口和证据路径。',
         'ds-047/ds-049 已沉淀吸奶器关键词代理与 SKU 映射，并按Batch19 internal proxy口径展示。',
-        '将穿戴式吸奶器继续按细分 TAM 展示，不写成 SOM。',
+        '将公开报告数值统一按TAM/segment-TAM展示，不写成SAM、SOM或品牌份额。',
       ]}
       displayPolicy={[
         'ERP内部代理可以展示为 proxy；份额、均价、评分、收入和专利数量仍等待外部证据。',
-        '可恢复的第一批数据应是公开报告支撑的品类 TAM 和细分 TAM。',
+        '公开报告支撑的第一批数据只恢复品类TAM和细分TAM。',
         '连接器数据只在授权快照进入后才能进入 CSV 导出。',
       ]}
       internalFactSummary={
         <div>
+          <div className="mb-4 rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+            <div className="flex items-start justify-between gap-3 flex-wrap">
+              <div>
+                <h2 className="text-sm font-semibold text-[#1d1d1f]">公开品类拆分 · ds-005</h2>
+                <p className="mt-1 text-[10px] leading-relaxed text-[#86868b]">
+                  Artifact: tmp/audits/p0-public-source-fill-20260630/ds005_evidence.json；结论边界：TAM/segment-TAM，不是SAM、SOM或品牌份额。
+                </p>
+              </div>
+              <span className="rounded-lg bg-[#34c759]/10 px-3 py-1.5 text-[10px] font-medium text-[#2f7d32]">
+                L1-method
+              </span>
+            </div>
+            <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-3">
+              {publicCategorySplitEvidence.map((item) => (
+                <div key={item.source} className="rounded-lg border border-[#EDE6DF] bg-white p-3">
+                  <p className="text-[11px] font-semibold text-[#1d1d1f]">{item.source}</p>
+                  <p className="mt-1 text-[10px] leading-relaxed text-[#86868b]">{item.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
             <div>
               <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP内部代理摘要 · Batch19已放行</h2>

@@ -29,15 +29,15 @@ const divergenceData = [
   { institution: 'Coherent Market Insights', value2025: '待补证', value2026: '待补证', forecast: '待补证', cagr: '待补证', scope: '候选来源，需条目级证据绑定', reliability: 'B', evidenceStatus: '候选' },
   { institution: 'Grand View Research', value2025: '上层TAM另页展示', value2026: '上层TAM另页展示', forecast: '上层TAM另页展示', cagr: '上层TAM另页展示', scope: '婴童用品上层TAM，不与吸奶器品类TAM直接混排', reliability: 'A', evidenceStatus: 'ds-044', sourceIds: ['ds-044'] },
   { institution: 'Precedence Research', value2025: '$35.1亿', value2026: '$38.1亿', forecast: '$79.5亿(2035)', cagr: '8.52%', scope: '全球吸奶器品类TAM', reliability: 'A', adopted: true, evidenceStatus: 'ds-001', sourceIds: ['ds-001'] },
-  { institution: 'Mordor Intelligence', value2025: '待补证', value2026: '待补证', forecast: '待补证', cagr: '待补证', scope: '候选公开页，需拆分市场数值与五力模型source条目', reliability: 'A', evidenceStatus: '候选' },
+  { institution: 'Mordor Intelligence', value2025: '$36.2亿', value2026: '$39.3亿', forecast: '$59.1亿(2031)', cagr: '8.49%', scope: '全球吸奶器品类TAM与五力模型输入，不作为机构五力评分', reliability: 'A', evidenceStatus: 'ds-004/ds-005', sourceIds: ['ds-004', 'ds-005'] },
 ];
 
 // 测算模型说明
 const calcModels = [
   { name: '市场层级/TAM边界', icon: BarChart3, desc: '份额分母与可服务市场边界', method: '全球婴童用品=上层TAM；全球吸奶器=品类TAM；穿戴式吸奶器=细分TAM。SAM需叠加地域/渠道/SKU/合规可服务范围，SOM需Momcozy可获份额假设。', source: '公开报告交叉验证 + 内部服务范围待补', sourceIds: ['ds-001', 'ds-044', 'ds-045'] },
-  { name: '波特五力', icon: Target, desc: '行业竞争强度框架', method: '五力维度框架；当前定量评分属于内部解释性模型，待方法论和人工复核凭证补齐后才能展示为评分事实。', source: 'Mordor Intelligence框架 + 内部评估待复核', sourceIds: ['ds-004'] },
-  { name: '海关HS编码', icon: Globe, desc: '国际贸易商品分类', method: 'HS 9018.11(breast pumps) / 9018.90(medical instruments) / 美国HTS 9018.90.7500；税率需以目的国海关当期页面或报关凭证为准。', source: 'WCO / USITC 查询入口', sourceIds: ['ds-003'] },
-  { name: 'BCG矩阵', icon: TrendingUp, desc: '产品组合增长-份额分析', method: '市场增长率×相对市场份额 → 明星/现金牛/问题/瘦狗四象限', source: 'Boston Consulting Group经典模型', sourceIds: ['ds-005'] },
+  { name: '波特五力', icon: Target, desc: '行业竞争强度框架', method: '五力维度框架；Mordor、Precedence、Fortune公开报告只支撑模型输入，评分必须标为Momcozy内部解释性模型。', source: '公开报告交叉验证 + 内部模型', sourceIds: ['ds-004'] },
+  { name: 'PEST官方来源矩阵', icon: Globe, desc: '政策、监管和公共健康语境', method: 'FDA吸奶器监管、DOL Pump at Work、CDC breastfeeding data、WHO infant feeding 分别支撑监管、劳动政策、公共健康和全球建议语境。', source: 'FDA / DOL / CDC / WHO', sourceIds: ['ds-003'] },
+  { name: '品类拆分/TAM口径', icon: TrendingUp, desc: '吸奶器品类TAM与segment-TAM', method: 'Mordor、Precedence、Fortune交叉验证公开报告口径；本批只支撑TAM/segment-TAM，SAM需叠加地域、渠道、SKU和合规可服务范围。', source: '公开报告交叉验证', sourceIds: ['ds-005'] },
   { name: 'RFM分层', icon: Users, desc: '用户价值分层模型', method: 'R(最近购买)×F(频次)×M(金额) → 分层用户分群；需CRM连接器或授权快照后展示真实分层。', source: 'Momcozy CRM系统待接入', sourceIds: ['ds-012'] },
 ];
 

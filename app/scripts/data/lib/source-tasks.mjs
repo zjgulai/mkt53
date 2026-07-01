@@ -73,7 +73,18 @@ function acceptanceCriteriaFor(queueType, connectorItem) {
   return ['公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。', ...common];
 }
 
-function buildTask(source, queueType, method, connectorItem) {
+function publicSourceBlockedReason(sourceResult) {
+  if (!sourceResult || sourceResult.method !== 'public-url-check') return undefined;
+
+  const statusLabel = sourceResult.httpStatus ? `HTTP ${sourceResult.httpStatus}` : sourceResult.status;
+  return `${statusLabel}：${sourceResult.note ?? '公开来源当期不可达，需要人工确认链接或供应商权限。'}`;
+}
+
+function sourceBlockedReason(source, sourceResult) {
+  return source.gap || publicSourceBlockedReason(sourceResult);
+}
+
+function buildTask(source, queueType, method, connectorItem, sourceResult) {
   const priority = connectorItem?.priority ?? priorityFor(source);
 
   return {
@@ -94,7 +105,7 @@ function buildTask(source, queueType, method, connectorItem) {
     collectionMethod: method,
     blockedReason:
       connectorItem?.blockedReason ??
-      source.gap ??
+      sourceBlockedReason(source, sourceResult) ??
       (source.verificationStatus === 'verified' ? '已复核来源仍需补留痕材料。' : '缺少可审计的来源凭证、采集窗口或复核记录。'),
     requiredEvidence: evidenceChecklistFor(source, queueType, connectorItem),
     acceptanceCriteria: acceptanceCriteriaFor(queueType, connectorItem),
@@ -127,10 +138,12 @@ export function buildSourceTaskQueue(sourceRegistry, options = {}) {
   const generatedAt = options.generatedAt ?? new Date().toISOString();
   const connectorBacklog = options.connectorBacklog ?? buildConnectorBacklog(sourceRegistry);
   const connectorItemsBySourceId = new Map(connectorBacklog.items.map((item) => [item.id, item]));
+  const sourceResultsBySourceId = new Map((options.sourceResults ?? []).map((item) => [item.id, item]));
   const tasks = [];
 
   for (const source of sourceRegistry) {
     const method = classifyCollectionMethod(source);
+    const sourceResult = sourceResultsBySourceId.get(source.id);
 
     if (method === 'connector-required') {
       tasks.push(buildTask(source, 'connector-readiness', method, connectorItemsBySourceId.get(source.id)));
@@ -142,8 +155,11 @@ export function buildSourceTaskQueue(sourceRegistry, options = {}) {
       continue;
     }
 
-    if (method === 'public-url-check' && (source.verificationStatus !== 'verified' || source.gap)) {
-      tasks.push(buildTask(source, 'public-source-review', method));
+    const hasCurrentPublicIssue =
+      sourceResult?.method === 'public-url-check' && ['source-error', 'fetch-error'].includes(sourceResult.status);
+
+    if (method === 'public-url-check' && (source.verificationStatus !== 'verified' || source.gap || hasCurrentPublicIssue)) {
+      tasks.push(buildTask(source, 'public-source-review', method, undefined, sourceResult));
     }
   }
 

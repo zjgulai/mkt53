@@ -1,0 +1,54 @@
+{
+  "exportedAt": "2026-06-30T01:46:22.195Z",
+  "tableName": "policy_regulations",
+  "rowCsvPath": "/Users/pray/project/mkt53/exports/policy_regulations.csv",
+  "schemaCsvPath": "/Users/pray/project/mkt53/exports/policy_regulations_schema.csv",
+  "rowCount": 7,
+  "schemaFieldCount": 11,
+  "sources": [
+    {
+      "type": "rendered local row candidates",
+      "path": "app/src/pages/HomePage.tsx",
+      "symbol": "policyTimeline",
+      "lineStart": 46,
+      "lineEnd": 103
+    },
+    {
+      "type": "table schema",
+      "path": "app/src/pages/DataManage.tsx",
+      "symbol": "policy_regulations",
+      "lineStart": 504,
+      "lineEnd": 520
+    },
+    {
+      "type": "source registry and evidence status",
+      "path": "app/src/data/source-registry.ts",
+      "symbols": [
+        "ds-016",
+        "policy-cpsc-efiling",
+        "policy-eu-mdr-transition"
+      ],
+      "lineStart": 58,
+      "lineEnd": 87
+    }
+  ],
+  "boundary": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "productionWrites": false,
+    "productionDeploy": false,
+    "factPromotion": false,
+    "exportScope": "local review CSV; not production-published table export"
+  },
+  "evidenceGate": {
+    "totalRows": 7,
+    "l1PublicRuntimeRows": 2,
+    "l0UnverifiedRows": 5,
+    "canDisplayPublicSourceOnlyRows": 2,
+    "blockedRows": 5
+  },
+  "hashes": {
+    "rowCsvSha256": "40bdf2259365ee85245b7bc43e2db1ef4511b92ab0da03ab095c2cb1781f59e9",
+    "schemaCsvSha256": "981b8f79fa906fe004e073f8d61f7ac898c37e00bd77a1303cffd49765dc9f37"
+  }
+}

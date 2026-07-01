@@ -73,6 +73,81 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(routeSmokeScript).toContain('full_route_chrome_smoke.json');
   });
 
+  it('keeps restored user insight pages populated with business data and evidence boundaries', () => {
+    const userPage = readFileSync(join(process.cwd(), 'src/pages/UsersPage.tsx'), 'utf8');
+    const consumerPage = readFileSync(join(process.cwd(), 'src/pages/users/ConsumerInterviews.tsx'), 'utf8');
+    const channelPage = readFileSync(join(process.cwd(), 'src/pages/users/ChannelInterviews.tsx'), 'utf8');
+    const storePage = readFileSync(join(process.cwd(), 'src/pages/users/StoreInterviews.tsx'), 'utf8');
+    const overseasPage = readFileSync(join(process.cwd(), 'src/pages/users/OverseasSentiment.tsx'), 'utf8');
+    const aestheticsPage = readFileSync(join(process.cwd(), 'src/pages/users/Aesthetics.tsx'), 'utf8');
+
+    const personaAssets = [
+      'public/images/personas/persona-pregnant.jpg',
+      'public/images/personas/persona-newmom.jpg',
+      'public/images/personas/persona-working.jpg',
+      'public/images/personas/persona-secondchild.jpg',
+      'public/images/personas/persona-quality.jpg',
+      'public/images/personas/persona-tech.jpg',
+    ];
+
+    for (const asset of personaAssets) {
+      expect(() => accessSync(join(process.cwd(), asset), constants.R_OK)).not.toThrow();
+    }
+
+    for (const marker of [
+      'const personaTable = [',
+      'const detailedPersonas = [',
+      '孕期妈妈',
+      '新手妈妈',
+      '背奶妈妈',
+      '二胎妈妈',
+      '品质追求者',
+      '科技爱好者',
+      'Sarah',
+      'Rebecca',
+      'Michelle',
+      'Linda',
+      'Victoria',
+      'Rachel',
+      '/images/personas/persona-pregnant.jpg',
+      '/images/personas/persona-newmom.jpg',
+      '/images/personas/persona-working.jpg',
+      '/images/personas/persona-secondchild.jpg',
+      '/images/personas/persona-quality.jpg',
+      '/images/personas/persona-tech.jpg',
+      '潮流新手妈妈',
+      '跨国精英妈妈',
+      'RFM用户价值分层模型',
+      'audit-source: ds-011 ds-043',
+      'audit-source: ds-012; sample-only',
+      'audit-source: ds-013; sample-only',
+    ]) {
+      expect(userPage).toContain(marker);
+    }
+    expect(userPage).not.toContain('const governanceTasks = [');
+    expect(userPage).not.toContain('const blockedDisplays = [');
+
+    for (const marker of ['const interviews = [', 'Emily R.', 'Sophie M.', 'Claudia W.', 'Kano模型', 'PageEvidenceNotice', 'audit-source: ds-014; sample-only']) {
+      expect(consumerPage).toContain(marker);
+    }
+
+    for (const marker of ['const channelPerformance = [', 'Amazon US', 'TikTok Shop', 'Shopee Southeast Asia', 'PageEvidenceNotice', 'audit-source: ds-041; sample-only']) {
+      expect(channelPage).toContain(marker);
+    }
+
+    for (const marker of ['const stores = [', 'Momcozy LA Experience Store', 'Momcozy Dubai Mall', 'PageEvidenceNotice', 'audit-source: ds-042; sample-only']) {
+      expect(storePage).toContain(marker);
+    }
+
+    for (const marker of ['const sentimentTrend = [', 'Reddit', 'TikTok', '海外舆情采集状态', 'PageEvidenceNotice', 'audit-source: ds-013; sample-only']) {
+      expect(overseasPage).toContain(marker);
+    }
+
+    for (const marker of ['colorPreference', 'styleTrends', 'regionStyle', 'designCases', 'M5 Wearable Pump', 'PageEvidenceNotice', "sourceIds={['ds-040']}"]) {
+      expect(aestheticsPage).toContain(marker);
+    }
+  });
+
   it('keeps periodic data collection scripts discoverable from npm', () => {
     const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as { scripts: Record<string, string> };
 
@@ -82,6 +157,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(packageJson.scripts['data:audit:deep:summary']).toContain('--summary-json --no-write');
     expect(packageJson.scripts['data:source-gaps:prioritize']).toContain('scripts/data/prioritize-source-gaps.mjs');
     expect(packageJson.scripts['data:source-gaps:readiness-packets']).toContain('scripts/data/build-source-gap-readiness-packets.mjs');
+    expect(packageJson.scripts['data:source-gaps:readiness-coverage']).toContain('scripts/data/build-source-gap-readiness-coverage.mjs');
     expect(packageJson.scripts['data:source-gaps:owner-intake']).toContain('scripts/data/build-source-gap-owner-intake.mjs');
     expect(packageJson.scripts['data:source-gaps:owner-intake:prefill']).toContain('scripts/data/prefill-source-gap-owner-intake.mjs');
     expect(packageJson.scripts['data:source-gaps:owner-chat-intake-pack']).toContain(
@@ -340,6 +416,85 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(result.packets.some((packet) => packet.required_artifact_fields.includes('field_dictionary_path'))).toBe(true);
     expect(result.packets.some((packet) => packet.forbidden_claims.includes('Amazon platform-level'))).toBe(true);
     expect(result.questions.every((question) => question.packet_id && question.question_id)).toBe(true);
+    expect(existsSync(outDir)).toBe(false);
+    expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    rmSync(tempDir, { recursive: true, force: true });
+  });
+
+  it('builds readiness coverage from priority rows and packet outputs', () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-coverage-'));
+    const sourcePath = join(tempDir, 'source_gap_priority_matrix.csv');
+    const packetDir = join(tempDir, 'packets');
+    const outDir = join(tempDir, 'out');
+    mkdirSync(packetDir, { recursive: true });
+
+    const priorityHeader =
+      'priority,priority_reason,owner_lane,recommended_collection_lane,source_id,module,page,metric,source_name,source_type,collection_method,evidence_grade,verification_status,privacy_level,allowed_current_display_state,can_display_as_fact_current,next_action,smallest_evidence_needed,blocking_reason,gap,source_url,evidence_artifact_path,last_verified,action';
+    const priorityRows = [
+      'P0,Core connector gap,amazon_connector_owner,connector-readiness-or-authorized-private-snapshot,ds-007,看竞争,CompetitionPage,竞品概览,Amazon.com 实时采集,平台API,connector-required,L0-unverified,needs-review,private/internal,display_as_gate_only,false,Create connector readiness record,Authorized read-only export or connector readiness artifact,authorized-connector-or-private-snapshot-required,,,,2026-06-30,补采集任务记录',
+      'P0,Core connector gap,voc_nlp_connector_owner,connector-readiness-or-authorized-private-snapshot,ds-032,看行业,FlavorMap,VOC功能趋势地图,VOC NLP,AI模型,connector-required,L0-unverified,needs-review,private/internal,display_as_gate_only,false,Create connector readiness record,Authorized read-only export or connector readiness artifact,authorized-connector-or-private-snapshot-required,缺少VOC样本窗口,,,2026-06-30,补运行记录',
+      'P1,Manual gap,business_owner_manual_review,manual-review-artifact,ds-014,看用户,ConsumerInterviews,消费者访谈,定性研究,定性,manual-required,L0-unverified,needs-review,public,display_as_gate_only,false,Create manual review artifact,Manual evidence artifact signed by business owner,manual-evidence-artifact-required,样本量未标注,,,2026-06-30,补充样本量说明',
+    ];
+    writeFileSync(sourcePath, `${priorityHeader}\n${priorityRows.join('\n')}\n`);
+
+    const packetHeader =
+      'packet_id,priority,owner_lane,source_count,source_ids,pages,collection_methods,current_max_evidence_grade,target_min_evidence_grade,decision_boundary,blocked_fact_display_until,required_artifact_fields,acceptance_gate,forbidden_claims';
+    const packetRows = [
+      'p0-amazon-connector-owner-01,P0,amazon_connector_owner,1,ds-007,CompetitionPage,connector-required,L0-unverified,L3-production-read-only,readiness_packet_only,required evidence artifact is created,artifact_id|owner_alias|evidence_file_path|evidence_hash,Owner provides authorized read-only snapshot,Do not display these rows as verified facts.',
+      'p0-voc-nlp-connector-owner-02,P0,voc_nlp_connector_owner,1,ds-032,FlavorMap,connector-required,L0-unverified,L3-production-read-only,readiness_packet_only,required evidence artifact is created,artifact_id|owner_alias|evidence_file_path|evidence_hash,Owner provides authorized read-only snapshot,Do not promote NLP output without review.',
+    ];
+    writeFileSync(join(packetDir, 'readiness_packets.csv'), `${packetHeader}\n${packetRows.join('\n')}\n`);
+
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/build-source-gap-readiness-coverage.mjs',
+        '--source',
+        sourcePath,
+        '--packet-dir',
+        packetDir,
+        '--out',
+        outDir,
+        '--json',
+        '--no-write',
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      },
+    );
+    const result = JSON.parse(output) as {
+      summary: {
+        sourceGapCount: number;
+        coveredSourceGapCount: number;
+        uncoveredSourceIds: string[];
+        byOwnerLane: Record<string, number>;
+        boundaries: Record<string, boolean>;
+      };
+      coverageRows: Array<{
+        source_id: string;
+        covered_by_packet: string;
+        packet_id: string;
+        packet_dir: string;
+        can_display_as_fact_current: string;
+      }>;
+    };
+
+    expect(result.summary.sourceGapCount).toBe(2);
+    expect(result.summary.coveredSourceGapCount).toBe(2);
+    expect(result.summary.uncoveredSourceIds).toEqual([]);
+    expect(result.summary.byOwnerLane.amazon_connector_owner).toBe(1);
+    expect(result.summary.byOwnerLane.voc_nlp_connector_owner).toBe(1);
+    expect(result.summary.boundaries.providerCalls).toBe(false);
+    expect(result.summary.boundaries.restrictedConnectorAccess).toBe(false);
+    expect(result.summary.boundaries.productionWrites).toBe(false);
+    expect(result.summary.boundaries.factPromotion).toBe(false);
+    expect(result.coverageRows.map((row) => row.source_id)).toEqual(['ds-007', 'ds-032']);
+    expect(result.coverageRows.every((row) => row.covered_by_packet === 'yes')).toBe(true);
+    expect(result.coverageRows.every((row) => row.packet_id.startsWith('p0-'))).toBe(true);
+    expect(result.coverageRows.every((row) => row.packet_dir === packetDir)).toBe(true);
+    expect(result.coverageRows.every((row) => row.can_display_as_fact_current === 'false')).toBe(true);
     expect(existsSync(outDir)).toBe(false);
     expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
 
@@ -1057,7 +1212,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(audit.summary.pagesWithStaticDataWithoutRegistry).toBe(0);
     expect(audit.summary.issueCount).toBe(0);
     expect(audit.summary.criticalIssueCount).toBe(0);
-    expect(audit.summary.collectionMethods['local-file-check']).toBe(2);
+    expect(audit.summary.collectionMethods['local-file-check']).toBe(3);
     expect(audit.summary.collectionMethods['connector-required']).toBeGreaterThan(0);
     expect(audit.summary.collectionMethods['public-url-check']).toBeGreaterThan(0);
   });
@@ -1160,16 +1315,86 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       };
     };
 
-    expect(manifest.sourceTaskQueue.total).toBe(48);
+    expect(manifest.sourceTaskQueue.total).toBe(39);
     expect(manifest.sourceTaskQueue.queueTypeCounts['connector-readiness']).toBe(28);
-    expect(manifest.sourceTaskQueue.queueTypeCounts['manual-evidence']).toBe(12);
-    expect(manifest.sourceTaskQueue.queueTypeCounts['public-source-review']).toBe(8);
+    expect(manifest.sourceTaskQueue.queueTypeCounts['manual-evidence']).toBe(6);
+    expect(manifest.sourceTaskQueue.queueTypeCounts['public-source-review']).toBe(5);
     expect(manifest.sourceTaskQueue.priorityCounts.P0).toBeGreaterThan(0);
     expect(manifest.sourceTaskQueue.ownerTeamCounts['market-research']).toBeGreaterThan(0);
-    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'manual-evidence:ds-003')).toBe(true);
+    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'manual-evidence:ds-003')).toBe(false);
+    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-016')).toBe(false);
+    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-017')).toBe(false);
+    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-034')).toBe(false);
+    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-036')).toBe(false);
+    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'manual-evidence:ds-025')).toBe(false);
     expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-002')).toBe(true);
     expect(manifest.sourceTaskQueue.tasks.every((task) => task.requiredEvidence.length > 0)).toBe(true);
     expect(manifest.sourceTaskQueue.tasks.every((task) => task.acceptanceCriteria.join(' ').includes('不得'))).toBe(true);
+  });
+
+  it('adds public review tasks for current public collection issues even when registry rows are verified', async () => {
+    const { buildSourceTaskQueue } = (await import('../../scripts/data/lib/source-tasks.mjs')) as {
+      buildSourceTaskQueue: (sourceRegistry: unknown[], options: Record<string, unknown>) => {
+        total: number;
+        queueTypeCounts: Record<string, number>;
+        tasks: Array<{ taskId: string; sourceId: string; blockedReason: string }>;
+      };
+    };
+    const taskQueue = buildSourceTaskQueue(
+      [
+        {
+          id: 'ds-044',
+          module: '看市场',
+          page: 'MarketPage',
+          metric: '全球婴童用品上层TAM',
+          sourceName: 'Grand View Research',
+          sourceType: '行业报告',
+          reliability: 'A',
+          verificationStatus: 'verified',
+          sourceUrl: 'https://www.grandviewresearch.com/industry-analysis/baby-products-market',
+          gap: '',
+          action: 'OK',
+        },
+        {
+          id: 'ds-045',
+          module: '看市场',
+          page: 'MarketPage',
+          metric: '穿戴式吸奶器细分TAM',
+          sourceName: 'Fortune Business Insights',
+          sourceType: '行业报告',
+          reliability: 'A',
+          verificationStatus: 'verified',
+          sourceUrl: 'https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880',
+          gap: '',
+          action: 'OK',
+        },
+      ],
+      {
+        generatedAt: '2026-07-01T00:00:00.000Z',
+        connectorBacklog: { items: [] },
+        sourceResults: [
+          {
+            id: 'ds-044',
+            method: 'public-url-check',
+            status: 'source-error',
+            httpStatus: 403,
+            note: '公开来源返回非 2xx，需要人工确认链接或供应商权限。',
+          },
+          {
+            id: 'ds-045',
+            method: 'public-url-check',
+            status: 'ok',
+            httpStatus: 200,
+          },
+        ],
+      },
+    );
+
+    expect(taskQueue.total).toBe(1);
+    expect(taskQueue.queueTypeCounts['public-source-review']).toBe(1);
+    expect(taskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-044')).toBe(true);
+    expect(taskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-045')).toBe(false);
+    expect(taskQueue.tasks[0].blockedReason).toContain('HTTP 403');
   });
 
   it('plans browser-assisted public evidence capture without network or business writes', () => {
@@ -3373,7 +3598,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(output).not.toMatch(/password|client_secret|cookie|raw_review_text|customer_email|SHOULD_NOT_LEAK/i);
     expect(manifest.batchId).toBe('ai-report-governance-batch4-20260625');
     expect(manifest.sourceIds).toEqual(
-      expect.arrayContaining(['ds-021', 'ds-022', 'ds-023', 'ds-024', 'ds-025', 'ds-026', 'ds-029', 'ds-030', 'ds-031', 'ds-035', 'ds-047', 'ds-049', 'ds-050', 'ds-051']),
+      expect.arrayContaining(['ds-021', 'ds-022', 'ds-023', 'ds-024', 'ds-026', 'ds-029', 'ds-030', 'ds-031', 'ds-035', 'ds-047', 'ds-049', 'ds-050', 'ds-051']),
     );
     expect(manifest.evidenceGrade).toBe('L2-fixture-or-dry-run');
     expect(manifest.privacyLevel).toBe('private/internal');

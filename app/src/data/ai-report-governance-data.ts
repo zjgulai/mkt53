@@ -2,7 +2,7 @@ export const aiReportBatch4Artifact = {
   batchId: 'ai-report-governance-batch4-20260625',
   artifactDir: 'tmp/exports/ai-report-governance-batch4-20260625',
   manifestPath: 'tmp/exports/ai-report-governance-batch4-20260625/batch4_ai_report_governance_manifest.json',
-  sourceIds: ['ds-021', 'ds-022', 'ds-023', 'ds-024', 'ds-025', 'ds-026', 'ds-029', 'ds-030', 'ds-031', 'ds-032', 'ds-033', 'ds-035', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'],
+  sourceIds: ['ds-021', 'ds-022', 'ds-023', 'ds-024', 'ds-026', 'ds-029', 'ds-030', 'ds-031', 'ds-032', 'ds-033', 'ds-035', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'],
   evidenceGrade: 'L2-fixture-or-dry-run',
   privacyLevel: 'private/internal',
   canDisplayAsFact: false,
@@ -27,7 +27,7 @@ export const aiReportBatch4Artifact = {
 
 export const aiReportBatch4Metrics = [
   { label: 'dataset manifest', value: 7, note: 'review/VOC, YouTube, web review, KB, gallery/design, ERP context, report catalog', sourceIds: ['ds-021', 'ds-022', 'ds-023', 'ds-024', 'ds-026', 'ds-029', 'ds-030', 'ds-031'] },
-  { label: 'model run gate', value: 7, note: 'model version, prompt version, request trace and eval report all blocked', sourceIds: ['ds-025', 'ds-029', 'ds-030', 'ds-031'] },
+  { label: 'model run gate', value: 7, note: 'model version, prompt version, request trace and eval report all blocked', sourceIds: ['ds-022', 'ds-029', 'ds-030', 'ds-031'] },
   { label: 'human review gate', value: 5, note: 'comment, YouTube, web review, design asset and report review gates are not approved', sourceIds: ['ds-021', 'ds-023', 'ds-024', 'ds-026'] },
   { label: 'report queue', value: 5, note: 'internal ops, category, channel, supply risk and competitive landscape reports are queued only', sourceIds: ['ds-024', 'ds-035', 'ds-047', 'ds-049', 'ds-050', 'ds-051'] },
   { label: 'ERP bridge', value: 5, note: 'ERP context can route numerator/proxy context but cannot become AI or market fact', sourceIds: ['ds-035', 'ds-047', 'ds-049', 'ds-050', 'ds-051'] },
@@ -48,7 +48,7 @@ export const aiModelRunReadinessRows = [
   { runId: 'youtube_nlp_run', surface: 'YouTube测评', status: 'blocked_missing_api_manifest', sourceIds: ['ds-031'], canDisplayAsFact: false },
   { runId: 'web_review_run', surface: '网页评测', status: 'blocked_missing_robots_sampling_manifest', sourceIds: ['ds-023'], canDisplayAsFact: false },
   { runId: 'design_generation_run', surface: '设计助手/AI图库', status: 'blocked_missing_generation_audit_log', sourceIds: ['ds-026', 'ds-029'], canDisplayAsFact: false },
-  { runId: 'rag_assistant_run', surface: 'AI助手', status: 'blocked_missing_retrieval_trace', sourceIds: ['ds-025', 'ds-022'], canDisplayAsFact: false },
+  { runId: 'rag_assistant_run', surface: 'AI助手', status: 'blocked_missing_retrieval_trace', sourceIds: ['ds-022'], canDisplayAsFact: false },
   { runId: 'knowledge_retrieval_eval', surface: '知识库', status: 'blocked_missing_eval_set', sourceIds: ['ds-022'], canDisplayAsFact: false },
   { runId: 'report_drafting_run', surface: '报告中心/报告预览', status: 'blocked_missing_human_review', sourceIds: ['ds-024'], canDisplayAsFact: false },
 ];
@@ -69,7 +69,7 @@ export const aiErpContextBridgeRows = [
   { bridgeId: 'category_prioritization_bridge', surface: '知识库/AI助手', allowedUse: '把检索上下文路由到 SKU/category 治理主题', forbiddenUse: '不能暴露原始 SKU、客户、运营或仓库标识', sourceIds: ['ds-047', 'ds-049'] },
 ];
 
-// audit-source: ds-021 ds-023 ds-025 ds-026 ds-029 ds-030 ds-031 ds-032 ds-033 ds-035 ds-009 ds-010
+// audit-source: ds-021 ds-023 ds-026 ds-029 ds-030 ds-031 ds-032 ds-033 ds-035 ds-009 ds-010
 export const aiReportBatch4DisplayPolicy = [
   'Batch 4 只生成 AI/报告治理 private/internal gated readiness，不包含真实评论、模型输出、生成图片调用日志、客户数据或报告结论。',
   'dataset_manifest、model_run_manifest、human_review_status 和 report_generation_queue 均为 private/internal L2 gate，canDisplayAsFact=false。',

@@ -334,7 +334,6 @@ export async function collectWeeklySources(options = {}) {
   const sourceRegistry = extractSourceRegistry(appRoot);
   const audit = analyzeConsistency(appRoot);
   const connectorBacklog = buildConnectorBacklog(sourceRegistry);
-  const sourceTaskQueue = buildSourceTaskQueue(sourceRegistry, { connectorBacklog, generatedAt });
   const publicUrlPolicy = {
     timeoutMs,
     maxAttempts,
@@ -367,6 +366,7 @@ export async function collectWeeklySources(options = {}) {
     },
     { total: 0 },
   );
+  const sourceTaskQueue = buildSourceTaskQueue(sourceRegistry, { connectorBacklog, generatedAt, sourceResults: sources });
 
   return {
     schemaVersion: 1,

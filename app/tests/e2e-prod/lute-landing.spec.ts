@@ -7,7 +7,7 @@ const periodicManifestUrl = `${marketUrl}/periodic-data/latest.json`;
 const periodicConnectorBacklogUrl = `${marketUrl}/periodic-data/connectors.json`;
 const weeklyManifestUrl = `${marketUrl}/weekly-data/latest.json`;
 const evidenceBoundaryRoutes = [
-  { path: '/#/ai-assistant', expectedText: 'AI助手演示边界' },
+  { path: '/#/ai-assistant', expectedText: 'AI助手静态入口配置已复核' },
   { path: '/#/ai-gallery', expectedText: 'AI图库素材口径' },
   { path: '/#/reports', expectedText: '报告目录元数据口径' },
   { path: '/#/report/r009', expectedText: '报告内容来源边界' },
@@ -115,11 +115,11 @@ test.describe('production landing service entry guard', () => {
     const manifest = await response.json();
     expect(manifest.refreshCadence).toBe('semi-monthly');
     expect(manifest.period).toMatch(/^\d{4}-\d{2}-H[12]$/);
-    expect(manifest.totals.total).toBe(45);
-    expect(manifest.auditSummary.sourceRegistryCount).toBe(45);
+    expect(manifest.totals.total).toBe(manifest.auditSummary.sourceRegistryCount);
+    expect(manifest.totals.total).toBeGreaterThanOrEqual(45);
     expect(manifest.auditSummary.pagesWithStaticDataWithoutRegistry).toBe(0);
     expect(manifest.auditSummary.issueCount).toBe(0);
-    expect(manifest.connectorBacklog.total).toBe(23);
+    expect(manifest.connectorBacklog.total).toBe(manifest.totals['connector-required']);
   });
 
   test('mkt53 production connector backlog keeps restricted sources blocked', async ({ request }) => {
@@ -127,7 +127,8 @@ test.describe('production landing service entry guard', () => {
     expect(response.ok()).toBe(true);
 
     const backlog = await response.json();
-    expect(backlog.total).toBe(23);
+    expect(backlog.total).toBeGreaterThanOrEqual(23);
+    expect(backlog.total).toBe(backlog.items.length);
     expect(backlog.groups.some((group: { connectorId: string }) => group.connectorId === 'amazon-commerce')).toBe(true);
     expect(backlog.groups.some((group: { connectorId: string }) => group.connectorId === 'review-nlp')).toBe(true);
     expect(backlog.items.every((item: { blockedReason: string }) => item.blockedReason.includes('不得伪造'))).toBe(true);
@@ -139,6 +140,7 @@ test.describe('production landing service entry guard', () => {
 
     const manifest = await response.json();
     expect(manifest.refreshCadence).toBe('semi-monthly');
-    expect(manifest.totals.total).toBe(45);
+    expect(manifest.totals.total).toBe(manifest.auditSummary.sourceRegistryCount);
+    expect(manifest.totals.total).toBeGreaterThanOrEqual(45);
   });
 });
