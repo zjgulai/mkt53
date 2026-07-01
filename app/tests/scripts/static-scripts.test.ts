@@ -27,6 +27,42 @@ function runOptionalLocalErpArtifactScript(args: string[]) {
   }
 }
 
+function copyManualEvidencePackToTemp() {
+  const sourceDir = join(process.cwd(), 'tmp/audits/source-error-manual-evidence-pack-loop9-20260701');
+  const targetDir = mkdtempSync(join(tmpdir(), 'mkt53-manual-evidence-'));
+
+  for (const file of ['manual_evidence_packets.csv', 'manual_evidence_acceptance_gate.csv']) {
+    writeFileSync(join(targetDir, file), readFileSync(join(sourceDir, file), 'utf8'));
+  }
+
+  const questionnaire = readFileSync(join(sourceDir, 'manual_evidence_questionnaire.csv'), 'utf8').trimEnd().split('\n');
+  const header = questionnaire[0].split(',');
+  const fieldIndex = Object.fromEntries(header.map((field, index) => [field, index]));
+  const decisions: Record<string, string> = {
+    'ds-002': 'accepted_for_l3_evidence',
+    'ds-044': 'needs_replacement_source',
+    'ds-045': 'blocked_vendor_access',
+  };
+  const hash = 'a'.repeat(64);
+  const filledRows = questionnaire.slice(1).map((line) => {
+    const row = line.split(',');
+    const sourceId = row[fieldIndex.source_id];
+    const requiredField = row[fieldIndex.required_field];
+
+    row[fieldIndex.answer] = requiredField === 'decision' ? decisions[sourceId] : `${requiredField}_submitted_${sourceId}`;
+    row[fieldIndex.reviewer] = 'market-research-owner';
+    row[fieldIndex.answered_at] = '2026-07-01';
+    row[fieldIndex.evidence_path] = `tmp/manual-evidence/${sourceId}.json`;
+    row[fieldIndex.artifact_sha256] = hash;
+    row[fieldIndex.validation_status] = 'owner_submitted';
+
+    return row.join(',');
+  });
+
+  writeFileSync(join(targetDir, 'manual_evidence_questionnaire.csv'), `${[questionnaire[0], ...filledRows].join('\n')}\n`);
+  return targetDir;
+}
+
 describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }, () => {
   it('keeps deploy-static executable and guarded by local quality gates', () => {
     const scriptPath = join(process.cwd(), 'scripts/deploy-static.sh');
@@ -148,6 +184,91 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     }
   });
 
+  it('keeps public source manual evidence validation blocked for an empty owner submission', () => {
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/validate-public-source-manual-evidence.mjs',
+        '--intake',
+        'tmp/audits/source-error-manual-evidence-pack-loop9-20260701',
+        '--json',
+        '--no-write',
+      ],
+      { cwd: process.cwd(), encoding: 'utf8' },
+    );
+    const payload = JSON.parse(output) as {
+      summary: {
+        targetCount: number;
+        readyForManualReleaseReviewCount: number;
+        blockedPacketCount: number;
+        allowedDecisions: string[];
+        boundaries: Record<string, boolean>;
+      };
+      samplePacketValidation: Array<Record<string, string>>;
+    };
+
+    expect(payload.summary.targetCount).toBe(3);
+    expect(payload.summary.readyForManualReleaseReviewCount).toBe(0);
+    expect(payload.summary.blockedPacketCount).toBe(3);
+    expect(payload.summary.allowedDecisions).toEqual(
+      expect.arrayContaining([
+        'accepted_for_l3_evidence',
+        'needs_replacement_source',
+        'rejected_scope_mismatch',
+        'blocked_vendor_access',
+      ]),
+    );
+    expect(payload.summary.boundaries.factPromotion).toBe(false);
+    expect(payload.summary.boundaries.sourceRegistryWrites).toBe(false);
+    expect(payload.summary.boundaries.productionWrites).toBe(false);
+    expect(payload.samplePacketValidation.every((packet) => packet.packet_validation_status === 'blocked_manual_evidence_incomplete')).toBe(true);
+  });
+
+  it('accepts complete public source manual evidence intake only as a manual release review queue', () => {
+    const tempDir = copyManualEvidencePackToTemp();
+
+    try {
+      const output = execFileSync(
+        'node',
+        ['scripts/data/validate-public-source-manual-evidence.mjs', '--intake', tempDir, '--json', '--no-write'],
+        { cwd: process.cwd(), encoding: 'utf8' },
+      );
+      const payload = JSON.parse(output) as {
+        summary: {
+          targetCount: number;
+          readyForManualReleaseReviewCount: number;
+          blockedPacketCount: number;
+          acceptedForL3EvidenceCount: number;
+          needsReplacementSourceCount: number;
+          blockedVendorAccessCount: number;
+          rejectedScopeMismatchCount: number;
+          boundaries: Record<string, boolean>;
+        };
+        samplePacketValidation: Array<Record<string, string>>;
+      };
+
+      expect(payload.summary.targetCount).toBe(3);
+      expect(payload.summary.readyForManualReleaseReviewCount).toBe(3);
+      expect(payload.summary.blockedPacketCount).toBe(0);
+      expect(payload.summary.acceptedForL3EvidenceCount).toBe(1);
+      expect(payload.summary.needsReplacementSourceCount).toBe(1);
+      expect(payload.summary.blockedVendorAccessCount).toBe(1);
+      expect(payload.summary.rejectedScopeMismatchCount).toBe(0);
+      expect(payload.summary.boundaries.manualReleaseReviewRequired).toBe(true);
+      expect(payload.summary.boundaries.factPromotion).toBe(false);
+      expect(payload.summary.boundaries.sourceRegistryWrites).toBe(false);
+      expect(payload.summary.boundaries.pageWrites).toBe(false);
+      expect(payload.samplePacketValidation.every((packet) => packet.packet_validation_status === 'ready_for_manual_release_review')).toBe(
+        true,
+      );
+      expect(payload.samplePacketValidation.every((packet) => packet.can_write_source_registry === 'false')).toBe(true);
+      expect(payload.samplePacketValidation.every((packet) => packet.can_update_page_display === 'false')).toBe(true);
+      expect(payload.samplePacketValidation.every((packet) => packet.can_export_as_fact_csv === 'false')).toBe(true);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   it('keeps periodic data collection scripts discoverable from npm', () => {
     const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as { scripts: Record<string, string> };
 
@@ -174,6 +295,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(packageJson.scripts['data:public-evidence:live']).toContain('--live');
     expect(packageJson.scripts['data:public-evidence:live']).toContain('--write-public');
     expect(packageJson.scripts['data:source-tasks']).toContain('scripts/data/build-source-tasks.mjs');
+    expect(packageJson.scripts['data:manual-evidence:validate']).toContain('scripts/data/validate-public-source-manual-evidence.mjs');
     expect(packageJson.scripts['data:refresh:weekly']).toContain('scripts/data/refresh-weekly-data.mjs');
     expect(packageJson.scripts['data:refresh:semi-monthly']).toContain('scripts/data/refresh-semi-monthly-data.mjs');
     expect(packageJson.scripts['data:refresh:semi-monthly:public-evidence']).toContain('scripts/data/refresh-semi-monthly-data.mjs');
@@ -258,6 +380,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       'scripts/data/audit-deep.mjs',
       'scripts/data/prioritize-source-gaps.mjs',
       'scripts/data/build-source-gap-readiness-packets.mjs',
+      'scripts/data/validate-public-source-manual-evidence.mjs',
       'scripts/data/build-source-gap-owner-intake.mjs',
       'scripts/data/prefill-source-gap-owner-intake.mjs',
       'scripts/data/build-source-gap-owner-chat-intake-pack.mjs',
