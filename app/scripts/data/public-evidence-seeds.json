@@ -63,6 +63,42 @@
       "notFullPlatformDataset": true
     },
     {
+      "id": "medela-magic-inbra-official-sample",
+      "sourceId": "ds-008",
+      "page": "NewCompetition",
+      "metric": "Brand official product page sample",
+      "label": "Medela Magic InBra official product page sample",
+      "url": "https://www.medela.com/en/breastfeeding-pumping/products/pumps/inbra-electric/magic-inbra",
+      "evidenceClass": "brand-official-page",
+      "expectedEvidenceTerms": ["Magic InBra", "breast pump"],
+      "collectionBoundary": "Public brand product page only; no checkout, no account area, no inventory, price, rating, sales, or market-share claim.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "eufy-e20-official-sample",
+      "sourceId": "ds-008",
+      "page": "NewCompetition",
+      "metric": "Brand official product page sample",
+      "label": "eufy E20 official product page sample",
+      "url": "https://www.eufy.com/products/t6060121",
+      "evidenceClass": "brand-official-page",
+      "expectedEvidenceTerms": ["E20", "HeatFlow"],
+      "collectionBoundary": "Public brand product page only; no checkout, no account area, no inventory, price, rating, sales, or market-share claim.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "medela-pump-in-style-pro-2026-new-competition",
+      "sourceId": "ds-008",
+      "page": "NewCompetition",
+      "metric": "Brand official news evidence",
+      "label": "Medela Pump In Style Pro 2026 official news for new competition monitoring",
+      "url": "https://www.medela.com/en/about-medela/medela-news/pump-in-style-pro-named-best-new-product-in-the-us-for-2026",
+      "evidenceClass": "brand-official-news",
+      "expectedEvidenceTerms": ["Pump In Style", "2026"],
+      "collectionBoundary": "Public brand news page only; supports launch/news monitoring, not sales, share, ranking, or pricing conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
       "id": "medela-pump-in-style-pro-2026-news",
       "sourceId": "ds-034",
       "page": "IndustryNews",

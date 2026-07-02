@@ -1,7 +1,43 @@
-import { useState } from 'react';
-import { LayoutGrid, FileBarChart, Map as MapIcon, Database, TrendingUp, Zap, Shield, ArrowUpRight, AlertTriangle, CheckCircle, Flame, Cpu, Baby } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { LayoutGrid, FileBarChart, Map as MapIcon, Database, TrendingUp, Zap, Shield, ArrowUpRight, AlertTriangle, CheckCircle, Flame, Cpu, Baby, ExternalLink } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
+
+interface PublicEvidenceRecord {
+  seedId: string;
+  sourceId: string;
+  page: string;
+  evidenceClass: string;
+  captureStatus: string;
+  capturedAt?: string;
+  title?: string;
+  label?: string;
+  url: string;
+  collectionBoundary: string;
+  notFullPlatformDataset?: boolean;
+  matchedEvidenceTerms?: string[];
+  missingEvidenceTerms?: string[];
+  nonVerbatimSummary?: string;
+  safety?: {
+    networkCalls?: number;
+    loginAttempted?: boolean;
+    bypassAttempted?: boolean;
+    businessDataWrites?: number;
+  };
+}
+
+interface PublicEvidenceManifest {
+  mode: string;
+  generatedAt: string;
+  summary?: {
+    total: number;
+    captureStatusCounts?: Record<string, number>;
+    evidenceClassCounts?: Record<string, number>;
+    networkCalls: number;
+    businessDataWrites: number;
+  };
+  records?: PublicEvidenceRecord[];
+}
 
 const pricePending = '价格待复核';
 const trendPending = '趋势待复核';
@@ -67,7 +103,33 @@ const sidebarItems = [
 
 export default function NewCompetition() {
   const [timeFilter, setTimeFilter] = useState('全部');
+  const [publicEvidenceManifest, setPublicEvidenceManifest] = useState<PublicEvidenceManifest | null>(null);
+  const [publicEvidenceStatus, setPublicEvidenceStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
   const filters = ['全部', '2026年', '2025年', '即将上市'];
+
+  useEffect(() => {
+    let active = true;
+
+    fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) throw new Error('Public evidence samples unavailable.');
+        return response.json() as Promise<PublicEvidenceManifest>;
+      })
+      .then((manifest) => {
+        if (!active) return;
+        setPublicEvidenceManifest(manifest);
+        setPublicEvidenceStatus('ready');
+      })
+      .catch(() => {
+        if (!active) return;
+        setPublicEvidenceManifest(null);
+        setPublicEvidenceStatus('missing');
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const getFiltered = () => {
     if (timeFilter === '2026年') return newProducts2026;
@@ -77,6 +139,16 @@ export default function NewCompetition() {
   };
   const filtered = getFiltered();
   const highThreat = threatMatrix.filter(t => t.threatLevel === '高').length;
+  const newCompetitionEvidence = (publicEvidenceManifest?.records ?? []).filter(
+    (record) => record.sourceId === 'ds-008' || record.page === 'NewCompetition',
+  );
+  const capturedNewCompetitionEvidence = newCompetitionEvidence.filter((record) => record.captureStatus === 'captured');
+  const evidenceBusinessDataWrites = publicEvidenceManifest?.summary?.businessDataWrites ?? 0;
+  const evidenceNetworkCalls = newCompetitionEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
+  const evidenceStatusLabel =
+    publicEvidenceStatus === 'ready'
+      ? `${capturedNewCompetitionEvidence.length}/${newCompetitionEvidence.length} captured`
+      : publicEvidenceStatus;
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -107,9 +179,76 @@ export default function NewCompetition() {
             <PageEvidenceNotice
               sourceIds={['ds-008']}
               title="新品线索使用边界"
-              description="品牌官网和新闻稿适合支撑新品线索；销量、威胁等级和应对动作属于内部判断，不作为已验证销售结论。"
+              description={
+                <span>
+                  当前页面读取 public evidence manifest 中 ds-008 的官网/新闻公开样本；这些样本只支撑新品与卖点线索，销量、价格、评分、份额、威胁等级和应对动作仍属于待授权或内部判断。
+                </span>
+              }
               cadence="新品线索复核口径"
             />
+
+            <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
+              <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
+                <div>
+                  <h2 className="text-sm font-semibold text-[#1d1d1f]">新品公开证据采集包 · ds-008</h2>
+                  <p className="mt-1 text-[10px] leading-relaxed text-[#86868b]">
+                    mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · businessDataWrites={evidenceBusinessDataWrites}
+                  </p>
+                </div>
+                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${capturedNewCompetitionEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+                  {evidenceStatusLabel}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">官网/新闻样本</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{capturedNewCompetitionEvidence.length}/{newCompetitionEvidence.length || '-'}</p>
+                </div>
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">网络采集</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">networkCalls={evidenceNetworkCalls}</p>
+                </div>
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">写入边界</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">businessDataWrites={evidenceBusinessDataWrites}</p>
+                </div>
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">平台指标</p>
+                  <p className="mt-1 text-xs font-semibold text-[#ff9500]">price/rating/share blocked</p>
+                </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
+                {(newCompetitionEvidence.length > 0 ? newCompetitionEvidence : []).map((record) => (
+                  <div key={record.seedId} className="rounded-xl border border-[#EDE6DF] bg-white p-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate text-[11px] font-semibold text-[#1d1d1f]">{record.title || record.label}</p>
+                        <p className="mt-1 text-[10px] text-[#86868b]">{record.evidenceClass} · {record.captureStatus}</p>
+                      </div>
+                      <a href={record.url} target="_blank" rel="noreferrer" className="inline-flex flex-shrink-0 items-center gap-1 rounded-lg border border-[#EDE6DF] px-2 py-1 text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E]">
+                        source <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                    <p className="mt-2 text-[10px] leading-relaxed text-[#86868b]">{record.nonVerbatimSummary || record.collectionBoundary}</p>
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {(record.matchedEvidenceTerms ?? []).map((term) => (
+                        <span key={term} className="rounded-full bg-[#34c759]/10 px-2 py-0.5 text-[9px] font-medium text-[#2f7d32]">{term}</span>
+                      ))}
+                      {record.notFullPlatformDataset ? (
+                        <span className="rounded-full bg-[#ff9500]/10 px-2 py-0.5 text-[9px] font-medium text-[#a85f00]">notFullPlatformDataset</span>
+                      ) : null}
+                    </div>
+                  </div>
+                ))}
+                {newCompetitionEvidence.length === 0 ? (
+                  <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                    <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回 ds-008 公开证据样本。</p>
+                  </div>
+                ) : null}
+              </div>
+            </div>
 
             {/* 2026 Market Snapshot */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -117,7 +256,7 @@ export default function NewCompetition() {
                 { label: '2026全球吸奶器市场', value: '$3.81B', sub: 'Precedence Research · ds-001', color: '#C25B6E', icon: <TrendingUp className="w-4 h-4" /> },
                 { label: '2026穿戴式市场', value: '$233M', sub: 'Fortune BI · ds-045', color: '#ff9500', icon: <Zap className="w-4 h-4" /> },
                 { label: 'Momcozy 2026新品', value: '5款', sub: 'W1/Air1/BM08等', color: '#34c759', icon: <CheckCircle className="w-4 h-4" /> },
-                { label: '高威胁竞品', value: String(highThreat), sub: '需重点关注', color: '#ff3b30', icon: <AlertTriangle className="w-4 h-4" /> },
+                { label: '高威胁线索', value: String(highThreat), sub: '内部判断 · 待授权验证', color: '#ff3b30', icon: <AlertTriangle className="w-4 h-4" /> },
               ].map((s, i) => (
                 <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">
                   <div className="flex items-center gap-2 mb-2">

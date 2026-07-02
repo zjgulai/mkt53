@@ -8,7 +8,7 @@
   "timezone": "Asia/Shanghai",
   "nextScheduledAt": "2026-07-16T09:00:00+08:00",
   "scheduleCron": "0 9 1,16 * *",
-  "generatedAt": "2026-07-02T03:05:48.755Z",
+  "generatedAt": "2026-07-02T09:26:34.350Z",
   "refreshCadence": "semi-monthly",
   "collectionPolicy": {
     "publicUrl": {
@@ -976,7 +976,7 @@
   },
   "sourceTaskQueue": {
     "schemaVersion": 1,
-    "generatedAt": "2026-07-02T03:05:48.755Z",
+    "generatedAt": "2026-07-02T09:26:34.350Z",
     "generatedRule": "source task queue 只表达待补证和接入任务，不代表业务数据已采集。",
     "total": 40,
     "queueTypeCounts": {
@@ -1017,7 +1017,7 @@
       "sourceUrl": "https://www.precedenceresearch.com/breast-pump-market",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:48.806Z",
+      "checkedAt": "2026-07-02T09:26:34.458Z",
       "httpStatus": 200,
       "contentType": "text/html; charset=UTF-8",
       "etag": "",
@@ -1030,7 +1030,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:48.806Z",
+          "checkedAt": "2026-07-02T09:26:34.458Z",
           "httpStatus": 200,
           "retryable": false
         }
@@ -1046,12 +1046,12 @@
       "sourceUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:49.623Z",
+      "checkedAt": "2026-07-02T09:26:36.807Z",
       "httpStatus": 200,
       "contentType": "text/html; charset=UTF-8",
       "etag": "",
       "lastModified": "",
-      "sampleHash": "40375558b52682421f091a5ccff4f53bd48289e75eacf288cf575f0712134107",
+      "sampleHash": "92a1e418dac6e4eb6fd21044bf4746ae0d5082a267e440a4b3e27093a7f11b68",
       "retryable": false,
       "note": "公开来源可达，已记录元数据和样本哈希。",
       "checkAttemptCount": 1,
@@ -1059,7 +1059,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:49.623Z",
+          "checkedAt": "2026-07-02T09:26:36.807Z",
           "httpStatus": 200,
           "retryable": false
         }
@@ -1075,12 +1075,12 @@
       "sourceUrl": "https://www.grandviewresearch.com/industry-analysis/baby-products-market",
       "method": "public-url-check",
       "status": "source-error",
-      "checkedAt": "2026-07-02T03:05:50.081Z",
+      "checkedAt": "2026-07-02T09:26:37.169Z",
       "httpStatus": 403,
       "contentType": "text/html; charset=UTF-8",
       "etag": "",
       "lastModified": "",
-      "sampleHash": "334d8c42f5ce2ecf79d03c1d9adcb85c676b164add8841313f3984969451aa27",
+      "sampleHash": "da3f74f541956e36da3d387734032a7fcd14857b17198143cdee99f4c459ea63",
       "retryable": false,
       "note": "公开来源返回非 2xx，需要人工确认链接或供应商权限。",
       "checkAttemptCount": 1,
@@ -1088,7 +1088,7 @@
         {
           "attempt": 1,
           "status": "source-error",
-          "checkedAt": "2026-07-02T03:05:50.081Z",
+          "checkedAt": "2026-07-02T09:26:37.169Z",
           "httpStatus": 403,
           "retryable": false
         }
@@ -1104,12 +1104,12 @@
       "sourceUrl": "https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:50.335Z",
+      "checkedAt": "2026-07-02T09:26:37.325Z",
       "httpStatus": 200,
       "contentType": "text/html; charset=UTF-8",
       "etag": "",
       "lastModified": "",
-      "sampleHash": "db3c002d1be5829d0ec961f628ec47c778e9a42f3d841ebda67a24ebbfb98a38",
+      "sampleHash": "2a32200207ca776bcb63f1afbe52a393234673683aa212ce39f22a1c36759eac",
       "retryable": false,
       "note": "公开来源可达，已记录元数据和样本哈希。",
       "checkAttemptCount": 1,
@@ -1117,7 +1117,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:50.335Z",
+          "checkedAt": "2026-07-02T09:26:37.325Z",
           "httpStatus": 200,
           "retryable": false
         }
@@ -1133,7 +1133,7 @@
       "sourceUrl": "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/Breast_pump/monthly/2025060100/2026062400",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:50.747Z",
+      "checkedAt": "2026-07-02T09:26:37.763Z",
       "httpStatus": 200,
       "contentType": "application/json; charset=utf-8",
       "etag": "W/\"20-da39a3ee5e6b4b0d3255bfef95601890afd80709\"",
@@ -1146,7 +1146,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:50.747Z",
+          "checkedAt": "2026-07-02T09:26:37.763Z",
           "httpStatus": 200,
           "retryable": false
         }
@@ -1160,7 +1160,7 @@
       "sourceName": "ERP 销售统计导出",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:51.424Z",
+      "checkedAt": "2026-07-02T09:26:38.631Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1170,7 +1170,7 @@
       "sourceName": "ERP 售后销量统计导出",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:51.424Z",
+      "checkedAt": "2026-07-02T09:26:38.631Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1180,7 +1180,7 @@
       "sourceName": "ERP 零售与渠道销量统计",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:51.424Z",
+      "checkedAt": "2026-07-02T09:26:38.631Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1190,7 +1190,7 @@
       "sourceName": "ERP > 销售 > 全渠道销售增长表现",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:51.424Z",
+      "checkedAt": "2026-07-02T09:26:38.631Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1200,7 +1200,7 @@
       "sourceName": "ERP > 销售 > 全渠道目标达成",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:51.424Z",
+      "checkedAt": "2026-07-02T09:26:38.631Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1212,7 +1212,7 @@
       "sourceUrl": "https://www.fda.gov/medical-devices/consumer-products/breast-pumps",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:51.424Z",
+      "checkedAt": "2026-07-02T09:26:38.631Z",
       "httpStatus": 200,
       "contentType": "text/html; charset=UTF-8",
       "etag": "\"1782898452\"",
@@ -1225,7 +1225,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:51.424Z",
+          "checkedAt": "2026-07-02T09:26:38.631Z",
           "httpStatus": 200,
           "retryable": false
         }
@@ -1241,7 +1241,7 @@
       "sourceUrl": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:51.690Z",
+      "checkedAt": "2026-07-02T09:26:38.802Z",
       "httpStatus": 206,
       "contentType": "text/html; charset=utf-8",
       "etag": "W/\"2ef2b-NqkFg0QhMa0FBSX5K5v+Vy9z/k8\"",
@@ -1254,7 +1254,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:51.690Z",
+          "checkedAt": "2026-07-02T09:26:38.802Z",
           "httpStatus": 206,
           "retryable": false
         }
@@ -1270,7 +1270,7 @@
       "sourceUrl": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:52.126Z",
+      "checkedAt": "2026-07-02T09:26:39.205Z",
       "httpStatus": 206,
       "contentType": "text/html; charset=utf-8",
       "etag": "W/\"2ef2b-NqkFg0QhMa0FBSX5K5v+Vy9z/k8\"",
@@ -1283,7 +1283,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:52.126Z",
+          "checkedAt": "2026-07-02T09:26:39.205Z",
           "httpStatus": 206,
           "retryable": false
         }
@@ -1298,7 +1298,7 @@
       "sourceUrl": "https://www.census.gov/foreign-trade/data/IMDB.html",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:52.301Z",
+      "checkedAt": "2026-07-02T09:26:39.449Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1308,7 +1308,7 @@
       "sourceName": "Amazon.com 实时采集",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:52.301Z",
+      "checkedAt": "2026-07-02T09:26:39.449Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1318,7 +1318,7 @@
       "sourceName": "品牌官网/新闻稿",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-07-02T03:05:52.301Z",
+      "checkedAt": "2026-07-02T09:26:39.449Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1328,7 +1328,7 @@
       "sourceName": "Amazon.com 2026-05",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:52.301Z",
+      "checkedAt": "2026-07-02T09:26:39.449Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1339,7 +1339,7 @@
       "sourceUrl": "https://vendorcentral.amazon.com",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:52.301Z",
+      "checkedAt": "2026-07-02T09:26:39.449Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1351,7 +1351,7 @@
       "sourceUrl": "https://www.questmobile.com.cn/research/report/1927204984337829890",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:52.301Z",
+      "checkedAt": "2026-07-02T09:26:39.449Z",
       "httpStatus": 206,
       "contentType": "text/html",
       "etag": "\"6a4339ab-1b6f3\"",
@@ -1364,7 +1364,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:52.301Z",
+          "checkedAt": "2026-07-02T09:26:39.449Z",
           "httpStatus": 206,
           "retryable": false
         }
@@ -1380,7 +1380,7 @@
       "sourceUrl": "https://www.mamava.com/why-buy-blog/2025-state-of-breastfeeding-survey",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:52.793Z",
+      "checkedAt": "2026-07-02T09:26:39.933Z",
       "httpStatus": 206,
       "contentType": "text/html;charset=utf-8",
       "etag": "W/\"21c9490b99552c33b9adf9141bed01c0--gzip\"",
@@ -1393,7 +1393,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:52.793Z",
+          "checkedAt": "2026-07-02T09:26:39.933Z",
           "httpStatus": 206,
           "retryable": false
         }
@@ -1407,7 +1407,7 @@
       "sourceName": "Momcozy CRM",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:53.094Z",
+      "checkedAt": "2026-07-02T09:26:40.359Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1417,7 +1417,7 @@
       "sourceName": "TikTok/IG/FB API",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:53.094Z",
+      "checkedAt": "2026-07-02T09:26:40.359Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1427,7 +1427,7 @@
       "sourceName": "定性研究",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-07-02T03:05:53.094Z",
+      "checkedAt": "2026-07-02T09:26:40.359Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1437,7 +1437,7 @@
       "sourceName": "Grand View Research / Fortune BI",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-07-02T03:05:53.094Z",
+      "checkedAt": "2026-07-02T09:26:40.359Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1449,7 +1449,7 @@
       "sourceUrl": "https://health.ec.europa.eu/medical-devices-sector/new-regulations_en",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:53.094Z",
+      "checkedAt": "2026-07-02T09:26:40.359Z",
       "httpStatus": 206,
       "contentType": "text/html; charset=UTF-8",
       "etag": "",
@@ -1462,7 +1462,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:53.094Z",
+          "checkedAt": "2026-07-02T09:26:40.359Z",
           "httpStatus": 206,
           "retryable": false
         }
@@ -1478,12 +1478,12 @@
       "sourceUrl": "https://patentscope.wipo.int/search/en/advancedSearch.jsf",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:54.207Z",
+      "checkedAt": "2026-07-02T09:26:41.156Z",
       "httpStatus": 200,
       "contentType": "text/html;charset=UTF-8",
       "etag": "",
       "lastModified": "",
-      "sampleHash": "6cba94e808726d9e59f9ab599ab5012ddc39caf4a6a97c6358d98af488b86cde",
+      "sampleHash": "c74db7e3bbc48421b95cd6fb1a16ebc87a6ef8bd6486bc6c07519a3c29cabd89",
       "retryable": false,
       "note": "公开来源可达，已记录元数据和样本哈希。",
       "checkAttemptCount": 1,
@@ -1491,7 +1491,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:54.207Z",
+          "checkedAt": "2026-07-02T09:26:41.156Z",
           "httpStatus": 200,
           "retryable": false
         }
@@ -1505,7 +1505,7 @@
       "sourceName": "展会官网",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-07-02T03:05:55.191Z",
+      "checkedAt": "2026-07-02T09:26:42.191Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1515,7 +1515,7 @@
       "sourceName": "Momcozy内部/Amazon",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.191Z",
+      "checkedAt": "2026-07-02T09:26:42.191Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1525,7 +1525,7 @@
       "sourceName": "内部测算",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.191Z",
+      "checkedAt": "2026-07-02T09:26:42.191Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1535,7 +1535,7 @@
       "sourceName": "评论数据集 / NLP模型",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.191Z",
+      "checkedAt": "2026-07-02T09:26:42.191Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1545,7 +1545,7 @@
       "sourceName": "内部维护",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.191Z",
+      "checkedAt": "2026-07-02T09:26:42.191Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1555,7 +1555,7 @@
       "sourceName": "爬虫采集",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.191Z",
+      "checkedAt": "2026-07-02T09:26:42.191Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1565,7 +1565,7 @@
       "sourceName": "内部管理",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.191Z",
+      "checkedAt": "2026-07-02T09:26:42.191Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1576,7 +1576,7 @@
       "sourceUrl": "https://github.com/zjgulai/mkt53/blob/main/app/src/pages/AIAssistantPage.tsx",
       "method": "local-file-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:55.191Z",
+      "checkedAt": "2026-07-02T09:26:42.191Z",
       "localPath": "src/pages/AIAssistantPage.tsx",
       "fileSizeBytes": 2600,
       "sampleHash": "dbf82f50c6392602b91a8ab24d151702d7f67e05ed3d9560ba77551fe52855a0",
@@ -1589,7 +1589,7 @@
       "sourceName": "Kimi Image Generation / 本地图片资产",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.193Z",
+      "checkedAt": "2026-07-02T09:26:42.192Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1600,7 +1600,7 @@
       "sourceUrl": "https://github.com/zjgulai/mkt53/blob/main/app/src/pages/DataManage.tsx",
       "method": "local-file-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:55.193Z",
+      "checkedAt": "2026-07-02T09:26:42.192Z",
       "localPath": "src/pages/DataManage.tsx",
       "fileSizeBytes": 260867,
       "sampleHash": "b9c331a2437a8af9bb5b1a95c455b83f077689b943d8e7e156a70eb5913397d5",
@@ -1614,7 +1614,7 @@
       "sourceUrl": "https://github.com/zjgulai/mkt53/blob/main/app/src/data/source-registry.ts",
       "method": "local-file-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:55.194Z",
+      "checkedAt": "2026-07-02T09:26:42.192Z",
       "localPath": "src/data/source-registry.ts",
       "fileSizeBytes": 44778,
       "sampleHash": "926375701e102a3b3348ce2a08e97388aa802c6693508b178d7c4870bf92829b",
@@ -1627,7 +1627,7 @@
       "sourceName": "AI模型配置 / 官网采集图",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.194Z",
+      "checkedAt": "2026-07-02T09:26:42.192Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1637,7 +1637,7 @@
       "sourceName": "Amazon API / NLP模型占位",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.194Z",
+      "checkedAt": "2026-07-02T09:26:42.192Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1647,7 +1647,7 @@
       "sourceName": "YouTube Data API / 达人研究占位",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.194Z",
+      "checkedAt": "2026-07-02T09:26:42.192Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1657,7 +1657,7 @@
       "sourceName": "用户评论/VOC NLP汇总",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.194Z",
+      "checkedAt": "2026-07-02T09:26:42.192Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1667,7 +1667,7 @@
       "sourceName": "VOC NLP汇总 / 人工分析",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.194Z",
+      "checkedAt": "2026-07-02T09:26:42.192Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1679,7 +1679,7 @@
       "sourceUrl": "https://www.accessdata.fda.gov/cdrh_docs/pdf25/K253283.pdf",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:55.194Z",
+      "checkedAt": "2026-07-02T09:26:42.192Z",
       "httpStatus": 206,
       "contentType": "application/pdf",
       "etag": "\"80f3315b8d4ddc1:0\"",
@@ -1692,7 +1692,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:55.194Z",
+          "checkedAt": "2026-07-02T09:26:42.192Z",
           "httpStatus": 206,
           "retryable": false
         }
@@ -1706,7 +1706,7 @@
       "sourceName": "Momcozy ERP / 供应商访谈",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:55.318Z",
+      "checkedAt": "2026-07-02T09:26:42.834Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1718,10 +1718,10 @@
       "sourceUrl": "https://momcozy.com/products/momcozy-mobile-flow-hands-free-breast-pump",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:55.318Z",
+      "checkedAt": "2026-07-02T09:26:42.834Z",
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
-      "etag": "W/\"page_cache:55923212486:ProductDetailsController:da3bc15c901a4c63ec2f8e4b73e2a21f\"",
+      "etag": "W/\"page_cache:55923212486:ProductDetailsController:1a9c0478fe6ee0cb78ebffd466b085d0\"",
       "lastModified": "",
       "sampleHash": "f16b7cf5033696543ec46e22936e0da60b81e935234ac9902b7eb5ecd8a6132a",
       "retryable": false,
@@ -1731,7 +1731,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:55.318Z",
+          "checkedAt": "2026-07-02T09:26:42.834Z",
           "httpStatus": 200,
           "retryable": false
         }
@@ -1745,7 +1745,7 @@
       "sourceName": "行业报告 / Amazon品类采集",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:56.243Z",
+      "checkedAt": "2026-07-02T09:26:43.915Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1755,7 +1755,7 @@
       "sourceName": "行业报告加权 / Amazon BSR",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:56.243Z",
+      "checkedAt": "2026-07-02T09:26:43.915Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1765,7 +1765,7 @@
       "sourceName": "Amazon品类采集 / 行业报告",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:56.243Z",
+      "checkedAt": "2026-07-02T09:26:43.915Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1775,7 +1775,7 @@
       "sourceName": "用户调研 / AI图像资产标签",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-07-02T03:05:56.243Z",
+      "checkedAt": "2026-07-02T09:26:43.915Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
@@ -1785,7 +1785,7 @@
       "sourceName": "渠道访谈 / 内部销售口径",
       "method": "connector-required",
       "status": "connector-required",
-      "checkedAt": "2026-07-02T03:05:56.243Z",
+      "checkedAt": "2026-07-02T09:26:43.915Z",
       "note": "该来源需要授权 API、内部系统或合规爬虫连接器，本脚本不伪造采集结果。"
     },
     {
@@ -1795,11 +1795,11 @@
       "sourceName": "门店访谈 / 运营数据审计",
       "method": "manual-required",
       "status": "manual-required",
-      "checkedAt": "2026-07-02T03:05:56.243Z",
+      "checkedAt": "2026-07-02T09:26:43.915Z",
       "note": "该来源缺少可自动访问 URL，需要人工上传、采购报告或补充来源入口。"
     },
     {
-      "attempt": 1,
+      "attempt": 2,
       "id": "policy-cpsc-efiling",
       "page": "RegulationDetail",
       "metric": "CPSC CPC/eFiling官方入口与资源",
@@ -1807,7 +1807,7 @@
       "sourceUrl": "https://www.cpsc.gov/eFiling",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:56.243Z",
+      "checkedAt": "2026-07-02T09:26:52.416Z",
       "httpStatus": 200,
       "contentType": "text/html; charset=UTF-8",
       "etag": "\"1782850157\"",
@@ -1815,17 +1815,24 @@
       "sampleHash": "e091e33f216a87a5079c89a2fad34f4c0919a42fda7c31b1fe4629764dcd4a26",
       "retryable": false,
       "note": "公开来源可达，已记录元数据和样本哈希。",
-      "checkAttemptCount": 1,
+      "checkAttemptCount": 2,
       "attempts": [
         {
           "attempt": 1,
+          "status": "fetch-error",
+          "checkedAt": "2026-07-02T09:26:43.915Z",
+          "error": "This operation was aborted",
+          "retryable": true
+        },
+        {
+          "attempt": 2,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:56.243Z",
+          "checkedAt": "2026-07-02T09:26:52.416Z",
           "httpStatus": 200,
           "retryable": false
         }
       ],
-      "statusStability": "fresh-ok"
+      "statusStability": "recovered-after-retry"
     },
     {
       "attempt": 1,
@@ -1836,7 +1843,7 @@
       "sourceUrl": "https://health.ec.europa.eu/medical-devices-sector/new-regulations_en",
       "method": "public-url-check",
       "status": "ok",
-      "checkedAt": "2026-07-02T03:05:56.408Z",
+      "checkedAt": "2026-07-02T09:26:52.603Z",
       "httpStatus": 206,
       "contentType": "text/html; charset=UTF-8",
       "etag": "",
@@ -1849,7 +1856,7 @@
         {
           "attempt": 1,
           "status": "ok",
-          "checkedAt": "2026-07-02T03:05:56.408Z",
+          "checkedAt": "2026-07-02T09:26:52.603Z",
           "httpStatus": 206,
           "retryable": false
         }
@@ -1859,23 +1866,23 @@
   ],
   "publicEvidence": {
     "mode": "live-browser-capture",
-    "generatedAt": "2026-07-02T03:05:56.574Z",
-    "total": 15,
+    "generatedAt": "2026-07-02T09:26:53.154Z",
+    "total": 18,
     "captureStatusCounts": {
-      "captured": 15
+      "captured": 18
     },
     "evidenceClassCounts": {
       "public-page-sample": 1,
       "official-trade-data-page": 1,
       "official-customs-ruling-page": 1,
-      "brand-official-page": 2,
-      "brand-official-news": 1,
+      "brand-official-page": 4,
+      "brand-official-news": 2,
       "official-regulatory-page": 2,
       "market-report-public-page": 2,
       "exhibition-official-page": 4,
       "public-survey-page": 1
     },
-    "networkCalls": 15,
+    "networkCalls": 18,
     "businessDataWrites": 0,
     "manifestPath": "public/periodic-data/public-evidence-samples.json"
   },
