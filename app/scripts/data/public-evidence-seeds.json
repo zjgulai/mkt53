@@ -255,6 +255,54 @@
       "notFullPlatformDataset": true
     },
     {
+      "id": "babycare-mordor-baby-care-products-market",
+      "sourceId": "ds-037",
+      "page": "BabyCare",
+      "metric": "Baby care public report source availability",
+      "label": "Mordor baby care products market public page",
+      "url": "https://www.mordorintelligence.com/industry-reports/baby-care-products-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Baby Care Products Market", "CAGR"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports baby care category context source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "babycare-gmi-bottle-warmer-sterilizer-market",
+      "sourceId": "ds-037",
+      "page": "BabyCare",
+      "metric": "Baby care public report source availability",
+      "label": "Global Market Insights baby bottle warmer and sterilizer market public page",
+      "url": "https://www.gminsights.com/industry-analysis/baby-bottle-warmer-and-sterilizer-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Baby Bottle Warmer and Sterilizer Market", "CAGR"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports bottle warmer and sterilizer segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "babycare-tbrc-baby-monitoring-devices-market",
+      "sourceId": "ds-037",
+      "page": "BabyCare",
+      "metric": "Baby care public report source availability",
+      "label": "The Business Research Company baby monitoring devices market public page",
+      "url": "https://www.thebusinessresearchcompany.com/report/baby-monitoring-devices-global-market-report",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Baby Monitoring Devices Market", "CAGR"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports baby monitoring devices segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "babycare-mordor-humidifier-market",
+      "sourceId": "ds-037",
+      "page": "BabyCare",
+      "metric": "Baby care public report source availability",
+      "label": "Mordor humidifier market public page",
+      "url": "https://www.mordorintelligence.com/industry-reports/humidifier-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Humidifier Market", "CAGR"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports humidifier segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
       "id": "abc-kids-expo-2026",
       "sourceId": "ds-018",
       "page": "Exhibition",

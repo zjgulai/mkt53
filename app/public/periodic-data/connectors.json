@@ -422,7 +422,7 @@
       "page": "BabyCare",
       "metric": "婴儿护理品类规模",
       "sourceName": "行业报告 / Amazon品类采集",
-      "verificationStatus": "example",
+      "verificationStatus": "needs-review",
       "connectorId": "amazon-commerce",
       "connectorLabel": "Amazon Marketplace / Brand Analytics",
       "priority": "P0",
@@ -439,7 +439,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "补品类报告来源、采集窗口和测算公式"
+      "nextAction": "保留公开报告入口证据包；提交p0-amazon-connector-owner-01证据包并补类目/品牌映射后再复核婴儿护理外部趋势和品牌结论"
     },
     {
       "id": "ds-038",

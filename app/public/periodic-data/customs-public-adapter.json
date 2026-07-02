@@ -3,7 +3,7 @@
   "connectorId": "customs-public-data-adapter",
   "mode": "public-customs-source-adapter",
   "status": "ready-for-public-query-planning",
-  "generatedAt": "2026-07-02T10:40:18.574Z",
+  "generatedAt": "2026-07-02T11:07:47.758Z",
   "sourceId": "ds-006",
   "page": "CustomsData",
   "metric": "HS编码进出口",
@@ -74,7 +74,7 @@
       "id": "safetyBoundary",
       "status": "ready",
       "details": {
-        "networkCalls": 26,
+        "networkCalls": 30,
         "businessDataWrites": 0,
         "rawTextPublicBundleAllowed": false,
         "shipmentFactsGenerated": false
@@ -127,7 +127,7 @@
         "textArchivePath": "tmp/public-evidence/text/cbp-electric-breast-pump-hts-ruling.txt",
         "textArchiveBytes": 4764,
         "screenshotPath": "tmp/public-evidence/screenshots/cbp-electric-breast-pump-hts-ruling.png",
-        "screenshotHash": "a0db2829759cf95570347a2ca21f39dcec63cf018e3cafbfa762ae1fe80b5433"
+        "screenshotHash": "a278ffabf02bd66a2ca229a035de94a0a78d81bd66db0c3c1c6f8f60aa33b1ea"
       },
       "ready": true,
       "missingMatchedTerms": []
