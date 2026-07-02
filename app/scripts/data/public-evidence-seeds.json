@@ -32,7 +32,7 @@
       "page": "CustomsData",
       "metric": "Breast pump HTS classification evidence",
       "label": "CBP CROSS ruling for electric breast pump HTS classification",
-      "url": "https://rulings.cbp.gov/ruling/N021593",
+      "url": "https://rulings.cbp.gov/search?collection=ALL&page=1&pageSize=30&sortBy=RELEVANCE&term=breast+pump",
       "evidenceClass": "official-customs-ruling-page",
       "expectedEvidenceTerms": ["electric breast pump", "8413.81.0040"],
       "collectionBoundary": "Public customs ruling only; supports HS/HTS classification context, not import volume, supplier, importer, shipment, or country-share facts.",
@@ -87,14 +87,14 @@
       "notFullPlatformDataset": true
     },
     {
-      "id": "ecfr-16-cfr-1242-nursing-pillows",
+      "id": "cpsc-16-cfr-1242-nursing-pillows-guidance",
       "sourceId": "ds-016",
       "page": "PolicyInsight",
-      "metric": "Official CFR nursing pillow safety standard evidence",
-      "label": "eCFR 16 CFR Part 1242 nursing pillow standard",
-      "url": "https://www.ecfr.gov/current/title-16/chapter-II/subchapter-B/part-1242/section-1242.1",
+      "metric": "Official CPSC nursing pillow safety standard guidance",
+      "label": "CPSC 16 CFR part 1242 nursing pillow business guidance",
+      "url": "https://www.cpsc.gov/Business--Manufacturing/Business-Education/Business-Guidance/Nursing-Pillows",
       "evidenceClass": "official-regulatory-page",
-      "expectedEvidenceTerms": ["consumer product safety standard", "April 23, 2025"],
+      "expectedEvidenceTerms": ["16 CFR part 1242", "April 23, 2025"],
       "collectionBoundary": "Public federal regulation document only; supports regulatory source-entry context, not product-level legal opinion or SKU compliance status.",
       "notFullPlatformDataset": true
     },

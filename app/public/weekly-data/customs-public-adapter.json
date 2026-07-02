@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "connectorId": "customs-public-data-adapter",
   "mode": "public-customs-source-adapter",
-  "status": "blocked",
-  "generatedAt": "2026-07-02T02:55:59.854Z",
+  "status": "ready-for-public-query-planning",
+  "generatedAt": "2026-07-02T03:05:48.755Z",
   "sourceId": "ds-006",
   "page": "CustomsData",
   "metric": "HS编码进出口",
@@ -29,7 +29,7 @@
   "checks": [
     {
       "id": "publicEvidenceBundle",
-      "status": "blocked",
+      "status": "ready",
       "details": {
         "publicEvidencePath": "runtime-public-evidence",
         "requiredSeedIds": [
@@ -37,14 +37,11 @@
           "cbp-electric-breast-pump-hts-ruling"
         ],
         "readySeedIds": [
-          "us-census-merchandise-imports-database"
+          "us-census-merchandise-imports-database",
+          "cbp-electric-breast-pump-hts-ruling"
         ]
       },
-      "blockers": [
-        {
-          "type": "missing-or-incomplete-public-evidence"
-        }
-      ]
+      "blockers": []
     },
     {
       "id": "officialTradeDataSource",
@@ -61,18 +58,17 @@
     },
     {
       "id": "officialClassificationContext",
-      "status": "blocked",
+      "status": "ready",
       "details": {
         "seedId": "cbp-electric-breast-pump-hts-ruling",
-        "url": "https://rulings.cbp.gov/ruling/N021593",
-        "matchedEvidenceTerms": [],
+        "url": "https://rulings.cbp.gov/search?collection=ALL&page=1&pageSize=30&sortBy=RELEVANCE&term=breast+pump",
+        "matchedEvidenceTerms": [
+          "electric breast pump",
+          "8413.81.0040"
+        ],
         "hsCodeCandidate": "8413.81.0040"
       },
-      "blockers": [
-        {
-          "type": "official-hts-classification-context-not-ready"
-        }
-      ]
+      "blockers": []
     },
     {
       "id": "safetyBoundary",
@@ -86,14 +82,7 @@
       "blockers": []
     }
   ],
-  "blockers": [
-    {
-      "type": "missing-or-incomplete-public-evidence"
-    },
-    {
-      "type": "official-hts-classification-context-not-ready"
-    }
-  ],
+  "blockers": [],
   "evidenceRecords": [
     {
       "seedId": "us-census-merchandise-imports-database",
@@ -123,28 +112,25 @@
       "seedId": "cbp-electric-breast-pump-hts-ruling",
       "evidenceRole": "official_hts_classification_context",
       "sourceId": "ds-006",
-      "url": "https://rulings.cbp.gov/ruling/N021593",
+      "url": "https://rulings.cbp.gov/search?collection=ALL&page=1&pageSize=30&sortBy=RELEVANCE&term=breast+pump",
       "evidenceClass": "official-customs-ruling-page",
       "captureStatus": "captured",
-      "title": "CROSS Ruling",
-      "visibleTextHash": "4ff594dc5dd9dbdd077c5335dbdcf7646e329d8e77e4b8032cbc9b129a58e786",
-      "matchedEvidenceTerms": [],
-      "missingEvidenceTerms": [
+      "title": "CROSS Search Results",
+      "visibleTextHash": "6033ab48c5ec83e62bb144137c3bbf5188965757db627ab36f4ef40619bad089",
+      "matchedEvidenceTerms": [
         "electric breast pump",
         "8413.81.0040"
       ],
-      "nonVerbatimSummary": "CBP CROSS ruling for electric breast pump HTS classification: title captured (12 chars); matched 0/2 expected evidence terms; visible text length 334.",
+      "missingEvidenceTerms": [],
+      "nonVerbatimSummary": "CBP CROSS ruling for electric breast pump HTS classification: title captured (20 chars); matched 2/2 expected evidence terms; visible text length 4753.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/cbp-electric-breast-pump-hts-ruling.txt",
-        "textArchiveBytes": 337,
+        "textArchiveBytes": 4764,
         "screenshotPath": "tmp/public-evidence/screenshots/cbp-electric-breast-pump-hts-ruling.png",
-        "screenshotHash": "c4dc082bf4d85c2ffefc17fc72e862f650a81836f0f1e9f881748dd25cadfd4b"
+        "screenshotHash": "a278ffabf02bd66a2ca229a035de94a0a78d81bd66db0c3c1c6f8f60aa33b1ea"
       },
-      "ready": false,
-      "missingMatchedTerms": [
-        "electric breast pump",
-        "8413.81.0040"
-      ]
+      "ready": true,
+      "missingMatchedTerms": []
     }
   ],
   "hsCodeCandidates": [
@@ -167,7 +153,7 @@
   ],
   "queryPlan": {
     "planId": "customs-public-us-imports-htsusa-plan",
-    "status": "blocked-until-public-evidence-ready",
+    "status": "ready-for-owner-query-parameter-review",
     "sourceSystem": "U.S. Census public merchandise trade import data",
     "defaultFlow": "US imports",
     "candidateCommodityCodes": [

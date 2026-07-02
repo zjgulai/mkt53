@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-02T02:56:08.295Z",
+  "generatedAt": "2026-07-02T03:05:56.574Z",
   "mode": "live-browser-capture",
   "generatedRule": "Browser-assisted public evidence captures only public visible pages. It does not log in, bypass access controls, write business datasets, or replace authorized connectors.",
   "seedPath": "scripts/data/public-evidence-seeds.json",
@@ -12,8 +12,7 @@
   "summary": {
     "total": 15,
     "captureStatusCounts": {
-      "captured": 13,
-      "fetch-error": 2
+      "captured": 15
     },
     "evidenceClassCounts": {
       "public-page-sample": 1,
@@ -44,7 +43,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:56:15.046Z",
+      "capturedAt": "2026-07-02T03:06:03.045Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -64,18 +63,18 @@
       "finalUrl": "https://www.amazon.com/s?k=wearable+breast+pump",
       "httpStatus": 200,
       "title": "Amazon.com : wearable breast pump",
-      "visibleTextLength": 28299,
-      "visibleTextHash": "dfc6f294f94c56bc55a0fecb81097af53012f9456125f2e745985c4b1710d96d",
+      "visibleTextLength": 26795,
+      "visibleTextHash": "01fcb8e48583765e95a35fc81056212095abc1feb9cbbed49fee7845aafbaf25",
       "matchedEvidenceTerms": [
         "breast pump"
       ],
       "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Amazon wearable breast pump public search sample: title captured (33 chars); matched 1/1 expected evidence terms; visible text length 28299.",
+      "nonVerbatimSummary": "Amazon wearable breast pump public search sample: title captured (33 chars); matched 1/1 expected evidence terms; visible text length 26795.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/amazon-search-wearable-breast-pump-sample.txt",
-        "textArchiveBytes": 28319,
+        "textArchiveBytes": 26815,
         "screenshotPath": "tmp/public-evidence/screenshots/amazon-search-wearable-breast-pump-sample.png",
-        "screenshotHash": "a11962300147af9d65aa22c7871155c89f498e736d20f89ad30ac841748df669"
+        "screenshotHash": "7f61964e91dc5a12f147669f66c352738da4d8a05c079d398f9a9962fdd373c0"
       },
       "warnings": [],
       "pageErrors": []
@@ -94,7 +93,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:56:27.859Z",
+      "capturedAt": "2026-07-02T03:06:09.876Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -142,7 +141,7 @@
       "page": "CustomsData",
       "metric": "Breast pump HTS classification evidence",
       "label": "CBP CROSS ruling for electric breast pump HTS classification",
-      "url": "https://rulings.cbp.gov/ruling/N021593",
+      "url": "https://rulings.cbp.gov/search?collection=ALL&page=1&pageSize=30&sortBy=RELEVANCE&term=breast+pump",
       "evidenceClass": "official-customs-ruling-page",
       "collectionBoundary": "Public customs ruling only; supports HS/HTS classification context, not import volume, supplier, importer, shipment, or country-share facts.",
       "notFullPlatformDataset": true,
@@ -150,7 +149,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:56:37.480Z",
+      "capturedAt": "2026-07-02T03:06:15.585Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -167,26 +166,24 @@
         "boundaryValid": true
       },
       "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://rulings.cbp.gov/ruling/N021593",
+      "finalUrl": "https://rulings.cbp.gov/search?collection=ALL&page=1&pageSize=30&sortBy=RELEVANCE&term=breast%20pump",
       "httpStatus": 200,
-      "title": "CROSS Ruling",
-      "visibleTextLength": 334,
-      "visibleTextHash": "4ff594dc5dd9dbdd077c5335dbdcf7646e329d8e77e4b8032cbc9b129a58e786",
-      "matchedEvidenceTerms": [],
-      "missingEvidenceTerms": [
+      "title": "CROSS Search Results",
+      "visibleTextLength": 4753,
+      "visibleTextHash": "6033ab48c5ec83e62bb144137c3bbf5188965757db627ab36f4ef40619bad089",
+      "matchedEvidenceTerms": [
         "electric breast pump",
         "8413.81.0040"
       ],
-      "nonVerbatimSummary": "CBP CROSS ruling for electric breast pump HTS classification: title captured (12 chars); matched 0/2 expected evidence terms; visible text length 334.",
+      "missingEvidenceTerms": [],
+      "nonVerbatimSummary": "CBP CROSS ruling for electric breast pump HTS classification: title captured (20 chars); matched 2/2 expected evidence terms; visible text length 4753.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/cbp-electric-breast-pump-hts-ruling.txt",
-        "textArchiveBytes": 337,
+        "textArchiveBytes": 4764,
         "screenshotPath": "tmp/public-evidence/screenshots/cbp-electric-breast-pump-hts-ruling.png",
-        "screenshotHash": "c4dc082bf4d85c2ffefc17fc72e862f650a81836f0f1e9f881748dd25cadfd4b"
+        "screenshotHash": "a278ffabf02bd66a2ca229a035de94a0a78d81bd66db0c3c1c6f8f60aa33b1ea"
       },
-      "warnings": [
-        "expected evidence terms were not matched in visible text"
-      ],
+      "warnings": [],
       "pageErrors": []
     },
     {
@@ -202,8 +199,8 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "fetch-error",
-      "capturedAt": "2026-07-02T02:56:52.534Z",
+      "captureStatus": "captured",
+      "capturedAt": "2026-07-02T03:06:38.263Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -219,8 +216,34 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence capture failed without bypassing access controls.",
-      "error": "page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://momcozy.com/products/m5-smart-wearable-breast-pump-upgraded-with-app-control\", waiting until \"domcontentloaded\"\u001b[22m\n"
+      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
+      "finalUrl": "https://momcozy.com/products/m5-smart-wearable-breast-pump-upgraded-with-app-control?variant=45110887514310",
+      "httpStatus": 200,
+      "title": "M5 Smart Wearable Breast Pump – Upgraded with App Control",
+      "visibleTextLength": 7659,
+      "visibleTextHash": "5cf4106c39ffd05332ccc0b2aff939fc306d30a32e722c5e023f72811a02e856",
+      "matchedEvidenceTerms": [
+        "M5",
+        "breast pump"
+      ],
+      "missingEvidenceTerms": [],
+      "nonVerbatimSummary": "Momcozy M5 official product page sample: title captured (57 chars); matched 2/2 expected evidence terms; visible text length 7659.",
+      "localEvidence": {
+        "textArchivePath": "tmp/public-evidence/text/momcozy-m5-official-sample.txt",
+        "textArchiveBytes": 8935,
+        "screenshotPath": "tmp/public-evidence/screenshots/momcozy-m5-official-sample.png",
+        "screenshotHash": "8fb703e2eb4d01d26e09fbed58742bc25325f944d3ef4276adb10e58da45b241"
+      },
+      "warnings": [
+        "browser console or page errors were observed"
+      ],
+      "pageErrors": [
+        "Failed to load resource: net::ERR_CONNECTION_RESET",
+        "Element \"input[name='selling_plan']\" not found within 5000ms",
+        "Failed to fetch",
+        "Failed to load resource: the server responded with a status of 404 ()",
+        "Suppressed error while exporting metrics: TypeError: Failed to fetch\n    at window.fetch (https://cdn.shopify.com/extensions/019f09bf-4554-7be4-a65e-d41ce3b577f1/fast-bundle-product-bundles-115/assets/main.min.js:109:98559)\n    at window2.fetch (https://momcozy.com/cdn/shopifycloud/storefront/assets/shop_events_listener-4e26a9ce.js:1:7379)\n    at https://momcozy.com/cdn/wpm/b4074779awe500cddcp1e53a49dm5f7c656el.js:1:135277\n    at Start.window.fetch (https://cdn.shopify.com/s/files/1/0013/1642/1703/t/1/assets/ac2_lt.js?v=449678:1:384622)\n    at Qi.exportTo (https://momcozy.com/cdn/shopifycloud/portable-wallets/latest/portable-wallets.en.js:1:20238)\n    at Qi.exportMetrics (https://momcozy.com/cdn/shopifycloud/portable-wallets/latest/portable-wallets.en.js:1:19892)\n    at Zi.exportMetrics (https://momcozy.com/cdn/shopifycloud/portable-wallets/latest/portable-wallets.en.js:1:21149)\n    at ji.exportMetrics (https://momcozy.com/cdn/shopifycloud/portable-wallets/latest/portable-wallets.en.js:1:17326)\n    at go (https://momcozy.com/cdn/shopifycloud/portable-wallets/latest/portable-wallets.en.js:1:63047)\n    at https://momcozy.com/cdn/shopifycloud/portable-wallets/latest/portable-wallets.en.js:1:62905 undefined"
+      ]
     },
     {
       "seedId": "willow-go-official-sample",
@@ -236,7 +259,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:57:04.348Z",
+      "capturedAt": "2026-07-02T03:06:45.118Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -268,7 +291,7 @@
         "textArchivePath": "tmp/public-evidence/text/willow-go-official-sample.txt",
         "textArchiveBytes": 4155,
         "screenshotPath": "tmp/public-evidence/screenshots/willow-go-official-sample.png",
-        "screenshotHash": "c78bf9e60f014dc95cc0e3cf11c8bf7476324f49bada109a8309d6b8db1da104"
+        "screenshotHash": "531447578d85e4076d7d933f7b69d713770d8fbd0f2074d04e7f6720ac2a808c"
       },
       "warnings": [
         "browser console or page errors were observed"
@@ -292,7 +315,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:57:11.341Z",
+      "capturedAt": "2026-07-02T03:06:50.701Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -324,7 +347,7 @@
         "textArchivePath": "tmp/public-evidence/text/medela-pump-in-style-pro-2026-news.txt",
         "textArchiveBytes": 2885,
         "screenshotPath": "tmp/public-evidence/screenshots/medela-pump-in-style-pro-2026-news.png",
-        "screenshotHash": "0e6496bd416430da3e90d6571025a764a56ca32c7cc37d358ea8f7e492a218aa"
+        "screenshotHash": "68f11638ebd2743f4b1dbbf5123475c9f3d6e0ef2d133224a8150445debc5e54"
       },
       "warnings": [],
       "pageErrors": []
@@ -343,7 +366,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:57:21.186Z",
+      "capturedAt": "2026-07-02T03:06:56.987Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -381,12 +404,12 @@
       "pageErrors": []
     },
     {
-      "seedId": "ecfr-16-cfr-1242-nursing-pillows",
+      "seedId": "cpsc-16-cfr-1242-nursing-pillows-guidance",
       "sourceId": "ds-016",
       "page": "PolicyInsight",
-      "metric": "Official CFR nursing pillow safety standard evidence",
-      "label": "eCFR 16 CFR Part 1242 nursing pillow standard",
-      "url": "https://www.ecfr.gov/current/title-16/chapter-II/subchapter-B/part-1242/section-1242.1",
+      "metric": "Official CPSC nursing pillow safety standard guidance",
+      "label": "CPSC 16 CFR part 1242 nursing pillow business guidance",
+      "url": "https://www.cpsc.gov/Business--Manufacturing/Business-Education/Business-Guidance/Nursing-Pillows",
       "evidenceClass": "official-regulatory-page",
       "collectionBoundary": "Public federal regulation document only; supports regulatory source-entry context, not product-level legal opinion or SKU compliance status.",
       "notFullPlatformDataset": true,
@@ -394,7 +417,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:57:25.789Z",
+      "capturedAt": "2026-07-02T03:07:03.520Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -411,26 +434,24 @@
         "boundaryValid": true
       },
       "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://unblock.federalregister.gov/",
+      "finalUrl": "https://www.cpsc.gov/Business--Manufacturing/Business-Education/Business-Guidance/Nursing-Pillows",
       "httpStatus": 200,
-      "title": "Federal Register :: Request Access",
-      "visibleTextLength": 858,
-      "visibleTextHash": "5b20604b9a3ea939df8679cde8cc4f751bcb604d48aec4a1301b73cbcb7c92af",
-      "matchedEvidenceTerms": [],
-      "missingEvidenceTerms": [
-        "consumer product safety standard",
+      "title": "Nursing Pillows Business Guidance | CPSC.gov",
+      "visibleTextLength": 7380,
+      "visibleTextHash": "229fc5009d6f6b8af5af94f63239bead52d0cde265fa5eea88af751a0a5d3072",
+      "matchedEvidenceTerms": [
+        "16 CFR part 1242",
         "April 23, 2025"
       ],
-      "nonVerbatimSummary": "eCFR 16 CFR Part 1242 nursing pillow standard: title captured (34 chars); matched 0/2 expected evidence terms; visible text length 858.",
+      "missingEvidenceTerms": [],
+      "nonVerbatimSummary": "CPSC 16 CFR part 1242 nursing pillow business guidance: title captured (44 chars); matched 2/2 expected evidence terms; visible text length 7380.",
       "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/ecfr-16-cfr-1242-nursing-pillows.txt",
-        "textArchiveBytes": 859,
-        "screenshotPath": "tmp/public-evidence/screenshots/ecfr-16-cfr-1242-nursing-pillows.png",
-        "screenshotHash": "e55b8e18fa2f3f770b5dbd8b1f1252a1abe37b7b739acc4aafd438656d124907"
+        "textArchivePath": "tmp/public-evidence/text/cpsc-16-cfr-1242-nursing-pillows-guidance.txt",
+        "textArchiveBytes": 7427,
+        "screenshotPath": "tmp/public-evidence/screenshots/cpsc-16-cfr-1242-nursing-pillows-guidance.png",
+        "screenshotHash": "d4305dada5f6409858e24c8c6581c916be18ef33b517fb4e56fab8e0b510f704"
       },
-      "warnings": [
-        "expected evidence terms were not matched in visible text"
-      ],
+      "warnings": [],
       "pageErrors": []
     },
     {
@@ -447,7 +468,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:57:32.869Z",
+      "capturedAt": "2026-07-02T03:07:07.705Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -479,7 +500,7 @@
         "textArchivePath": "tmp/public-evidence/text/mordor-wearable-breast-pumps-market.txt",
         "textArchiveBytes": 16231,
         "screenshotPath": "tmp/public-evidence/screenshots/mordor-wearable-breast-pumps-market.png",
-        "screenshotHash": "408abffb6249a601ebb8fcd293f8d16830b692e59cdaf8d66e80f437616ed40c"
+        "screenshotHash": "82998caf3b92ab281acc90f318b2eb3d0d967161e631dbc9777b9c69a912fc71"
       },
       "warnings": [],
       "pageErrors": []
@@ -498,7 +519,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:57:44.536Z",
+      "capturedAt": "2026-07-02T03:07:15.798Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -518,27 +539,27 @@
       "finalUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
       "httpStatus": 200,
       "title": "Breast Pump Market Size, Share, Value | Growth Report [2034]",
-      "visibleTextLength": 39357,
-      "visibleTextHash": "982427bc45c778b958a8a6b4bc81f223e8eec49bc190eeed969cfbec1d3d0d82",
+      "visibleTextLength": 29349,
+      "visibleTextHash": "207fcb2112a1776709cda28ff52c5a3b6f3fe505361769ba4be83377888ea96d",
       "matchedEvidenceTerms": [
         "Breast Pump Market",
         "Market Size"
       ],
       "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Fortune BI breast pump market public page: title captured (60 chars); matched 2/2 expected evidence terms; visible text length 39357.",
+      "nonVerbatimSummary": "Fortune BI breast pump market public page: title captured (60 chars); matched 2/2 expected evidence terms; visible text length 29349.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/fortune-bi-breast-pump-market.txt",
-        "textArchiveBytes": 40743,
+        "textArchiveBytes": 29375,
         "screenshotPath": "tmp/public-evidence/screenshots/fortune-bi-breast-pump-market.png",
-        "screenshotHash": "0e8d5ec142386a55fd6f40b1a7b5ab69ac13d206520844202b286cf506221ac4"
+        "screenshotHash": "955b2d4fe209ebe8fcd21625e55553c5017e32e682667996c92c2b67b7ddf31c"
       },
       "warnings": [
         "browser console or page errors were observed"
       ],
       "pageErrors": [
+        "Failed to load resource: the server responded with a status of 404 ()",
         "Cannot read properties of null (reading 'addEventListener')",
-        "Cannot read properties of null (reading 'add')",
-        "Failed to load resource: the server responded with a status of 404 ()"
+        "Cannot read properties of null (reading 'add')"
       ]
     },
     {
@@ -555,7 +576,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:57:50.317Z",
+      "capturedAt": "2026-07-02T03:07:20.361Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -611,7 +632,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:58:00.619Z",
+      "capturedAt": "2026-07-02T03:07:27.202Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -644,7 +665,7 @@
         "textArchivePath": "tmp/public-evidence/text/kind-und-jugend-2026.txt",
         "textArchiveBytes": 2890,
         "screenshotPath": "tmp/public-evidence/screenshots/kind-und-jugend-2026.png",
-        "screenshotHash": "bf1579c03a50903cc0018c012214c2425378786e47986959de6fef664b902e12"
+        "screenshotHash": "58cea84474f437c212604448cedaf6a97636b6d56f352651f413b4800be012b5"
       },
       "warnings": [],
       "pageErrors": []
@@ -662,8 +683,8 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "fetch-error",
-      "capturedAt": "2026-07-02T02:58:15.661Z",
+      "captureStatus": "captured",
+      "capturedAt": "2026-07-02T03:07:33.333Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -679,8 +700,27 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence capture failed without bypassing access controls.",
-      "error": "page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://www.cbmexpochina.com/about-cbme-china/\", waiting until \"domcontentloaded\"\u001b[22m\n"
+      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
+      "finalUrl": "https://www.cbmexpochina.com/about-cbme-china/",
+      "httpStatus": 200,
+      "title": "CBME China – 15-17 July 2026 | NECC, Shanghai, China",
+      "visibleTextLength": 2188,
+      "visibleTextHash": "2ce7a78cf5c9a0aa1713020c33ebc1ed47cf2ba464a8d6fce5e0b8812b5a2c94",
+      "matchedEvidenceTerms": [
+        "2026",
+        "July",
+        "NECC"
+      ],
+      "missingEvidenceTerms": [],
+      "nonVerbatimSummary": "CBME China 2026 official page: title captured (52 chars); matched 3/3 expected evidence terms; visible text length 2188.",
+      "localEvidence": {
+        "textArchivePath": "tmp/public-evidence/text/cbme-china-2026.txt",
+        "textArchiveBytes": 2199,
+        "screenshotPath": "tmp/public-evidence/screenshots/cbme-china-2026.png",
+        "screenshotHash": "71f5910e6e0c360db9b6d4db6cdfa328be3e32275cfe995eff4fb236f55456c4"
+      },
+      "warnings": [],
+      "pageErrors": []
     },
     {
       "seedId": "tokyo-baby-kids-expo-2027",
@@ -696,7 +736,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:58:21.806Z",
+      "capturedAt": "2026-07-02T03:07:37.992Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -728,7 +768,7 @@
         "textArchivePath": "tmp/public-evidence/text/tokyo-baby-kids-expo-2027.txt",
         "textArchiveBytes": 4338,
         "screenshotPath": "tmp/public-evidence/screenshots/tokyo-baby-kids-expo-2027.png",
-        "screenshotHash": "56ad31c56669975bb6c3e8cb3898d8e305de466a439966f9813ee98c55564a6b"
+        "screenshotHash": "9ba1fe63a36cd5f1ffb2237faa3dec04031256dcc5a8bee7c591f5177ee0db5f"
       },
       "warnings": [],
       "pageErrors": []
@@ -747,7 +787,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-02T02:58:34.202Z",
+      "capturedAt": "2026-07-02T03:07:46.802Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -779,7 +819,7 @@
         "textArchivePath": "tmp/public-evidence/text/mamava-medela-2025-breastfeeding-survey.txt",
         "textArchiveBytes": 7209,
         "screenshotPath": "tmp/public-evidence/screenshots/mamava-medela-2025-breastfeeding-survey.png",
-        "screenshotHash": "0082474b526dc398f317bb7d1ff4dd65863a985d3c0b245c9e0f38876367b609"
+        "screenshotHash": "34087492c572a5c88501a2963c5fc4f6464bd74311e1bcb525378ed94721cf44"
       },
       "warnings": [
         "browser console or page errors were observed"
