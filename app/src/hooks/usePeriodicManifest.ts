@@ -36,6 +36,16 @@ export interface PeriodicCollectionManifest {
     businessDataWrites: number;
     manifestPath?: string;
   };
+  customsPublicAdapter?: {
+    status: string;
+    sourceId: string;
+    mode: string;
+    manifestPath?: string;
+    allowedClaimScopes?: string[];
+    forbiddenClaimScopes?: string[];
+    networkCalls?: number;
+    businessDataWrites?: number;
+  };
   totals: Record<string, number>;
 }
 
