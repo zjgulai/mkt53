@@ -490,6 +490,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(packageJson.scripts['data:connector:amazon:readiness:template']).toContain('--print-readiness-template');
     expect(packageJson.scripts['data:connector:amazon:readiness:scaffold']).toContain('scaffold-amazon-readiness-fill-draft.mjs');
     expect(packageJson.scripts['data:connector:amazon:readiness:promote']).toContain('promote-amazon-readiness-fill-draft.mjs');
+    expect(packageJson.scripts['data:connector:customs:public']).toContain('customs-public-data-adapter.mjs');
     expect(packageJson.scripts['data:connector:voc-nlp:dry-run']).toContain('scripts/data/connectors/voc-nlp-dry-run.mjs');
     expect(packageJson.scripts['data:connector:voc-nlp:readiness']).toContain('--readiness-gate');
     expect(packageJson.scripts['data:connector:voc-nlp:readiness:template']).toContain('--print-readiness-template');
@@ -529,7 +530,10 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/periodic-data/latest.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/periodic-data/source-tasks.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('collectPublicEvidence');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('buildCustomsPublicDataAdapter');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/periodic-data/public-evidence-samples.json');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/periodic-data/customs-public-adapter.json');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/weekly-data/customs-public-adapter.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('--public-evidence-live');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('--skip-public-evidence');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
@@ -558,6 +562,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       'scripts/data/build-source-gap-readiness-packets.mjs',
       'scripts/data/validate-public-source-manual-evidence.mjs',
       'scripts/data/build-public-source-manual-release-review.mjs',
+      'scripts/data/connectors/customs-public-data-adapter.mjs',
       'scripts/data/build-source-gap-owner-intake.mjs',
       'scripts/data/prefill-source-gap-owner-intake.mjs',
       'scripts/data/build-source-gap-owner-chat-intake-pack.mjs',
@@ -1587,6 +1592,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(manifest.connectorBacklog.groups.find((group) => group.connectorId === 'review-nlp')?.sourceIds).toEqual(
       expect.arrayContaining(['ds-021', 'ds-030', 'ds-032', 'ds-033']),
     );
+    expect(manifest.connectorBacklog.groups.find((group) => group.connectorId === 'review-nlp')?.sourceIds).not.toContain('ds-006');
+    expect(manifest.connectorBacklog.groups.find((group) => group.connectorId === 'trade-import')?.sourceIds).toEqual(['ds-006']);
     expect(manifest.connectorBacklog.items.every((item) => item.blockedReason.includes('不得伪造'))).toBe(true);
     expect(manifest.connectorBacklog.groups.find((group) => group.connectorId === 'internal-erp')?.sourceIds).toEqual(
       expect.arrayContaining(['ds-035', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']),
@@ -1865,6 +1872,97 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     } finally {
       globalThis.fetch = originalFetch;
       vi.restoreAllMocks();
+    }
+  });
+
+  it('builds customs public adapter from public evidence without promoting shipment facts', () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-customs-public-adapter-'));
+    const evidencePath = join(tempDir, 'public-evidence-samples.json');
+
+    try {
+      writeFileSync(
+        evidencePath,
+        `${JSON.stringify(
+          {
+            schemaVersion: 1,
+            mode: 'fixture',
+            generatedAt: '2026-07-02T00:00:00.000Z',
+            summary: {
+              total: 2,
+              networkCalls: 0,
+              businessDataWrites: 0,
+            },
+            records: [
+              {
+                seedId: 'us-census-merchandise-imports-database',
+                sourceId: 'ds-006',
+                url: 'https://www.census.gov/foreign-trade/data/IMDB.html',
+                evidenceClass: 'official-trade-data-page',
+                captureStatus: 'captured',
+                title: 'Merchandise Trade Imports',
+                visibleTextHash: 'fixture-census-hash',
+                matchedEvidenceTerms: ['Merchandise Trade Imports', 'HTSUSA'],
+                missingEvidenceTerms: [],
+                nonVerbatimSummary: 'fixture public source summary',
+                localEvidence: { textArchivePath: 'tmp/public-evidence/text/us-census.txt' },
+              },
+              {
+                seedId: 'cbp-electric-breast-pump-hts-ruling',
+                sourceId: 'ds-006',
+                url: 'https://rulings.cbp.gov/ruling/N021593',
+                evidenceClass: 'official-customs-ruling-page',
+                captureStatus: 'captured',
+                title: 'CROSS Ruling',
+                visibleTextHash: 'fixture-cbp-hash',
+                matchedEvidenceTerms: ['electric breast pump', '8413.81.0040'],
+                missingEvidenceTerms: [],
+                nonVerbatimSummary: 'fixture classification summary',
+                localEvidence: { textArchivePath: 'tmp/public-evidence/text/cbp.txt' },
+              },
+            ],
+          },
+          null,
+          2,
+        )}\n`,
+      );
+
+      const output = execFileSync(
+        'node',
+        ['scripts/data/connectors/customs-public-data-adapter.mjs', '--public-evidence', evidencePath, '--json', '--no-write'],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+        },
+      );
+      const adapter = JSON.parse(output) as {
+        status: string;
+        sourceId: string;
+        boundaries: { networkCalls: number; businessDataWrites: number; factPromotion: boolean; shipmentRowsIncluded: boolean };
+        hsCodeCandidates: Array<{ code: string; reviewRequiredBeforeQuery: boolean }>;
+        forbiddenClaimScopes: string[];
+        evidenceRecords: Array<{ seedId: string; ready: boolean; visibleTextHash?: string }>;
+        queryPlan: { status: string; candidateCommodityCodes: string[]; requiredOwnerInputs: string[] };
+      };
+
+      expect(adapter.status).toBe('ready-for-public-query-planning');
+      expect(adapter.sourceId).toBe('ds-006');
+      expect(adapter.boundaries).toMatchObject({
+        networkCalls: 0,
+        businessDataWrites: 0,
+        factPromotion: false,
+        shipmentRowsIncluded: false,
+      });
+      expect(adapter.hsCodeCandidates).toContainEqual(expect.objectContaining({ code: '8413.81.0040', reviewRequiredBeforeQuery: true }));
+      expect(adapter.queryPlan).toMatchObject({
+        status: 'ready-for-owner-query-parameter-review',
+        candidateCommodityCodes: ['8413.81.0040'],
+      });
+      expect(adapter.queryPlan.requiredOwnerInputs).toEqual(expect.arrayContaining(['confirm final HS/HTS code list for Momcozy product scope']));
+      expect(adapter.forbiddenClaimScopes).toEqual(expect.arrayContaining(['shipment-level facts', 'Import Genius replacement']));
+      expect(adapter.evidenceRecords.every((record) => record.ready)).toBe(true);
+      expect(adapter.evidenceRecords.map((record) => record.visibleTextHash)).toEqual(['fixture-census-hash', 'fixture-cbp-hash']);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
     }
   });
 

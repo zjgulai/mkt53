@@ -15,6 +15,30 @@
       "notFullPlatformDataset": true
     },
     {
+      "id": "us-census-merchandise-imports-database",
+      "sourceId": "ds-006",
+      "page": "CustomsData",
+      "metric": "Official public import data source availability",
+      "label": "U.S. Census Merchandise Trade Imports database",
+      "url": "https://www.census.gov/foreign-trade/data/IMDB.html",
+      "evidenceClass": "official-trade-data-page",
+      "expectedEvidenceTerms": ["Merchandise Trade Imports", "HTSUSA"],
+      "collectionBoundary": "Public government data product page only; no company shipment records, no Import Genius replacement, no claim of complete cross-border trade panel.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "cbp-electric-breast-pump-hts-ruling",
+      "sourceId": "ds-006",
+      "page": "CustomsData",
+      "metric": "Breast pump HTS classification evidence",
+      "label": "CBP CROSS ruling for electric breast pump HTS classification",
+      "url": "https://rulings.cbp.gov/ruling/N021593",
+      "evidenceClass": "official-customs-ruling-page",
+      "expectedEvidenceTerms": ["electric breast pump", "8413.81.0040"],
+      "collectionBoundary": "Public customs ruling only; supports HS/HTS classification context, not import volume, supplier, importer, shipment, or country-share facts.",
+      "notFullPlatformDataset": true
+    },
+    {
       "id": "momcozy-m5-official-sample",
       "sourceId": "ds-008",
       "page": "NewCompetition",
@@ -63,6 +87,18 @@
       "notFullPlatformDataset": true
     },
     {
+      "id": "ecfr-16-cfr-1242-nursing-pillows",
+      "sourceId": "ds-016",
+      "page": "PolicyInsight",
+      "metric": "Official CFR nursing pillow safety standard evidence",
+      "label": "eCFR 16 CFR Part 1242 nursing pillow standard",
+      "url": "https://www.ecfr.gov/current/title-16/chapter-II/subchapter-B/part-1242/section-1242.1",
+      "evidenceClass": "official-regulatory-page",
+      "expectedEvidenceTerms": ["consumer product safety standard", "April 23, 2025"],
+      "collectionBoundary": "Public federal regulation document only; supports regulatory source-entry context, not product-level legal opinion or SKU compliance status.",
+      "notFullPlatformDataset": true
+    },
+    {
       "id": "mordor-wearable-breast-pumps-market",
       "sourceId": "ds-034",
       "page": "IndustryNews",
@@ -92,9 +128,9 @@
       "page": "Exhibition",
       "metric": "Exhibition official schedule evidence",
       "label": "ABC Kids Expo 2026 public exhibitor page",
-      "url": "https://theabcshow.com/pages/exhibitors-2024",
+      "url": "https://abckids2026.mapyourshow.com/",
       "evidenceClass": "exhibition-official-page",
-      "expectedEvidenceTerms": ["2026", "Mandalay Bay"],
+      "expectedEvidenceTerms": ["May 13-15, 2026", "Mandalay Bay"],
       "collectionBoundary": "Public exhibition page only; no exhibitor portal login.",
       "notFullPlatformDataset": true
     },
@@ -123,14 +159,14 @@
       "notFullPlatformDataset": true
     },
     {
-      "id": "tokyo-baby-kids-expo-2026",
+      "id": "tokyo-baby-kids-expo-2027",
       "sourceId": "ds-018",
       "page": "Exhibition",
       "metric": "Exhibition official schedule evidence",
-      "label": "Baby & Kids Expo Tokyo Summer 2026 official page",
+      "label": "Baby & Kids Expo Tokyo Summer 2027 official page",
       "url": "https://www.lifestyle-expo.jp/summer/en-gb.html",
       "evidenceClass": "exhibition-official-page",
-      "expectedEvidenceTerms": ["June 24", "2026", "Tokyo Big Sight"],
+      "expectedEvidenceTerms": ["2027", "Tokyo Big Sight"],
       "collectionBoundary": "Public exhibition page only.",
       "notFullPlatformDataset": true
     },

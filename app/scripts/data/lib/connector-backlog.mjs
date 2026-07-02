@@ -97,6 +97,7 @@ function connectorDefinitionFor(source) {
   const text = `${source.id} ${source.page} ${source.metric} ${source.sourceName} ${source.sourceType} ${source.note} ${source.action}`.toLowerCase();
 
   const exactOrder = [
+    ['trade-import', /import genius|海关|hs编码|进出口|htsusa|hts/i],
     ['youtube-data', /youtube/i],
     ['crawler-compliance', /爬虫|网页评论/i],
     ['review-nlp', /评论|review|voc|nlp|情感分析/i],

@@ -886,8 +886,8 @@
       "id": "ds-006",
       "page": "CustomsData",
       "metric": "HS编码进出口",
-      "sourceName": "海关总署/Import Genius",
-      "sourceUrl": "https://www.importgenius.com",
+      "sourceName": "U.S. Census / CBP public evidence + Import Genius gate",
+      "sourceUrl": "https://www.census.gov/foreign-trade/data/IMDB.html",
       "verificationStatus": "example",
       "connectorId": "trade-import",
       "connectorLabel": "Import Genius / Customs Trade Data",
@@ -903,7 +903,7 @@
       ],
       "stopCondition": "dry-run 输出 hsCodes、countrySet、window、sampleCount 和授权状态。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "需接入Import Genius API或数仓"
+      "nextAction": "先按public customs adapter做公开查询规划；真实贸易事实展示仍需Import Genius或授权海关数据快照并通过release review。"
     },
     {
       "id": "ds-031",

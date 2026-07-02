@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-01T02:31:28.033Z",
+  "generatedAt": "2026-07-02T02:55:59.854Z",
   "generatedRule": "source task queue 只表达待补证和接入任务，不代表业务数据已采集。",
-  "total": 41,
+  "total": 40,
   "queueTypeCounts": {
     "connector-readiness": 28,
     "manual-evidence": 6,
-    "public-source-review": 7
+    "public-source-review": 6
   },
   "priorityCounts": {
     "P0": 14,
     "P1": 11,
-    "P2": 16
+    "P2": 15
   },
   "ownerTeamCounts": {
     "brand-strategy": 2,
     "competitive-intelligence": 4,
     "data-ai": 7,
     "industry-regulatory": 7,
-    "market-research": 11,
+    "market-research": 10,
     "user-research": 7,
     "data-governance": 2,
     "insight-ops": 1
@@ -73,13 +73,12 @@
       },
       {
         "queueType": "public-source-review",
-        "count": 7,
+        "count": 6,
         "taskIds": [
           "public-source-review:policy-cpsc-efiling",
           "public-source-review:policy-eu-mdr-transition",
           "public-source-review:ds-002",
           "public-source-review:ds-044",
-          "public-source-review:ds-045",
           "public-source-review:ds-046",
           "public-source-review:ds-043"
         ]
@@ -125,7 +124,7 @@
       },
       {
         "priority": "P2",
-        "count": 16,
+        "count": 15,
         "taskIds": [
           "connector-readiness:ds-020",
           "connector-readiness:ds-022",
@@ -140,7 +139,6 @@
           "public-source-review:policy-eu-mdr-transition",
           "public-source-review:ds-002",
           "public-source-review:ds-044",
-          "public-source-review:ds-045",
           "public-source-review:ds-046",
           "public-source-review:ds-043"
         ]
@@ -208,7 +206,7 @@
       },
       {
         "ownerTeam": "market-research",
-        "count": 11,
+        "count": 10,
         "taskIds": [
           "connector-readiness:ds-037",
           "connector-readiness:ds-038",
@@ -219,7 +217,6 @@
           "connector-readiness:ds-049",
           "public-source-review:ds-002",
           "public-source-review:ds-044",
-          "public-source-review:ds-045",
           "public-source-review:ds-046"
         ]
       },
@@ -788,8 +785,8 @@
       "module": "看市场",
       "page": "CustomsData",
       "metric": "HS编码进出口",
-      "sourceName": "海关总署/Import Genius",
-      "sourceUrl": "https://www.importgenius.com",
+      "sourceName": "U.S. Census / CBP public evidence + Import Genius gate",
+      "sourceUrl": "https://www.census.gov/foreign-trade/data/IMDB.html",
       "sourceType": "官方数据",
       "reliability": "D",
       "verificationStatus": "example",
@@ -807,7 +804,7 @@
         "不得把待补凭证或待接入来源改写成已采集事实",
         "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
       ],
-      "nextAction": "需接入Import Genius API或数仓"
+      "nextAction": "先按public customs adapter做公开查询规划；真实贸易事实展示仍需Import Genius或授权海关数据快照并通过release review。"
     },
     {
       "taskId": "connector-readiness:ds-047",
@@ -1364,35 +1361,6 @@
         "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
       ],
       "nextAction": "OK：仅作为全球婴童用品上层TAM背景；不得作为吸奶器品牌份额、SAM或SOM分母"
-    },
-    {
-      "taskId": "public-source-review:ds-045",
-      "queueType": "public-source-review",
-      "queueLabel": "公开来源复核",
-      "priority": "P2",
-      "ownerTeam": "market-research",
-      "sourceId": "ds-045",
-      "module": "看市场",
-      "page": "MarketPage",
-      "metric": "穿戴式吸奶器细分TAM",
-      "sourceName": "Fortune Business Insights",
-      "sourceUrl": "https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880",
-      "sourceType": "行业报告",
-      "reliability": "A",
-      "verificationStatus": "verified",
-      "collectionMethod": "public-url-check",
-      "blockedReason": "HTTP 500：公开来源返回非 2xx，需要人工确认链接或供应商权限。",
-      "requiredEvidence": [
-        "报告页、采购凭证或人工访问记录",
-        "市场口径、样本范围、公式和权重说明",
-        "复核日期、复核人和可展示摘要"
-      ],
-      "acceptanceCriteria": [
-        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
-        "不得把待补凭证或待接入来源改写成已采集事实",
-        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
-      ],
-      "nextAction": "OK"
     },
     {
       "taskId": "public-source-review:ds-046",

@@ -66,6 +66,21 @@ describe('source registry', () => {
     expect(mamava.gap).toContain('不支撑全球用户画像');
   });
 
+  it('keeps customs public adapter as source planning evidence instead of shipment facts', () => {
+    const customs = getSourceRegistryItem('ds-006');
+
+    expect(customs.sourceName).toContain('U.S. Census');
+    expect(customs.sourceName).toContain('Import Genius gate');
+    expect(customs.collectionMethod).toBe('connector-required');
+    expect(customs.evidenceGrade).toBe('LO-S-synthetic');
+    expect(customs.canDisplayAsFact).toBe(false);
+    expect(customs.evidenceArtifactPath).toBe('public/periodic-data/customs-public-adapter.json');
+    expect(customs.claimScope).toContain('not shipment');
+    expect(customs.note).toContain('HTS 8413.81.0040');
+    expect(customs.note).toContain('不支撑进口商');
+    expect(customs.action).toContain('release review');
+  });
+
   it('binds every static-data page from the weekly audit backlog to a registry item', () => {
     const pages = [
       'AIGallery',

@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import { analyzeConsistency } from './lib/project-analysis.mjs';
 import { collectSemiMonthlySources } from './collect-weekly-sources.mjs';
 import { collectPublicEvidence } from './collect-public-evidence.mjs';
+import { buildCustomsPublicDataAdapter } from './connectors/customs-public-data-adapter.mjs';
 import { summarizeSourceTaskQueue } from './lib/source-tasks.mjs';
 
 const args = process.argv.slice(2);
@@ -39,6 +40,11 @@ const publicEvidence = skipPublicEvidence
       timeoutMs: publicEvidenceTimeoutMs,
       maxSources: publicEvidenceMaxSources,
     });
+const customsPublicAdapter = buildCustomsPublicDataAdapter({
+  publicEvidence,
+  publicEvidencePath: publicEvidence ? 'runtime-public-evidence' : 'public/periodic-data/public-evidence-samples.json',
+  generatedAt: manifest.generatedAt,
+});
 const publicManifest = {
   ...manifest,
   sourceTaskQueue: summarizeSourceTaskQueue(manifest.sourceTaskQueue),
@@ -63,18 +69,31 @@ const publicManifest = {
         businessDataWrites: 0,
         manifestPath: '',
       },
+  customsPublicAdapter: {
+    status: customsPublicAdapter.status,
+    sourceId: customsPublicAdapter.sourceId,
+    mode: customsPublicAdapter.mode,
+    manifestPath: 'public/periodic-data/customs-public-adapter.json',
+    allowedClaimScopes: customsPublicAdapter.allowedClaimScopes,
+    forbiddenClaimScopes: customsPublicAdapter.forbiddenClaimScopes,
+    networkCalls: customsPublicAdapter.boundaries.networkCalls,
+    businessDataWrites: customsPublicAdapter.boundaries.businessDataWrites,
+  },
 };
 
 writeJson('tmp/data-collection/audit-latest.json', audit);
 writeJson('public/periodic-data/latest.json', publicManifest);
 writeJson('public/periodic-data/connectors.json', manifest.connectorBacklog);
 writeJson('public/periodic-data/source-tasks.json', manifest.sourceTaskQueue);
+writeJson('public/periodic-data/customs-public-adapter.json', customsPublicAdapter);
 writeJson('public/weekly-data/latest.json', publicManifest);
 writeJson('public/weekly-data/connectors.json', manifest.connectorBacklog);
 writeJson('public/weekly-data/source-tasks.json', manifest.sourceTaskQueue);
+writeJson('public/weekly-data/customs-public-adapter.json', customsPublicAdapter);
 writeJson(`tmp/data-collection/runs/${manifest.period}.json`, manifest);
 writeJson(`tmp/data-collection/runs/${manifest.period}-connectors.json`, manifest.connectorBacklog);
 writeJson(`tmp/data-collection/runs/${manifest.period}-source-tasks.json`, manifest.sourceTaskQueue);
+writeJson(`tmp/data-collection/runs/${manifest.period}-customs-public-adapter.json`, customsPublicAdapter);
 
 if (publicEvidence) {
   writeJson('public/periodic-data/public-evidence-samples.json', publicEvidence);
@@ -92,8 +111,10 @@ process.stdout.write([
   `compatLatest=public/weekly-data/latest.json`,
   `connectors=public/periodic-data/connectors.json`,
   `sourceTasks=public/periodic-data/source-tasks.json`,
+  `customsPublicAdapter=public/periodic-data/customs-public-adapter.json`,
   `compatConnectors=public/weekly-data/connectors.json`,
   `compatSourceTasks=public/weekly-data/source-tasks.json`,
+  `compatCustomsPublicAdapter=public/weekly-data/customs-public-adapter.json`,
   `publicEvidence=${publicEvidence ? 'public/periodic-data/public-evidence-samples.json' : 'skipped'}`,
   `publicEvidenceMode=${publicEvidence ? publicEvidence.mode : 'skipped'}`,
   `publicEvidenceCaptured=${publicEvidence?.summary.captureStatusCounts.captured ?? 0}/${publicEvidence?.summary.total ?? 0}`,

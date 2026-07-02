@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "connectorId": "customs-public-data-adapter",
+  "mode": "public-customs-source-adapter",
+  "status": "blocked",
+  "generatedAt": "2026-07-02T02:55:59.854Z",
+  "sourceId": "ds-006",
+  "page": "CustomsData",
+  "metric": "HS编码进出口",
+  "evidenceSource": {
+    "publicEvidencePath": "runtime-public-evidence",
+    "recordShape": "records"
+  },
+  "boundaries": {
+    "publicSourceOnly": true,
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "productionWrites": false,
+    "factPromotion": false,
+    "sourceRegistryWrites": false,
+    "pageWrites": false,
+    "networkCalls": 0,
+    "businessDataWrites": 0,
+    "rawTextIncluded": false,
+    "shipmentRowsIncluded": false,
+    "importerExporterIncluded": false,
+    "supplierIncluded": false
+  },
+  "checks": [
+    {
+      "id": "publicEvidenceBundle",
+      "status": "blocked",
+      "details": {
+        "publicEvidencePath": "runtime-public-evidence",
+        "requiredSeedIds": [
+          "us-census-merchandise-imports-database",
+          "cbp-electric-breast-pump-hts-ruling"
+        ],
+        "readySeedIds": [
+          "us-census-merchandise-imports-database"
+        ]
+      },
+      "blockers": [
+        {
+          "type": "missing-or-incomplete-public-evidence"
+        }
+      ]
+    },
+    {
+      "id": "officialTradeDataSource",
+      "status": "ready",
+      "details": {
+        "seedId": "us-census-merchandise-imports-database",
+        "url": "https://www.census.gov/foreign-trade/data/IMDB.html",
+        "matchedEvidenceTerms": [
+          "Merchandise Trade Imports",
+          "HTSUSA"
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "id": "officialClassificationContext",
+      "status": "blocked",
+      "details": {
+        "seedId": "cbp-electric-breast-pump-hts-ruling",
+        "url": "https://rulings.cbp.gov/ruling/N021593",
+        "matchedEvidenceTerms": [],
+        "hsCodeCandidate": "8413.81.0040"
+      },
+      "blockers": [
+        {
+          "type": "official-hts-classification-context-not-ready"
+        }
+      ]
+    },
+    {
+      "id": "safetyBoundary",
+      "status": "ready",
+      "details": {
+        "networkCalls": 15,
+        "businessDataWrites": 0,
+        "rawTextPublicBundleAllowed": false,
+        "shipmentFactsGenerated": false
+      },
+      "blockers": []
+    }
+  ],
+  "blockers": [
+    {
+      "type": "missing-or-incomplete-public-evidence"
+    },
+    {
+      "type": "official-hts-classification-context-not-ready"
+    }
+  ],
+  "evidenceRecords": [
+    {
+      "seedId": "us-census-merchandise-imports-database",
+      "evidenceRole": "official_trade_data_source",
+      "sourceId": "ds-006",
+      "url": "https://www.census.gov/foreign-trade/data/IMDB.html",
+      "evidenceClass": "official-trade-data-page",
+      "captureStatus": "captured",
+      "title": "Merchandise Trade Imports",
+      "visibleTextHash": "d43d3d3927e77bd43581aaa2dbf4acc6528f516cada7beb463071ebe26998cf0",
+      "matchedEvidenceTerms": [
+        "Merchandise Trade Imports",
+        "HTSUSA"
+      ],
+      "missingEvidenceTerms": [],
+      "nonVerbatimSummary": "U.S. Census Merchandise Trade Imports database: title captured (25 chars); matched 2/2 expected evidence terms; visible text length 1266.",
+      "localEvidence": {
+        "textArchivePath": "tmp/public-evidence/text/us-census-merchandise-imports-database.txt",
+        "textArchiveBytes": 1267,
+        "screenshotPath": "tmp/public-evidence/screenshots/us-census-merchandise-imports-database.png",
+        "screenshotHash": "7d7362274c9cf844a88ee64bc8e62d8645f963f7cec7a974c5f01616da445e5e"
+      },
+      "ready": true,
+      "missingMatchedTerms": []
+    },
+    {
+      "seedId": "cbp-electric-breast-pump-hts-ruling",
+      "evidenceRole": "official_hts_classification_context",
+      "sourceId": "ds-006",
+      "url": "https://rulings.cbp.gov/ruling/N021593",
+      "evidenceClass": "official-customs-ruling-page",
+      "captureStatus": "captured",
+      "title": "CROSS Ruling",
+      "visibleTextHash": "4ff594dc5dd9dbdd077c5335dbdcf7646e329d8e77e4b8032cbc9b129a58e786",
+      "matchedEvidenceTerms": [],
+      "missingEvidenceTerms": [
+        "electric breast pump",
+        "8413.81.0040"
+      ],
+      "nonVerbatimSummary": "CBP CROSS ruling for electric breast pump HTS classification: title captured (12 chars); matched 0/2 expected evidence terms; visible text length 334.",
+      "localEvidence": {
+        "textArchivePath": "tmp/public-evidence/text/cbp-electric-breast-pump-hts-ruling.txt",
+        "textArchiveBytes": 337,
+        "screenshotPath": "tmp/public-evidence/screenshots/cbp-electric-breast-pump-hts-ruling.png",
+        "screenshotHash": "c4dc082bf4d85c2ffefc17fc72e862f650a81836f0f1e9f881748dd25cadfd4b"
+      },
+      "ready": false,
+      "missingMatchedTerms": [
+        "electric breast pump",
+        "8413.81.0040"
+      ]
+    }
+  ],
+  "hsCodeCandidates": [
+    {
+      "code": "8413.81.0040",
+      "jurisdiction": "US HTSUS",
+      "evidenceSeedId": "cbp-electric-breast-pump-hts-ruling",
+      "scope": "electric breast pump classification context only",
+      "reviewRequiredBeforeQuery": true
+    }
+  ],
+  "publicDataSourceCandidates": [
+    {
+      "sourceName": "U.S. Census Merchandise Trade Imports database",
+      "evidenceSeedId": "us-census-merchandise-imports-database",
+      "url": "https://www.census.gov/foreign-trade/data/IMDB.html",
+      "supportedUse": "public HTSUSA import data source availability and query planning",
+      "unsupportedUse": "company shipment records, importer/exporter identity, supplier identity, Import Genius replacement"
+    }
+  ],
+  "queryPlan": {
+    "planId": "customs-public-us-imports-htsusa-plan",
+    "status": "blocked-until-public-evidence-ready",
+    "sourceSystem": "U.S. Census public merchandise trade import data",
+    "defaultFlow": "US imports",
+    "candidateCommodityCodes": [
+      "8413.81.0040"
+    ],
+    "requiredOwnerInputs": [
+      "confirm final HS/HTS code list for Momcozy product scope",
+      "confirm countries or regions to compare",
+      "confirm collection window and reporting granularity",
+      "confirm units, value fields and any quantity denominator",
+      "confirm whether a second public source cross-check is required"
+    ]
+  },
+  "allowedClaimScopes": [
+    "public official trade-data source availability",
+    "HTS classification context for query planning",
+    "public query parameter plan"
+  ],
+  "forbiddenClaimScopes": [
+    "shipment-level facts",
+    "importer or exporter identity",
+    "supplier identity",
+    "company shipment count",
+    "country share or market share fact",
+    "sales, GMV, revenue or demand conclusion",
+    "Import Genius replacement"
+  ],
+  "nextActions": [
+    "Owner confirms HS/HTS code list and product scope.",
+    "Adapter query runner is implemented only after query parameters are approved.",
+    "Shipment-level Import Genius or internal warehouse data remains a separate authorized connector lane.",
+    "Source registry and page fact promotion require a separate release review."
+  ]
+}
