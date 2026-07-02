@@ -30,6 +30,7 @@
     "data:public-evidence:live": "node scripts/data/collect-public-evidence.mjs --live --write-public --write tmp/public-evidence/latest.json",
     "data:source-tasks": "node scripts/data/build-source-tasks.mjs --write public/periodic-data/source-tasks.json --write public/weekly-data/source-tasks.json",
     "data:manual-evidence:validate": "node scripts/data/validate-public-source-manual-evidence.mjs",
+    "data:manual-evidence:release-review": "node scripts/data/build-public-source-manual-release-review.mjs",
     "data:refresh:weekly": "node scripts/data/refresh-weekly-data.mjs",
     "data:refresh:semi-monthly": "node scripts/data/refresh-semi-monthly-data.mjs",
     "data:refresh:semi-monthly:public-evidence": "node scripts/data/refresh-semi-monthly-data.mjs --public-evidence-live",

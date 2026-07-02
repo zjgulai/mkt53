@@ -63,6 +63,20 @@ function copyManualEvidencePackToTemp() {
   return targetDir;
 }
 
+function buildManualEvidenceValidationToTemp() {
+  const tempRoot = mkdtempSync(join(tmpdir(), 'mkt53-manual-release-review-'));
+  const intakeDir = copyManualEvidencePackToTemp();
+  const validationDir = join(tempRoot, 'validation');
+
+  execFileSync(
+    'node',
+    ['scripts/data/validate-public-source-manual-evidence.mjs', '--intake', intakeDir, '--out', validationDir],
+    { cwd: process.cwd(), encoding: 'utf8' },
+  );
+
+  return { tempRoot, intakeDir, validationDir };
+}
+
 describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }, () => {
   it('keeps deploy-static executable and guarded by local quality gates', () => {
     const scriptPath = join(process.cwd(), 'scripts/deploy-static.sh');
@@ -269,6 +283,167 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     }
   });
 
+  it('keeps public source manual release review empty when current intake is blocked', () => {
+    const output = execFileSync(
+      'node',
+      [
+        'scripts/data/build-public-source-manual-release-review.mjs',
+        '--validation',
+        'tmp/audits/public-source-manual-evidence-validation-loop11-20260701',
+        '--json',
+        '--no-write',
+      ],
+      { cwd: process.cwd(), encoding: 'utf8' },
+    );
+    const payload = JSON.parse(output) as {
+      summary: {
+        packetCount: number;
+        readyPacketCount: number;
+        queuedForManualReleaseReviewCount: number;
+        blockedIntakePacketCount: number;
+        approvedPatchCandidateCount: number;
+        boundaries: Record<string, boolean>;
+      };
+      sampleDecisionRows: Array<Record<string, string>>;
+    };
+
+    expect(payload.summary.packetCount).toBe(3);
+    expect(payload.summary.readyPacketCount).toBe(0);
+    expect(payload.summary.queuedForManualReleaseReviewCount).toBe(0);
+    expect(payload.summary.blockedIntakePacketCount).toBe(3);
+    expect(payload.summary.approvedPatchCandidateCount).toBe(0);
+    expect(payload.summary.boundaries.sourceRegistryWrites).toBe(false);
+    expect(payload.summary.boundaries.pageWrites).toBe(false);
+    expect(payload.summary.boundaries.csvFactExport).toBe(false);
+    expect(payload.sampleDecisionRows.every((row) => row.release_review_status === 'blocked_intake_not_ready')).toBe(true);
+    expect(payload.sampleDecisionRows.every((row) => row.can_write_source_registry === 'false')).toBe(true);
+  });
+
+  it('keeps completed public source intake queued until a release review record is supplied', () => {
+    const { tempRoot, intakeDir, validationDir } = buildManualEvidenceValidationToTemp();
+
+    try {
+      const output = execFileSync(
+        'node',
+        ['scripts/data/build-public-source-manual-release-review.mjs', '--validation', validationDir, '--json', '--no-write'],
+        { cwd: process.cwd(), encoding: 'utf8' },
+      );
+      const payload = JSON.parse(output) as {
+        summary: {
+          packetCount: number;
+          readyPacketCount: number;
+          queuedForManualReleaseReviewCount: number;
+          blockedIntakePacketCount: number;
+          reviewRecordPresent: boolean;
+          approvedPatchCandidateCount: number;
+          replacementSourceRequiredCount: number;
+          vendorAccessBlockedCount: number;
+          boundaries: Record<string, boolean>;
+        };
+        sampleDecisionRows: Array<Record<string, string>>;
+      };
+
+      expect(payload.summary.packetCount).toBe(3);
+      expect(payload.summary.readyPacketCount).toBe(3);
+      expect(payload.summary.queuedForManualReleaseReviewCount).toBe(3);
+      expect(payload.summary.blockedIntakePacketCount).toBe(0);
+      expect(payload.summary.reviewRecordPresent).toBe(false);
+      expect(payload.summary.approvedPatchCandidateCount).toBe(0);
+      expect(payload.summary.replacementSourceRequiredCount).toBe(1);
+      expect(payload.summary.vendorAccessBlockedCount).toBe(1);
+      expect(payload.summary.boundaries.sourceRegistryWrites).toBe(false);
+      expect(payload.summary.boundaries.pageWrites).toBe(false);
+      expect(payload.summary.boundaries.csvFactExport).toBe(false);
+      expect(payload.sampleDecisionRows.some((row) => row.release_review_status === 'blocked_missing_review_record')).toBe(true);
+      expect(payload.sampleDecisionRows.every((row) => row.can_update_page_display === 'false')).toBe(true);
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+      rmSync(intakeDir, { recursive: true, force: true });
+    }
+  });
+
+  it('turns reviewed accepted evidence into source registry patch candidates only', () => {
+    const { tempRoot, intakeDir, validationDir } = buildManualEvidenceValidationToTemp();
+    const reviewRecordPath = join(tempRoot, 'release-review-record.json');
+
+    writeFileSync(
+      reviewRecordPath,
+      `${JSON.stringify(
+        {
+          review_record_id: 'loop12-public-source-release-review-001',
+          reviewer_alias: 'source-governance-reviewer',
+          reviewed_at: '2026-07-02',
+          manual_release_review_completed: true,
+          approved_task_ids: ['public-source-manual-evidence:ds-002'],
+          approved_source_ids: ['ds-002'],
+          decision_scope: 'source registry patch planning only',
+          source_registry_patch_authorized: true,
+          page_display_authorized: false,
+          csv_fact_export_authorized: false,
+          production_deploy_authorized: false,
+          provider_calls_authorized: false,
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    try {
+      const output = execFileSync(
+        'node',
+        [
+          'scripts/data/build-public-source-manual-release-review.mjs',
+          '--validation',
+          validationDir,
+          '--review-record',
+          reviewRecordPath,
+          '--json',
+          '--no-write',
+        ],
+        { cwd: process.cwd(), encoding: 'utf8' },
+      );
+      const payload = JSON.parse(output) as {
+        summary: {
+          reviewRecordPresent: boolean;
+          reviewRecordCoreReady: boolean;
+          approvedPatchCandidateCount: number;
+          replacementSourceRequiredCount: number;
+          vendorAccessBlockedCount: number;
+          blockedBoundaryCount: number;
+          validationPassed: boolean;
+          boundaries: Record<string, boolean>;
+        };
+        sampleDecisionRows: Array<Record<string, string>>;
+      };
+
+      expect(payload.summary.reviewRecordPresent).toBe(true);
+      expect(payload.summary.reviewRecordCoreReady).toBe(true);
+      expect(payload.summary.approvedPatchCandidateCount).toBe(1);
+      expect(payload.summary.replacementSourceRequiredCount).toBe(1);
+      expect(payload.summary.vendorAccessBlockedCount).toBe(1);
+      expect(payload.summary.blockedBoundaryCount).toBe(0);
+      expect(payload.summary.validationPassed).toBe(true);
+      expect(payload.summary.boundaries.sourceRegistryWrites).toBe(false);
+      expect(payload.summary.boundaries.pageWrites).toBe(false);
+      expect(payload.summary.boundaries.csvFactExport).toBe(false);
+      expect(payload.summary.boundaries.sourceRegistryPatchPlanningOnly).toBe(true);
+      expect(payload.sampleDecisionRows.find((row) => row.source_id === 'ds-002')).toMatchObject({
+        release_review_status: 'approved_for_source_registry_patch_candidate',
+        can_prepare_source_registry_patch: 'true',
+        can_write_source_registry: 'false',
+      });
+      expect(payload.sampleDecisionRows.find((row) => row.source_id === 'ds-044')).toMatchObject({
+        release_review_status: 'replacement_source_required',
+      });
+      expect(payload.sampleDecisionRows.find((row) => row.source_id === 'ds-045')).toMatchObject({
+        release_review_status: 'blocked_vendor_access',
+      });
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+      rmSync(intakeDir, { recursive: true, force: true });
+    }
+  });
+
   it('keeps periodic data collection scripts discoverable from npm', () => {
     const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as { scripts: Record<string, string> };
 
@@ -296,6 +471,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(packageJson.scripts['data:public-evidence:live']).toContain('--write-public');
     expect(packageJson.scripts['data:source-tasks']).toContain('scripts/data/build-source-tasks.mjs');
     expect(packageJson.scripts['data:manual-evidence:validate']).toContain('scripts/data/validate-public-source-manual-evidence.mjs');
+    expect(packageJson.scripts['data:manual-evidence:release-review']).toContain('scripts/data/build-public-source-manual-release-review.mjs');
     expect(packageJson.scripts['data:refresh:weekly']).toContain('scripts/data/refresh-weekly-data.mjs');
     expect(packageJson.scripts['data:refresh:semi-monthly']).toContain('scripts/data/refresh-semi-monthly-data.mjs');
     expect(packageJson.scripts['data:refresh:semi-monthly:public-evidence']).toContain('scripts/data/refresh-semi-monthly-data.mjs');
@@ -381,6 +557,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       'scripts/data/prioritize-source-gaps.mjs',
       'scripts/data/build-source-gap-readiness-packets.mjs',
       'scripts/data/validate-public-source-manual-evidence.mjs',
+      'scripts/data/build-public-source-manual-release-review.mjs',
       'scripts/data/build-source-gap-owner-intake.mjs',
       'scripts/data/prefill-source-gap-owner-intake.mjs',
       'scripts/data/build-source-gap-owner-chat-intake-pack.mjs',
