@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-02T10:12:34.499Z",
+  "generatedAt": "2026-07-02T10:40:18.574Z",
   "generatedRule": "source task queue 只表达待补证和接入任务，不代表业务数据已采集。",
   "total": 40,
   "queueTypeCounts": {
@@ -565,7 +565,7 @@
         "不得把待补凭证或待接入来源改写成已采集事实",
         "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
       ],
-      "nextAction": "提交p0-amazon-connector-owner-01证据包并补类目/品牌映射"
+      "nextAction": "保留公开报告入口证据包；提交p0-amazon-connector-owner-01证据包并补类目/品牌映射后再复核哺乳用品外部趋势和品牌结论"
     },
     {
       "taskId": "connector-readiness:ds-012",

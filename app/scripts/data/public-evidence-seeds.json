@@ -207,6 +207,54 @@
       "notFullPlatformDataset": true
     },
     {
+      "id": "nursing-products-the-insight-breastfeeding-accessories-market",
+      "sourceId": "ds-039",
+      "page": "NursingProducts",
+      "metric": "Nursing products public report source availability",
+      "label": "The Insight Partners breastfeeding accessories market public page",
+      "url": "https://www.theinsightpartners.com/reports/breastfeeding-accessories-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Breastfeeding Accessories Market", "CAGR"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports nursing accessories category context source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "nursing-products-techsci-nursing-bras-market",
+      "sourceId": "ds-039",
+      "page": "NursingProducts",
+      "metric": "Nursing products public report source availability",
+      "label": "TechSci nursing bras market public page",
+      "url": "https://www.techsciresearch.com/report/nursing-bras-market/20978.html",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Nursing Bras Market", "CAGR"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports nursing bra segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "nursing-products-gmi-breast-pads-market",
+      "sourceId": "ds-039",
+      "page": "NursingProducts",
+      "metric": "Nursing products public report source availability",
+      "label": "Global Market Insights breast pads market public page",
+      "url": "https://www.gminsights.com/industry-analysis/breast-pads-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Breast Pads Market", "CAGR"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports breast pads segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "nursing-products-spherical-breast-milk-storage-products",
+      "sourceId": "ds-039",
+      "page": "NursingProducts",
+      "metric": "Nursing products public report source availability",
+      "label": "Spherical Insights breast milk storage products market public page",
+      "url": "https://www.sphericalinsights.com/reports/breast-milk-storage-products-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Breast Milk Storage Products", "CAGR"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports milk storage products source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
       "id": "abc-kids-expo-2026",
       "sourceId": "ds-018",
       "page": "Exhibition",
