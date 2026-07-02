@@ -463,7 +463,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "提交p0-amazon-connector-owner-01证据包并补品类测算表"
+      "nextAction": "保留公开报告入口证据包；提交p0-amazon-connector-owner-01证据包并补品类测算表后再复核外部品类结论"
     },
     {
       "id": "ds-039",

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-02T09:26:34.350Z",
+  "generatedAt": "2026-07-02T10:12:34.499Z",
   "generatedRule": "source task queue 只表达待补证和接入任务，不代表业务数据已采集。",
   "total": 40,
   "queueTypeCounts": {
@@ -535,7 +535,7 @@
         "不得把待补凭证或待接入来源改写成已采集事实",
         "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
       ],
-      "nextAction": "提交p0-amazon-connector-owner-01证据包并补品类测算表"
+      "nextAction": "保留公开报告入口证据包；提交p0-amazon-connector-owner-01证据包并补品类测算表后再复核外部品类结论"
     },
     {
       "taskId": "connector-readiness:ds-039",
@@ -1173,6 +1173,7 @@
       "page": "NewCompetition",
       "metric": "新品追踪",
       "sourceName": "品牌官网/新闻稿",
+      "sourceUrl": "https://www.medela.com/en/breastfeeding-pumping/products/pumps/inbra-electric/magic-inbra",
       "sourceType": "新闻",
       "reliability": "B",
       "verificationStatus": "verified",
@@ -1188,7 +1189,7 @@
         "不得把待补凭证或待接入来源改写成已采集事实",
         "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
       ],
-      "nextAction": "OK"
+      "nextAction": "OK：按公开官网/新闻样本展示新品线索；平台指标仍需授权连接器或人工复核证据"
     },
     {
       "taskId": "manual-evidence:ds-015",

@@ -159,6 +159,54 @@
       "notFullPlatformDataset": true
     },
     {
+      "id": "category-mordor-breast-pumps-market",
+      "sourceId": "ds-038",
+      "page": "CategoryAnalysis",
+      "metric": "Category analysis public report source availability",
+      "label": "Mordor breast pumps market public page for category analysis",
+      "url": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Breast Pumps Market", "Market Size"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports category context source availability only, not BSR, ranking, sales, margin, brand share, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "category-mordor-wearable-breast-pumps-market",
+      "sourceId": "ds-038",
+      "page": "CategoryAnalysis",
+      "metric": "Category analysis public report source availability",
+      "label": "Mordor wearable breast pumps market public page for category analysis",
+      "url": "https://www.mordorintelligence.com/industry-reports/wearable-breast-pumps-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Wearable Breast Pumps", "Market"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports wearable category context source availability only, not BSR, ranking, sales, margin, brand share, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "category-fortune-bi-breast-pump-market",
+      "sourceId": "ds-038",
+      "page": "CategoryAnalysis",
+      "metric": "Category analysis public report source availability",
+      "label": "Fortune BI breast pump market public page for category analysis",
+      "url": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Breast Pump Market", "Market Size"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports category context source availability only, not BSR, ranking, sales, margin, brand share, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "category-precedence-breast-pump-market",
+      "sourceId": "ds-038",
+      "page": "CategoryAnalysis",
+      "metric": "Category analysis public report source availability",
+      "label": "Precedence breast pump market public page for category analysis",
+      "url": "https://www.precedenceresearch.com/breast-pump-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Breast Pump Market", "CAGR"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports category context source availability only, not BSR, ranking, sales, margin, brand share, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
       "id": "abc-kids-expo-2026",
       "sourceId": "ds-018",
       "page": "Exhibition",
