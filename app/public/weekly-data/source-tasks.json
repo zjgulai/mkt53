@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-05T07:58:33.768Z",
+  "generatedAt": "2026-07-05T08:18:24.819Z",
   "generatedRule": "source task queue 只表达待补证和接入任务，不代表业务数据已采集。",
   "total": 41,
   "queueTypeCounts": {
@@ -279,21 +279,21 @@
       "module": "看竞争",
       "page": "CompetitionPage",
       "metric": "竞品概览",
-      "sourceName": "Amazon.com 实时采集 + 品牌官网公开入口",
+      "sourceName": "Amazon.com 实时采集",
       "sourceType": "平台API",
       "reliability": "A",
       "verificationStatus": "needs-review",
       "collectionMethod": "connector-required",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "requiredEvidence": [
-        "评论原文数据集或平台 API 授权",
-        "关键词词典和产品映射",
-        "模型版本与人工复核样本",
+        "Amazon SP-API 或 Vendor Central Brand Analytics 授权",
+        "ASIN/SKU/品牌映射表",
+        "采集窗口和站点范围",
         "采集窗口、数据范围和站点/地区边界",
         "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
       ],
       "acceptanceCriteria": [
-        "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
+        "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
         "不得把待补凭证或待接入来源改写成已采集事实",
         "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
       ],
@@ -340,7 +340,7 @@
       "page": "RegionCompetition",
       "metric": "区域份额",
       "sourceName": "Amazon Brand Analytics",
-      "sourceUrl": "https://vendorcentral.amazon.com",
+      "sourceUrl": "https://sellercentral.amazon.com/help/hub/reference/external/GH2Z5B4HMF5ZXCG2",
       "sourceType": "平台数据",
       "reliability": "B",
       "verificationStatus": "needs-review",
@@ -358,7 +358,7 @@
         "不得把待补凭证或待接入来源改写成已采集事实",
         "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
       ],
-      "nextAction": "提交p0-amazon-connector-owner-01证据包；如需全渠道份额需另接零售面板或完整行业报告"
+      "nextAction": "保留公开区域来源入口证据包；提交p0-amazon-connector-owner-01证据包并补国家/marketplace映射、Amazon BA快照和零售面板分母后再复核区域份额与排名"
     },
     {
       "taskId": "connector-readiness:ds-021",

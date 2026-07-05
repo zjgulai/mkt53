@@ -7,8 +7,9 @@
       "connectorId": "amazon-commerce",
       "label": "Amazon Marketplace / Brand Analytics",
       "priority": "P0",
-      "sourceCount": 6,
+      "sourceCount": 7,
       "sourceIds": [
+        "ds-007",
         "ds-009",
         "ds-010",
         "ds-019",
@@ -17,6 +18,7 @@
         "ds-039"
       ],
       "pages": [
+        "CompetitionPage",
         "ProductManage",
         "RegionCompetition",
         "SelfInsight",
@@ -42,16 +44,14 @@
       "connectorId": "review-nlp",
       "label": "Review / VOC NLP Pipeline",
       "priority": "P0",
-      "sourceCount": 5,
+      "sourceCount": 4,
       "sourceIds": [
-        "ds-007",
         "ds-021",
         "ds-030",
         "ds-032",
         "ds-033"
       ],
       "pages": [
-        "CompetitionPage",
         "CommentData",
         "ReviewAnalysis",
         "FlavorMap",
@@ -321,6 +321,30 @@
       "nextAction": "接入服务端代理后记录requestId、model、cost和status"
     },
     {
+      "id": "ds-007",
+      "page": "CompetitionPage",
+      "metric": "竞品概览",
+      "sourceName": "Amazon.com 实时采集",
+      "verificationStatus": "needs-review",
+      "connectorId": "amazon-commerce",
+      "connectorLabel": "Amazon Marketplace / Brand Analytics",
+      "priority": "P0",
+      "requiredAccess": [
+        "Amazon SP-API 或 Vendor Central Brand Analytics 授权",
+        "ASIN/SKU/品牌映射表",
+        "采集窗口和站点范围"
+      ],
+      "outputContract": [
+        "product_snapshot",
+        "review_snapshot",
+        "brand_share_snapshot",
+        "category_rank_snapshot"
+      ],
+      "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "nextAction": "保留公开品牌入口证据包；提交p0-amazon-connector-owner-01证据包并通过owner intake验证后再复核竞品价格、排名、份额、销量和SKU结论"
+    },
+    {
       "id": "ds-009",
       "page": "ProductManage",
       "metric": "产品参数/价格",
@@ -349,7 +373,7 @@
       "page": "RegionCompetition",
       "metric": "区域份额",
       "sourceName": "Amazon Brand Analytics",
-      "sourceUrl": "https://vendorcentral.amazon.com",
+      "sourceUrl": "https://sellercentral.amazon.com/help/hub/reference/external/GH2Z5B4HMF5ZXCG2",
       "verificationStatus": "needs-review",
       "connectorId": "amazon-commerce",
       "connectorLabel": "Amazon Marketplace / Brand Analytics",
@@ -367,7 +391,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "提交p0-amazon-connector-owner-01证据包；如需全渠道份额需另接零售面板或完整行业报告"
+      "nextAction": "保留公开区域来源入口证据包；提交p0-amazon-connector-owner-01证据包并补国家/marketplace映射、Amazon BA快照和零售面板分母后再复核区域份额与排名"
     },
     {
       "id": "ds-019",
@@ -738,30 +762,6 @@
       "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "OK"
-    },
-    {
-      "id": "ds-007",
-      "page": "CompetitionPage",
-      "metric": "竞品概览",
-      "sourceName": "Amazon.com 实时采集 + 品牌官网公开入口",
-      "verificationStatus": "needs-review",
-      "connectorId": "review-nlp",
-      "connectorLabel": "Review / VOC NLP Pipeline",
-      "priority": "P0",
-      "requiredAccess": [
-        "评论原文数据集或平台 API 授权",
-        "关键词词典和产品映射",
-        "模型版本与人工复核样本"
-      ],
-      "outputContract": [
-        "review_sample_manifest",
-        "sentiment_score_snapshot",
-        "topic_cluster_snapshot",
-        "human_review_sample"
-      ],
-      "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "保留公开品牌入口证据包；提交p0-amazon-connector-owner-01证据包并通过owner intake验证后再复核竞品价格、排名、份额、销量和SKU结论"
     },
     {
       "id": "ds-021",

@@ -147,6 +147,54 @@
       "notFullPlatformDataset": true
     },
     {
+      "id": "region-competition-amazon-spapi-marketplace-ids",
+      "sourceId": "ds-010",
+      "page": "RegionCompetition",
+      "metric": "Regional competition public source availability",
+      "label": "Amazon SP-API Marketplace IDs for regional marketplace mapping",
+      "url": "https://developer-docs.amazon.com/sp-api/docs/marketplace-ids",
+      "evidenceClass": "official-platform-doc-page",
+      "expectedEvidenceTerms": ["Marketplace IDs", "North America", "Europe"],
+      "collectionBoundary": "Public Amazon documentation only; supports marketplace and country mapping source availability, not Amazon Brand Analytics regional share, country rank, brand share, sales, GMV, price, rating, SKU facts, or full-channel market share.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "region-competition-amazon-spapi-endpoints",
+      "sourceId": "ds-010",
+      "page": "RegionCompetition",
+      "metric": "Regional competition public source availability",
+      "label": "Amazon SP-API endpoints for regional request routing",
+      "url": "https://developer-docs.amazon.com/sp-api/docs/sp-api-endpoints",
+      "evidenceClass": "official-platform-doc-page",
+      "expectedEvidenceTerms": ["SP-API Endpoints", "North America", "Europe"],
+      "collectionBoundary": "Public Amazon documentation only; supports endpoint and region routing source availability, not Amazon Brand Analytics regional share, country rank, brand share, sales, GMV, price, rating, SKU facts, or full-channel market share.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "region-competition-amazon-brand-analytics-help",
+      "sourceId": "ds-010",
+      "page": "RegionCompetition",
+      "metric": "Regional competition public source availability",
+      "label": "Amazon Seller Central Brand Analytics public help page",
+      "url": "https://sellercentral.amazon.com/help/hub/reference/external/GH2Z5B4HMF5ZXCG2",
+      "evidenceClass": "official-platform-doc-page",
+      "expectedEvidenceTerms": ["Brand Analytics", "product portfolio"],
+      "collectionBoundary": "Public Amazon help page only; supports Brand Analytics source availability and access context, not regional share, country rank, brand share, sales, GMV, price, rating, SKU facts, or full-channel market share.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "region-competition-mordor-breast-pumps-market",
+      "sourceId": "ds-010",
+      "page": "RegionCompetition",
+      "metric": "Regional competition public source availability",
+      "label": "Mordor breast pumps market public page for regional context",
+      "url": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["North America", "Asia-Pacific"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports regional market context source availability only, not Amazon Brand Analytics regional share, country rank, brand share, sales, GMV, price, rating, SKU facts, or full-channel market share.",
+      "notFullPlatformDataset": true
+    },
+    {
       "id": "medela-pump-in-style-pro-2026-news",
       "sourceId": "ds-034",
       "page": "IndustryNews",
