@@ -99,6 +99,54 @@
       "notFullPlatformDataset": true
     },
     {
+      "id": "competition-medela-magic-inbra-official",
+      "sourceId": "ds-007",
+      "page": "CompetitionPage",
+      "metric": "Competition overview public brand source availability",
+      "label": "Medela Magic InBra official product page for competitor overview",
+      "url": "https://www.medela.com/en/breastfeeding-pumping/products/pumps/inbra-electric/magic-inbra",
+      "evidenceClass": "brand-official-page",
+      "expectedEvidenceTerms": ["Magic InBra", "breast pump"],
+      "collectionBoundary": "Public brand official page only; supports competitor brand/product source availability only, not Amazon rank, brand share, sales, GMV, price, rating, review count, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "competition-spectra-s1-plus-official",
+      "sourceId": "ds-007",
+      "page": "CompetitionPage",
+      "metric": "Competition overview public brand source availability",
+      "label": "Spectra S1 Plus official product page for competitor overview",
+      "url": "https://www.spectrababyusa.com/products/spectra-s1-plus-premier-rechargeable-double-electric-breast-pump",
+      "evidenceClass": "brand-official-page",
+      "expectedEvidenceTerms": ["S1 Plus", "breast pump", "Spectra"],
+      "collectionBoundary": "Public brand official page only; supports competitor brand/product source availability only, not Amazon rank, brand share, sales, GMV, price, rating, review count, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "competition-philips-avent-breast-pumps-official",
+      "sourceId": "ds-007",
+      "page": "CompetitionPage",
+      "metric": "Competition overview public brand source availability",
+      "label": "Philips Avent official breast pumps page for competitor overview",
+      "url": "https://www.usa.philips.com/c-m-mo/breast-pumps-care",
+      "evidenceClass": "brand-official-page",
+      "expectedEvidenceTerms": ["Philips Avent", "Breast Pumps"],
+      "collectionBoundary": "Public brand official page only; supports competitor brand/product source availability only, not Amazon rank, brand share, sales, GMV, price, rating, review count, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "competition-eufy-breast-pump-category",
+      "sourceId": "ds-007",
+      "page": "CompetitionPage",
+      "metric": "Competition overview public brand source availability",
+      "label": "eufy official breast pump category page for competitor overview",
+      "url": "https://www.eufy.com/collections/breast-pump",
+      "evidenceClass": "brand-official-page",
+      "expectedEvidenceTerms": ["breast pump", "eufy"],
+      "collectionBoundary": "Public brand official page only; supports competitor brand/product source availability only, not Amazon rank, brand share, sales, GMV, price, rating, review count, or SKU-level conclusions.",
+      "notFullPlatformDataset": true
+    },
+    {
       "id": "medela-pump-in-style-pro-2026-news",
       "sourceId": "ds-034",
       "page": "IndustryNews",

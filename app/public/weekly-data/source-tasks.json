@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-02T11:07:47.758Z",
+  "generatedAt": "2026-07-05T07:58:33.768Z",
   "generatedRule": "source task queue 只表达待补证和接入任务，不代表业务数据已采集。",
-  "total": 40,
+  "total": 41,
   "queueTypeCounts": {
     "connector-readiness": 28,
     "manual-evidence": 6,
-    "public-source-review": 6
+    "public-source-review": 7
   },
   "priorityCounts": {
     "P0": 14,
     "P1": 11,
-    "P2": 15
+    "P2": 16
   },
   "ownerTeamCounts": {
     "brand-strategy": 2,
     "competitive-intelligence": 4,
     "data-ai": 7,
     "industry-regulatory": 7,
-    "market-research": 10,
+    "market-research": 11,
     "user-research": 7,
     "data-governance": 2,
     "insight-ops": 1
@@ -73,12 +73,13 @@
       },
       {
         "queueType": "public-source-review",
-        "count": 6,
+        "count": 7,
         "taskIds": [
           "public-source-review:policy-cpsc-efiling",
           "public-source-review:policy-eu-mdr-transition",
           "public-source-review:ds-002",
           "public-source-review:ds-044",
+          "public-source-review:ds-045",
           "public-source-review:ds-046",
           "public-source-review:ds-043"
         ]
@@ -124,7 +125,7 @@
       },
       {
         "priority": "P2",
-        "count": 15,
+        "count": 16,
         "taskIds": [
           "connector-readiness:ds-020",
           "connector-readiness:ds-022",
@@ -139,6 +140,7 @@
           "public-source-review:policy-eu-mdr-transition",
           "public-source-review:ds-002",
           "public-source-review:ds-044",
+          "public-source-review:ds-045",
           "public-source-review:ds-046",
           "public-source-review:ds-043"
         ]
@@ -206,7 +208,7 @@
       },
       {
         "ownerTeam": "market-research",
-        "count": 10,
+        "count": 11,
         "taskIds": [
           "connector-readiness:ds-037",
           "connector-readiness:ds-038",
@@ -217,6 +219,7 @@
           "connector-readiness:ds-049",
           "public-source-review:ds-002",
           "public-source-review:ds-044",
+          "public-source-review:ds-045",
           "public-source-review:ds-046"
         ]
       },
@@ -276,25 +279,25 @@
       "module": "看竞争",
       "page": "CompetitionPage",
       "metric": "竞品概览",
-      "sourceName": "Amazon.com 实时采集",
+      "sourceName": "Amazon.com 实时采集 + 品牌官网公开入口",
       "sourceType": "平台API",
       "reliability": "A",
       "verificationStatus": "needs-review",
       "collectionMethod": "connector-required",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "requiredEvidence": [
-        "Amazon SP-API 或 Vendor Central Brand Analytics 授权",
-        "ASIN/SKU/品牌映射表",
-        "采集窗口和站点范围",
+        "评论原文数据集或平台 API 授权",
+        "关键词词典和产品映射",
+        "模型版本与人工复核样本",
         "采集窗口、数据范围和站点/地区边界",
         "不含凭据和私有明细的 dry-run 或 readiness gate 输出"
       ],
       "acceptanceCriteria": [
-        "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
+        "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
         "不得把待补凭证或待接入来源改写成已采集事实",
         "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
       ],
-      "nextAction": "提交p0-amazon-connector-owner-01证据包并通过owner intake验证"
+      "nextAction": "保留公开品牌入口证据包；提交p0-amazon-connector-owner-01证据包并通过owner intake验证后再复核竞品价格、排名、份额、销量和SKU结论"
     },
     {
       "taskId": "connector-readiness:ds-009",
@@ -1362,6 +1365,35 @@
         "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
       ],
       "nextAction": "OK：仅作为全球婴童用品上层TAM背景；不得作为吸奶器品牌份额、SAM或SOM分母"
+    },
+    {
+      "taskId": "public-source-review:ds-045",
+      "queueType": "public-source-review",
+      "queueLabel": "公开来源复核",
+      "priority": "P2",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-045",
+      "module": "看市场",
+      "page": "MarketPage",
+      "metric": "穿戴式吸奶器细分TAM",
+      "sourceName": "Fortune Business Insights",
+      "sourceUrl": "https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880",
+      "sourceType": "行业报告",
+      "reliability": "A",
+      "verificationStatus": "verified",
+      "collectionMethod": "public-url-check",
+      "blockedReason": "HTTP 403：公开来源返回非 2xx，需要人工确认链接或供应商权限。",
+      "requiredEvidence": [
+        "报告页、采购凭证或人工访问记录",
+        "市场口径、样本范围、公式和权重说明",
+        "复核日期、复核人和可展示摘要"
+      ],
+      "acceptanceCriteria": [
+        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "OK"
     },
     {
       "taskId": "public-source-review:ds-046",
