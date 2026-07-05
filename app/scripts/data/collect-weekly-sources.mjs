@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { chromium } from '@playwright/test';
 import { analyzeConsistency, classifyCollectionMethod, extractSourceRegistry, isoWeek } from './lib/project-analysis.mjs';
 import { buildConnectorBacklog } from './lib/connector-backlog.mjs';
 import { buildSourceTaskQueue } from './lib/source-tasks.mjs';
@@ -143,6 +144,75 @@ async function readPreviewHash(response) {
   return hashBuffer(buffer);
 }
 
+async function checkPublicUrlWithBrowserFallback(source, timeoutMs, attempt, checkedAt, fallbackFrom) {
+  let browser;
+
+  try {
+    browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext({
+      viewport: { width: 1365, height: 900 },
+      userAgent: 'mkt53-data-collector/1.0 (+https://mkt.lute-tlz-dddd.top)',
+    });
+    const page = await context.newPage();
+    const response = await page.goto(source.sourceUrl, {
+      waitUntil: 'domcontentloaded',
+      timeout: timeoutMs,
+    });
+    await page.waitForTimeout(500);
+
+    const title = (await page.title().catch(() => '')).trim();
+    const visibleText = (await page.locator('body').innerText({ timeout: 3000 }).catch(() => '')).replace(/\s+/g, ' ').trim();
+    const sample = `${title}\n${visibleText}`.slice(0, previewLimitBytes);
+    const httpStatus = response?.status();
+    const status = httpStatus && httpStatus >= 200 && httpStatus < 400 ? 'ok' : httpStatus ? 'source-error' : 'fetch-error';
+
+    await context.close();
+
+    return {
+      attempt,
+      id: source.id,
+      page: source.page,
+      metric: source.metric,
+      sourceName: source.sourceName,
+      sourceUrl: source.sourceUrl,
+      method: 'public-url-check',
+      status,
+      checkedAt,
+      httpStatus,
+      contentType: response?.headers()?.['content-type'] ?? '',
+      etag: response?.headers()?.etag ?? '',
+      lastModified: response?.headers()?.['last-modified'] ?? '',
+      sampleHash: sample ? hashBuffer(Buffer.from(sample)) : undefined,
+      requestVariant: 'browser-domcontentloaded-fallback',
+      fallbackFrom,
+      retryable: status === 'source-error' && httpStatus ? retryableHttpStatuses.has(httpStatus) : status === 'fetch-error',
+      note:
+        status === 'ok'
+          ? '公开来源可通过浏览器fallback访问，已记录元数据和样本哈希。'
+          : '公开来源浏览器fallback仍返回非 2xx，需要人工确认链接或供应商权限。',
+    };
+  } catch (error) {
+    return {
+      attempt,
+      id: source.id,
+      page: source.page,
+      metric: source.metric,
+      sourceName: source.sourceName,
+      sourceUrl: source.sourceUrl,
+      method: 'public-url-check',
+      status: 'fetch-error',
+      checkedAt,
+      requestVariant: 'browser-domcontentloaded-fallback',
+      fallbackFrom,
+      error: error instanceof Error ? error.message : String(error),
+      retryable: true,
+      note: '公开来源浏览器fallback请求失败，需要下次周度任务重试或人工复核。',
+    };
+  } finally {
+    await browser?.close().catch(() => undefined);
+  }
+}
+
 function localPathFromSource(source, appRoot) {
   const sourceName = typeof source.sourceName === 'string' ? source.sourceName : '';
   const appRelativePath = sourceName.startsWith('app/') ? sourceName.slice('app/'.length) : sourceName;
@@ -212,59 +282,100 @@ function checkLocalFile(source, appRoot) {
 }
 
 async function checkPublicUrlAttempt(source, timeoutMs, attempt) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   const checkedAt = new Date().toISOString();
-
-  try {
-    const response = await fetch(source.sourceUrl, {
-      method: 'GET',
-      signal: controller.signal,
+  const requestVariants = [
+    {
+      requestVariant: 'ranged-preview',
       headers: {
         Accept: 'text/html,application/json,text/plain,*/*',
         Range: `bytes=0-${previewLimitBytes - 1}`,
         'User-Agent': 'mkt53-data-collector/1.0 (+https://mkt.lute-tlz-dddd.top)',
       },
-    });
-    const sampleHash = await readPreviewHash(response);
-    const status = response.ok ? 'ok' : 'source-error';
+    },
+    {
+      requestVariant: 'full-page-fallback',
+      headers: {
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'User-Agent': 'mkt53-data-collector/1.0 (+https://mkt.lute-tlz-dddd.top)',
+      },
+    },
+  ];
+  let fallbackFrom;
 
-    return {
-      attempt,
-      id: source.id,
-      page: source.page,
-      metric: source.metric,
-      sourceName: source.sourceName,
-      sourceUrl: source.sourceUrl,
-      method: 'public-url-check',
-      status,
-      checkedAt,
-      httpStatus: response.status,
-      contentType: response.headers.get('content-type') ?? '',
-      etag: response.headers.get('etag') ?? '',
-      lastModified: response.headers.get('last-modified') ?? '',
-      sampleHash,
-      retryable: status === 'source-error' && retryableHttpStatuses.has(response.status),
-      note: response.ok ? '公开来源可达，已记录元数据和样本哈希。' : '公开来源返回非 2xx，需要人工确认链接或供应商权限。',
-    };
-  } catch (error) {
-    return {
-      attempt,
-      id: source.id,
-      page: source.page,
-      metric: source.metric,
-      sourceName: source.sourceName,
-      sourceUrl: source.sourceUrl,
-      method: 'public-url-check',
-      status: 'fetch-error',
-      checkedAt,
-      error: error instanceof Error ? error.message : String(error),
-      retryable: true,
-      note: '公开来源请求失败，需要下次周度任务重试或人工复核。',
-    };
-  } finally {
-    clearTimeout(timeout);
+  for (const variant of requestVariants) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      const response = await fetch(source.sourceUrl, {
+        method: 'GET',
+        signal: controller.signal,
+        headers: variant.headers,
+      });
+      const sampleHash = await readPreviewHash(response);
+      const status = response.ok ? 'ok' : 'source-error';
+
+      if (!response.ok && [403, 406].includes(response.status) && variant.requestVariant === 'ranged-preview') {
+        fallbackFrom = {
+          requestVariant: variant.requestVariant,
+          httpStatus: response.status,
+          note: 'Range 预览请求被源站拒绝，已降级为普通页面 GET 重试。',
+        };
+        continue;
+      }
+
+      if (!response.ok && [403, 406].includes(response.status) && variant.requestVariant === 'full-page-fallback') {
+        return checkPublicUrlWithBrowserFallback(source, timeoutMs, attempt, checkedAt, {
+          requestVariant: variant.requestVariant,
+          httpStatus: response.status,
+          previousFallback: fallbackFrom,
+          note: '普通页面 GET 仍被源站拒绝，已降级为浏览器公开页面检查。',
+        });
+      }
+
+      return {
+        attempt,
+        id: source.id,
+        page: source.page,
+        metric: source.metric,
+        sourceName: source.sourceName,
+        sourceUrl: source.sourceUrl,
+        method: 'public-url-check',
+        status,
+        checkedAt,
+        httpStatus: response.status,
+        contentType: response.headers.get('content-type') ?? '',
+        etag: response.headers.get('etag') ?? '',
+        lastModified: response.headers.get('last-modified') ?? '',
+        sampleHash,
+        requestVariant: variant.requestVariant,
+        fallbackFrom,
+        retryable: status === 'source-error' && retryableHttpStatuses.has(response.status),
+        note: response.ok ? '公开来源可达，已记录元数据和样本哈希。' : '公开来源返回非 2xx，需要人工确认链接或供应商权限。',
+      };
+    } catch (error) {
+      if (variant.requestVariant === 'ranged-preview') {
+        fallbackFrom = {
+          requestVariant: variant.requestVariant,
+          error: error instanceof Error ? error.message : String(error),
+          note: 'Range 预览请求失败，已降级为普通页面 GET 重试。',
+        };
+        continue;
+      }
+
+      return checkPublicUrlWithBrowserFallback(source, timeoutMs, attempt, checkedAt, {
+        requestVariant: variant.requestVariant,
+        error: error instanceof Error ? error.message : String(error),
+        previousFallback: fallbackFrom,
+        note: '普通页面 GET 请求失败，已降级为浏览器公开页面检查。',
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
   }
+
+  throw new Error('Unexpected public URL request variant fallthrough.');
 }
 
 function summarizeAttempt(attemptResult) {

@@ -1624,8 +1624,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
 
     expect(manifest.sourceTaskQueue.total).toBe(39);
     expect(manifest.sourceTaskQueue.queueTypeCounts['connector-readiness']).toBe(28);
-    expect(manifest.sourceTaskQueue.queueTypeCounts['manual-evidence']).toBe(6);
-    expect(manifest.sourceTaskQueue.queueTypeCounts['public-source-review']).toBe(5);
+    expect(manifest.sourceTaskQueue.queueTypeCounts['manual-evidence']).toBe(7);
+    expect(manifest.sourceTaskQueue.queueTypeCounts['public-source-review']).toBe(4);
     expect(manifest.sourceTaskQueue.priorityCounts.P0).toBeGreaterThan(0);
     expect(manifest.sourceTaskQueue.ownerTeamCounts['market-research']).toBeGreaterThan(0);
     expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'manual-evidence:ds-003')).toBe(false);
@@ -1634,7 +1634,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-034')).toBe(false);
     expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-036')).toBe(false);
     expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'manual-evidence:ds-025')).toBe(false);
-    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-002')).toBe(true);
+    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'public-source-review:ds-002')).toBe(false);
+    expect(manifest.sourceTaskQueue.tasks.some((task) => task.taskId === 'manual-evidence:ds-044')).toBe(true);
     expect(manifest.sourceTaskQueue.tasks.every((task) => task.requiredEvidence.length > 0)).toBe(true);
     expect(manifest.sourceTaskQueue.tasks.every((task) => task.acceptanceCriteria.join(' ').includes('不得'))).toBe(true);
   });
@@ -1825,7 +1826,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(manifest.totals.ok).toBeGreaterThanOrEqual(2);
   });
 
-  it('retries transient public URL failures before marking weekly sources as failed', async () => {
+  it('falls back from transient ranged public URL failures before marking weekly sources as failed', async () => {
     const originalFetch = globalThis.fetch;
     let callCount = 0;
 
@@ -1864,9 +1865,9 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       expect(manifest.collectionPolicy.publicUrl).toMatchObject({ maxAttempts: 2, retryDelayMs: 0 });
       expect(publicSources.length).toBeGreaterThan(0);
       expect(publicSources.every((source) => source.status === 'ok')).toBe(true);
-      expect(publicSources.every((source) => source.checkAttemptCount === 2)).toBe(true);
-      expect(publicSources.every((source) => source.statusStability === 'recovered-after-retry')).toBe(true);
-      expect(publicSources.every((source) => source.attempts?.[0]?.status === 'fetch-error' && source.attempts?.[0]?.retryable === true)).toBe(true);
+      expect(publicSources.every((source) => source.checkAttemptCount === 1)).toBe(true);
+      expect(publicSources.every((source) => source.statusStability === 'fresh-ok')).toBe(true);
+      expect(publicSources.every((source) => source.attempts?.[0]?.status === 'ok' && source.attempts?.[0]?.retryable === false)).toBe(true);
       expect(manifest.totals['fetch-error'] ?? 0).toBe(0);
       expect(callCount).toBe(publicSources.length * 2);
     } finally {

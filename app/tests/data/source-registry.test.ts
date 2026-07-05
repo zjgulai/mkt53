@@ -55,12 +55,14 @@ describe('source registry', () => {
     const mamava = getSourceRegistryItem('ds-043');
 
     expect(fortune.sourceUrl).toBe('https://www.fortunebusinessinsights.com/breast-pump-market-107054');
-    expect(fortune.action).toContain('人工复核凭证');
+    expect(fortune.collectionMethod).toBe('public-url-check');
+    expect(fortune.canDisplayAsFact).toBe(true);
+    expect(fortune.action).toContain('品牌份额仍需');
     expect(mordor.sourceUrl).toBe('https://www.mordorintelligence.com/industry-reports/breast-pumps-market');
     expect(mordor.verificationStatus).toBe('verified');
     expect(mordor.note).toContain('公开报告交叉证据');
     expect(mordor.note).toContain('外部机构原始结论');
-    expect(fortune.note).toContain('Cloudflare challenge');
+    expect(fortune.note).toContain('普通公开GET可达');
     expect(mamava.verificationStatus).toBe('verified');
     expect(mamava.note).toContain('2,842份回复');
     expect(mamava.gap).toContain('不支撑全球用户画像');

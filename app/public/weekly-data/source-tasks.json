@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-05T09:09:13.595Z",
+  "generatedAt": "2026-07-05T18:41:25.568Z",
   "generatedRule": "source task queue 只表达待补证和接入任务，不代表业务数据已采集。",
-  "total": 41,
+  "total": 39,
   "queueTypeCounts": {
     "connector-readiness": 28,
-    "manual-evidence": 6,
-    "public-source-review": 7
+    "manual-evidence": 7,
+    "public-source-review": 4
   },
   "priorityCounts": {
     "P0": 14,
     "P1": 11,
-    "P2": 16
+    "P2": 14
   },
   "ownerTeamCounts": {
     "brand-strategy": 2,
     "competitive-intelligence": 4,
     "data-ai": 7,
     "industry-regulatory": 7,
-    "market-research": 11,
+    "market-research": 9,
     "user-research": 7,
     "data-governance": 2,
     "insight-ops": 1
@@ -61,25 +61,23 @@
       },
       {
         "queueType": "manual-evidence",
-        "count": 6,
+        "count": 7,
         "taskIds": [
           "manual-evidence:ds-040",
           "manual-evidence:ds-014",
           "manual-evidence:ds-042",
           "manual-evidence:ds-008",
           "manual-evidence:ds-015",
-          "manual-evidence:ds-018"
+          "manual-evidence:ds-018",
+          "manual-evidence:ds-044"
         ]
       },
       {
         "queueType": "public-source-review",
-        "count": 7,
+        "count": 4,
         "taskIds": [
           "public-source-review:policy-cpsc-efiling",
           "public-source-review:policy-eu-mdr-transition",
-          "public-source-review:ds-002",
-          "public-source-review:ds-044",
-          "public-source-review:ds-045",
           "public-source-review:ds-046",
           "public-source-review:ds-043"
         ]
@@ -125,7 +123,7 @@
       },
       {
         "priority": "P2",
-        "count": 16,
+        "count": 14,
         "taskIds": [
           "connector-readiness:ds-020",
           "connector-readiness:ds-022",
@@ -136,11 +134,9 @@
           "manual-evidence:ds-008",
           "manual-evidence:ds-015",
           "manual-evidence:ds-018",
+          "manual-evidence:ds-044",
           "public-source-review:policy-cpsc-efiling",
           "public-source-review:policy-eu-mdr-transition",
-          "public-source-review:ds-002",
-          "public-source-review:ds-044",
-          "public-source-review:ds-045",
           "public-source-review:ds-046",
           "public-source-review:ds-043"
         ]
@@ -208,7 +204,7 @@
       },
       {
         "ownerTeam": "market-research",
-        "count": 11,
+        "count": 9,
         "taskIds": [
           "connector-readiness:ds-037",
           "connector-readiness:ds-038",
@@ -217,9 +213,7 @@
           "connector-readiness:ds-047",
           "connector-readiness:ds-048",
           "connector-readiness:ds-049",
-          "public-source-review:ds-002",
-          "public-source-review:ds-044",
-          "public-source-review:ds-045",
+          "manual-evidence:ds-044",
           "public-source-review:ds-046"
         ]
       },
@@ -1251,6 +1245,35 @@
       "nextAction": "OK"
     },
     {
+      "taskId": "manual-evidence:ds-044",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P2",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-044",
+      "module": "看市场",
+      "page": "MarketPage",
+      "metric": "全球婴童用品上层TAM",
+      "sourceName": "Grand View Research",
+      "sourceUrl": "https://www.grandviewresearch.com/industry-analysis/baby-products-market",
+      "sourceType": "行业报告",
+      "reliability": "A",
+      "verificationStatus": "verified",
+      "collectionMethod": "manual-required",
+      "blockedReason": "Grand View Research自动采集被403拦截，需保留人工访问、采购报告或网页复核凭证",
+      "requiredEvidence": [
+        "报告页、采购凭证或人工访问记录",
+        "市场口径、样本范围、公式和权重说明",
+        "复核日期、复核人和可展示摘要"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "保留上层TAM展示边界；补人工复核凭证后再恢复自动化或升级证据等级"
+    },
+    {
       "taskId": "public-source-review:policy-cpsc-efiling",
       "queueType": "public-source-review",
       "queueLabel": "公开来源复核",
@@ -1307,93 +1330,6 @@
         "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
       ],
       "nextAction": "OK：仅展示官方法规时间线；产品级判断需法务分类和证书复核"
-    },
-    {
-      "taskId": "public-source-review:ds-002",
-      "queueType": "public-source-review",
-      "queueLabel": "公开来源复核",
-      "priority": "P2",
-      "ownerTeam": "market-research",
-      "sourceId": "ds-002",
-      "module": "看市场",
-      "page": "MarketPage",
-      "metric": "北美区域份额",
-      "sourceName": "Fortune Business Insights",
-      "sourceUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
-      "sourceType": "行业报告",
-      "reliability": "A",
-      "verificationStatus": "verified",
-      "collectionMethod": "public-url-check",
-      "blockedReason": "自动化访问受反爬限制",
-      "requiredEvidence": [
-        "报告页、采购凭证或人工访问记录",
-        "市场口径、样本范围、公式和权重说明",
-        "复核日期、复核人和可展示摘要"
-      ],
-      "acceptanceCriteria": [
-        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
-        "不得把待补凭证或待接入来源改写成已采集事实",
-        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
-      ],
-      "nextAction": "保留具体报告页并补人工复核凭证"
-    },
-    {
-      "taskId": "public-source-review:ds-044",
-      "queueType": "public-source-review",
-      "queueLabel": "公开来源复核",
-      "priority": "P2",
-      "ownerTeam": "market-research",
-      "sourceId": "ds-044",
-      "module": "看市场",
-      "page": "MarketPage",
-      "metric": "全球婴童用品上层TAM",
-      "sourceName": "Grand View Research",
-      "sourceUrl": "https://www.grandviewresearch.com/industry-analysis/baby-products-market",
-      "sourceType": "行业报告",
-      "reliability": "A",
-      "verificationStatus": "verified",
-      "collectionMethod": "public-url-check",
-      "blockedReason": "HTTP 403：公开来源返回非 2xx，需要人工确认链接或供应商权限。",
-      "requiredEvidence": [
-        "报告页、采购凭证或人工访问记录",
-        "市场口径、样本范围、公式和权重说明",
-        "复核日期、复核人和可展示摘要"
-      ],
-      "acceptanceCriteria": [
-        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
-        "不得把待补凭证或待接入来源改写成已采集事实",
-        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
-      ],
-      "nextAction": "OK：仅作为全球婴童用品上层TAM背景；不得作为吸奶器品牌份额、SAM或SOM分母"
-    },
-    {
-      "taskId": "public-source-review:ds-045",
-      "queueType": "public-source-review",
-      "queueLabel": "公开来源复核",
-      "priority": "P2",
-      "ownerTeam": "market-research",
-      "sourceId": "ds-045",
-      "module": "看市场",
-      "page": "MarketPage",
-      "metric": "穿戴式吸奶器细分TAM",
-      "sourceName": "Fortune Business Insights",
-      "sourceUrl": "https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880",
-      "sourceType": "行业报告",
-      "reliability": "A",
-      "verificationStatus": "verified",
-      "collectionMethod": "public-url-check",
-      "blockedReason": "HTTP 403：公开来源返回非 2xx，需要人工确认链接或供应商权限。",
-      "requiredEvidence": [
-        "报告页、采购凭证或人工访问记录",
-        "市场口径、样本范围、公式和权重说明",
-        "复核日期、复核人和可展示摘要"
-      ],
-      "acceptanceCriteria": [
-        "公开来源复核后必须保留 URL、发布日期、访问状态和人工复核边界。",
-        "不得把待补凭证或待接入来源改写成已采集事实",
-        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
-      ],
-      "nextAction": "OK"
     },
     {
       "taskId": "public-source-review:ds-046",
