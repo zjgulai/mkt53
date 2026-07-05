@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-05T08:18:33.551Z",
+  "generatedAt": "2026-07-05T09:02:08.621Z",
   "mode": "live-browser-capture",
   "generatedRule": "Browser-assisted public evidence captures only public visible pages. It does not log in, bypass access controls, write business datasets, or replace authorized connectors.",
   "seedPath": "scripts/data/public-evidence-seeds.json",
@@ -12,8 +12,8 @@
   "summary": {
     "total": 38,
     "captureStatusCounts": {
-      "captured": 34,
-      "source-error": 4
+      "captured": 37,
+      "fetch-error": 1
     },
     "evidenceClassCounts": {
       "public-page-sample": 1,
@@ -37,7 +37,7 @@
       "page": "ProductManage",
       "metric": "Amazon public search sample",
       "label": "Amazon wearable breast pump public search sample",
-      "url": "https://www.amazon.com/s?k=wearable+breast+pump",
+      "url": "https://www.amazon.sg/s?k=wearable+breast+pump",
       "evidenceClass": "public-page-sample",
       "collectionBoundary": "Public visible search page only; no login, no bypass, no review scraping, no claim of complete pricing or review coverage.",
       "notFullPlatformDataset": true,
@@ -45,7 +45,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:18:39.004Z",
+      "capturedAt": "2026-07-05T09:02:14.270Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -62,21 +62,21 @@
         "boundaryValid": true
       },
       "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.amazon.sg/s?k=wearable+breast+pump&ref=mr_direct_us_sg_sg",
+      "finalUrl": "https://www.amazon.sg/s?k=wearable+breast+pump",
       "httpStatus": 200,
       "title": "Amazon.sg : wearable breast pump",
-      "visibleTextLength": 18571,
-      "visibleTextHash": "21e5d3018475b58ed6de142f0bc3919d1917cf6587d203652a687cd09af06fb7",
+      "visibleTextLength": 18168,
+      "visibleTextHash": "21832e24300e5967b4d7782c1e43723b47ec5889741d5b067486d419cbe2d400",
       "matchedEvidenceTerms": [
         "breast pump"
       ],
       "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Amazon wearable breast pump public search sample: title captured (32 chars); matched 1/1 expected evidence terms; visible text length 18571.",
+      "nonVerbatimSummary": "Amazon wearable breast pump public search sample: title captured (32 chars); matched 1/1 expected evidence terms; visible text length 18168.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/amazon-search-wearable-breast-pump-sample.txt",
-        "textArchiveBytes": 18607,
+        "textArchiveBytes": 18204,
         "screenshotPath": "tmp/public-evidence/screenshots/amazon-search-wearable-breast-pump-sample.png",
-        "screenshotHash": "ae9eb403f6a3dd58ccb9e06c2f720796717554d3883cc45eafed1ee9ff59d440"
+        "screenshotHash": "f231eb00b846eef079c56f1db5e774c585bcc78359d3edc14d060843396aafcf"
       },
       "warnings": [],
       "pageErrors": []
@@ -95,7 +95,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:18:43.011Z",
+      "capturedAt": "2026-07-05T09:02:18.415Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -150,7 +150,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:18:46.768Z",
+      "capturedAt": "2026-07-05T09:02:21.202Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -201,7 +201,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:18:53.855Z",
+      "capturedAt": "2026-07-05T09:02:28.653Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -221,28 +221,28 @@
       "finalUrl": "https://momcozy.com/products/m5-smart-wearable-breast-pump-upgraded-with-app-control?variant=45110887514310",
       "httpStatus": 200,
       "title": "M5 Smart Wearable Breast Pump – Upgraded with App Control",
-      "visibleTextLength": 5738,
-      "visibleTextHash": "56de0b24ed48f03e5d1b6e96fa2a5b53a5c37737d6abb3be6bd17bf31c92f89f",
+      "visibleTextLength": 8840,
+      "visibleTextHash": "be4d08f7200cf9c5d1e083174f97ac655a5c9c28b3e585730f02cf038813bc2f",
       "matchedEvidenceTerms": [
         "M5",
         "breast pump"
       ],
       "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Momcozy M5 official product page sample: title captured (57 chars); matched 2/2 expected evidence terms; visible text length 5738.",
+      "nonVerbatimSummary": "Momcozy M5 official product page sample: title captured (57 chars); matched 2/2 expected evidence terms; visible text length 8840.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/momcozy-m5-official-sample.txt",
-        "textArchiveBytes": 5756,
+        "textArchiveBytes": 8880,
         "screenshotPath": "tmp/public-evidence/screenshots/momcozy-m5-official-sample.png",
-        "screenshotHash": "3ada2752506e3ae40feff79aa27b53c376ad90b5af0fef2ec646e9d403f62e35"
+        "screenshotHash": "3df9b7bf808022264807ad7fe682f961d81fad60aec13e910bb54a06833ede1b"
       },
       "warnings": [
         "browser console or page errors were observed"
       ],
       "pageErrors": [
+        "Failed to load resource: net::ERR_SOCKET_NOT_CONNECTED",
         "Failed to load resource: the server responded with a status of 404 ()",
-        "Failed to load resource: the server responded with a status of 404 ()",
-        "Failed to load resource: net::ERR_CONNECTION_CLOSED",
-        "Failed to load resource: net::ERR_CONNECTION_CLOSED",
+        "Failed to load resource: net::ERR_SOCKET_NOT_CONNECTED",
+        "Failed to load resource: net::ERR_SOCKET_NOT_CONNECTED",
         "Failed to load resource: net::ERR_SOCKET_NOT_CONNECTED"
       ]
     },
@@ -260,7 +260,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:18:59.133Z",
+      "capturedAt": "2026-07-05T09:02:35.121Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -280,19 +280,19 @@
       "finalUrl": "https://onewillow.com/products/willow-go-pump-kit",
       "httpStatus": 200,
       "title": "Willow Go® Wearable Breast Pump | #1 for Comfort & Milk Output – Willow Pump",
-      "visibleTextLength": 4119,
-      "visibleTextHash": "47bd32d98fdb43e12afeb50426b8d7e97df5d594542fa3305679eec42a3a8f8a",
+      "visibleTextLength": 4214,
+      "visibleTextHash": "c97602f0c7e3650b3c0bfabc87e1bf5f4562829baa9e9851f8a5ee199cd6edb2",
       "matchedEvidenceTerms": [
         "Willow Go",
         "breast pump"
       ],
       "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Willow Go official product page sample: title captured (76 chars); matched 2/2 expected evidence terms; visible text length 4119.",
+      "nonVerbatimSummary": "Willow Go official product page sample: title captured (76 chars); matched 2/2 expected evidence terms; visible text length 4214.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/willow-go-official-sample.txt",
-        "textArchiveBytes": 4155,
+        "textArchiveBytes": 4250,
         "screenshotPath": "tmp/public-evidence/screenshots/willow-go-official-sample.png",
-        "screenshotHash": "f15f4a12bb5e2db8456ae9e38cd294933998634bc64c5d15576f29e3325f4693"
+        "screenshotHash": "3a89ced32bcec5262d58efe10ae06c56d3ad0039935c4ac34823f20e7ca930f7"
       },
       "warnings": [
         "browser console or page errors were observed"
@@ -316,7 +316,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:04.964Z",
+      "capturedAt": "2026-07-05T09:02:40.845Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -348,10 +348,15 @@
         "textArchivePath": "tmp/public-evidence/text/medela-magic-inbra-official-sample.txt",
         "textArchiveBytes": 7290,
         "screenshotPath": "tmp/public-evidence/screenshots/medela-magic-inbra-official-sample.png",
-        "screenshotHash": "86303578bff532413921c9b6743c609da86b7ad41e209a5ae4bfeb4010ecac24"
+        "screenshotHash": "50866f23edbf0a32f91a74e1445782ff802bed0ecf0932ef3b3579715f814aac"
       },
-      "warnings": [],
-      "pageErrors": []
+      "warnings": [
+        "browser console or page errors were observed"
+      ],
+      "pageErrors": [
+        "Cannot read properties of null (reading 'remove')",
+        "Cannot read properties of undefined (reading 'TenantFeatures')"
+      ]
     },
     {
       "seedId": "eufy-e20-official-sample",
@@ -366,8 +371,8 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:09.327Z",
+      "captureStatus": "fetch-error",
+      "capturedAt": "2026-07-05T09:03:10.947Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -383,34 +388,8 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.eufy.com/products/t6060121?variant=44930661056698",
-      "httpStatus": 200,
-      "title": "eufy Wearable Breast Pump E20 - eufy US",
-      "visibleTextLength": 7424,
-      "visibleTextHash": "9719c87fed6125469a2e809130b08fbeb33c3a35d2822ec00b693e44574fbcf8",
-      "matchedEvidenceTerms": [
-        "E20",
-        "HeatFlow"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "eufy E20 official product page sample: title captured (39 chars); matched 2/2 expected evidence terms; visible text length 7424.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/eufy-e20-official-sample.txt",
-        "textArchiveBytes": 7490,
-        "screenshotPath": "tmp/public-evidence/screenshots/eufy-e20-official-sample.png",
-        "screenshotHash": "ed46a900c970b9cd5cf30c3ebce968f47b036b9c422f41ba436fe05f7591569c"
-      },
-      "warnings": [
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Minified React error #418; visit https://reactjs.org/docs/error-decoder.html?invariant=418 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
-        "Minified React error #418; visit https://reactjs.org/docs/error-decoder.html?invariant=418 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
-        "Minified React error #418; visit https://reactjs.org/docs/error-decoder.html?invariant=418 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
-        "Minified React error #418; visit https://reactjs.org/docs/error-decoder.html?invariant=418 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
-        "Minified React error #418; visit https://reactjs.org/docs/error-decoder.html?invariant=418 for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
-      ]
+      "note": "Browser-assisted public evidence capture failed without bypassing access controls.",
+      "error": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://www.eufy.com/products/t6060121\", waiting until \"domcontentloaded\"\u001b[22m\n"
     },
     {
       "seedId": "medela-pump-in-style-pro-2026-new-competition",
@@ -426,7 +405,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:12.635Z",
+      "capturedAt": "2026-07-05T09:03:14.194Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -458,7 +437,7 @@
         "textArchivePath": "tmp/public-evidence/text/medela-pump-in-style-pro-2026-new-competition.txt",
         "textArchiveBytes": 3101,
         "screenshotPath": "tmp/public-evidence/screenshots/medela-pump-in-style-pro-2026-new-competition.png",
-        "screenshotHash": "967b92a2f9a3f4798708da10579d63d2094f7b418f5b0557324a7b20860e1f69"
+        "screenshotHash": "5d73aa102b568d9a53efdcf47b8ecc57df97f43fc15feb527e1d7ad8dd282ae2"
       },
       "warnings": [],
       "pageErrors": []
@@ -477,7 +456,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:17.934Z",
+      "capturedAt": "2026-07-05T09:03:17.772Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -509,14 +488,10 @@
         "textArchivePath": "tmp/public-evidence/text/competition-medela-magic-inbra-official.txt",
         "textArchiveBytes": 7290,
         "screenshotPath": "tmp/public-evidence/screenshots/competition-medela-magic-inbra-official.png",
-        "screenshotHash": "4a86f1341e4eab08b780e483fb6b215a0d59a4dfbff21389e8fba473d5f8fe14"
+        "screenshotHash": "c428167a5697b5efc9f8e42517244fd36183be7a37fa634f71abf121416c7fd6"
       },
-      "warnings": [
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Cannot read properties of undefined (reading 'TenantFeatures')"
-      ]
+      "warnings": [],
+      "pageErrors": []
     },
     {
       "seedId": "competition-spectra-s1-plus-official",
@@ -532,7 +507,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:20.652Z",
+      "capturedAt": "2026-07-05T09:03:20.230Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -552,20 +527,20 @@
       "finalUrl": "https://www.spectrababyusa.com/products/spectra-s1-plus-premier-rechargeable-double-electric-breast-pump",
       "httpStatus": 200,
       "title": "Spectra S1 Plus Rechargeable Breast Pump - Portable Hospital-Grade Pump | Spectra Baby US",
-      "visibleTextLength": 6713,
-      "visibleTextHash": "3bccf7a30d8feb5df68eb1fdce71840ec368e439b4267cb5f9e3e75b585b5aff",
+      "visibleTextLength": 3551,
+      "visibleTextHash": "496d738bb84b9ff1d632ab3cef06822b13c864c43ec9587eb5aae73d72ea7fca",
       "matchedEvidenceTerms": [
         "S1 Plus",
         "breast pump",
         "Spectra"
       ],
       "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Spectra S1 Plus official product page for competitor overview: title captured (89 chars); matched 3/3 expected evidence terms; visible text length 6713.",
+      "nonVerbatimSummary": "Spectra S1 Plus official product page for competitor overview: title captured (89 chars); matched 3/3 expected evidence terms; visible text length 3551.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/competition-spectra-s1-plus-official.txt",
-        "textArchiveBytes": 6750,
+        "textArchiveBytes": 3568,
         "screenshotPath": "tmp/public-evidence/screenshots/competition-spectra-s1-plus-official.png",
-        "screenshotHash": "0a5be8f429de16ed08a3bc2031656abace86ad67bcaa7009523958529404d6a3"
+        "screenshotHash": "2ba9622e77f9a22c9eae3360afccc202f21fb7980107f28f56c8cc416673c389"
       },
       "warnings": [],
       "pageErrors": []
@@ -584,7 +559,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:23.271Z",
+      "capturedAt": "2026-07-05T09:03:23.150Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -616,7 +591,7 @@
         "textArchivePath": "tmp/public-evidence/text/competition-philips-avent-breast-pumps-official.txt",
         "textArchiveBytes": 6760,
         "screenshotPath": "tmp/public-evidence/screenshots/competition-philips-avent-breast-pumps-official.png",
-        "screenshotHash": "8cc1715dded4bd14c60fd8b09f78c18cd39058c4f85a683e83409128bfd585b8"
+        "screenshotHash": "87aacf0a88d2d8f4cbf3d8e66cb6e8b2db43f1262f98d3c5278cd2e6477d69fb"
       },
       "warnings": [
         "browser console or page errors were observed"
@@ -640,7 +615,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:27.151Z",
+      "capturedAt": "2026-07-05T09:03:27.548Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -672,7 +647,7 @@
         "textArchivePath": "tmp/public-evidence/text/competition-eufy-breast-pump-category.txt",
         "textArchiveBytes": 12676,
         "screenshotPath": "tmp/public-evidence/screenshots/competition-eufy-breast-pump-category.png",
-        "screenshotHash": "18aac855883e23a899d92cbe2cfa293e82515b3b329dbd72e66afd68d9630f6e"
+        "screenshotHash": "e6befe9b9c4e428c541515705628213826cac066c579b883e319a31fcc9d5f05"
       },
       "warnings": [
         "browser console or page errors were observed"
@@ -699,7 +674,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:30.151Z",
+      "capturedAt": "2026-07-05T09:03:30.559Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -719,20 +694,20 @@
       "finalUrl": "https://developer-docs.amazon/sp-api/docs/marketplace-ids",
       "httpStatus": 200,
       "title": "Marketplace IDs",
-      "visibleTextLength": 19293,
-      "visibleTextHash": "5c0becd351439967ca7338adb7f305e67be51485606bc2f809645d63f96085a8",
+      "visibleTextLength": 19396,
+      "visibleTextHash": "48c7de0dcc8a014b80393e7cb6b53dc771357ec87c60267e1733eed9fbd179c2",
       "matchedEvidenceTerms": [
         "Marketplace IDs",
         "North America",
         "Europe"
       ],
       "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Amazon SP-API Marketplace IDs for regional marketplace mapping: title captured (15 chars); matched 3/3 expected evidence terms; visible text length 19293.",
+      "nonVerbatimSummary": "Amazon SP-API Marketplace IDs for regional marketplace mapping: title captured (15 chars); matched 3/3 expected evidence terms; visible text length 19396.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/region-competition-amazon-spapi-marketplace-ids.txt",
-        "textArchiveBytes": 19294,
+        "textArchiveBytes": 19399,
         "screenshotPath": "tmp/public-evidence/screenshots/region-competition-amazon-spapi-marketplace-ids.png",
-        "screenshotHash": "afe1e96d83a69aec8097c68a7103bcb8820b46a734aa09f7efd01a15237ede9c"
+        "screenshotHash": "1038eae4625018f91e47fbf50bae91bd85061b2d7e446abb6ae0d2749e636bb7"
       },
       "warnings": [],
       "pageErrors": []
@@ -751,7 +726,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:32.986Z",
+      "capturedAt": "2026-07-05T09:03:33.842Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -784,7 +759,7 @@
         "textArchivePath": "tmp/public-evidence/text/region-competition-amazon-spapi-endpoints.txt",
         "textArchiveBytes": 18986,
         "screenshotPath": "tmp/public-evidence/screenshots/region-competition-amazon-spapi-endpoints.png",
-        "screenshotHash": "58059722d8eaae58877ed965c2eef4d6fef70c853b6831f9f8f7cd0467db2bc1"
+        "screenshotHash": "4c69c1ae4672805b50f069157d15a7d00ad91b9000cdc3b34d9ae6172a9853ef"
       },
       "warnings": [],
       "pageErrors": []
@@ -803,7 +778,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:36.389Z",
+      "capturedAt": "2026-07-05T09:03:37.012Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -854,7 +829,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:38.633Z",
+      "capturedAt": "2026-07-05T09:03:39.064Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -886,7 +861,7 @@
         "textArchivePath": "tmp/public-evidence/text/region-competition-mordor-breast-pumps-market.txt",
         "textArchiveBytes": 21013,
         "screenshotPath": "tmp/public-evidence/screenshots/region-competition-mordor-breast-pumps-market.png",
-        "screenshotHash": "31242887b4eaf6dca5c52cdb24270643aa51882e2e35a25e6a66f734e9840065"
+        "screenshotHash": "2ef9aec846452080a77f9e1ce01de657bf1aa5b28d43110694a376beaa6d65c6"
       },
       "warnings": [],
       "pageErrors": []
@@ -905,7 +880,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:41.557Z",
+      "capturedAt": "2026-07-05T09:03:42.304Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -925,19 +900,19 @@
       "finalUrl": "https://www.medela.com/en/about-medela/medela-news/pump-in-style-pro-named-best-new-product-in-the-us-for-2026",
       "httpStatus": 200,
       "title": "Pump In Style® Pro Named Best New Product in the U.S. for 2026",
-      "visibleTextLength": 3069,
-      "visibleTextHash": "cd3356bb62d072da2284beaeb8db3e4db2033c10f40751585ef96873effd4978",
+      "visibleTextLength": 2850,
+      "visibleTextHash": "0245cec2262807bc9f77540bc7f7e39bb7d68ce3123989ebfec7daf8212f06cd",
       "matchedEvidenceTerms": [
         "Pump In Style",
         "2026"
       ],
       "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Medela Pump In Style Pro 2026 official news: title captured (62 chars); matched 2/2 expected evidence terms; visible text length 3069.",
+      "nonVerbatimSummary": "Medela Pump In Style Pro 2026 official news: title captured (62 chars); matched 2/2 expected evidence terms; visible text length 2850.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/medela-pump-in-style-pro-2026-news.txt",
-        "textArchiveBytes": 3101,
+        "textArchiveBytes": 2878,
         "screenshotPath": "tmp/public-evidence/screenshots/medela-pump-in-style-pro-2026-news.png",
-        "screenshotHash": "2ca20bc44368ca8a50808a0530afbc927664ff132c7fe697c29e84b4b7344ea1"
+        "screenshotHash": "ff7ccb54eae68aef5318bc0ed8eb547c89fe09976f06cbce35112a5bbf58784d"
       },
       "warnings": [],
       "pageErrors": []
@@ -956,7 +931,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:43.431Z",
+      "capturedAt": "2026-07-05T09:03:45.121Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1007,7 +982,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:48.139Z",
+      "capturedAt": "2026-07-05T09:03:47.513Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1058,7 +1033,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:50.546Z",
+      "capturedAt": "2026-07-05T09:03:49.614Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1090,7 +1065,7 @@
         "textArchivePath": "tmp/public-evidence/text/mordor-wearable-breast-pumps-market.txt",
         "textArchiveBytes": 16231,
         "screenshotPath": "tmp/public-evidence/screenshots/mordor-wearable-breast-pumps-market.png",
-        "screenshotHash": "c613f214705da409c15861f709c11c1002037db081da1e6d8e821c0d42c76c2a"
+        "screenshotHash": "fbf61ad33df68be43b178dffebfdc59bd599de4ebcdbbe6187a095148760c657"
       },
       "warnings": [],
       "pageErrors": []
@@ -1101,15 +1076,15 @@
       "page": "MarketPage",
       "metric": "Market report public page sample",
       "label": "Fortune BI breast pump market public page",
-      "url": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "url": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
       "evidenceClass": "market-report-public-page",
       "collectionBoundary": "Public report landing page only; no paid report extraction.",
       "notFullPlatformDataset": true,
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "source-error",
-      "capturedAt": "2026-07-05T08:19:51.935Z",
+      "captureStatus": "captured",
+      "capturedAt": "2026-07-05T09:03:51.712Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1126,30 +1101,26 @@
         "boundaryValid": true
       },
       "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
-      "httpStatus": 403,
-      "title": "Just a moment...",
-      "visibleTextLength": 277,
-      "visibleTextHash": "ec3447bc5fdad3ece73e98e07dd6d54c7286e456fe430ac5859509a9519133a3",
-      "matchedEvidenceTerms": [],
-      "missingEvidenceTerms": [
-        "Breast Pump Market",
+      "finalUrl": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
+      "httpStatus": 200,
+      "title": "Breast Pumps Market Size, Share And Growth | Industry Research Report, 2031",
+      "visibleTextLength": 20948,
+      "visibleTextHash": "f2e3967199348816a8c4dba01e3d46043a92fc06c281158012781921133837df",
+      "matchedEvidenceTerms": [
         "Market Size"
       ],
-      "nonVerbatimSummary": "Fortune BI breast pump market public page: title captured (16 chars); matched 0/2 expected evidence terms; visible text length 277.",
+      "missingEvidenceTerms": [
+        "Breast Pump Market"
+      ],
+      "nonVerbatimSummary": "Fortune BI breast pump market public page: title captured (75 chars); matched 1/2 expected evidence terms; visible text length 20948.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/fortune-bi-breast-pump-market.txt",
-        "textArchiveBytes": 278,
+        "textArchiveBytes": 21013,
         "screenshotPath": "tmp/public-evidence/screenshots/fortune-bi-breast-pump-market.png",
-        "screenshotHash": "40d0d32c045209e5fa15f0b311233854032ca6f580c9a218e6b95e3fbd8d4846"
+        "screenshotHash": "2ad07075e6c4a1a6bc23acfc1dd4cdb6a98c3500b8c000feb0f3645da2b169aa"
       },
-      "warnings": [
-        "expected evidence terms were not matched in visible text",
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Failed to load resource: the server responded with a status of 403 ()"
-      ]
+      "warnings": [],
+      "pageErrors": []
     },
     {
       "seedId": "category-mordor-breast-pumps-market",
@@ -1165,7 +1136,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:53.947Z",
+      "capturedAt": "2026-07-05T09:03:53.722Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1197,7 +1168,7 @@
         "textArchivePath": "tmp/public-evidence/text/category-mordor-breast-pumps-market.txt",
         "textArchiveBytes": 21013,
         "screenshotPath": "tmp/public-evidence/screenshots/category-mordor-breast-pumps-market.png",
-        "screenshotHash": "c8335ad6bbe65e13ce16ad14f50a6a9add6b688a04792828266296c2e1bfe8e4"
+        "screenshotHash": "f65a007907224710c8b22623ea1042e72a175ec856aa0a9c8419664e76d7882a"
       },
       "warnings": [],
       "pageErrors": []
@@ -1216,7 +1187,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:19:55.898Z",
+      "capturedAt": "2026-07-05T09:03:56.178Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1248,7 +1219,7 @@
         "textArchivePath": "tmp/public-evidence/text/category-mordor-wearable-breast-pumps-market.txt",
         "textArchiveBytes": 16231,
         "screenshotPath": "tmp/public-evidence/screenshots/category-mordor-wearable-breast-pumps-market.png",
-        "screenshotHash": "9d200026ba638d4ef466e4773e0cd40f31ab0dcd48942cfc621bf7e379e518c8"
+        "screenshotHash": "3a5a0bfca73143961b78b333357fa6dc5266aeb1f5595728a4cd8e81350c8efe"
       },
       "warnings": [],
       "pageErrors": []
@@ -1259,15 +1230,15 @@
       "page": "CategoryAnalysis",
       "metric": "Category analysis public report source availability",
       "label": "Fortune BI breast pump market public page for category analysis",
-      "url": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "url": "https://www.precedenceresearch.com/breast-pump-market",
       "evidenceClass": "market-report-public-page",
       "collectionBoundary": "Public report landing page only; no paid report extraction; supports category context source availability only, not BSR, ranking, sales, margin, brand share, or SKU-level conclusions.",
       "notFullPlatformDataset": true,
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "source-error",
-      "capturedAt": "2026-07-05T08:19:57.235Z",
+      "captureStatus": "captured",
+      "capturedAt": "2026-07-05T09:03:59.502Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1284,29 +1255,28 @@
         "boundaryValid": true
       },
       "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
-      "httpStatus": 403,
-      "title": "Just a moment...",
-      "visibleTextLength": 277,
-      "visibleTextHash": "6a31cf6fa7ee634918ef596dfd1ced7619d4c9772fcb27a2bc93dc0512a2a238",
-      "matchedEvidenceTerms": [],
-      "missingEvidenceTerms": [
+      "finalUrl": "https://www.precedenceresearch.com/breast-pump-market",
+      "httpStatus": 200,
+      "title": "Breast Pump Market Size to Hit USD 7.95 Billion by 2035",
+      "visibleTextLength": 24599,
+      "visibleTextHash": "abcf114b9e0fbd720fe4cd7e285385abe58ce26b6d74d28c212e9d0758d3ba23",
+      "matchedEvidenceTerms": [
         "Breast Pump Market",
         "Market Size"
       ],
-      "nonVerbatimSummary": "Fortune BI breast pump market public page for category analysis: title captured (16 chars); matched 0/2 expected evidence terms; visible text length 277.",
+      "missingEvidenceTerms": [],
+      "nonVerbatimSummary": "Fortune BI breast pump market public page for category analysis: title captured (55 chars); matched 2/2 expected evidence terms; visible text length 24599.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/category-fortune-bi-breast-pump-market.txt",
-        "textArchiveBytes": 278,
+        "textArchiveBytes": 24627,
         "screenshotPath": "tmp/public-evidence/screenshots/category-fortune-bi-breast-pump-market.png",
-        "screenshotHash": "faf2417ff1f8508c7bcc7b4f3cfa7b634c061b129863e039f403a9e80f1a4ae9"
+        "screenshotHash": "f6778ec6b2a7b6db945c62e66aed60773dabf5b38e15eefd47dd34e01334f255"
       },
       "warnings": [
-        "expected evidence terms were not matched in visible text",
         "browser console or page errors were observed"
       ],
       "pageErrors": [
-        "Failed to load resource: the server responded with a status of 403 ()"
+        "Cannot read properties of undefined (reading 'top')"
       ]
     },
     {
@@ -1323,7 +1293,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:00.882Z",
+      "capturedAt": "2026-07-05T09:04:02.431Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1378,7 +1348,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:04.813Z",
+      "capturedAt": "2026-07-05T09:04:06.595Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1433,7 +1403,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:07.524Z",
+      "capturedAt": "2026-07-05T09:04:09.444Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1454,7 +1424,7 @@
       "httpStatus": 200,
       "title": "Nursing Bras Market Size, Share, and Forecast 2031",
       "visibleTextLength": 25906,
-      "visibleTextHash": "a808dd5edd961b2a42a1e03acb7310cab86752c095ac3ee483472a133cb0af9a",
+      "visibleTextHash": "62163f94fa4d0fbba853e5fad698d94182e2912434a0946483bc93d533f46b88",
       "matchedEvidenceTerms": [
         "Nursing Bras Market",
         "CAGR"
@@ -1465,7 +1435,7 @@
         "textArchivePath": "tmp/public-evidence/text/nursing-products-techsci-nursing-bras-market.txt",
         "textArchiveBytes": 25914,
         "screenshotPath": "tmp/public-evidence/screenshots/nursing-products-techsci-nursing-bras-market.png",
-        "screenshotHash": "23d632c0cb0eaf6540e749c0f6675a9eb8c9943d61a19eb00a8af1c23faa3ba6"
+        "screenshotHash": "c5d5380e52be2535dcfd5bfbae30bcc1e4d8f531867aed221074c5836d5b5737"
       },
       "warnings": [],
       "pageErrors": []
@@ -1475,16 +1445,16 @@
       "sourceId": "ds-039",
       "page": "NursingProducts",
       "metric": "Nursing products public report source availability",
-      "label": "Global Market Insights breast pads market public page",
-      "url": "https://www.gminsights.com/industry-analysis/breast-pads-market",
+      "label": "TechSci nursing bras market public page",
+      "url": "https://www.techsciresearch.com/report/nursing-bras-market/20978.html",
       "evidenceClass": "market-report-public-page",
       "collectionBoundary": "Public report landing page only; no paid report extraction; supports breast pads segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
       "notFullPlatformDataset": true,
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "source-error",
-      "capturedAt": "2026-07-05T08:20:08.773Z",
+      "captureStatus": "captured",
+      "capturedAt": "2026-07-05T09:04:12.328Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1501,30 +1471,25 @@
         "boundaryValid": true
       },
       "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.gminsights.com/industry-analysis/breast-pads-market",
-      "httpStatus": 403,
-      "title": "Just a moment...",
-      "visibleTextLength": 264,
-      "visibleTextHash": "8bc836e1c414c00380d43cdac6aff69df37d3dabbf7fdee123aacddcc4488a18",
-      "matchedEvidenceTerms": [],
-      "missingEvidenceTerms": [
-        "Breast Pads Market",
+      "finalUrl": "https://www.techsciresearch.com/report/nursing-bras-market/20978.html",
+      "httpStatus": 200,
+      "title": "Nursing Bras Market Size, Share, and Forecast 2031",
+      "visibleTextLength": 25906,
+      "visibleTextHash": "1e7bab7c65299bd0ed0d1c0e12313dbc47dff79ce55b4c49097c1b61fa77ab34",
+      "matchedEvidenceTerms": [
+        "Nursing Bras Market",
         "CAGR"
       ],
-      "nonVerbatimSummary": "Global Market Insights breast pads market public page: title captured (16 chars); matched 0/2 expected evidence terms; visible text length 264.",
+      "missingEvidenceTerms": [],
+      "nonVerbatimSummary": "TechSci nursing bras market public page: title captured (50 chars); matched 2/2 expected evidence terms; visible text length 25906.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/nursing-products-gmi-breast-pads-market.txt",
-        "textArchiveBytes": 265,
+        "textArchiveBytes": 25914,
         "screenshotPath": "tmp/public-evidence/screenshots/nursing-products-gmi-breast-pads-market.png",
-        "screenshotHash": "028f6361ed26c4604c159eceb5912332ea1a75e2e5c5668d9d22c065071b57b2"
+        "screenshotHash": "50cf7adeeb52d89a3676307d198e62aa0e06030616fa67fc1560e38115135b69"
       },
-      "warnings": [
-        "expected evidence terms were not matched in visible text",
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Failed to load resource: the server responded with a status of 403 ()"
-      ]
+      "warnings": [],
+      "pageErrors": []
     },
     {
       "seedId": "nursing-products-spherical-breast-milk-storage-products",
@@ -1540,7 +1505,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:12.549Z",
+      "capturedAt": "2026-07-05T09:04:16.043Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1591,7 +1556,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:15.190Z",
+      "capturedAt": "2026-07-05T09:04:18.564Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1623,7 +1588,7 @@
         "textArchivePath": "tmp/public-evidence/text/babycare-mordor-baby-care-products-market.txt",
         "textArchiveBytes": 33933,
         "screenshotPath": "tmp/public-evidence/screenshots/babycare-mordor-baby-care-products-market.png",
-        "screenshotHash": "d949517ccc351e80d7106fe71afbb61fb994366cca64b38d9bda8bb2dbc8ffcd"
+        "screenshotHash": "5a16f97f2489914225624963cb51c94236903ff9031eb940504df06f2589d0aa"
       },
       "warnings": [],
       "pageErrors": []
@@ -1633,16 +1598,16 @@
       "sourceId": "ds-037",
       "page": "BabyCare",
       "metric": "Baby care public report source availability",
-      "label": "Global Market Insights baby bottle warmer and sterilizer market public page",
-      "url": "https://www.gminsights.com/industry-analysis/baby-bottle-warmer-and-sterilizer-market",
+      "label": "Mordor baby care products market public page",
+      "url": "https://www.mordorintelligence.com/industry-reports/baby-care-products-market",
       "evidenceClass": "market-report-public-page",
-      "collectionBoundary": "Public report landing page only; no paid report extraction; supports bottle warmer and sterilizer segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports baby care segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
       "notFullPlatformDataset": true,
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "source-error",
-      "capturedAt": "2026-07-05T08:20:16.469Z",
+      "captureStatus": "captured",
+      "capturedAt": "2026-07-05T09:04:20.773Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1659,30 +1624,25 @@
         "boundaryValid": true
       },
       "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.gminsights.com/industry-analysis/baby-bottle-warmer-and-sterilizer-market",
-      "httpStatus": 403,
-      "title": "Just a moment...",
-      "visibleTextLength": 264,
-      "visibleTextHash": "2b88246550ae4303d239da8a2e93ea2dc67d3b456657cf4a63987a2491c4d30f",
-      "matchedEvidenceTerms": [],
-      "missingEvidenceTerms": [
-        "Baby Bottle Warmer and Sterilizer Market",
+      "finalUrl": "https://www.mordorintelligence.com/industry-reports/baby-care-products-market",
+      "httpStatus": 200,
+      "title": "Baby Care Products Market Analysis | Industry Report, Size & Forecast 2031",
+      "visibleTextLength": 33906,
+      "visibleTextHash": "295a1a9c633afab786bc5640ddb20dd7e47cd27f31021738ab79b96dafdb94cb",
+      "matchedEvidenceTerms": [
+        "Baby Care Products Market",
         "CAGR"
       ],
-      "nonVerbatimSummary": "Global Market Insights baby bottle warmer and sterilizer market public page: title captured (16 chars); matched 0/2 expected evidence terms; visible text length 264.",
+      "missingEvidenceTerms": [],
+      "nonVerbatimSummary": "Mordor baby care products market public page: title captured (74 chars); matched 2/2 expected evidence terms; visible text length 33906.",
       "localEvidence": {
         "textArchivePath": "tmp/public-evidence/text/babycare-gmi-bottle-warmer-sterilizer-market.txt",
-        "textArchiveBytes": 265,
+        "textArchiveBytes": 33933,
         "screenshotPath": "tmp/public-evidence/screenshots/babycare-gmi-bottle-warmer-sterilizer-market.png",
-        "screenshotHash": "0e64e9ae4065ed96cf2afe8886cdc55e821d64f9282d6d94d71838d087be0045"
+        "screenshotHash": "d9d7da77aa536f7b0ae3b9b9553e46b57eb3c9eab618a737e28347f475a49a0a"
       },
-      "warnings": [
-        "expected evidence terms were not matched in visible text",
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Failed to load resource: the server responded with a status of 403 ()"
-      ]
+      "warnings": [],
+      "pageErrors": []
     },
     {
       "seedId": "babycare-tbrc-baby-monitoring-devices-market",
@@ -1698,7 +1658,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:18.524Z",
+      "capturedAt": "2026-07-05T09:04:22.880Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1730,7 +1690,7 @@
         "textArchivePath": "tmp/public-evidence/text/babycare-tbrc-baby-monitoring-devices-market.txt",
         "textArchiveBytes": 15006,
         "screenshotPath": "tmp/public-evidence/screenshots/babycare-tbrc-baby-monitoring-devices-market.png",
-        "screenshotHash": "2f9a77b1c41a9a996f4d917a9476192c89aae150fe5ff2da7b7f050a846f71b7"
+        "screenshotHash": "72ebf051cf74e84dea41df60548dd9dfba6d8574bb74e823b088fe9b63039363"
       },
       "warnings": [],
       "pageErrors": []
@@ -1749,7 +1709,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:20.908Z",
+      "capturedAt": "2026-07-05T09:04:25.330Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1781,7 +1741,7 @@
         "textArchivePath": "tmp/public-evidence/text/babycare-mordor-humidifier-market.txt",
         "textArchiveBytes": 33074,
         "screenshotPath": "tmp/public-evidence/screenshots/babycare-mordor-humidifier-market.png",
-        "screenshotHash": "382f881f35b9834d1ad888a13631dcbf655b077d2748fd41b65795bafb9183fb"
+        "screenshotHash": "bb481c8bbad3d4ec4d65015efec6846cbc8a4c7c32b2a97e807f514f1b96cac9"
       },
       "warnings": [],
       "pageErrors": []
@@ -1800,7 +1760,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:26.110Z",
+      "capturedAt": "2026-07-05T09:04:31.939Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1832,7 +1792,7 @@
         "textArchivePath": "tmp/public-evidence/text/abc-kids-expo-2026.txt",
         "textArchiveBytes": 701,
         "screenshotPath": "tmp/public-evidence/screenshots/abc-kids-expo-2026.png",
-        "screenshotHash": "ee41ce4e7262e8d76d18e9475bbbede1a3682a64d96e91822e22d41030701582"
+        "screenshotHash": "122816b8ec18cded5145b3ad3558a284676c6f45c33d755d9bf12b2f4b8a17a8"
       },
       "warnings": [
         "browser console or page errors were observed"
@@ -1856,7 +1816,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:31.419Z",
+      "capturedAt": "2026-07-05T09:04:37.317Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1889,7 +1849,7 @@
         "textArchivePath": "tmp/public-evidence/text/kind-und-jugend-2026.txt",
         "textArchiveBytes": 3331,
         "screenshotPath": "tmp/public-evidence/screenshots/kind-und-jugend-2026.png",
-        "screenshotHash": "525b56cbb2bd81de91b6f954651bd2f8a93a1c5cfcec71150f98db1c21829d6b"
+        "screenshotHash": "a9b43e8293c5b0f072014b6a1a81005274be4a4f22ae0fe64fc2240ec18e8657"
       },
       "warnings": [],
       "pageErrors": []
@@ -1908,7 +1868,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:33.613Z",
+      "capturedAt": "2026-07-05T09:04:39.105Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1960,7 +1920,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:36.811Z",
+      "capturedAt": "2026-07-05T09:04:41.348Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
@@ -1992,7 +1952,7 @@
         "textArchivePath": "tmp/public-evidence/text/tokyo-baby-kids-expo-2027.txt",
         "textArchiveBytes": 4338,
         "screenshotPath": "tmp/public-evidence/screenshots/tokyo-baby-kids-expo-2027.png",
-        "screenshotHash": "d4a7e8249b3e2137a4acbcfdeaac4c3ce411f24c3f0fd146a5bfedbf33442945"
+        "screenshotHash": "6fbde76f338f434a177a2586c2098333b2e55fc245aec4faf2a15b3ae0d37c86"
       },
       "warnings": [],
       "pageErrors": []
@@ -2011,7 +1971,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "captured",
-      "capturedAt": "2026-07-05T08:20:40.086Z",
+      "capturedAt": "2026-07-05T09:04:44.747Z",
       "browser": "chromium",
       "safety": {
         "networkCalls": 1,
