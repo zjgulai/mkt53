@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-05T18:41:25.568Z",
+  "generatedAt": "2026-07-06T03:40:50.013Z",
   "generatedRule": "source task queue 只表达待补证和接入任务，不代表业务数据已采集。",
-  "total": 39,
+  "total": 41,
   "queueTypeCounts": {
     "connector-readiness": 28,
-    "manual-evidence": 7,
+    "manual-evidence": 9,
     "public-source-review": 4
   },
   "priorityCounts": {
     "P0": 14,
     "P1": 11,
-    "P2": 14
+    "P2": 16
   },
   "ownerTeamCounts": {
     "brand-strategy": 2,
     "competitive-intelligence": 4,
     "data-ai": 7,
     "industry-regulatory": 7,
-    "market-research": 9,
+    "market-research": 11,
     "user-research": 7,
     "data-governance": 2,
     "insight-ops": 1
@@ -61,7 +61,7 @@
       },
       {
         "queueType": "manual-evidence",
-        "count": 7,
+        "count": 9,
         "taskIds": [
           "manual-evidence:ds-040",
           "manual-evidence:ds-014",
@@ -69,7 +69,9 @@
           "manual-evidence:ds-008",
           "manual-evidence:ds-015",
           "manual-evidence:ds-018",
-          "manual-evidence:ds-044"
+          "manual-evidence:ds-002",
+          "manual-evidence:ds-044",
+          "manual-evidence:ds-045"
         ]
       },
       {
@@ -123,7 +125,7 @@
       },
       {
         "priority": "P2",
-        "count": 14,
+        "count": 16,
         "taskIds": [
           "connector-readiness:ds-020",
           "connector-readiness:ds-022",
@@ -134,7 +136,9 @@
           "manual-evidence:ds-008",
           "manual-evidence:ds-015",
           "manual-evidence:ds-018",
+          "manual-evidence:ds-002",
           "manual-evidence:ds-044",
+          "manual-evidence:ds-045",
           "public-source-review:policy-cpsc-efiling",
           "public-source-review:policy-eu-mdr-transition",
           "public-source-review:ds-046",
@@ -204,7 +208,7 @@
       },
       {
         "ownerTeam": "market-research",
-        "count": 9,
+        "count": 11,
         "taskIds": [
           "connector-readiness:ds-037",
           "connector-readiness:ds-038",
@@ -213,7 +217,9 @@
           "connector-readiness:ds-047",
           "connector-readiness:ds-048",
           "connector-readiness:ds-049",
+          "manual-evidence:ds-002",
           "manual-evidence:ds-044",
+          "manual-evidence:ds-045",
           "public-source-review:ds-046"
         ]
       },
@@ -1245,6 +1251,35 @@
       "nextAction": "OK"
     },
     {
+      "taskId": "manual-evidence:ds-002",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P2",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-002",
+      "module": "看市场",
+      "page": "MarketPage",
+      "metric": "北美区域份额",
+      "sourceName": "Fortune Business Insights",
+      "sourceUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "sourceType": "行业报告",
+      "reliability": "A",
+      "verificationStatus": "verified",
+      "collectionMethod": "manual-required",
+      "blockedReason": "Fortune BI供应商页自动采集存在403波动，需保留人工访问、采购报告或替代公开证据样本",
+      "requiredEvidence": [
+        "报告页、采购凭证或人工访问记录",
+        "市场口径、样本范围、公式和权重说明",
+        "复核日期、复核人和可展示摘要"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "保留公开报告口径和替代公开样本边界；品牌份额仍需Amazon/零售面板授权快照"
+    },
+    {
       "taskId": "manual-evidence:ds-044",
       "queueType": "manual-evidence",
       "queueLabel": "人工补录凭证",
@@ -1272,6 +1307,35 @@
         "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
       ],
       "nextAction": "保留上层TAM展示边界；补人工复核凭证后再恢复自动化或升级证据等级"
+    },
+    {
+      "taskId": "manual-evidence:ds-045",
+      "queueType": "manual-evidence",
+      "queueLabel": "人工补录凭证",
+      "priority": "P2",
+      "ownerTeam": "market-research",
+      "sourceId": "ds-045",
+      "module": "看市场",
+      "page": "MarketPage",
+      "metric": "穿戴式吸奶器细分TAM",
+      "sourceName": "Fortune Business Insights",
+      "sourceUrl": "https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880",
+      "sourceType": "行业报告",
+      "reliability": "A",
+      "verificationStatus": "verified",
+      "collectionMethod": "manual-required",
+      "blockedReason": "Fortune BI供应商页自动采集存在403波动，需保留人工访问、采购报告或替代公开证据样本",
+      "requiredEvidence": [
+        "报告页、采购凭证或人工访问记录",
+        "市场口径、样本范围、公式和权重说明",
+        "复核日期、复核人和可展示摘要"
+      ],
+      "acceptanceCriteria": [
+        "补齐材料后必须更新 source registry 的 gap/action/note，并保留复核日期。",
+        "不得把待补凭证或待接入来源改写成已采集事实",
+        "不得提交真实凭据、私有 ASIN/SKU、客户明细或内部 owner 信息到 git/public"
+      ],
+      "nextAction": "保留细分TAM公开报告口径和替代公开样本边界；SOM继续等待渠道、地域和可获份额证据"
     },
     {
       "taskId": "public-source-review:policy-cpsc-efiling",

@@ -243,15 +243,27 @@
       "notFullPlatformDataset": true
     },
     {
-      "id": "fortune-bi-breast-pump-market",
+      "id": "ds002-mordor-breast-pump-market-substitute",
       "sourceId": "ds-002",
       "page": "MarketPage",
-      "metric": "Market report public page sample",
-      "label": "Fortune BI breast pump market public page",
+      "metric": "Market report substitute public page sample",
+      "label": "Mordor breast pumps market public substitute for ds-002",
       "url": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
       "evidenceClass": "market-report-public-page",
       "expectedEvidenceTerms": ["Breast Pump Market", "Market Size"],
-      "collectionBoundary": "Public report landing page only; no paid report extraction.",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; substitute evidence for source availability when the Fortune BI supplier page blocks automation. Does not support brand share, channel share, or Amazon facts.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "ds045-mordor-wearable-breast-pumps-market-substitute",
+      "sourceId": "ds-045",
+      "page": "MarketPage",
+      "metric": "Wearable breast pump market substitute public page sample",
+      "label": "Mordor wearable breast pumps market public substitute for ds-045",
+      "url": "https://www.mordorintelligence.com/industry-reports/wearable-breast-pumps-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": ["Wearable Breast Pumps", "Market"],
+      "collectionBoundary": "Public report landing page only; no paid report extraction; substitute evidence for source availability when the Fortune BI supplier page blocks automation. Does not support SAM, SOM, brand share, pricing, ranking, or sales facts.",
       "notFullPlatformDataset": true
     },
     {
