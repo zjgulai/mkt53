@@ -6917,8 +6917,8 @@
       "source_file": "app/package.json",
       "source_location": "L105",
       "_origin": "ast",
-      "community": 86,
-      "community_name": "dependencies",
+      "community": 285,
+      "community_name": "@hookform/resolvers",
       "norm_label": "@hookform/resolvers",
       "id": "app_package_dependencies_hookform_resolvers"
     },
@@ -6928,8 +6928,8 @@
       "source_file": "app/package.json",
       "source_location": "L105",
       "_origin": "ast",
-      "community": 86,
-      "community_name": "dependencies",
+      "community": 285,
+      "community_name": "@hookform/resolvers",
       "norm_label": "@hookform/resolvers",
       "id": "hookform_resolvers"
     },
@@ -7511,8 +7511,8 @@
       "source_file": "app/package.json",
       "source_location": "L132",
       "_origin": "ast",
-      "community": 285,
-      "community_name": "class-variance-authority",
+      "community": 86,
+      "community_name": "dependencies",
       "norm_label": "class-variance-authority",
       "id": "app_package_dependencies_class_variance_authority"
     },
@@ -7522,8 +7522,8 @@
       "source_file": "app/package.json",
       "source_location": "L132",
       "_origin": "ast",
-      "community": 285,
-      "community_name": "class-variance-authority",
+      "community": 86,
+      "community_name": "dependencies",
       "norm_label": "class-variance-authority",
       "id": "class_variance_authority"
     },
@@ -134305,5 +134305,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "9ccf86a352669ab8cf75db3b582706ddf0b91ce8"
+  "built_at_commit": "99cfc3da515fe469148eaa8bdeedb2fb12cbc506"
 }
