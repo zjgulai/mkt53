@@ -1,0 +1,69 @@
+{
+  "contractVersion": "mkt53.regulation-source-legal-intake.v1",
+  "inputClass": "synthetic-readiness-fixture",
+  "requestId": "fixture-request-001",
+  "generatedAt": "2026-07-24T00:00:00.000Z",
+  "sourceScope": {
+    "sourceRegistryIds": ["fixture-source-001"],
+    "jurisdictionCodes": ["TEST-ONLY"],
+    "officialSourceHosts": ["regulation-fixture.invalid"],
+    "allowedDocumentTypes": ["regulation-text"],
+    "requestedClaimScopes": ["fixture-contract-shape-only"],
+    "collectionWindowStart": "2026-07-01",
+    "collectionWindowEnd": "2026-07-31",
+    "scopeOwnerId": "fixture-owner-source"
+  },
+  "skuOwnership": {
+    "skuOwnerId": "fixture-owner-sku",
+    "ownerRole": "TEST-ONLY",
+    "skuIds": ["fixture-sku-001"],
+    "targetMarkets": ["TEST-ONLY"],
+    "authorizationEvidenceRef": "fixture://authorization/sku-001",
+    "expiresAt": "2026-08-31T00:00:00.000Z"
+  },
+  "legalReviewWorkflow": {
+    "reviewerId": "fixture-reviewer-001",
+    "reviewerRole": "TEST-ONLY",
+    "approvalSlaHours": 48,
+    "escalationOwnerId": "fixture-owner-escalation",
+    "decisionPolicyRef": "fixture://policy/review-v1",
+    "requiredDecisionStates": ["approved", "rejected", "withdrawn"]
+  },
+  "evidenceHandoff": {
+    "handoffOwnerId": "fixture-owner-evidence",
+    "snapshotStoreRef": "fixture://snapshot-store",
+    "reviewEventStoreRef": "fixture://review-events",
+    "hashAlgorithm": "sha256",
+    "retentionDays": 30,
+    "requiredArtifacts": [
+      "official-source-file",
+      "retrieval-metadata",
+      "content-sha256",
+      "snapshot-record",
+      "sku-scope-basis",
+      "legal-review-event",
+      "withdrawal-event"
+    ]
+  },
+  "withdrawalGovernance": {
+    "withdrawalOwnerId": "fixture-owner-withdrawal",
+    "propagationSlaHours": 24,
+    "affectedSurfaces": ["dashboard", "csv-export", "report-export"],
+    "reasonRequired": true,
+    "auditEventRequired": true
+  },
+  "submissionConfirmations": {
+    "ownerSubmissionRef": "fixture://submission/001",
+    "sourceScopeConfirmedBy": "fixture-owner-source",
+    "skuScopeConfirmedBy": "fixture-owner-sku",
+    "legalWorkflowConfirmedBy": "fixture-reviewer-001",
+    "submittedAt": "2026-07-24T00:00:00.000Z"
+  },
+  "disclosure": {
+    "notLegalAdvice": true,
+    "noLiveCollection": true,
+    "noRealSkuEvaluation": true,
+    "noProductionWrites": true,
+    "noFactPromotion": true
+  }
+}

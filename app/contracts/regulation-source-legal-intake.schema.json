@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mkt.lute-tlz-dddd.top/contracts/regulation-source-legal-intake.schema.json",
+  "title": "mkt53 regulation source and legal intake readiness packet",
+  "description": "Readiness intake only. A complete packet is not authorization to collect, evaluate, publish, or provide legal advice.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "inputClass",
+    "requestId",
+    "generatedAt",
+    "sourceScope",
+    "skuOwnership",
+    "legalReviewWorkflow",
+    "evidenceHandoff",
+    "withdrawalGovernance",
+    "submissionConfirmations",
+    "disclosure"
+  ],
+  "properties": {
+    "contractVersion": { "const": "mkt53.regulation-source-legal-intake.v1" },
+    "inputClass": {
+      "enum": ["empty-readiness-template", "synthetic-readiness-fixture", "owner-submitted-intake"]
+    },
+    "requestId": { "$ref": "#/$defs/nullableNonEmptyString" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "sourceScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceRegistryIds",
+        "jurisdictionCodes",
+        "officialSourceHosts",
+        "allowedDocumentTypes",
+        "requestedClaimScopes",
+        "collectionWindowStart",
+        "collectionWindowEnd",
+        "scopeOwnerId"
+      ],
+      "properties": {
+        "sourceRegistryIds": { "$ref": "#/$defs/stringArray" },
+        "jurisdictionCodes": { "$ref": "#/$defs/stringArray" },
+        "officialSourceHosts": { "$ref": "#/$defs/stringArray" },
+        "allowedDocumentTypes": { "$ref": "#/$defs/stringArray" },
+        "requestedClaimScopes": { "$ref": "#/$defs/stringArray" },
+        "collectionWindowStart": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "collectionWindowEnd": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "scopeOwnerId": { "$ref": "#/$defs/nullableNonEmptyString" }
+      }
+    },
+    "skuOwnership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skuOwnerId", "ownerRole", "skuIds", "targetMarkets", "authorizationEvidenceRef", "expiresAt"],
+      "properties": {
+        "skuOwnerId": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "ownerRole": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "skuIds": { "$ref": "#/$defs/stringArray" },
+        "targetMarkets": { "$ref": "#/$defs/stringArray" },
+        "authorizationEvidenceRef": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "expiresAt": { "$ref": "#/$defs/nullableNonEmptyString" }
+      }
+    },
+    "legalReviewWorkflow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewerId",
+        "reviewerRole",
+        "approvalSlaHours",
+        "escalationOwnerId",
+        "decisionPolicyRef",
+        "requiredDecisionStates"
+      ],
+      "properties": {
+        "reviewerId": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "reviewerRole": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "approvalSlaHours": { "type": ["integer", "null"], "minimum": 1, "maximum": 720 },
+        "escalationOwnerId": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "decisionPolicyRef": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "requiredDecisionStates": { "const": ["approved", "rejected", "withdrawn"] }
+      }
+    },
+    "evidenceHandoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "handoffOwnerId",
+        "snapshotStoreRef",
+        "reviewEventStoreRef",
+        "hashAlgorithm",
+        "retentionDays",
+        "requiredArtifacts"
+      ],
+      "properties": {
+        "handoffOwnerId": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "snapshotStoreRef": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "reviewEventStoreRef": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "hashAlgorithm": { "const": "sha256" },
+        "retentionDays": { "type": ["integer", "null"], "minimum": 1 },
+        "requiredArtifacts": {
+          "const": [
+            "official-source-file",
+            "retrieval-metadata",
+            "content-sha256",
+            "snapshot-record",
+            "sku-scope-basis",
+            "legal-review-event",
+            "withdrawal-event"
+          ]
+        }
+      }
+    },
+    "withdrawalGovernance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["withdrawalOwnerId", "propagationSlaHours", "affectedSurfaces", "reasonRequired", "auditEventRequired"],
+      "properties": {
+        "withdrawalOwnerId": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "propagationSlaHours": { "type": ["integer", "null"], "minimum": 1, "maximum": 168 },
+        "affectedSurfaces": { "$ref": "#/$defs/stringArray" },
+        "reasonRequired": { "const": true },
+        "auditEventRequired": { "const": true }
+      }
+    },
+    "submissionConfirmations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ownerSubmissionRef",
+        "sourceScopeConfirmedBy",
+        "skuScopeConfirmedBy",
+        "legalWorkflowConfirmedBy",
+        "submittedAt"
+      ],
+      "properties": {
+        "ownerSubmissionRef": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "sourceScopeConfirmedBy": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "skuScopeConfirmedBy": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "legalWorkflowConfirmedBy": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "submittedAt": { "$ref": "#/$defs/nullableNonEmptyString" }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["notLegalAdvice", "noLiveCollection", "noRealSkuEvaluation", "noProductionWrites", "noFactPromotion"],
+      "properties": {
+        "notLegalAdvice": { "const": true },
+        "noLiveCollection": { "const": true },
+        "noRealSkuEvaluation": { "const": true },
+        "noProductionWrites": { "const": true },
+        "noFactPromotion": { "const": true }
+      }
+    }
+  },
+  "$defs": {
+    "nullableNonEmptyString": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "stringArray": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    }
+  }
+}

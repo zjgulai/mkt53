@@ -1,0 +1,56 @@
+{
+  "contractVersion": "mkt53.regulation-sku-matrix.v1",
+  "evidenceClass": "synthetic-contract-fixture",
+  "generatedAt": "2026-07-24T00:00:00.000Z",
+  "records": [
+    {
+      "id": "reg-sku-fixture-001",
+      "source": {
+        "sourceRegistryId": null,
+        "jurisdiction": "TEST-ONLY",
+        "authority": null,
+        "title": null,
+        "officialUrl": null,
+        "retrievedAt": null,
+        "contentSha256": null,
+        "effectiveFrom": null,
+        "effectiveTo": null,
+        "claimScope": "contract-shape-only"
+      },
+      "sku": {
+        "skuId": "sku-fixture-001",
+        "productFamily": "synthetic-fixture",
+        "targetMarket": "TEST-ONLY"
+      },
+      "decision": {
+        "applicability": "unknown",
+        "status": "legal-review-required",
+        "scopeBasis": "Synthetic contract fixture; no regulatory scope was evaluated.",
+        "rationale": "Exercises required fields and fail-closed publication gates only.",
+        "reviewerId": null,
+        "reviewedAt": null,
+        "reason": null
+      },
+      "evidence": {
+        "snapshotId": null,
+        "reviewDecisionId": null,
+        "sourceEvidencePath": null
+      },
+      "publication": {
+        "canDisplayAsComplianceFact": false,
+        "notLegalAdvice": true,
+        "blockedReasons": [
+          "official-source-snapshot-missing",
+          "sku-scope-not-evaluated",
+          "legal-review-missing"
+        ]
+      }
+    }
+  ],
+  "disclosure": {
+    "notLegalAdvice": true,
+    "officialSnapshots": 0,
+    "reviewedSkuDecisions": 0,
+    "publishableComplianceFacts": 0
+  }
+}

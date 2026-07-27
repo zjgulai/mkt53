@@ -1,0 +1,30 @@
+{
+  "contractVersion": "mkt53.regulation-review-handoff-prerequisites.v1",
+  "inputClass": "synthetic-handoff-fixture",
+  "generatedAt": "2026-07-24T00:00:00.000Z",
+  "officialSnapshot": {
+    "snapshotId": "fixture-snapshot-001",
+    "sourceRegistryId": "fixture-source-001",
+    "artifactSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "metadataSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "contentRetrievedAt": "2026-07-24T00:10:00.000Z",
+    "evidencePath": "fixture://evidence/snapshot-001",
+    "verifiedAgainstBytes": false
+  },
+  "reviewerAuthorization": {
+    "reviewerId": "fixture-reviewer-independent-001",
+    "reviewerRole": "TEST-ONLY",
+    "authorizationRef": "fixture://authorization/reviewer-001",
+    "authorizedAt": "2026-07-24T00:20:00.000Z",
+    "expiresAt": "2026-08-24T00:20:00.000Z",
+    "independentFromRequestOwner": true
+  },
+  "disclosure": {
+    "notLegalAdvice": true,
+    "noBackendReviewWrite": true,
+    "noRealSkuEvaluation": true,
+    "noProductionWrites": true,
+    "noApproveReject": true,
+    "noFactPromotion": true
+  }
+}

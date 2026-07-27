@@ -1,0 +1,69 @@
+{
+  "contractVersion": "mkt53.regulation-source-legal-intake.v1",
+  "inputClass": "empty-readiness-template",
+  "requestId": null,
+  "generatedAt": "2026-07-24T00:00:00.000Z",
+  "sourceScope": {
+    "sourceRegistryIds": [],
+    "jurisdictionCodes": [],
+    "officialSourceHosts": [],
+    "allowedDocumentTypes": [],
+    "requestedClaimScopes": [],
+    "collectionWindowStart": null,
+    "collectionWindowEnd": null,
+    "scopeOwnerId": null
+  },
+  "skuOwnership": {
+    "skuOwnerId": null,
+    "ownerRole": null,
+    "skuIds": [],
+    "targetMarkets": [],
+    "authorizationEvidenceRef": null,
+    "expiresAt": null
+  },
+  "legalReviewWorkflow": {
+    "reviewerId": null,
+    "reviewerRole": null,
+    "approvalSlaHours": null,
+    "escalationOwnerId": null,
+    "decisionPolicyRef": null,
+    "requiredDecisionStates": ["approved", "rejected", "withdrawn"]
+  },
+  "evidenceHandoff": {
+    "handoffOwnerId": null,
+    "snapshotStoreRef": null,
+    "reviewEventStoreRef": null,
+    "hashAlgorithm": "sha256",
+    "retentionDays": null,
+    "requiredArtifacts": [
+      "official-source-file",
+      "retrieval-metadata",
+      "content-sha256",
+      "snapshot-record",
+      "sku-scope-basis",
+      "legal-review-event",
+      "withdrawal-event"
+    ]
+  },
+  "withdrawalGovernance": {
+    "withdrawalOwnerId": null,
+    "propagationSlaHours": null,
+    "affectedSurfaces": [],
+    "reasonRequired": true,
+    "auditEventRequired": true
+  },
+  "submissionConfirmations": {
+    "ownerSubmissionRef": null,
+    "sourceScopeConfirmedBy": null,
+    "skuScopeConfirmedBy": null,
+    "legalWorkflowConfirmedBy": null,
+    "submittedAt": null
+  },
+  "disclosure": {
+    "notLegalAdvice": true,
+    "noLiveCollection": true,
+    "noRealSkuEvaluation": true,
+    "noProductionWrites": true,
+    "noFactPromotion": true
+  }
+}

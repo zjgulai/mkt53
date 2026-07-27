@@ -1,0 +1,30 @@
+{
+  "contractVersion": "mkt53.regulation-review-handoff-prerequisites.v1",
+  "inputClass": "empty-handoff-template",
+  "generatedAt": "2026-07-24T00:00:00.000Z",
+  "officialSnapshot": {
+    "snapshotId": null,
+    "sourceRegistryId": null,
+    "artifactSha256": null,
+    "metadataSha256": null,
+    "contentRetrievedAt": null,
+    "evidencePath": null,
+    "verifiedAgainstBytes": false
+  },
+  "reviewerAuthorization": {
+    "reviewerId": null,
+    "reviewerRole": null,
+    "authorizationRef": null,
+    "authorizedAt": null,
+    "expiresAt": null,
+    "independentFromRequestOwner": null
+  },
+  "disclosure": {
+    "notLegalAdvice": true,
+    "noBackendReviewWrite": true,
+    "noRealSkuEvaluation": true,
+    "noProductionWrites": true,
+    "noApproveReject": true,
+    "noFactPromotion": true
+  }
+}

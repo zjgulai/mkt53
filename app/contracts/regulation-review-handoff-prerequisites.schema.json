@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mkt.lute-tlz-dddd.top/contracts/regulation-review-handoff-prerequisites.schema.json",
+  "title": "mkt53 regulation draft review handoff prerequisites",
+  "description": "Local gate inputs only. This contract cannot create a backend review subject or authorize a legal decision.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "inputClass",
+    "generatedAt",
+    "officialSnapshot",
+    "reviewerAuthorization",
+    "disclosure"
+  ],
+  "properties": {
+    "contractVersion": { "const": "mkt53.regulation-review-handoff-prerequisites.v1" },
+    "inputClass": { "enum": ["empty-handoff-template", "synthetic-handoff-fixture"] },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "officialSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshotId",
+        "sourceRegistryId",
+        "artifactSha256",
+        "metadataSha256",
+        "contentRetrievedAt",
+        "evidencePath",
+        "verifiedAgainstBytes"
+      ],
+      "properties": {
+        "snapshotId": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "sourceRegistryId": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "artifactSha256": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "metadataSha256": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "contentRetrievedAt": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "evidencePath": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "verifiedAgainstBytes": { "const": false }
+      }
+    },
+    "reviewerAuthorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewerId",
+        "reviewerRole",
+        "authorizationRef",
+        "authorizedAt",
+        "expiresAt",
+        "independentFromRequestOwner"
+      ],
+      "properties": {
+        "reviewerId": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "reviewerRole": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "authorizationRef": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "authorizedAt": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "expiresAt": { "$ref": "#/$defs/nullableNonEmptyString" },
+        "independentFromRequestOwner": { "type": ["boolean", "null"] }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "notLegalAdvice",
+        "noBackendReviewWrite",
+        "noRealSkuEvaluation",
+        "noProductionWrites",
+        "noApproveReject",
+        "noFactPromotion"
+      ],
+      "properties": {
+        "notLegalAdvice": { "const": true },
+        "noBackendReviewWrite": { "const": true },
+        "noRealSkuEvaluation": { "const": true },
+        "noProductionWrites": { "const": true },
+        "noApproveReject": { "const": true },
+        "noFactPromotion": { "const": true }
+      }
+    }
+  },
+  "$defs": {
+    "nullableNonEmptyString": {
+      "type": ["string", "null"],
+      "minLength": 1
+    }
+  }
+}
