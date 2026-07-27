@@ -159,7 +159,7 @@ export default function ChannelInterviews() {
       title="渠道访谈仅保留治理状态"
       description="当前缺少渠道访谈记录、受访者授权、销售快照版本、字段字典和证据哈希，不能展示渠道健康度、利润率、销售占比或增长率。"
       layout="page"
-      navigation={<Sidebar items={sidebarItems} />}
+      navigation={<Sidebar items={sidebarItems} responsive />}
     >
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">

@@ -16,6 +16,7 @@ interface SidebarProps {
   items: SidebarItem[];
   activeSection?: string;
   onSectionChange?: (sectionId: string) => void;
+  responsive?: boolean;
 }
 
 function SidebarItemComponent({
@@ -187,9 +188,16 @@ function SidebarChildItem({
   );
 }
 
-export default function Sidebar({ items, activeSection, onSectionChange }: SidebarProps) {
+export default function Sidebar({ items, activeSection, onSectionChange, responsive = false }: SidebarProps) {
   return (
-    <aside className="hidden lg:block w-56 bg-white rounded-2xl p-3 h-fit sticky top-20 card-shadow-sm border border-[#EDE6DF] flex-shrink-0">
+    <aside
+      className={cn(
+        'bg-white rounded-2xl p-3 h-fit card-shadow-sm border border-[#EDE6DF] flex-shrink-0',
+        responsive
+          ? 'block w-full lg:w-56 lg:sticky lg:top-20'
+          : 'hidden lg:block w-56 sticky top-20',
+      )}
+    >
       <nav className="space-y-0.5">
         {items.map((item, idx) => (
           <SidebarItemComponent

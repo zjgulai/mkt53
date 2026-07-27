@@ -106,7 +106,7 @@ export default function FactDisplayGate({
     return (
       <main className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-[1600px] mx-auto">
-          <div className="flex gap-8">
+          <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
             {navigation}
             <div className="flex-1 min-w-0">{panel}</div>
           </div>

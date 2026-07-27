@@ -3,12 +3,12 @@ import { expect, test } from '@playwright/test';
 const chartRoutes = [
   { path: '/', expectation: 'chart' },
   { path: '/#/market', expectation: 'chart' },
-  { path: '/#/users', expectation: 'gate' },
+  { path: '/#/users', expectation: 'gate-with-inline-navigation' },
   { path: '/#/users/aesthetics', expectation: 'chart' },
-  { path: '/#/users/overseas', expectation: 'gate' },
-  { path: '/#/users/consumer', expectation: 'gate' },
-  { path: '/#/users/channel', expectation: 'gate' },
-  { path: '/#/users/store', expectation: 'gate' },
+  { path: '/#/users/overseas', expectation: 'gate-with-sidebar' },
+  { path: '/#/users/consumer', expectation: 'gate-with-sidebar' },
+  { path: '/#/users/channel', expectation: 'gate-with-sidebar' },
+  { path: '/#/users/store', expectation: 'gate-with-sidebar' },
 ] as const;
 
 test.describe('route-aware chart bundle guard', () => {
@@ -31,7 +31,11 @@ test.describe('route-aware chart bundle guard', () => {
       } else {
         await expect(page.getByTestId('fact-display-gate').first()).toBeVisible();
         await expect(page.locator('.recharts-wrapper')).toHaveCount(0);
-        await expect(page.locator('aside a', { hasText: '母婴舆情' })).toHaveCount(1);
+        if (route.expectation === 'gate-with-sidebar') {
+          await expect(page.locator('aside a', { hasText: '母婴舆情' })).toBeVisible();
+        } else {
+          await expect(page.getByRole('button', { name: '母婴舆情' })).toBeVisible();
+        }
       }
 
       const hasHorizontalOverflow = await page.evaluate(

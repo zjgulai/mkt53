@@ -4,12 +4,12 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 4589 nodes · 7298 edges · 346 communities
+- 4589 nodes · 7299 edges · 349 communities
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 192 edges (avg confidence: 0.59)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `257c1aae`
+- Built from commit: `9ccf86a3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -281,7 +281,7 @@
 - sku
 - properties
 - properties
-- @hookform/resolvers
+- class-variance-authority
 - required
 - BE-07 审计与恢复隔离演练
 - validate-regulation-sku-contract.mjs
@@ -332,10 +332,13 @@
 - next-themes
 - nullableNonEmptyString
 - required
-- class-variance-authority
+- prioritize-source-gaps.mjs
 - react-hook-form
 - Q: Which local nodes implement the DATA-REG synthetic intake draft projection, lineage, idempotency, and withdrawal blocking?
 - @radix-ui/react-context-menu
+- isValidIsoDateOrDateTime
+- regulation-source-legal-intake.test.ts
+- @radix-ui/react-accordion
 - Q: Which nodes implement the DATA-REG synthetic draft-to-review handoff gate and its fail-closed evidence rules?
 - dependency-security-contract.test.ts
 - Q: How was the vendor-charts temporary exception retired without raising bundle limits?
@@ -344,7 +347,7 @@
 - @radix-ui/react-navigation-menu
 
 ## God Nodes (most connected - your core abstractions)
-1. `cn()` - 273 edges
+1. `cn()` - 274 edges
 2. `scripts` - 94 edges
 3. `Settings` - 42 edges
 4. `SourceRegistryService` - 33 edges
@@ -364,13 +367,13 @@
   app/scripts/data/build-erp-governance-batch7.mjs → docs/architecture/mkt53-system-map-20260604/generate-excalidraw-diagrams.mjs
 - `buildTemplateFiles()` --indirect_call--> `relativePath()`  [INFERRED]
   app/scripts/data/build-erp-owner-submission-pack-batch13.mjs → app/scripts/data/build-erp-owner-submission-intake-batch12.mjs
-- `PageEvidenceNotice()` --indirect_call--> `getSourceRegistryItem()`  [INFERRED]
-  app/src/components/PageEvidenceNotice.tsx → app/src/data/source-registry.ts
+- `buildDecisionRows()` --indirect_call--> `nextAction()`  [INFERRED]
+  app/scripts/data/build-public-source-manual-release-review.mjs → app/scripts/data/prioritize-source-gaps.mjs
 
 ## Import Cycles
 - None detected.
 
-## Communities (346 total, 0 thin omitted)
+## Communities (349 total, 0 thin omitted)
 
 ### Community 0 - "scripts"
 Cohesion: 0.02
@@ -457,8 +460,8 @@ Cohesion: 0.26
 Nodes (21): Permission, Principal, BaseModel, require_permission(), AppEnvironment, StrEnum, DatabaseReadinessProbe, DatabaseSessionManager (+13 more)
 
 ### Community 21 - "build-public-source-manual-release-review.mjs"
-Cohesion: 0.07
-Nodes (55): ALLOWED_REVIEW_STATUSES, approvedSourceIds(), approvedTaskIds(), BOUNDARY_FIELDS, buildBoundaryRows(), buildDecisionRows(), buildManifest(), buildQueueRows() (+47 more)
+Cohesion: 0.14
+Nodes (30): ALLOWED_REVIEW_STATUSES, approvedSourceIds(), approvedTaskIds(), BOUNDARY_FIELDS, buildBoundaryRows(), buildDecisionRows(), buildManifest(), buildQueueRows() (+22 more)
 
 ### Community 22 - "utils.ts"
 Cohesion: 0.07
@@ -718,7 +721,7 @@ Nodes (13): 1. 本轮目标, 2.1 新鲜命令证据, 2.2 页面与报告代码�
 
 ### Community 86 - "dependencies"
 Cohesion: 0.18
-Nodes (11): dependencies, clsx, input-otp, @radix-ui/react-accordion, @radix-ui/react-aspect-ratio, recharts, clsx, input-otp (+3 more)
+Nodes (11): dependencies, clsx, @hookform/resolvers, input-otp, @radix-ui/react-aspect-ratio, recharts, clsx, @hookform/resolvers (+3 more)
 
 ### Community 87 - "input-group.tsx"
 Cohesion: 0.21
@@ -1033,7 +1036,7 @@ Cohesion: 1.00
 Nodes (2): @radix-ui/react-avatar, @radix-ui/react-avatar
 
 ### Community 167 - "project-regulation-intake-to-sku-draft.mjs"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (20): assertTmpWritePath(), buildLineage(), buildMatrix(), buildRecord(), canonicalize(), canonicalSha256(), emptyMatrix(), isIsoDateTime() (+12 more)
 
 ### Community 168 - "publication"
@@ -1321,8 +1324,8 @@ Cohesion: 0.18
 Nodes (11): additionalProperties, required, type, reviewerId, decision, applicability, rationale, reason (+3 more)
 
 ### Community 253 - "validate-regulation-source-legal-intake.mjs"
-Cohesion: 0.13
-Nodes (33): OFFICIAL_SOURCE_REGISTRY_IDS, addError(), addMissing(), ALLOWED_DOCUMENT_TYPES, arraysEqual(), asArray(), buildReadinessGroups(), buildRegulationSourceLegalIntakeReport() (+25 more)
+Cohesion: 0.14
+Nodes (30): OFFICIAL_SOURCE_REGISTRY_IDS, addError(), addMissing(), ALLOWED_DOCUMENT_TYPES, arraysEqual(), asArray(), buildReadinessGroups(), buildRegulationSourceLegalIntakeReport() (+22 more)
 
 ### Community 255 - "quality-be02.sh"
 Cohesion: 1.00
@@ -1366,7 +1369,7 @@ Nodes (1): quality-be04.sh script
 
 ### Community 266 - "PageEvidenceNotice.tsx"
 Cohesion: 0.06
-Nodes (30): getDominantStatus(), PageEvidenceNotice(), PageEvidenceNoticeProps, statusPriority, toneStyles, SidebarChildItem(), SidebarItemComponent(), SidebarProps (+22 more)
+Nodes (31): getDominantStatus(), PageEvidenceNotice(), PageEvidenceNoticeProps, statusPriority, toneStyles, Sidebar(), SidebarChildItem(), SidebarItemComponent() (+23 more)
 
 ### Community 267 - "ReportPreview.tsx"
 Cohesion: 0.29
@@ -1440,9 +1443,9 @@ Nodes (14): $ref, $ref, approved, rejected, withdrawn, properties, decisionPolic
 Cohesion: 0.15
 Nodes (13): const, format, type, enum, properties, contractVersion, generatedAt, inputClass (+5 more)
 
-### Community 285 - "@hookform/resolvers"
+### Community 285 - "class-variance-authority"
 Cohesion: 1.00
-Nodes (2): @hookform/resolvers, @hookform/resolvers
+Nodes (2): class-variance-authority, class-variance-authority
 
 ### Community 286 - "required"
 Cohesion: 0.17
@@ -1453,8 +1456,8 @@ Cohesion: 0.22
 Nodes (8): 1. 结论, 2. 隔离与 fail-closed 边界, 3. 实现, 4. 演练流程, 5. 最终实测证据, 6. 未覆盖与生产停止条件, 7. 下一批建议, BE-07 审计与恢复隔离演练
 
 ### Community 288 - "validate-regulation-sku-contract.mjs"
-Cohesion: 0.16
-Nodes (25): isNonEmptyString(), isValidIsoCalendarDate(), isValidIsoDateOrDateTime(), isValidTimezoneIsoDateTime(), addError(), APPLICABILITY_VALUES, buildRegulationSkuContractReport(), DECISION_STATUSES (+17 more)
+Cohesion: 0.21
+Nodes (21): addError(), APPLICABILITY_VALUES, buildRegulationSkuContractReport(), DECISION_STATUSES, DECISIVE_STATUSES, EVIDENCE_CLASSES, isAllowedOfficialSourceUrl(), isIsoDate() (+13 more)
 
 ### Community 289 - "properties"
 Cohesion: 0.20
@@ -1644,9 +1647,9 @@ Nodes (9): $defs, nullableNonEmptyString, type, null, string, minLength, type, i
 Cohesion: 0.33
 Nodes (6): contractVersion, disclosure, generatedAt, required, evidenceClass, records
 
-### Community 336 - "class-variance-authority"
-Cohesion: 1.00
-Nodes (2): class-variance-authority, class-variance-authority
+### Community 336 - "prioritize-source-gaps.mjs"
+Cohesion: 0.14
+Nodes (25): acceptanceGate(), allowedCurrentDisplayState(), BATCH_FIELDS, buildBatches(), buildReport(), buildSummary(), CORE_BUSINESS_PAGES, countBy() (+17 more)
 
 ### Community 337 - "react-hook-form"
 Cohesion: 1.00
@@ -1659,6 +1662,18 @@ Nodes (4): Answer, Outcome, Q: Which local nodes implement the DATA-REG syntheti
 ### Community 339 - "@radix-ui/react-context-menu"
 Cohesion: 1.00
 Nodes (2): @radix-ui/react-context-menu, @radix-ui/react-context-menu
+
+### Community 340 - "isValidIsoDateOrDateTime"
+Cohesion: 0.90
+Nodes (4): isNonEmptyString(), isValidIsoCalendarDate(), isValidIsoDateOrDateTime(), isValidTimezoneIsoDateTime()
+
+### Community 341 - "regulation-source-legal-intake.test.ts"
+Cohesion: 0.83
+Nodes (3): buildOwnerPacket(), buildSyntheticPacket(), readTemplate()
+
+### Community 342 - "@radix-ui/react-accordion"
+Cohesion: 1.00
+Nodes (2): @radix-ui/react-accordion, @radix-ui/react-accordion
 
 ### Community 346 - "Q: Which nodes implement the DATA-REG synthetic draft-to-review handoff gate and its fail-closed evidence rules?"
 Cohesion: 0.40
@@ -1708,7 +1723,7 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `cn()` connect `cn` to `menubar.tsx`, `sidebar.tsx`, `field.tsx`, `PageEvidenceNotice.tsx`, `context-menu.tsx`, `dropdown-menu.tsx`, `react`, `carousel.tsx`, `empty.tsx`, `utils.ts`, `input-group.tsx`, `command.tsx`, `toggle-group.tsx`, `item.tsx`, `alert-dialog.tsx`, `drawer.tsx`?**
   _High betweenness centrality (0.048) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `dependencies` to `package.json`, `@radix-ui/react-select`, `cmdk`, `@hookform/resolvers`, `lucide-react`, `@radix-ui/react-checkbox`, `@radix-ui/react-avatar`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `date-fns`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `tailwind-merge`, `vaul`, `zod`, `next-themes`, `embla-carousel-react`, `class-variance-authority`, `react-hook-form`, `@radix-ui/react-context-menu`, `@radix-ui/react-alert-dialog`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-collapsible`, `react`?**
+- **Why does `dependencies` connect `dependencies` to `package.json`, `@radix-ui/react-select`, `cmdk`, `class-variance-authority`, `lucide-react`, `@radix-ui/react-checkbox`, `@radix-ui/react-avatar`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `date-fns`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `tailwind-merge`, `vaul`, `zod`, `next-themes`, `embla-carousel-react`, `react-hook-form`, `@radix-ui/react-context-menu`, `@radix-ui/react-accordion`, `@radix-ui/react-alert-dialog`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-collapsible`, `react`?**
   _High betweenness centrality (0.028) - this node is a cross-community bridge._
 - **Why does `react` connect `react` to `sidebar.tsx`, `field.tsx`, `carousel.tsx`, `dependencies`, `toggle-group.tsx`, `alert-dialog.tsx`?**
   _High betweenness centrality (0.025) - this node is a cross-community bridge._

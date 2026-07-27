@@ -187,7 +187,7 @@ export default function ConsumerInterviews() {
       title="消费者访谈仅保留治理状态"
       description="当前缺少业务 owner 签核、样本窗口、招募条件、脱敏原文、授权状态和证据哈希，不能展示 NPS、满意度、原话或主题占比。"
       layout="page"
-      navigation={<Sidebar items={sidebarItems} />}
+      navigation={<Sidebar items={sidebarItems} responsive />}
     >
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
