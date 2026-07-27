@@ -4,12 +4,12 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 4546 nodes · 7204 edges · 347 communities
+- 4546 nodes · 7204 edges · 346 communities
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 188 edges (avg confidence: 0.59)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e9a4b0ae`
+- Built from commit: `d3fb8c4b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -181,7 +181,7 @@
 - @radix-ui/react-avatar
 - project-regulation-intake-to-sku-draft.mjs
 - publication
-- refresh-weekly-data.mjs
+- class-variance-authority
 - @radix-ui/react-dialog
 - @radix-ui/react-dropdown-menu
 - @radix-ui/react-hover-card
@@ -211,7 +211,6 @@
 - zod
 - devDependencies
 - BE-03 Source Registry 本地 API
-- date-fns
 - Q: 同意下一步，开始执行
 - models.py
 - Q: 下一批的执行建议是？
@@ -371,7 +370,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (347 total, 0 thin omitted)
+## Communities (346 total, 0 thin omitted)
 
 ### Community 0 - "scripts"
 Cohesion: 0.02
@@ -662,8 +661,8 @@ Cohesion: 0.14
 Nodes (15): DataSourceRegistryStatus(), Props, DataSourceRegistryErrorKind, DataSourceRegistryLoadError, DataSourceRegistryRuntime, resolveDataSourceRegistryRuntime(), DataSourceRegistryState, DataSourceRegistryStatus (+7 more)
 
 ### Community 72 - "project-analysis.mjs"
-Cohesion: 0.21
-Nodes (16): args, result, writeArgIndex, relativePath(), analyzeConsistency(), arrayFromVariable(), extractDataModules(), extractTableGovernanceIds() (+8 more)
+Cohesion: 0.12
+Nodes (23): args, result, writeArgIndex, relativePath(), analyzeConsistency(), arrayFromVariable(), extractDataModules(), extractTableGovernanceIds() (+15 more)
 
 ### Community 73 - "build-ai-report-governance-batch4.mjs"
 Cohesion: 0.17
@@ -719,7 +718,7 @@ Nodes (13): 1. 本轮目标, 2.1 新鲜命令证据, 2.2 页面与报告代码�
 
 ### Community 86 - "dependencies"
 Cohesion: 0.18
-Nodes (11): dependencies, class-variance-authority, clsx, input-otp, @radix-ui/react-aspect-ratio, recharts, class-variance-authority, clsx (+3 more)
+Nodes (11): dependencies, clsx, date-fns, input-otp, @radix-ui/react-aspect-ratio, recharts, clsx, date-fns (+3 more)
 
 ### Community 87 - "input-group.tsx"
 Cohesion: 0.21
@@ -1041,9 +1040,9 @@ Nodes (20): assertTmpWritePath(), buildLineage(), buildMatrix(), buildRecord(), 
 Cohesion: 0.20
 Nodes (10): items, type, uniqueItems, type, blockedReasons, canDisplayAsComplianceFact, publication, additionalProperties (+2 more)
 
-### Community 169 - "refresh-weekly-data.mjs"
-Cohesion: 0.22
-Nodes (7): args, audit, maxAttemptsIndex, noNetwork, publicManifest, retryDelayIndex, timeoutIndex
+### Community 169 - "class-variance-authority"
+Cohesion: 1.00
+Nodes (2): class-variance-authority, class-variance-authority
 
 ### Community 170 - "@radix-ui/react-dialog"
 Cohesion: 1.00
@@ -1160,10 +1159,6 @@ Nodes (47): devDependencies, autoprefixer, eslint, @eslint/js, eslint-plugin-rea
 ### Community 198 - "BE-03 Source Registry 本地 API"
 Cohesion: 0.22
 Nodes (8): 1. 结果, 2. API 合同, 3. 并发与幂等语义, 4. 数据模型与迁移, 5. 新鲜验证, 6. 生产停止条件, 7. 下一批建议, BE-03 Source Registry 本地 API
-
-### Community 199 - "date-fns"
-Cohesion: 1.00
-Nodes (2): date-fns, date-fns
 
 ### Community 200 - "Q: 同意下一步，开始执行"
 Cohesion: 0.40
@@ -1713,7 +1708,7 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `cn()` connect `cn` to `menubar.tsx`, `sidebar.tsx`, `field.tsx`, `context-menu.tsx`, `Sidebar.tsx`, `dropdown-menu.tsx`, `react`, `carousel.tsx`, `empty.tsx`, `utils.ts`, `input-group.tsx`, `command.tsx`, `toggle-group.tsx`, `item.tsx`, `alert-dialog.tsx`, `drawer.tsx`?**
   _High betweenness centrality (0.052) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `dependencies` to `package.json`, `next-themes`, `@radix-ui/react-select`, `cmdk`, `lucide-react`, `@hookform/resolvers`, `@radix-ui/react-accordion`, `@radix-ui/react-avatar`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `react`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `@radix-ui/react-checkbox`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `tailwind-merge`, `vaul`, `zod`, `date-fns`, `embla-carousel-react`, `@radix-ui/react-context-menu`, `react-hook-form`, `@radix-ui/react-alert-dialog`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-collapsible`?**
+- **Why does `dependencies` connect `dependencies` to `package.json`, `next-themes`, `@radix-ui/react-select`, `cmdk`, `lucide-react`, `@hookform/resolvers`, `@radix-ui/react-accordion`, `@radix-ui/react-avatar`, `class-variance-authority`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `react`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `@radix-ui/react-checkbox`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `tailwind-merge`, `vaul`, `zod`, `embla-carousel-react`, `@radix-ui/react-context-menu`, `react-hook-form`, `@radix-ui/react-alert-dialog`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-collapsible`?**
   _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Why does `react` connect `react` to `sidebar.tsx`, `field.tsx`, `carousel.tsx`, `dependencies`, `toggle-group.tsx`, `alert-dialog.tsx`?**
   _High betweenness centrality (0.028) - this node is a cross-community bridge._
