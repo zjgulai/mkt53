@@ -576,17 +576,30 @@ Batch 04 分类结论：
 - [x] 完整交付：`docs/reviews/mkt53-project-review-20260722/p0-local-atomic-commits-20260727.md`、机器证据 JSON 与更新后的自包含 HTML。
 - [x] 边界保持：未 push、未建 PR、未部署、未写生产/数据库/nginx/cron，未调用 provider/connector。
 
+### Batch 27 — GitHub CI, targeted review fixes, and draft PR handoff
+
+- [x] 已将 `codex/mkt53-release-candidate-20260630` 推送至 GitHub，并创建 open/draft PR [#32](https://github.com/zjgulai/mkt53/pull/32)；base=`main`，没有 merge 或 deploy。
+- [x] 首次 GitHub-hosted run `30256791125` 的 app/backend 均通过，同时捕获 backend cache glob 错配：工作目录已是 `backend/`，`backend/uv.lock` 被解析为不存在的 `backend/backend/uv.lock`。
+- [x] 定向 review 复现并修复三组新增 fail-closed 缺口：不可能日历日期、`required_question_count=1junk` 数字前缀、`ds-016` 权威 host 错配；同时修复 uv cache glob 并增加 workflow 合同测试。
+- [x] 修复提交 `6674e0f` 的 GitHub-hosted run `30257673802` 通过：app 8/8、23 files / 183 unit、audit 0、2,383 modules、77/77 bundle、43/107/53、888 claims、Chrome 150/150；backend 64/64、92.73% coverage。
+- [x] GitHub backend L2 恢复演练通过：RPO 0.426246s、RTO 1.938102s，containers/networks/volumes=`0/0/0`，production DB/config/deploy=false，provider/connector calls=0。
+- [x] 修复 run 的 app/backend annotations 为 `0/0`；初始 cache warning 已关闭。
+- [x] Graphify 更新为 4,556 nodes / 7,215 edges / 344 communities；missing/dangling endpoint、self-loop、exact duplicate/collapsed edge 均为 0。
+- [x] `codex review --commit 6674e0f` 完成 diff、官方 setup-uv 规则、边界用例和 88+2 聚焦测试检查，未发出新的 actionable finding；随后出现三层同命令自递归并被有界终止，因此不声明 clean review。
+- [x] 交付：`docs/reviews/mkt53-project-review-20260722/p0-github-ci-review-closeout-20260727.md` 与机器证据 JSON。
+- [x] 边界保持：push/PR=true；merge/deploy/production/database/nginx/cron/provider/connector write=false。
+
 ### Next decision batch
 
 1. `P0-04 observation`：等待 2026-08-01 09:00 首次 cron 时间窗，再核对运行日志、run-report、H1 周期和双路径哈希；这是时间窗待观察，不需要提前重复写生产。
-2. `GitHub handoff`：本地原子提交和 Graphify 已关闭；下一门是独立 push 授权、真实 GitHub-hosted app/backend CI 与 review。push 不自动授权 deploy。
+2. `PR decision`：草稿 PR #32、GitHub-hosted app/backend CI 与修复提交已关闭当前交接门；下一门是人工 review 和明确 merge 决策。merge 不自动授权 deploy。
 3. `DATA-REG real intake`：只有六组 owner/source/SKU/legal/evidence/withdrawal 真实输入与独立授权齐备后，才允许设计 official snapshot importer 和真实 review handoff；当前不继续用合成 fixture 模拟业务完成。
-4. `Review retry`：Codex 额度恢复后，对 `d3fb8c4` 和最终 docs 提交执行定向 review；当前通过测试与人工复核，但不把额度错误写成 clean review。
+4. `Review retry`：若合并门仍要求 Codex clean 信号，先解决或规避 CLI 自递归，再对最终 HEAD 运行一次有界 review；当前不把“未发出新 finding”写成 completed/clean。
 
 ### 需要额外授权或业务输入的队列
 
 - `P0-04 observation`：2026-08-01 09:00 后进行只读运行证据核对；当前不是授权阻塞。
-- `Git handoff`：local commit 与 Graphify 已关闭；push、GitHub-hosted CI、PR 和 deploy 仍分别需要授权或真实运行证据；任一授权不向后传递。
+- `Git handoff`：push、草稿 PR 和 GitHub-hosted CI 已关闭；人工 review、merge 与 deploy 仍是独立门，任一授权不向后传递。
 - `DATA-REG real intake`：仍缺六组真实 owner/source/SKU/legal/evidence/withdrawal 输入和独立授权；当前 `0/6`，不得启动 live collection。
 - `DATA-AMZ/DATA-CRM/DATA-VOC`：连接器、只读快照、owner 字段合同与合规审批。
 - `DEC-03`：AI/provider 调用、成本和内容审核策略。

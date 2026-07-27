@@ -345,7 +345,7 @@
         <p class="hero-lede">mkt53 全项目复盘、产品设计逻辑、操作手册与逐模块迭代方案。本文以证据等级为骨架，把当前真实能力、演示边界、工程债务和 90 天演进路径放在同一份可执行文档中。</p>
         <div class="hero-meta">
           <span>REVIEW DATE · 2026-07-22</span>
-          <span>UPDATED · 2026-07-27 · BATCH 26</span>
+          <span>UPDATED · 2026-07-27 · BATCH 27</span>
           <span>BRANCH · codex/mkt53-release-candidate-20260630</span>
           <span>BASELINE · 0d44c332</span>
           <span>FORMAT · SELF-CONTAINED HTML</span>
@@ -371,7 +371,7 @@
         <div class="grid grid-3" style="margin-top:18px">
           <article class="card finding good"><span class="status verified">已形成能力</span><h3>可信边界可见</h3><p><code>PageEvidenceNotice</code>、<code>EvidenceGatePage</code>、source registry 与全路由 E2E 已把示例、待复核、公开来源和内部 proxy 的边界写进 UI 与测试。</p></article>
           <article class="card finding warn"><span class="status review">主要瓶颈</span><h3>真实数据未闭环</h3><p>本地 manifest 仍有 28 条 connector-required、9 条 manual-required；Amazon、CRM、VOC、YouTube、贸易和 ERP 自动刷新都不能被公开网页样本替代。</p></article>
-          <article class="card finding good"><span class="status verified">安全门禁恢复</span><h3>P0-02 / Batch 26 本地关闭</h3><p>14 个 high advisories 已清零；法规、人工证据和生产 smoke 的 5 项 fail-closed 缺口也已修复。最终 182 unit、lint、build、77 资产预算与 150 条桌面/移动 E2E 全部通过。P0-04 首次定时观察仍须等待 2026-08-01 09:00。</p></article>
+          <article class="card finding good"><span class="status verified">草稿 PR 门禁通过</span><h3>Batch 27 GitHub CI 已闭环</h3><p>草稿 PR #32 的修复提交 <code>6674e0f</code> 已由 GitHub-hosted app/backend 双 job 验证：183 unit、77 资产预算、150 条 E2E、64 backend tests 与 92.73% coverage 全部通过，job annotations 为 0。PR 尚未 merge 或部署。</p></article>
         </div>
         <div class="callout" style="margin-top:18px"><strong>生产恢复：</strong>2026-07-24 在完整 root-only 备份和完整配置 <code>nginx -t</code> 通过后，仅激活 mkt server block 并 reload nginx。未授权 root、deep route 与 manifest 均 302 到 apex login，真实会话首页与数据管理页可访问，生产 E2E 8/8；旧 2/8 结果保留为修复前基线。</div>
         <div class="callout" style="margin-top:12px"><strong>BE-01 / BE-02：</strong>Phase 1 采用同机独立 Compose、同源 <code>/api/v1/</code>、PostgreSQL 双网络隔离的可逆形态；BE-02 已建立并隔离验证本地 identity/RBAC 骨架。该结果是 L1 local validation，静态前端仍 canonical，后端未部署生产。</div>
@@ -395,11 +395,11 @@
           <div class="card flat">
             <h3>本次证据</h3>
             <ul class="checklist">
-              <li>Graphify 首次 code-only AST 覆盖 249 个代码文件；Batch 26 最终增量更新重新抽取 298 个 source files，全程 0 模型 token。</li>
-              <li>当前图谱：4,546 nodes / 7,204 edges / 346 communities；backend CI、依赖安全合同、证据门禁修复和系统 Chrome E2E 配置已同步，duplicate / missing / dangling / self-loop / collapsed edge 均为 0。</li>
+              <li>Graphify 首次 code-only AST 覆盖 249 个代码文件；Batch 27 最终增量更新覆盖 298 个 source files，全程 0 模型 token。</li>
+              <li>当前图谱：4,556 nodes / 7,215 edges / 344 communities；backend CI、依赖安全合同、严格日期/host/问卷门禁和系统 Chrome E2E 配置已同步，duplicate / missing / dangling / self-loop / collapsed edge 均为 0。</li>
               <li>数据一致性审计：43 pages / 107 tables / 53 sources / 0 issues。</li>
               <li>深度审计：888 claims；P0-04 仅执行授权的数据/automation/cron 写入，<code>providerCalls=false</code>。</li>
-              <li>本地 build、lint、串行 unit tests 为新鲜运行证据；生产仅发布 H2 数据文件，未部署应用 bundle。</li>
+              <li>本地 build、lint、串行 unit tests 与 GitHub-hosted PR run 均为新鲜候选证据；生产仅发布 H2 数据文件，未部署应用 bundle。</li>
               <li class="gap">生产 H2、cron 与 P0-05 均来自现场写入、真实会话与回归验证，不由 README 历史记录或本地通过推断。</li>
             </ul>
           </div>
@@ -412,9 +412,9 @@
           <div><h2>代码知识图谱分析</h2><p class="section-intro">Graphify 被安装为项目级 Codex skill，并生成可查询的 AST 图谱。它有效揭示跨文件中心节点，但任何 INFERRED 边仍需回到源码验证。</p></div>
         </div>
         <div class="grid grid-4">
-          <div class="card metric"><b>4,546</b><span>节点</span><small>代码、符号、依赖与查询记忆</small></div>
-          <div class="card metric"><b>7,204</b><span>边</span><small>imports / calls / contains 等</small></div>
-          <div class="card metric"><b>346</b><span>社区</span><small>min community size 0</small></div>
+          <div class="card metric"><b>4,556</b><span>节点</span><small>代码、符号、依赖与查询记忆</small></div>
+          <div class="card metric"><b>7,215</b><span>边</span><small>imports / calls / contains 等</small></div>
+          <div class="card metric"><b>344</b><span>社区</span><small>min community size 0</small></div>
           <div class="card metric"><b>60.5×</b><span>平均查询 token 降幅</span><small>121,500 words → scoped traversal</small></div>
         </div>
         <div class="grid grid-2" style="margin-top:18px">
@@ -429,7 +429,7 @@
           </div>
           <div class="card">
             <h3>图谱的局限</h3>
-            <p>Batch 26 查询定位了法规合同、owner 问卷、production smoke、backend quality 与恢复证据的跨文件关系；56 个 JSON/config 源文件仍是 zero-AST 可见性限制。</p>
+            <p>Batch 27 查询继续核对法规合同、owner 问卷、GitHub workflow、backend quality 与恢复证据的跨文件关系；57 个 JSON/config 源文件仍是 zero-AST 可见性限制。</p>
             <div class="callout"><strong>使用原则：</strong>图谱负责缩小搜索范围；事实声明由 EXTRACTED source location、相邻源码、测试与运行结果共同确认。</div>
           </div>
         </div>
@@ -777,10 +777,10 @@ npm run test:e2e</span>
             <tr><td>OPS-KEY</td><td>生产 SSH key 路径合同</td><td><span class="status verified">完成</span> deploy/smoke 共用解析器；默认 DDDD.pem，可用 MKT53_SSH_KEY_PATH 覆盖</td><td>L1 本地验证</td></tr>
             <tr><td>BE-01</td><td>后端部署形态 ADR</td><td><span class="status verified">决策完成</span> 同机独立 Compose、同源 API、PostgreSQL 双网络隔离；备份/SLO/成本/退出条件已固定</td><td>L0 accepted design</td></tr>
             <tr><td>BE-02</td><td>身份与 RBAC 本地骨架</td><td><span class="status verified">本地完成</span> FastAPI + PostgreSQL/Alembic；36 tests；95.81% coverage；401/403/200 矩阵；零 host port；file-only secrets</td><td>L1 local validation</td></tr>
-            <tr><td>BE-03–07</td><td>Registry / snapshot / review / adapter / recovery</td><td><span class="status verified">本地完成 + CI 已补</span> 版本化 source、不可变 snapshot、review 状态机、前端只读 adapter、隔离恢复与独立 backend CI 合同均有机器证据；GitHub-hosted run 和生产激活仍待后续</td><td>L1–L2 local validation</td></tr>
+            <tr><td>BE-03–07</td><td>Registry / snapshot / review / adapter / recovery</td><td><span class="status verified">本地完成 + GitHub CI 通过</span> 版本化 source、不可变 snapshot、review 状态机、前端只读 adapter、隔离恢复与独立 backend CI 均有机器证据；64 tests / 92.73% coverage；生产激活仍待独立决策</td><td>L1–L2 local + GitHub-hosted validation</td></tr>
             <tr><td>DATA-REG</td><td>法规 SKU 合同、gated projection 与 review handoff</td><td><span class="status review">L2 合成门禁</span> 合同、0/6 intake、6/6 synthetic projection、pending handoff、幂等、撤回及 approve/reject 阻断已验证；真实 snapshot / review decision / publishable fact 仍为 0</td><td>L2 fixture / dry-run</td></tr>
           </tbody></table></div>
-          <p><b>Batch 01–26 验收：</b>P0-04/P0-05 已完成各自授权范围内的生产恢复；BE-01–07 已形成可逆后端设计、本地治理 API、前端 adapter、隔离恢复证据与独立 backend CI 合同；DATA-REG 已推进到合同、intake readiness、纯合成投影和 draft-to-review handoff 门禁；两个 bundle 临时例外和 14 个 high advisories 均已退出。Batch 26 已完成本地原子提交、5 项 review 修复和 Graphify 新 HEAD；GitHub-hosted run、push 与 deploy 仍是独立后续门。首次 cron 观察仍待 8 月 1 日；后端和 DATA-REG 均未生产激活。</p>
+          <p><b>Batch 01–27 验收：</b>P0-04/P0-05 已完成各自授权范围内的生产恢复；BE-01–07 已形成可逆后端设计、本地治理 API、前端 adapter、隔离恢复证据与独立 backend CI；DATA-REG 已推进到合同、intake readiness、纯合成投影和 draft-to-review handoff 门禁；两个 bundle 临时例外和 14 个 high advisories 均已退出。Batch 27 已推送草稿 PR #32，关闭严格日期、问卷计数、法规 host 和 uv cache 四项缺口，GitHub-hosted app/backend run 全绿且无 annotation。merge 与 deploy 仍是独立后续门；首次 cron 观察仍待 8 月 1 日，后端和 DATA-REG 均未生产激活。</p>
         </div>
         <div class="card" style="margin-bottom:18px">
           <span class="status example">P0-04 · audit complete / acceptance failed</span>
@@ -952,12 +952,26 @@ npm run test:e2e</span>
           </tbody></table></div>
           <p><a href="./p0-local-atomic-commits-20260727.md">阅读 Batch 26 原子提交、使用与回滚手册</a> · <a href="./evidence/p0-local-atomic-commits-20260727.json">打开 Batch 26 机器证据</a>。</p>
         </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">Batch 27 · draft PR / GitHub CI green</span>
+          <h3>GitHub-hosted app/backend 门禁与定向修复已闭环</h3>
+          <div class="table-wrap"><table><thead><tr><th>验收域</th><th>结果</th><th>边界 / 下一门</th></tr></thead><tbody>
+            <tr><td>草稿 PR</td><td><span class="status verified">#32 open/draft</span> base=<code>main</code>；head=<code>codex/mkt53-release-candidate-20260630</code></td><td>已 push；未 merge、未 deploy</td></tr>
+            <tr><td>Review fixes</td><td>拒绝不可能日期和 <code>1junk</code> 计数；<code>ds-016</code> 改用加拿大法律官方 host；修复 uv cache glob</td><td>修复提交 <code>6674e0f</code>；88 app + 2 backend 聚焦测试通过</td></tr>
+            <tr><td>GitHub app</td><td><span class="status verified">8/8</span> 23 files / 183 unit、audit 0、2,383 modules、77/77 bundle、43/107/53、888 claims、Chrome 150/150</td><td>run <a href="https://github.com/zjgulai/mkt53/actions/runs/30257673802">30257673802</a>；annotations=0；不是生产验证</td></tr>
+            <tr><td>GitHub backend</td><td><span class="status verified">64/64</span> 92.73%；RPO 0.426246s、RTO 1.938102s；残留 0</td><td>L2 fixture-only；annotations=0；未部署 backend</td></tr>
+            <tr><td>Codex review</td><td>未发出新 actionable finding；diff、官方 setup-uv 规则和边界用例已检查</td><td>审查器三层自递归后有界终止，不声明 clean</td></tr>
+            <tr><td>Graphify</td><td>4,556 nodes / 7,215 edges / 344 communities；所有 multigraph integrity 计数为 0</td><td>report built from <code>0d4cf7a5</code>，由 <code>6674e0f</code> 连同修复提交；0 模型 token</td></tr>
+            <tr><td>授权边界</td><td>push / PR=true；merge / deploy / production write=false</td><td>下一门：人工 review、明确 merge 决策、独立 deploy 授权</td></tr>
+          </tbody></table></div>
+          <p><a href="./p0-github-ci-review-closeout-20260727.md">阅读 Batch 27 GitHub CI、使用与回滚手册</a> · <a href="./evidence/p0-github-ci-review-closeout-20260727.json">打开 Batch 27 机器证据</a> · <a href="https://github.com/zjgulai/mkt53/pull/32">打开草稿 PR #32</a>。</p>
+        </div>
         <div class="timeline">
           <div class="timeline-item card">
             <span class="status verified">Day 0–15 · 本地 P0 门禁已闭环</span>
             <h3>恢复可信刷新与安全门禁</h3>
             <p><b>已完成：</b>source schema、dependency security、bundle budget、候选证据包、P0-04 生产恢复，以及 P0-05 统一门户与 manifest 门禁生产激活。P0-04 首次定时运行仍待 8 月 1 日时间窗观察。</p>
-            <p><b>验收：</b>本地 audit 为 0，unit 182/182、E2E 150/150；生产 freshness 已恢复到 H2，P0-05 使用独立写入授权和真实授权会话完成正负向验收，production E2E 为 8/8。</p>
+            <p><b>验收：</b>本地与 GitHub-hosted audit 为 0，unit 183/183、E2E 150/150；生产 freshness 已恢复到 H2，P0-05 使用独立写入授权和真实授权会话完成正负向验收，production E2E 为 8/8。</p>
           </div>
           <div class="timeline-item card">
             <span class="status verified">Day 16–30 · BE-01–07 本地链路已验证</span>
@@ -1010,9 +1024,9 @@ npm run test:e2e</span>
           <div class="card">
             <h3>本次验证</h3>
             <div class="table-wrap"><table><thead><tr><th>检查</th><th>结果</th></tr></thead><tbody>
-              <tr><td>Graphify AST + cluster</td><td id="graphifyStatus"><span class="status verified">通过</span> 4,546 nodes / 7,204 edges / 346 communities；0 integrity defects</td></tr>
+              <tr><td>Graphify AST + cluster</td><td id="graphifyStatus"><span class="status verified">通过</span> 4,556 nodes / 7,215 edges / 344 communities；0 integrity defects</td></tr>
               <tr><td>Graph health</td><td><span class="status verified">通过</span> 0 integrity defects</td></tr>
-              <tr><td>Vitest serial</td><td><span class="status verified">通过</span> 23 files / 182 tests；79.207s；串行正式门；无失败</td></tr>
+              <tr><td>Vitest serial</td><td><span class="status verified">通过</span> 23 files / 183 tests；GitHub-hosted 正式门；无失败</td></tr>
               <tr><td>ESLint</td><td><span class="status verified">通过</span> ESLint 10；未禁用新增生命周期规则</td></tr>
               <tr><td>TypeScript + Vite build</td><td><span class="status verified">通过</span> 2,383 modules</td></tr>
               <tr><td>Data consistency</td><td><span class="status verified">通过</span> 0 issues</td></tr>
@@ -1021,7 +1035,7 @@ npm run test:e2e</span>
               <tr><td>Bundle budget</td><td><span class="status verified">通过</span> 77 assets / 77 pass / 0 temporary exception / 0 failures；DataManage 与 vendor-charts 例外均已删除</td></tr>
               <tr><td>DataManage browser acceptance</td><td><span class="status verified">通过</span> desktop + mobile；manual lazy request verified；0 overflow；0 console errors</td></tr>
               <tr><td>Chart route browser acceptance</td><td><span class="status verified">通过</span> 6 routes × desktop/mobile；12/12；charts visible；0 overflow；0 console/page errors</td></tr>
-              <tr><td>Release evidence</td><td><span class="status verified">本地候选 ready · 8/8</span> unit/lint/audit/build/bundle/data/E2E 均通过；生产仍 not deployed / not verified</td></tr>
+              <tr><td>Release evidence</td><td><span class="status verified">GitHub-hosted 候选 ready · 8/8</span> unit/lint/audit/build/bundle/data/E2E 均通过；run 30257673802；生产仍 not deployed / not verified</td></tr>
               <tr><td>P0-04 recovery candidate</td><td><span class="status verified">通过</span> 6 / 6；L2 dry-run；2026-07-H2；production writes=false</td></tr>
               <tr><td>P0-04 authorized recovery</td><td><span class="status verified">通过</span> L4；H2 production 10/10 hashes；cron installed；首次调度观察待 8/1</td></tr>
               <tr><td>P0-05 isolated candidate</td><td><span class="status verified">通过</span> L2 Docker fixture；nginx syntax；3×302；2×synthetic 200；internal auth 404；unit 3/3</td></tr>
@@ -1032,7 +1046,8 @@ npm run test:e2e</span>
               <tr><td>Production freshness</td><td><span class="status verified">已恢复</span> production H2；cron installed；first scheduled observation pending；upstream unknown-gated</td></tr>
               <tr><td>Production static smoke</td><td><span class="status verified">通过</span> 站点、静态资产与已发布 manifest 可读</td></tr>
               <tr><td>Production E2E</td><td id="prodE2EStatus"><span class="status verified">通过</span> 8 / 8；2026-07-24 P0-05 激活后桌面/移动 landing、root、deep routes 与 manifest 门禁全部通过</td></tr>
-              <tr><td>Codex review</td><td id="codexReviewStatus"><span class="status review">部分完成</span> Batch 26 广域复审发现的 5 类 fail-closed 缺口已修复并由 87 条定向测试覆盖；定向自动复审因 Codex 额度耗尽中断，不声明 clean</td></tr>
+              <tr><td>GitHub Actions</td><td><span class="status verified">通过</span> draft PR #32；app/backend success；64 backend tests / 92.73% coverage；两项 job annotations=0</td></tr>
+              <tr><td>Codex review</td><td id="codexReviewStatus"><span class="status review">部分完成</span> Batch 27 新增 3 类 fail-closed finding 已由 <code>6674e0f</code> 修复；修复复审未发出新 finding，但因三层自递归被有界终止，不声明 clean</td></tr>
             </tbody></table></div>
           </div>
           <div class="card">
@@ -1048,7 +1063,7 @@ npm run test:e2e</span>
               <li>本地证据写入 <code>app/tmp/release-evidence/latest.json</code>；CI 同名 artifact 保留 14 天。</li>
               <li>DataManage 与 <code>vendor-charts</code> 临时例外均已删除；shared chart core 使用 required、无 exception 的 180 KiB 永久规则。</li>
               <li>当前新鲜 <code>npm audit</code> 为 0 vulnerabilities；Node ≥22.22、最低安全版本和禁止 <code>react-router-dom</code> 回流已由永久合同保护。</li>
-              <li>P0-02 与 Batch 26 只证明 L1 本地候选和本地原子提交完成；push、GitHub-hosted CI、应用部署与生产验证仍需要各自独立授权。</li>
+              <li>Batch 27 已完成 push、草稿 PR 和 GitHub-hosted CI；人工 review、merge、应用部署与生产验证仍需要各自独立决策或授权。</li>
             </ul>
           </div>
         </div>
@@ -1097,6 +1112,8 @@ npm run test:e2e</span>
             <a href="../../../backend/tests/test_ci_workflow_contract.py"><b>backend/tests/test_ci_workflow_contract.py</b><span>最小权限、固定运行时与零外部变更永久合同</span></a>
             <a href="./p0-local-atomic-commits-20260727.md"><b>p0-local-atomic-commits-20260727.md</b><span>Batch 26 原子提交、复审修复、验证、使用与回滚手册</span></a>
             <a href="./evidence/p0-local-atomic-commits-20260727.json"><b>evidence/p0-local-atomic-commits-20260727.json</b><span>Batch 26 commits、review、release、BE-07、Graphify 与授权边界证据</span></a>
+            <a href="./p0-github-ci-review-closeout-20260727.md"><b>p0-github-ci-review-closeout-20260727.md</b><span>Batch 27 草稿 PR、GitHub CI、定向修复、使用与回滚手册</span></a>
+            <a href="./evidence/p0-github-ci-review-closeout-20260727.json"><b>evidence/p0-github-ci-review-closeout-20260727.json</b><span>Batch 27 PR、双 job、review、release、恢复与授权边界证据</span></a>
           </div>
           <div class="card">
             <h3>建议长期目录</h3>
@@ -1117,7 +1134,7 @@ graphify-out/
   references/</span>
           </div>
         </div>
-        <div class="callout" style="margin-top:18px"><strong>后续维护：</strong>业务代码变化后运行 <code>graphify update .</code>，再运行 <code>graphify cluster-only . --min-community-size=0</code>；当前 346 个社区已重聚类。Graphify 本轮仍报告 56 个 JSON/config 文件产出 zero AST nodes，因此图谱不能替代 JSON/文档原文核对。当前报告绑定代码修复提交 <code>d3fb8c4b</code>，canonical 图谱由 <code>19b3ab0</code> 提交。模块状态变化时同步 source registry、manifest、页面 gate、测试与本 HTML 的状态表。不要只改文案制造“已接入”。</div>
+        <div class="callout" style="margin-top:18px"><strong>后续维护：</strong>业务代码变化后运行 <code>graphify update .</code>，再运行 <code>graphify cluster-only . --min-community-size=0</code>；当前 344 个社区已重聚类。Graphify 本轮仍报告 57 个 JSON/config 文件产出 zero AST nodes，因此图谱不能替代 JSON/文档原文核对。当前报告 built from <code>0d4cf7a5</code>，canonical 图谱由修复提交 <code>6674e0f</code> 一并提交。模块状态变化时同步 source registry、manifest、页面 gate、测试与本 HTML 的状态表。不要只改文案制造“已接入”。</div>
       </section>
 
       <footer>
