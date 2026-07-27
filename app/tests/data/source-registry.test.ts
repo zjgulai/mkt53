@@ -7,6 +7,27 @@ import {
 } from '@/data/source-registry';
 
 describe('source registry', () => {
+  it('declares every governance field explicitly instead of relying on runtime defaults', () => {
+    const requiredGovernanceFields = [
+      'privacyLevel',
+      'collectionMethod',
+      'evidenceGrade',
+      'canDisplayAsFact',
+      'blockingReason',
+      'evidenceArtifactPath',
+      'claimScope',
+    ] as const;
+
+    const incompleteRows = sourceRegistry.flatMap((item) => {
+      const missingFields = requiredGovernanceFields.filter((field) => !Object.hasOwn(item, field));
+      return missingFields.length > 0 ? [{ id: item.id, missingFields }] : [];
+    });
+
+    expect(incompleteRows).toEqual([]);
+    expect(sourceRegistry.every((item) => item.claimScope.trim().length > 0)).toBe(true);
+    expect(sourceRegistry.every((item) => item.canDisplayAsFact || item.blockingReason.length > 0)).toBe(true);
+  });
+
   it('keeps registry ids unique and usable by module', () => {
     const ids = sourceRegistry.map((item) => item.id);
 
