@@ -47,7 +47,7 @@ test.describe('core pages visual guard', () => {
       await page.waitForLoadState('networkidle');
 
       if (pageConfig.path === '/') {
-        await expect(page.getByText(/半月数据周期 2026-06-H1/)).toBeVisible();
+        await expect(page.getByText(/半月数据周期 \d{4}-\d{2}-H[12]/)).toBeVisible();
         await expect(page.getByText(/连接器待接入/).first()).toBeVisible();
       }
 
@@ -56,6 +56,7 @@ test.describe('core pages visual guard', () => {
       }
 
       if (pageConfig.path === '/#/data-source') {
+        await expect(page.getByText('本地静态 registry')).toBeVisible();
         await expect(page.getByText('半月数据状态')).toBeVisible();
         await expect(page.getByText('补证任务')).toBeVisible();
         await expect(page.getByText('查看补证队列')).toBeVisible();

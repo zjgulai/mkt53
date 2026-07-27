@@ -4,7 +4,8 @@ set -euo pipefail
 BASE_URL="${BASE_URL:-https://mkt.lute-tlz-dddd.top}"
 APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPO_ROOT="$(cd "${APP_DIR}/.." && pwd)"
-KEY_PATH="${KEY_PATH:-${REPO_ROOT}/ai_video.pem}"
+source "${APP_DIR}/scripts/lib/ssh-key-contract.sh"
+KEY_PATH="$(mkt53_resolve_ssh_key_path "${REPO_ROOT}")"
 REMOTE="${REMOTE:-ubuntu@101.34.52.232}"
 REMOTE_PATH="${REMOTE_PATH:-/opt/mkt53/html/}"
 TMP_DIR="$(mktemp -d)"
@@ -55,10 +56,7 @@ for route in "${routes[@]}"; do
 done
 
 if [[ "${protected_route_count}" -gt 0 ]]; then
-  if [[ ! -f "${KEY_PATH}" ]]; then
-    echo "Missing SSH key for auth-protected production static check: ${KEY_PATH}" >&2
-    exit 1
-  fi
+  mkt53_require_ssh_key "${KEY_PATH}" "auth-protected production static check"
 
   remote_cat "index.html" > "${TMP_DIR}/index.html"
   remote_cat "periodic-data/latest.json" > "${TMP_DIR}/periodic-latest.json"

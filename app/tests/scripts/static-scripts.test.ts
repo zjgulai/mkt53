@@ -8,6 +8,7 @@ const SCRIPT_INTEGRATION_TIMEOUT_MS = 90_000;
 const FORBIDDEN_ERP_SCRIPT_OUTPUT_RE =
   /AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK|password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i;
 const LOCAL_ERP_ARTIFACT_MISSING_RE = /Missing (?:ERP export input|ERP Batch3 input|Batch\d+ input|Batch\d+ manifest)/;
+const MANUAL_EVIDENCE_EMPTY_FIXTURE_DIR = join(process.cwd(), 'tests/fixtures/manual-evidence-empty-intake');
 
 function runOptionalLocalErpArtifactScript(args: string[]) {
   try {
@@ -28,14 +29,15 @@ function runOptionalLocalErpArtifactScript(args: string[]) {
 }
 
 function copyManualEvidencePackToTemp() {
-  const sourceDir = join(process.cwd(), 'tmp/audits/source-error-manual-evidence-pack-loop9-20260701');
   const targetDir = mkdtempSync(join(tmpdir(), 'mkt53-manual-evidence-'));
 
   for (const file of ['manual_evidence_packets.csv', 'manual_evidence_acceptance_gate.csv']) {
-    writeFileSync(join(targetDir, file), readFileSync(join(sourceDir, file), 'utf8'));
+    writeFileSync(join(targetDir, file), readFileSync(join(MANUAL_EVIDENCE_EMPTY_FIXTURE_DIR, file), 'utf8'));
   }
 
-  const questionnaire = readFileSync(join(sourceDir, 'manual_evidence_questionnaire.csv'), 'utf8').trimEnd().split('\n');
+  const questionnaire = readFileSync(join(MANUAL_EVIDENCE_EMPTY_FIXTURE_DIR, 'manual_evidence_questionnaire.csv'), 'utf8')
+    .trimEnd()
+    .split('\n');
   const header = questionnaire[0].split(',');
   const fieldIndex = Object.fromEntries(header.map((field, index) => [field, index]));
   const decisions: Record<string, string> = {
@@ -77,6 +79,25 @@ function buildManualEvidenceValidationToTemp() {
   return { tempRoot, intakeDir, validationDir };
 }
 
+function buildBlockedManualEvidenceValidationToTemp() {
+  const tempRoot = mkdtempSync(join(tmpdir(), 'mkt53-blocked-manual-release-review-'));
+  const validationDir = join(tempRoot, 'validation');
+
+  execFileSync(
+    'node',
+    [
+      'scripts/data/validate-public-source-manual-evidence.mjs',
+      '--intake',
+      MANUAL_EVIDENCE_EMPTY_FIXTURE_DIR,
+      '--out',
+      validationDir,
+    ],
+    { cwd: process.cwd(), encoding: 'utf8' },
+  );
+
+  return { tempRoot, validationDir };
+}
+
 describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }, () => {
   it('keeps deploy-static executable and guarded by local quality gates', () => {
     const scriptPath = join(process.cwd(), 'scripts/deploy-static.sh');
@@ -87,7 +108,32 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(script).toContain('npm run lint');
     expect(script).toContain('npm audit');
     expect(script).toContain('npm run build');
+    expect(script).toContain('npm run quality:bundle-budget');
     expect(script).toContain('rsync -az --delete');
+  });
+
+  it('uses one explicit SSH key contract for deploy and auth-protected smoke checks', () => {
+    const contractPath = join(process.cwd(), 'scripts/lib/ssh-key-contract.sh');
+    const contract = readFileSync(contractPath, 'utf8');
+    const deployScript = readFileSync(join(process.cwd(), 'scripts/deploy-static.sh'), 'utf8');
+    const smokeScript = readFileSync(join(process.cwd(), 'scripts/smoke-prod.sh'), 'utf8');
+
+    expect(contract).toContain('MKT53_SSH_KEY_PATH');
+    expect(contract).toContain('${KEY_PATH:-${repo_root}/DDDD.pem}');
+    expect(contract).toContain('mkt53_require_ssh_key');
+    expect(contract).not.toContain('ai_video.pem');
+    expect(deployScript).toContain('source "${APP_DIR}/scripts/lib/ssh-key-contract.sh"');
+    expect(deployScript).toContain('mkt53_require_ssh_key "${KEY_PATH}" "production deploy"');
+    expect(smokeScript).toContain('source "${APP_DIR}/scripts/lib/ssh-key-contract.sh"');
+    expect(smokeScript).toContain('mkt53_require_ssh_key "${KEY_PATH}" "auth-protected production static check"');
+  });
+
+  it('keeps bundle and release evidence quality commands discoverable from npm', () => {
+    const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as { scripts: Record<string, string> };
+
+    expect(packageJson.scripts['quality:bundle-budget']).toContain('scripts/quality/check-bundle-budget.mjs');
+    expect(packageJson.scripts['quality:release-evidence']).toContain('scripts/quality/build-release-evidence.mjs');
+    expect(packageJson.scripts['quality:release-evidence']).toContain('tmp/release-evidence/latest.json');
   });
 
   it('keeps verified production deploy chained through smoke and E2E checks', () => {
@@ -204,7 +250,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       [
         'scripts/data/validate-public-source-manual-evidence.mjs',
         '--intake',
-        'tmp/audits/source-error-manual-evidence-pack-loop9-20260701',
+        MANUAL_EVIDENCE_EMPTY_FIXTURE_DIR,
         '--json',
         '--no-write',
       ],
@@ -284,39 +330,39 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('keeps public source manual release review empty when current intake is blocked', () => {
-    const output = execFileSync(
-      'node',
-      [
-        'scripts/data/build-public-source-manual-release-review.mjs',
-        '--validation',
-        'tmp/audits/public-source-manual-evidence-validation-loop11-20260701',
-        '--json',
-        '--no-write',
-      ],
-      { cwd: process.cwd(), encoding: 'utf8' },
-    );
-    const payload = JSON.parse(output) as {
-      summary: {
-        packetCount: number;
-        readyPacketCount: number;
-        queuedForManualReleaseReviewCount: number;
-        blockedIntakePacketCount: number;
-        approvedPatchCandidateCount: number;
-        boundaries: Record<string, boolean>;
-      };
-      sampleDecisionRows: Array<Record<string, string>>;
-    };
+    const { tempRoot, validationDir } = buildBlockedManualEvidenceValidationToTemp();
 
-    expect(payload.summary.packetCount).toBe(3);
-    expect(payload.summary.readyPacketCount).toBe(0);
-    expect(payload.summary.queuedForManualReleaseReviewCount).toBe(0);
-    expect(payload.summary.blockedIntakePacketCount).toBe(3);
-    expect(payload.summary.approvedPatchCandidateCount).toBe(0);
-    expect(payload.summary.boundaries.sourceRegistryWrites).toBe(false);
-    expect(payload.summary.boundaries.pageWrites).toBe(false);
-    expect(payload.summary.boundaries.csvFactExport).toBe(false);
-    expect(payload.sampleDecisionRows.every((row) => row.release_review_status === 'blocked_intake_not_ready')).toBe(true);
-    expect(payload.sampleDecisionRows.every((row) => row.can_write_source_registry === 'false')).toBe(true);
+    try {
+      const output = execFileSync(
+        'node',
+        ['scripts/data/build-public-source-manual-release-review.mjs', '--validation', validationDir, '--json', '--no-write'],
+        { cwd: process.cwd(), encoding: 'utf8' },
+      );
+      const payload = JSON.parse(output) as {
+        summary: {
+          packetCount: number;
+          readyPacketCount: number;
+          queuedForManualReleaseReviewCount: number;
+          blockedIntakePacketCount: number;
+          approvedPatchCandidateCount: number;
+          boundaries: Record<string, boolean>;
+        };
+        sampleDecisionRows: Array<Record<string, string>>;
+      };
+
+      expect(payload.summary.packetCount).toBe(3);
+      expect(payload.summary.readyPacketCount).toBe(0);
+      expect(payload.summary.queuedForManualReleaseReviewCount).toBe(0);
+      expect(payload.summary.blockedIntakePacketCount).toBe(3);
+      expect(payload.summary.approvedPatchCandidateCount).toBe(0);
+      expect(payload.summary.boundaries.sourceRegistryWrites).toBe(false);
+      expect(payload.summary.boundaries.pageWrites).toBe(false);
+      expect(payload.summary.boundaries.csvFactExport).toBe(false);
+      expect(payload.sampleDecisionRows.every((row) => row.release_review_status === 'blocked_intake_not_ready')).toBe(true);
+      expect(payload.sampleDecisionRows.every((row) => row.can_write_source_registry === 'false')).toBe(true);
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
   });
 
   it('keeps completed public source intake queued until a release review record is supplied', () => {
@@ -476,6 +522,9 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(packageJson.scripts['data:refresh:semi-monthly']).toContain('scripts/data/refresh-semi-monthly-data.mjs');
     expect(packageJson.scripts['data:refresh:semi-monthly:public-evidence']).toContain('scripts/data/refresh-semi-monthly-data.mjs');
     expect(packageJson.scripts['data:refresh:semi-monthly:public-evidence']).toContain('--public-evidence-live');
+    expect(packageJson.scripts['data:recovery:semi-monthly:candidate']).toContain(
+      'scripts/data/build-semi-monthly-recovery-candidate.mjs',
+    );
     expect(packageJson.scripts['data:connector:amazon:dry-run']).toContain('scripts/data/connectors/amazon-commerce-dry-run.mjs');
     expect(packageJson.scripts['data:connector:amazon:mapping:validate']).toContain('--json --no-write');
     expect(packageJson.scripts['data:connector:amazon:mapping:template']).toContain('--print-mapping-template');
@@ -537,16 +586,21 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('--public-evidence-live');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('--skip-public-evidence');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
-    expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('data:connector:amazon:private:audit');
-    expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_AMAZON_PRIVATE_DIR');
-    expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_PRIVATE_AUDIT_REQUIRED');
-    expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('data:refresh:weekly -- "$@"');
-    expect(readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8')).toContain('Continuing public weekly refresh');
-    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('data:connector:amazon:private:audit');
-    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_AMAZON_PRIVATE_DIR');
-    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('MKT53_PRIVATE_AUDIT_REQUIRED');
-    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('data:refresh:semi-monthly -- "$@"');
-    expect(readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8')).toContain('Continuing public semi-monthly refresh');
+    const weeklyLocalPublishScript = readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8');
+    expect(weeklyLocalPublishScript).toContain('data:connector:amazon:private:audit');
+    expect(weeklyLocalPublishScript).toContain('MKT53_AMAZON_PRIVATE_DIR');
+    expect(weeklyLocalPublishScript).toContain('MKT53_PRIVATE_AUDIT_REQUIRED');
+    expect(weeklyLocalPublishScript).toContain('data:refresh:weekly -- "$@"');
+    expect(weeklyLocalPublishScript).toContain('Continuing public weekly refresh');
+    expect(weeklyLocalPublishScript).toContain('npm run quality:bundle-budget');
+    const semiMonthlyLocalPublishScript = readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-local-static.sh'), 'utf8');
+    expect(semiMonthlyLocalPublishScript).toContain('data:connector:amazon:private:audit');
+    expect(semiMonthlyLocalPublishScript).toContain('MKT53_AMAZON_PRIVATE_DIR');
+    expect(semiMonthlyLocalPublishScript).toContain('MKT53_PRIVATE_AUDIT_REQUIRED');
+    expect(semiMonthlyLocalPublishScript).toContain('data:refresh:semi-monthly -- "$@"');
+    expect(semiMonthlyLocalPublishScript).toContain('Continuing public semi-monthly refresh');
+    expect(semiMonthlyLocalPublishScript).toContain('npm run quality:bundle-budget');
+    expect(semiMonthlyLocalPublishScript).toContain('Skipped static publish because one or more local quality gates failed');
     const semiMonthlyDeployScript = readFileSync(join(process.cwd(), 'scripts/data/semi-monthly-refresh-and-deploy.sh'), 'utf8');
     expect(semiMonthlyDeployScript).toContain('npm run deploy:prod');
     expect(semiMonthlyDeployScript).toContain('npm run smoke:prod');
@@ -573,6 +627,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       'scripts/data/collect-weekly-sources.mjs',
       'scripts/data/refresh-weekly-data.mjs',
       'scripts/data/refresh-semi-monthly-data.mjs',
+      'scripts/data/build-semi-monthly-recovery-candidate.mjs',
       'scripts/data/weekly-refresh-and-deploy.sh',
       'scripts/data/weekly-refresh-local-static.sh',
       'scripts/data/install-weekly-cron.sh',

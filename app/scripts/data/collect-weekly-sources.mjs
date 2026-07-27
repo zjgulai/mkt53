@@ -226,8 +226,7 @@ function localPathFromSource(source, appRoot) {
   return { target, relativePath, safe: true };
 }
 
-function checkLocalFile(source, appRoot) {
-  const checkedAt = new Date().toISOString();
+function checkLocalFile(source, appRoot, checkedAt = new Date().toISOString()) {
   const { target, relativePath, safe } = localPathFromSource(source, appRoot);
 
   if (!safe) {
@@ -411,7 +410,7 @@ async function checkPublicUrl(source, policy) {
   throw new Error('Unexpected public URL retry loop fallthrough.');
 }
 
-function skippedSource(source, method) {
+function skippedSource(source, method, checkedAt = new Date().toISOString()) {
   return {
     id: source.id,
     page: source.page,
@@ -420,7 +419,7 @@ function skippedSource(source, method) {
     sourceUrl: source.sourceUrl,
     method,
     status: method,
-    checkedAt: new Date().toISOString(),
+    checkedAt,
     note:
       method === 'public-url-check'
         ? '无网络 dry-run，仅确认该来源具备公开 URL 检查条件。'
@@ -457,12 +456,16 @@ export async function collectWeeklySources(options = {}) {
     const method = classifyCollectionMethod(source);
 
     if (method === 'local-file-check') {
-      sources.push(checkLocalFile(source, appRoot));
+      sources.push(checkLocalFile(source, appRoot, generatedAt));
       continue;
     }
 
     if (method !== 'public-url-check' || noNetwork) {
-      sources.push(noNetwork && method === 'public-url-check' ? skippedSource(source, 'public-url-check') : skippedSource(source, method));
+      sources.push(
+        noNetwork && method === 'public-url-check'
+          ? skippedSource(source, 'public-url-check', generatedAt)
+          : skippedSource(source, method, generatedAt),
+      );
       continue;
     }
 

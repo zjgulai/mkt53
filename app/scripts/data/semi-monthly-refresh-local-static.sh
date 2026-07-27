@@ -41,6 +41,7 @@ TEST_LOG="${RUN_LOG_DIR}/test.log"
 LINT_LOG="${RUN_LOG_DIR}/lint.log"
 AUDIT_LOG="${RUN_LOG_DIR}/npm-audit.log"
 BUILD_LOG="${RUN_LOG_DIR}/build.log"
+BUNDLE_BUDGET_LOG="${RUN_LOG_DIR}/bundle-budget.log"
 PUBLISH_LOG="${RUN_LOG_DIR}/publish-static.log"
 REPORT_LOG="${RUN_LOG_DIR}/run-report.log"
 
@@ -99,11 +100,26 @@ if [[ ${BUILD_STATUS} -ne 0 ]]; then
   HAS_FAILURE=1
 fi
 
-run_step "publish static html" "${PUBLISH_LOG}" rsync -az --delete dist/ "${HTML_DIR}/"
-PUBLISH_STATUS=$?
-
-if [[ ${PUBLISH_STATUS} -ne 0 ]]; then
+if [[ ${BUILD_STATUS} -eq 0 ]]; then
+  run_step "npm run quality:bundle-budget" "${BUNDLE_BUDGET_LOG}" npm run quality:bundle-budget
+  BUNDLE_BUDGET_STATUS=$?
+else
+  echo "Skipped bundle budget because build did not pass" | tee "${BUNDLE_BUDGET_LOG}"
+  BUNDLE_BUDGET_STATUS=1
+fi
+if [[ ${BUNDLE_BUDGET_STATUS} -ne 0 ]]; then
   HAS_FAILURE=1
+fi
+
+if [[ ${HAS_FAILURE} -eq 0 ]]; then
+  run_step "publish static html" "${PUBLISH_LOG}" rsync -az --delete dist/ "${HTML_DIR}/"
+  PUBLISH_STATUS=$?
+  if [[ ${PUBLISH_STATUS} -ne 0 ]]; then
+    HAS_FAILURE=1
+  fi
+else
+  echo "Skipped static publish because one or more local quality gates failed" | tee "${PUBLISH_LOG}"
+  PUBLISH_STATUS=1
 fi
 
 run_step "build semi-monthly run report" "${REPORT_LOG}" npm run data:semi-monthly:report -- --run-id "${RUN_ID}" --source "semi-monthly-local-static" --refresh-log "${REFRESH_LOG}" --deploy-log "${PUBLISH_LOG}" --refresh-status "${REFRESH_STATUS}" --deploy-status "${PUBLISH_STATUS}" --smoke-status "not-run" --e2e-status "not-run" --json
