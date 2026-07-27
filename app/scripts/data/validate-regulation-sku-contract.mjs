@@ -2,6 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { isValidIsoCalendarDate, isValidTimezoneIsoDateTime } from './lib/strict-iso-date.mjs';
 
 export const CONTRACT_VERSION = 'mkt53.regulation-sku-matrix.v1';
 export const OFFICIAL_SOURCE_REGISTRY_IDS = new Set([
@@ -20,8 +21,6 @@ const APPLICABILITY_VALUES = new Set(['unknown', 'in-scope', 'out-of-scope', 'co
 const DECISION_STATUSES = new Set(['draft', 'legal-review-required', 'approved', 'rejected', 'withdrawn']);
 const DECISIVE_STATUSES = new Set(['approved', 'rejected']);
 const SHA256_PATTERN = /^[a-f0-9]{64}$/;
-const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
-const ISO_DATE_TIME_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/;
 
 function isObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -32,21 +31,11 @@ function isNonEmptyString(value) {
 }
 
 function isValidCalendarDate(value) {
-  if (!isNonEmptyString(value) || !ISO_DATE_PATTERN.test(value)) return false;
-  const [year, month, day] = value.split('-').map(Number);
-  const date = new Date(0);
-  date.setUTCFullYear(year, month - 1, day);
-  date.setUTCHours(0, 0, 0, 0);
-  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+  return isValidIsoCalendarDate(value);
 }
 
 function isIsoDateTime(value) {
-  return (
-    isNonEmptyString(value) &&
-    ISO_DATE_TIME_PATTERN.test(value) &&
-    isValidCalendarDate(value.slice(0, 10)) &&
-    !Number.isNaN(Date.parse(value))
-  );
+  return isValidTimezoneIsoDateTime(value);
 }
 
 function isIsoDate(value) {

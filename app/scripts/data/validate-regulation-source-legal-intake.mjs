@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { isAbsolute, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { OFFICIAL_SOURCE_REGISTRY_IDS } from './validate-regulation-sku-contract.mjs';
+import { isValidIsoCalendarDate, isValidTimezoneIsoDateTime } from './lib/strict-iso-date.mjs';
 
 export const INTAKE_CONTRACT_VERSION = 'mkt53.regulation-source-legal-intake.v1';
 export const INTAKE_GROUP_COUNT = 6;
@@ -22,7 +23,6 @@ const REQUIRED_WITHDRAWAL_SURFACES = ['dashboard', 'csv-export', 'report-export'
 const ALLOWED_DOCUMENT_TYPES = new Set(['regulation-text', 'official-guidance', 'implementation-notice']);
 const SENSITIVE_KEY_PATTERN = /password|secret|token|cookie|private.?key|client.?secret|credential/i;
 const HOST_PATTERN = /^(?=.{1,253}$)(?!-)[a-z0-9.-]+(?<!-)$/;
-const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 const TOP_LEVEL_KEYS = [
   'contractVersion', 'inputClass', 'requestId', 'generatedAt', 'sourceScope', 'skuOwnership',
@@ -56,11 +56,11 @@ function isNonEmptyString(value) {
 }
 
 function isIsoDate(value) {
-  return isNonEmptyString(value) && ISO_DATE_PATTERN.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
+  return isValidIsoCalendarDate(value);
 }
 
 function isIsoDateTime(value) {
-  return isNonEmptyString(value) && /^\d{4}-\d{2}-\d{2}T/.test(value) && !Number.isNaN(Date.parse(value));
+  return isValidTimezoneIsoDateTime(value);
 }
 
 function isPositiveInteger(value, maximum = Number.MAX_SAFE_INTEGER) {
@@ -220,12 +220,16 @@ export function validateRegulationSourceLegalIntake(input, options = {}) {
 
   for (const key of ['sourceRegistryIds', 'jurisdictionCodes', 'officialSourceHosts', 'allowedDocumentTypes', 'requestedClaimScopes']) validateStringArray(input.sourceScope[key], `$.sourceScope.${key}`, errors);
   for (const key of ['collectionWindowStart', 'collectionWindowEnd', 'scopeOwnerId']) validateNullableString(input.sourceScope[key], `$.sourceScope.${key}`, errors);
+  for (const key of ['collectionWindowStart', 'collectionWindowEnd']) {
+    if (input.sourceScope[key] !== null && !isIsoDate(input.sourceScope[key])) addError(errors, `$.sourceScope.${key}`, 'date-required', 'Expected a valid ISO calendar date or null.');
+  }
   if (asArray(input.sourceScope.officialSourceHosts).some((host) => typeof host !== 'string' || !HOST_PATTERN.test(host) || host.includes('..'))) addError(errors, '$.sourceScope.officialSourceHosts', 'invalid-host', 'Official source hosts must be bare lowercase host names.');
   if (asArray(input.sourceScope.allowedDocumentTypes).some((type) => !ALLOWED_DOCUMENT_TYPES.has(type))) addError(errors, '$.sourceScope.allowedDocumentTypes', 'invalid-document-type', 'Document type is outside the intake contract.');
   if (isIsoDate(input.sourceScope.collectionWindowStart) && isIsoDate(input.sourceScope.collectionWindowEnd) && input.sourceScope.collectionWindowStart > input.sourceScope.collectionWindowEnd) addError(errors, '$.sourceScope.collectionWindowEnd', 'collection-window-order', 'Collection window end must not precede its start.');
 
   for (const key of ['skuIds', 'targetMarkets']) validateStringArray(input.skuOwnership[key], `$.skuOwnership.${key}`, errors);
   for (const key of ['skuOwnerId', 'ownerRole', 'authorizationEvidenceRef', 'expiresAt']) validateNullableString(input.skuOwnership[key], `$.skuOwnership.${key}`, errors);
+  if (input.skuOwnership.expiresAt !== null && !isIsoDateTime(input.skuOwnership.expiresAt)) addError(errors, '$.skuOwnership.expiresAt', 'date-time-required', 'expiresAt must be a valid timezone-bearing ISO date-time or null.');
   if (isIsoDateTime(input.skuOwnership.expiresAt) && isIsoDateTime(input.generatedAt) && Date.parse(input.skuOwnership.expiresAt) <= Date.parse(input.generatedAt)) addError(errors, '$.skuOwnership.expiresAt', 'authorization-expired', 'SKU authorization evidence must expire after generatedAt.');
 
   for (const key of ['reviewerId', 'reviewerRole', 'escalationOwnerId', 'decisionPolicyRef']) validateNullableString(input.legalReviewWorkflow[key], `$.legalReviewWorkflow.${key}`, errors);
@@ -243,6 +247,7 @@ export function validateRegulationSourceLegalIntake(input, options = {}) {
   if (input.withdrawalGovernance.reasonRequired !== true || input.withdrawalGovernance.auditEventRequired !== true) addError(errors, '$.withdrawalGovernance', 'withdrawal-controls-required', 'Reason and audit event controls must remain enabled.');
 
   for (const key of ['ownerSubmissionRef', 'sourceScopeConfirmedBy', 'skuScopeConfirmedBy', 'legalWorkflowConfirmedBy', 'submittedAt']) validateNullableString(input.submissionConfirmations[key], `$.submissionConfirmations.${key}`, errors);
+  if (input.submissionConfirmations.submittedAt !== null && !isIsoDateTime(input.submissionConfirmations.submittedAt)) addError(errors, '$.submissionConfirmations.submittedAt', 'date-time-required', 'submittedAt must be a valid timezone-bearing ISO date-time or null.');
   for (const key of SECTION_KEYS.disclosure) {
     if (input.disclosure[key] !== true) addError(errors, `$.disclosure.${key}`, 'disclosure-boundary-required', `${key} must remain true.`);
   }

@@ -40,9 +40,22 @@ const publicEvidence = skipPublicEvidence
       timeoutMs: publicEvidenceTimeoutMs,
       maxSources: publicEvidenceMaxSources,
     });
+const adapterEvidence = publicEvidence ?? {
+  schemaVersion: 1,
+  generatedAt: manifest.generatedAt,
+  mode: 'skipped',
+  summary: {
+    total: 0,
+    captureStatusCounts: {},
+    evidenceClassCounts: {},
+    networkCalls: 0,
+    businessDataWrites: 0,
+  },
+  records: [],
+};
 const customsPublicAdapter = buildCustomsPublicDataAdapter({
-  publicEvidence,
-  publicEvidencePath: publicEvidence ? 'runtime-public-evidence' : 'public/periodic-data/public-evidence-samples.json',
+  publicEvidence: adapterEvidence,
+  publicEvidencePath: publicEvidence ? 'runtime-public-evidence' : 'skipped-public-evidence',
   generatedAt: manifest.generatedAt,
 });
 const publicManifest = {

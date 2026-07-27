@@ -14,13 +14,17 @@ const requiredSeeds = [
     seedId: 'us-census-merchandise-imports-database',
     evidenceRole: 'official_trade_data_source',
     requiredMatchedTerms: ['Merchandise Trade Imports', 'HTSUSA'],
+    allowedHosts: ['www.census.gov'],
   },
   {
     seedId: 'cbp-electric-breast-pump-hts-ruling',
     evidenceRole: 'official_hts_classification_context',
     requiredMatchedTerms: ['electric breast pump', '8413.81.0040'],
+    allowedHosts: ['rulings.cbp.gov'],
   },
 ];
+
+const SHA256_PATTERN = /^[a-f0-9]{64}$/;
 
 function parseArgs(argv) {
   const writePaths = [];
@@ -54,8 +58,7 @@ function publicEvidenceRecords(publicEvidence) {
 }
 
 function loadPublicEvidence(path) {
-  const configured = path ? readJsonIfExists(path) : undefined;
-  if (configured) return { data: configured, path };
+  if (path) return { data: readJsonIfExists(path), path };
 
   const periodic = readJsonIfExists(defaultPublicEvidencePath);
   if (periodic) return { data: periodic, path: defaultPublicEvidencePath };
@@ -71,6 +74,35 @@ function hasMatchedTerms(record, requiredTerms) {
   return requiredTerms.every((term) => matched.includes(term));
 }
 
+function isNonEmptyString(value) {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function isAllowedEvidenceUrl(value, allowedHosts) {
+  if (!isNonEmptyString(value)) return false;
+
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && url.username === '' && url.password === '' && url.port === '' && allowedHosts.includes(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
+function missingProofFields(record, seed) {
+  const missing = [];
+  if (record?.sourceId !== sourceId) missing.push('sourceId');
+  if (!isAllowedEvidenceUrl(record?.url, seed.allowedHosts)) missing.push('url');
+  if (!isNonEmptyString(record?.title)) missing.push('title');
+  if (!SHA256_PATTERN.test(record?.visibleTextHash ?? '')) missing.push('visibleTextHash');
+  if (!isNonEmptyString(record?.localEvidence?.textArchivePath)) missing.push('localEvidence.textArchivePath');
+  return missing;
+}
+
+function isNonNegativeInteger(value) {
+  return Number.isSafeInteger(value) && value >= 0;
+}
+
 function sanitizeEvidenceRecord(record, seed) {
   if (!record) {
     return {
@@ -83,7 +115,8 @@ function sanitizeEvidenceRecord(record, seed) {
     };
   }
 
-  const ready = record.captureStatus === 'captured' && hasMatchedTerms(record, seed.requiredMatchedTerms);
+  const proofFieldsMissing = missingProofFields(record, seed);
+  const ready = record.captureStatus === 'captured' && hasMatchedTerms(record, seed.requiredMatchedTerms) && proofFieldsMissing.length === 0;
 
   return {
     seedId: record.seedId,
@@ -99,6 +132,7 @@ function sanitizeEvidenceRecord(record, seed) {
     nonVerbatimSummary: record.nonVerbatimSummary,
     localEvidence: record.localEvidence,
     ready,
+    missingProofFields: proofFieldsMissing,
     missingMatchedTerms: seed.requiredMatchedTerms.filter((term) => !(record.matchedEvidenceTerms ?? []).includes(term)),
   };
 }
@@ -125,9 +159,12 @@ export function buildCustomsPublicDataAdapter(options = {}) {
   const publicEvidenceReady = evidenceRecords.every((record) => record.ready);
   const sourceAvailabilityReady = tradeSourceRecord?.ready === true;
   const classificationReady = classificationRecord?.ready === true;
-  const inputNetworkCalls = evidenceInput.data?.summary?.networkCalls ?? 0;
-  const inputBusinessDataWrites = evidenceInput.data?.summary?.businessDataWrites ?? 0;
-  const safetyReady = inputBusinessDataWrites === 0;
+  const rawNetworkCalls = evidenceInput.data?.summary?.networkCalls;
+  const rawBusinessDataWrites = evidenceInput.data?.summary?.businessDataWrites;
+  const safetyCountersValid = isNonNegativeInteger(rawNetworkCalls) && isNonNegativeInteger(rawBusinessDataWrites);
+  const inputNetworkCalls = safetyCountersValid ? rawNetworkCalls : null;
+  const inputBusinessDataWrites = safetyCountersValid ? rawBusinessDataWrites : null;
+  const safetyReady = safetyCountersValid && inputBusinessDataWrites === 0;
   const checks = [
     buildCheck(
       'publicEvidenceBundle',
@@ -166,10 +203,11 @@ export function buildCustomsPublicDataAdapter(options = {}) {
       {
         networkCalls: inputNetworkCalls,
         businessDataWrites: inputBusinessDataWrites,
+        countersValid: safetyCountersValid,
         rawTextPublicBundleAllowed: false,
         shipmentFactsGenerated: false,
       },
-      { type: 'business-data-write-observed' },
+      safetyCountersValid ? { type: 'business-data-write-observed' } : { type: 'missing-or-invalid-safety-counters' },
     ),
   ];
   const blockers = checks.flatMap((check) => check.blockers);

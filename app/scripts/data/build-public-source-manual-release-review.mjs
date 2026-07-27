@@ -2,6 +2,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { isValidIsoDateOrDateTime } from './lib/strict-iso-date.mjs';
 
 const PACKET_GATE_REQUIRED_COLUMNS = [
   'task_id',
@@ -84,7 +85,6 @@ const ALLOWED_REVIEW_STATUSES = new Set([
 ]);
 
 const FORBIDDEN_TOKEN_RE = /password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i;
-const DATE_OR_DATETIME_RE = /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z?)?$/;
 
 function parseArgs(argv) {
   const options = {
@@ -243,7 +243,7 @@ function reviewRecordCoreReady(reviewRecord) {
   return Boolean(
     normalize(reviewRecord.review_record_id) &&
       normalize(reviewRecord.reviewer_alias) &&
-      DATE_OR_DATETIME_RE.test(normalize(reviewRecord.reviewed_at)) &&
+      isValidIsoDateOrDateTime(normalize(reviewRecord.reviewed_at)) &&
       normalizeBoolean(reviewRecord.manual_release_review_completed),
   );
 }
@@ -301,7 +301,7 @@ function buildDecisionRows(packetRows, reviewRecord) {
   return packetRows.map((packet) => {
     const ready = packet.ready_for_manual_release_review === 'true' && packet.packet_validation_status === 'ready_for_manual_release_review';
     const includedInReviewRecord = Boolean(
-      reviewRecord && (taskIds.has(packet.task_id) || sourceIds.has(packet.source_id)),
+      reviewRecord && taskIds.has(packet.task_id) && sourceIds.has(packet.source_id),
     );
     const acceptedDecision = packet.manual_decision === 'accepted_for_l3_evidence';
     const replacementSourceRequired = packet.manual_decision === 'needs_replacement_source';

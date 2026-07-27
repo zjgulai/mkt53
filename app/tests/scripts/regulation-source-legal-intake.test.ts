@@ -209,6 +209,25 @@ describe('DATA-REG source and legal intake readiness', () => {
     expect(report.readiness.groups.find((group: { id: string }) => group.id === 'withdrawal-governance')).toMatchObject({ ready: false });
   });
 
+  it('rejects impossible calendar dates and timezone-less review timestamps', () => {
+    const packet = buildSyntheticPacket();
+    packet.generatedAt = '2026-02-30T00:00:00.000Z';
+    packet.sourceScope.collectionWindowStart = '2026-02-30';
+    packet.sourceScope.collectionWindowEnd = '2026-13-01';
+    packet.skuOwnership.expiresAt = '2026-08-31T00:00:00';
+    packet.submissionConfirmations.submittedAt = '2026-07-24T00:00:00';
+
+    const result = validateRegulationSourceLegalIntake(packet, { inputPath: 'tests/fixtures/synthetic-memory.json' });
+    expect(result.contractValid).toBe(false);
+    expect(result.errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ path: '$.generatedAt', code: 'date-time-required' }),
+      expect.objectContaining({ path: '$.sourceScope.collectionWindowStart', code: 'date-required' }),
+      expect.objectContaining({ path: '$.sourceScope.collectionWindowEnd', code: 'date-required' }),
+      expect.objectContaining({ path: '$.skuOwnership.expiresAt', code: 'date-time-required' }),
+      expect.objectContaining({ path: '$.submissionConfirmations.submittedAt', code: 'date-time-required' }),
+    ]));
+  });
+
   it('runs the empty-template CLI without changing canonical public manifests', () => {
     const canonicalPaths = ['public/periodic-data/latest.json', 'public/weekly-data/latest.json'];
     const before = canonicalPaths.map((path) => readFileSync(path));

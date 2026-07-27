@@ -459,7 +459,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
           reviewer_alias: 'source-governance-reviewer',
           reviewed_at: '2026-07-02',
           manual_release_review_completed: true,
-          approved_task_ids: ['public-source-manual-evidence:ds-002'],
+          approved_task_ids: ['public-source-review:ds-002'],
           approved_source_ids: ['ds-002'],
           decision_scope: 'source registry patch planning only',
           source_registry_patch_authorized: true,
@@ -523,6 +523,64 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       expect(payload.sampleDecisionRows.find((row) => row.source_id === 'ds-045')).toMatchObject({
         release_review_status: 'blocked_vendor_access',
       });
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+      rmSync(intakeDir, { recursive: true, force: true });
+    }
+  });
+
+  it('requires an exact task/source pair and a real review calendar date', () => {
+    const { tempRoot, intakeDir, validationDir } = buildManualEvidenceValidationToTemp();
+    const reviewRecordPath = join(tempRoot, 'release-review-record.json');
+    const baseRecord = {
+      review_record_id: 'loop12-public-source-release-review-scope-test',
+      reviewer_alias: 'source-governance-reviewer',
+      reviewed_at: '2026-07-02',
+      manual_release_review_completed: true,
+      approved_task_ids: ['public-source-review:ds-002'],
+      approved_source_ids: ['ds-044'],
+      decision_scope: 'source registry patch planning only',
+      source_registry_patch_authorized: true,
+      page_display_authorized: false,
+      csv_fact_export_authorized: false,
+      production_deploy_authorized: false,
+      provider_calls_authorized: false,
+    };
+    const runReview = () => JSON.parse(execFileSync(
+      'node',
+      [
+        'scripts/data/build-public-source-manual-release-review.mjs',
+        '--validation',
+        validationDir,
+        '--review-record',
+        reviewRecordPath,
+        '--json',
+        '--no-write',
+      ],
+      { cwd: process.cwd(), encoding: 'utf8' },
+    )) as {
+      summary: { reviewRecordCoreReady: boolean; approvedPatchCandidateCount: number };
+      sampleDecisionRows: Array<Record<string, string>>;
+    };
+
+    try {
+      writeFileSync(reviewRecordPath, `${JSON.stringify(baseRecord, null, 2)}\n`);
+      const mismatchedScope = runReview();
+      expect(mismatchedScope.summary.reviewRecordCoreReady).toBe(true);
+      expect(mismatchedScope.summary.approvedPatchCandidateCount).toBe(0);
+      expect(mismatchedScope.sampleDecisionRows.find((row) => row.source_id === 'ds-002')).toMatchObject({
+        included_in_review_record: 'false',
+        release_review_status: 'blocked_review_scope_gap',
+      });
+
+      writeFileSync(reviewRecordPath, `${JSON.stringify({
+        ...baseRecord,
+        reviewed_at: '2026-02-30',
+        approved_source_ids: ['ds-002'],
+      }, null, 2)}\n`);
+      const impossibleDate = runReview();
+      expect(impossibleDate.summary.reviewRecordCoreReady).toBe(false);
+      expect(impossibleDate.summary.approvedPatchCandidateCount).toBe(0);
     } finally {
       rmSync(tempRoot, { recursive: true, force: true });
       rmSync(intakeDir, { recursive: true, force: true });
@@ -624,6 +682,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/weekly-data/customs-public-adapter.json');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('--public-evidence-live');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('--skip-public-evidence');
+    expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('skipped-public-evidence');
     expect(readFileSync(join(process.cwd(), 'scripts/data/refresh-semi-monthly-data.mjs'), 'utf8')).toContain('public/weekly-data/latest.json');
     const weeklyLocalPublishScript = readFileSync(join(process.cwd(), 'scripts/data/weekly-refresh-local-static.sh'), 'utf8');
     expect(weeklyLocalPublishScript).toContain('data:connector:amazon:private:audit');
@@ -2046,7 +2105,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
                 evidenceClass: 'official-trade-data-page',
                 captureStatus: 'captured',
                 title: 'Merchandise Trade Imports',
-                visibleTextHash: 'fixture-census-hash',
+                visibleTextHash: 'a'.repeat(64),
                 matchedEvidenceTerms: ['Merchandise Trade Imports', 'HTSUSA'],
                 missingEvidenceTerms: [],
                 nonVerbatimSummary: 'fixture public source summary',
@@ -2059,7 +2118,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
                 evidenceClass: 'official-customs-ruling-page',
                 captureStatus: 'captured',
                 title: 'CROSS Ruling',
-                visibleTextHash: 'fixture-cbp-hash',
+                visibleTextHash: 'b'.repeat(64),
                 matchedEvidenceTerms: ['electric breast pump', '8413.81.0040'],
                 missingEvidenceTerms: [],
                 nonVerbatimSummary: 'fixture classification summary',
@@ -2106,10 +2165,73 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       expect(adapter.queryPlan.requiredOwnerInputs).toEqual(expect.arrayContaining(['confirm final HS/HTS code list for Momcozy product scope']));
       expect(adapter.forbiddenClaimScopes).toEqual(expect.arrayContaining(['shipment-level facts', 'Import Genius replacement']));
       expect(adapter.evidenceRecords.every((record) => record.ready)).toBe(true);
-      expect(adapter.evidenceRecords.map((record) => record.visibleTextHash)).toEqual(['fixture-census-hash', 'fixture-cbp-hash']);
+      expect(adapter.evidenceRecords.map((record) => record.visibleTextHash)).toEqual(['a'.repeat(64), 'b'.repeat(64)]);
     } finally {
       rmSync(tempDir, { recursive: true, force: true });
     }
+  });
+
+  it('keeps customs readiness blocked when safety counters, proof fields, or current evidence are missing', async () => {
+    const { buildCustomsPublicDataAdapter } = (await import('../../scripts/data/connectors/customs-public-data-adapter.mjs')) as {
+      buildCustomsPublicDataAdapter: (options: Record<string, unknown>) => {
+        status: string;
+        checks: Array<{ id: string; status: string; blockers: Array<{ type: string }> }>;
+        evidenceRecords: Array<{ ready: boolean; missingProofFields: string[] }>;
+      };
+    };
+    const validRecords = [
+      {
+        seedId: 'us-census-merchandise-imports-database',
+        sourceId: 'ds-006',
+        url: 'https://www.census.gov/foreign-trade/data/IMDB.html',
+        captureStatus: 'captured',
+        title: 'Merchandise Trade Imports',
+        visibleTextHash: 'a'.repeat(64),
+        matchedEvidenceTerms: ['Merchandise Trade Imports', 'HTSUSA'],
+        localEvidence: { textArchivePath: 'tmp/public-evidence/text/us-census.txt' },
+      },
+      {
+        seedId: 'cbp-electric-breast-pump-hts-ruling',
+        sourceId: 'ds-006',
+        url: 'https://rulings.cbp.gov/ruling/N021593',
+        captureStatus: 'captured',
+        title: 'CROSS Ruling',
+        visibleTextHash: 'b'.repeat(64),
+        matchedEvidenceTerms: ['electric breast pump', '8413.81.0040'],
+        localEvidence: { textArchivePath: 'tmp/public-evidence/text/cbp.txt' },
+      },
+    ];
+
+    const missingSafety = buildCustomsPublicDataAdapter({ publicEvidence: { records: validRecords } });
+    expect(missingSafety.status).toBe('blocked');
+    expect(missingSafety.checks.find((check) => check.id === 'safetyBoundary')).toMatchObject({
+      status: 'blocked',
+      blockers: [{ type: 'missing-or-invalid-safety-counters' }],
+    });
+
+    const incompleteProof = buildCustomsPublicDataAdapter({
+      publicEvidence: {
+        summary: { networkCalls: 2, businessDataWrites: 0 },
+        records: validRecords.map((record) => ({
+          seedId: record.seedId,
+          captureStatus: record.captureStatus,
+          matchedEvidenceTerms: record.matchedEvidenceTerms,
+        })),
+      },
+    });
+    expect(incompleteProof.status).toBe('blocked');
+    expect(incompleteProof.evidenceRecords.every((record) => !record.ready && record.missingProofFields.length > 0)).toBe(true);
+
+    const skippedEvidence = buildCustomsPublicDataAdapter({
+      publicEvidence: {
+        mode: 'skipped',
+        summary: { total: 0, networkCalls: 0, businessDataWrites: 0 },
+        records: [],
+      },
+      publicEvidencePath: 'skipped-public-evidence',
+    });
+    expect(skippedEvidence.status).toBe('blocked');
+    expect(skippedEvidence.checks.find((check) => check.id === 'publicEvidenceBundle')?.status).toBe('blocked');
   });
 
   it('runs the Amazon commerce connector in blocked dry-run mode without leaking credentials', () => {
