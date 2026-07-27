@@ -365,9 +365,9 @@
     "semantic_hash": "f41edab20fdad73ff6557f4daea86c41"
   },
   "app/scripts/data/merge-source-gap-owner-chat-answers.mjs": {
-    "mtime": 1782791896.1385243,
-    "ast_hash": "547b7dcc8a79d97c41419f29e210c9d0",
-    "semantic_hash": "547b7dcc8a79d97c41419f29e210c9d0"
+    "mtime": 1785153757.120559,
+    "ast_hash": "254c3c8a8bdbfc5e9ee56dc28e81e215",
+    "semantic_hash": ""
   },
   "app/scripts/data/prefill-source-gap-owner-intake.mjs": {
     "mtime": 1782788900.6769152,
@@ -405,13 +405,13 @@
     "semantic_hash": "6927a87e34bf0e86f0f733b2f83cd2d9"
   },
   "app/scripts/data/validate-public-source-manual-evidence.mjs": {
-    "mtime": 1785141905.1037686,
-    "ast_hash": "a77a8c020a0a8cfff6bba84d1b4131ad",
+    "mtime": 1785153757.1183898,
+    "ast_hash": "1ae9e5311d4eda65d5aae3d17d1543f0",
     "semantic_hash": ""
   },
   "app/scripts/data/validate-source-gap-owner-intake.mjs": {
-    "mtime": 1785147452.2626047,
-    "ast_hash": "f9e8b8acdfae4afc415a2108ca305bca",
+    "mtime": 1785153757.1193786,
+    "ast_hash": "7e69d89e744eb67cc32de6cbfeb712ab",
     "semantic_hash": ""
   },
   "app/scripts/data/weekly-refresh-and-deploy.sh": {
@@ -945,8 +945,8 @@
     "semantic_hash": "d8e1c203591675d78deaaa6bd82b8854"
   },
   "app/src/pages/UsersPage.tsx": {
-    "mtime": 1785120425.7955222,
-    "ast_hash": "c3c30bb12e5635f4c6cf80364d24c6ef",
+    "mtime": 1785153790.003022,
+    "ast_hash": "0d9f088ed8c6a15bd99fa44118d3114f",
     "semantic_hash": ""
   },
   "app/src/pages/ai-assistant/CommentData.tsx": {
@@ -1080,24 +1080,24 @@
     "semantic_hash": "b02b9942ae7685b4e4a36e8e54f79caa"
   },
   "app/src/pages/users/ChannelInterviews.tsx": {
-    "mtime": 1782895306.5204945,
-    "ast_hash": "0652c7d8115d5fc52ee067e6db2ed81e",
-    "semantic_hash": "0652c7d8115d5fc52ee067e6db2ed81e"
+    "mtime": 1785153810.7417414,
+    "ast_hash": "d43cf2f39a1b4a1016d597c81dd54385",
+    "semantic_hash": ""
   },
   "app/src/pages/users/ConsumerInterviews.tsx": {
-    "mtime": 1782895260.8237467,
-    "ast_hash": "2dc03c76deb85cab29d41867891809a8",
-    "semantic_hash": "2dc03c76deb85cab29d41867891809a8"
+    "mtime": 1785153810.7374525,
+    "ast_hash": "1db2976e85464193ed23bcb9adc9b84e",
+    "semantic_hash": ""
   },
   "app/src/pages/users/OverseasSentiment.tsx": {
-    "mtime": 1782895156.0128198,
-    "ast_hash": "5efc7eb1715f77516b88bdd6bd473996",
-    "semantic_hash": "5efc7eb1715f77516b88bdd6bd473996"
+    "mtime": 1785153810.7451804,
+    "ast_hash": "bf53ec22f41f4cc267060f5743d64bad",
+    "semantic_hash": ""
   },
   "app/src/pages/users/StoreInterviews.tsx": {
-    "mtime": 1782895233.6083894,
-    "ast_hash": "1982b356135a9708508733596518854c",
-    "semantic_hash": "1982b356135a9708508733596518854c"
+    "mtime": 1785153810.743307,
+    "ast_hash": "bc0a75cd44e26cda3d3b3cbb2dc5fd8f",
+    "semantic_hash": ""
   },
   "app/src/routes/lazy-pages.tsx": {
     "mtime": 1781144910.3732367,
@@ -1140,8 +1140,8 @@
     "semantic_hash": "fe17ccca8c2cc27c5f9dd4bebeffb858"
   },
   "app/tests/e2e/core-pages.spec.ts": {
-    "mtime": 1784865602.6586142,
-    "ast_hash": "fac19202689ed08cbbb9449e65064657",
+    "mtime": 1785154398.0345333,
+    "ast_hash": "1688a43c3492d461889cc482246a1293",
     "semantic_hash": ""
   },
   "app/tests/e2e/full-data-quality-routes.spec.ts": {
@@ -1185,8 +1185,8 @@
     "semantic_hash": "6a9b5a2f7faf3ce7d54c9e49193cac71"
   },
   "app/tests/scripts/static-scripts.test.ts": {
-    "mtime": 1785150146.1528747,
-    "ast_hash": "43f08c73a6498614c65e5e258d29973a",
+    "mtime": 1785153871.1350112,
+    "ast_hash": "1dd204dab75a9124c526a6ac0b37e1bd",
     "semantic_hash": ""
   },
   "app/tests/security/clientBundleGuard.test.ts": {
@@ -1355,8 +1355,8 @@
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/index.html": {
-    "mtime": 1785148348.5571902,
-    "ast_hash": "421492f15fbb678f4721f7b96be32d33",
+    "mtime": 1785151871.2315097,
+    "ast_hash": "a55d2fd67cdf220612969475b33e6083",
     "semantic_hash": ""
   },
   "docs/workflows/workflow-quality-gate-stable.md": {
@@ -3180,13 +3180,13 @@
     "semantic_hash": ""
   },
   "backend/src/mkt53_backend/review_registry.py": {
-    "mtime": 1784864532.5844946,
-    "ast_hash": "34b00b3a37fe892b6f61646756fc474e",
+    "mtime": 1785153745.666023,
+    "ast_hash": "247ed91dd6473b59e7f0b87f808d0b3e",
     "semantic_hash": ""
   },
   "backend/tests/test_review_registry_api.py": {
-    "mtime": 1784864532.5946348,
-    "ast_hash": "16a867e0e37a43a849a8a11275a0f575",
+    "mtime": 1785153745.6667585,
+    "ast_hash": "e5ceccb125ec7852ec0987bff6ce9d9d",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/evidence/be-05-review-state-machine-local-api-20260724.json": {
@@ -3505,8 +3505,8 @@
     "semantic_hash": ""
   },
   "app/tests/e2e/chart-routes.spec.ts": {
-    "mtime": 1785118656.60691,
-    "ast_hash": "825ec01a4d1d8290cce83f27a86d8176",
+    "mtime": 1785154398.0332127,
+    "ast_hash": "82808b0b4b19fab4fe2682e04b371608",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/evidence/p0-03-datamanage-bundle-exception-retirement-20260724.json": {
@@ -3617,6 +3617,26 @@
   "docs/reviews/mkt53-project-review-20260722/p0-github-ci-review-closeout-20260727.md": {
     "mtime": 1785148215.3419492,
     "ast_hash": "1d4da7d5a507f1108baff63a63dd3515",
+    "semantic_hash": ""
+  },
+  "app/src/components/FactDisplayGate.tsx": {
+    "mtime": 1785153745.664754,
+    "ast_hash": "2a95b0f45eef2d233c2c30c0892f9639",
+    "semantic_hash": ""
+  },
+  "app/tests/components/FactDisplayGate.test.tsx": {
+    "mtime": 1785153745.665108,
+    "ast_hash": "252615addfe7b3132a6f8c25f5c61fed",
+    "semantic_hash": ""
+  },
+  "docs/reviews/mkt53-project-review-20260722/evidence/p0-full-codex-review-closeout-20260727.json": {
+    "mtime": 1785152068.6305792,
+    "ast_hash": "bbb105bd259a18f01947becf29575a47",
+    "semantic_hash": ""
+  },
+  "docs/reviews/mkt53-project-review-20260722/p0-full-codex-review-closeout-20260727.md": {
+    "mtime": 1785152068.62296,
+    "ast_hash": "69a060091dac75bed6cbb28d871cfeab",
     "semantic_hash": ""
   }
 }
