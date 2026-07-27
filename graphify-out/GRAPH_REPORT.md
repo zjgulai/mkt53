@@ -4,12 +4,12 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 4556 nodes · 7215 edges · 344 communities
+- 4574 nodes · 7249 edges · 335 communities
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 188 edges (avg confidence: 0.59)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0d4cf7a5`
+- Built from commit: `212f7dcd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -34,7 +34,7 @@
 - merge-source-gap-owner-chat-answers.mjs
 - build-release-evidence.mjs
 - DataManage.tsx
-- main.py
+- Settings
 - build-public-source-manual-release-review.mjs
 - utils.ts
 - prefill-source-gap-owner-intake.mjs
@@ -124,7 +124,7 @@
 - mkt53 Owner Answer Dispatch Ledger Draft
 - SearchPanel.tsx
 - test_compose_contract.py
-- SnapshotRegistryService
+- RegistryError
 - graphify reference: extra exports and benchmark
 - render-excalidraw-with-app-playwright.mjs
 - 市场洞察产品路线图
@@ -175,7 +175,7 @@
 - SourceRegistryService
 - build-regulation-review-handoff-gate.mjs
 - lucide-react
-- source-registry-adapter.test.tsx
+- prioritize-source-gaps.mjs
 - @radix-ui/react-accordion
 - Batch 25：P0 后端 CI 质量门禁
 - @radix-ui/react-avatar
@@ -211,7 +211,7 @@
 - zod
 - devDependencies
 - BE-03 Source Registry 本地 API
-- required
+- HTTPException
 - Q: 同意下一步，开始执行
 - models.py
 - Q: 下一批的执行建议是？
@@ -220,13 +220,13 @@
 - refresh-weekly-data.mjs
 - embla-carousel-react
 - 0001_be02_baseline.py
-- required
+- properties
 - OverseasSentiment.tsx
 - Q: Which code paths connect the Batch 26 data governance, bundle, backend review/recovery, regulation intake, dependency and Graphify work?
 - Q: 同意下一批建议
 - Batch 26：本地原子提交、复审修复与交接
 - test_ci_workflow_contract.py
-- test_config.py
+- required
 - Q: How should GitHub Actions enforce the mkt53 BE-03-07 backend quality gate without production side effects?
 - app/README.md
 - nginx/README.md
@@ -249,7 +249,7 @@
 - properties
 - Q: 同意下一批建议
 - BE-04 Snapshot Metadata 本地 API
-- Settings
+- Batch 27：GitHub CI、定向复审修复与草稿 PR 交接
 - required
 - validate-regulation-source-legal-intake.mjs
 - quality-be02.sh
@@ -278,23 +278,23 @@
 - Q: 同意下一批建议
 - @radix-ui/react-select
 - cmdk
-- sku
 - properties
 - properties
 - properties
+- @hookform/resolvers
 - required
 - BE-07 审计与恢复隔离演练
 - validate-regulation-sku-contract.mjs
 - properties
 - DATA-REG 合成 Intake → SKU Draft 投影演练
-- @hookform/resolvers
+- @radix-ui/react-checkbox
 - properties
 - null
 - P0-03 vendor-charts Bundle 临时例外退出方案
 - Q: 同意下一批建议
-- config.py
-- record
+- isValidIsoCalendarDate
 - required
+- .__init__
 - quality-be07.sh
 - SupplyChain.tsx
 - properties
@@ -308,28 +308,19 @@
 - regulation-review-handoff-prerequisites.schema.json
 - Q: 同意下一批建议
 - DATA-REG 法规 SKU 合同发现与本地门禁
-- required
 - 六组输入
-- enum
 - properties
-- @radix-ui/react-checkbox
 - required
 - enum
 - properties
 - Q: 同意下一批建议
 - required
-- required
-- auth.py
 - DATA-REG 来源与法务 Intake Readiness
 - DATA-REG 合成 Draft → Review Handoff 门禁
-- session_factory
-- test_recovery_drill.py
 - properties
 - required
-- test_health.py
 - Sidebar.tsx
 - required
-- properties
 - nullableNonEmptyString
 - Q: Which local nodes implement the DATA-REG synthetic intake draft projection, lineage, idempotency, and withdrawal blocking?
 - @radix-ui/react-context-menu
@@ -346,8 +337,8 @@
 2. `scripts` - 94 edges
 3. `Settings` - 42 edges
 4. `SourceRegistryService` - 32 edges
-5. `ReviewRegistryService` - 29 edges
-6. `8. 执行看板（2026-07-23）` - 29 edges
+5. `8. 执行看板（2026-07-23）` - 30 edges
+6. `ReviewRegistryService` - 29 edges
 7. `RegistryError` - 28 edges
 8. `PageEvidenceNotice()` - 27 edges
 9. `SnapshotRegistryService` - 27 edges
@@ -362,13 +353,13 @@
   app/scripts/data/build-erp-governance-batch7.mjs → docs/architecture/mkt53-system-map-20260604/generate-excalidraw-diagrams.mjs
 - `buildTemplateFiles()` --indirect_call--> `relativePath()`  [INFERRED]
   app/scripts/data/build-erp-owner-submission-pack-batch13.mjs → app/scripts/data/build-erp-owner-submission-intake-batch12.mjs
-- `SidebarItemComponent()` --calls--> `cn()`  [EXTRACTED]
-  app/src/components/Sidebar.tsx → app/src/lib/utils.ts
+- `buildDecisionRows()` --indirect_call--> `nextAction()`  [INFERRED]
+  app/scripts/data/build-public-source-manual-release-review.mjs → app/scripts/data/prioritize-source-gaps.mjs
 
 ## Import Cycles
 - None detected.
 
-## Communities (344 total, 0 thin omitted)
+## Communities (335 total, 0 thin omitted)
 
 ### Community 0 - "scripts"
 Cohesion: 0.02
@@ -400,7 +391,7 @@ Nodes (41): Aesthetics, AIAssistantPage, AIGallery, BabyCare, BreastPump, Catego
 
 ### Community 7 - "build-semi-monthly-recovery-candidate.mjs"
 Cohesion: 0.06
-Nodes (55): buildChecks(), buildPublicManifest(), buildSemiMonthlyRecoveryCandidate(), cronPreview(), isWithin(), main(), normalizeGeneratedAt(), parseArgs() (+47 more)
+Nodes (59): buildChecks(), buildPublicManifest(), buildSemiMonthlyRecoveryCandidate(), cronPreview(), isWithin(), main(), normalizeGeneratedAt(), parseArgs() (+51 more)
 
 ### Community 8 - "internal-crm-dry-run.mjs"
 Cohesion: 0.15
@@ -450,13 +441,13 @@ Nodes (31): assembleReleaseEvidence(), CHECK_PLAN, compactFacts(), countLines(),
 Cohesion: 0.12
 Nodes (22): coreDataModules, dataCatalogSourceIds, dataModules, dataCatalogSourceIds, erpDataModules, changeHistory, dataCatalogSourceIds, dataLineage (+14 more)
 
-### Community 20 - "main.py"
-Cohesion: 0.25
-Nodes (22): Permission, Principal, BaseModel, require_permission(), AppEnvironment, StrEnum, DatabaseReadinessProbe, DatabaseSessionManager (+14 more)
+### Community 20 - "Settings"
+Cohesion: 0.05
+Nodes (68): get_url(), run_migrations_offline(), run_migrations_online(), _authentication_error(), _authorization_error(), get_current_principal(), _parse_roles(), Permission (+60 more)
 
 ### Community 21 - "build-public-source-manual-release-review.mjs"
-Cohesion: 0.07
-Nodes (55): ALLOWED_REVIEW_STATUSES, approvedSourceIds(), approvedTaskIds(), BOUNDARY_FIELDS, buildBoundaryRows(), buildDecisionRows(), buildManifest(), buildQueueRows() (+47 more)
+Cohesion: 0.14
+Nodes (30): ALLOWED_REVIEW_STATUSES, approvedSourceIds(), approvedTaskIds(), BOUNDARY_FIELDS, buildBoundaryRows(), buildDecisionRows(), buildManifest(), buildQueueRows() (+22 more)
 
 ### Community 22 - "utils.ts"
 Cohesion: 0.07
@@ -511,12 +502,12 @@ Cohesion: 0.19
 Nodes (21): checkLocalFile(), checkPublicUrl(), checkPublicUrlAttempt(), checkPublicUrlWithBrowserFallback(), collectionPeriod(), collectWeeklySources(), hashBuffer(), localPathFromSource() (+13 more)
 
 ### Community 35 - "ReviewRegistryService"
-Cohesion: 0.11
-Nodes (40): ReviewEvent, ReviewSubject, get_review(), list_review_events(), list_reviews(), alias, DatabaseSession, ge (+32 more)
+Cohesion: 0.18
+Nodes (23): ReviewEvent, ReviewSubject, _canonical_request_hash(), _get_review_subject(), open_review(), Any, Exception, Session (+15 more)
 
 ### Community 36 - "8. 执行看板（2026-07-23）"
 Cohesion: 0.04
-Nodes (47): 1. 目标与完成定义, 2.1 已确认事实, 2.2 本轮授权边界, 2. 当前基线与边界, 3.1 工作流, 3.2 证据层级, 3.3 Definition of Done, 3. 执行模型 (+39 more)
+Nodes (48): 1. 目标与完成定义, 2.1 已确认事实, 2.2 本轮授权边界, 2. 当前基线与边界, 3.1 工作流, 3.2 证据层级, 3.3 Definition of Done, 3. 执行模型 (+40 more)
 
 ### Community 37 - "build-erp-owner-submission-dropbox-watchlist-batch14.mjs"
 Cohesion: 0.13
@@ -632,7 +623,7 @@ Nodes (12): erpChannelGrowthSnapshot, erpChannelTargetAttainment, CountryEvidenc
 
 ### Community 65 - "HomePage.tsx"
 Cohesion: 0.11
-Nodes (18): marketCagrLines, marketQuickInsights, marketSizeTrendData, actionColors2, countryColors, countryFlags, cpscEfilingSource, euMdrSource (+10 more)
+Nodes (17): marketCagrLines, marketQuickInsights, marketSizeTrendData, actionColors2, countryColors, countryFlags, cpscEfilingSource, euMdrSource (+9 more)
 
 ### Community 66 - "OperationsManual.tsx"
 Cohesion: 0.50
@@ -655,8 +646,8 @@ Cohesion: 0.14
 Nodes (11): MAP_FRAME, MapMarker, projectCoordinates(), WorldMap(), WorldMapProps, policyMapData, policyMarkers, policyTimeline (+3 more)
 
 ### Community 71 - "useDataSourceRegistry.ts"
-Cohesion: 0.27
-Nodes (11): DataSourceRegistryErrorKind, DataSourceRegistryRuntime, SourceRegistryItem, DataSourceRegistryState, DataSourceRegistryStatus, loadingState(), publicErrorMessage(), SourceLoader (+3 more)
+Cohesion: 0.13
+Nodes (16): DataSourceRegistryStatus(), Props, DataSourceRegistryErrorKind, DataSourceRegistryLoadError, DataSourceRegistryRuntime, resolveDataSourceRegistryRuntime(), SourceRegistryItem, DataSourceRegistryState (+8 more)
 
 ### Community 72 - "project-analysis.mjs"
 Cohesion: 0.21
@@ -747,8 +738,8 @@ Cohesion: 0.18
 Nodes (6): DrawerContent(), DrawerDescription(), DrawerFooter(), DrawerHeader(), DrawerOverlay(), DrawerTitle()
 
 ### Community 94 - "schemas.py"
-Cohesion: 0.20
-Nodes (11): CollectionMethod, EvidenceGrade, LifecycleStatus, PrivacyLevel, datetime, StrEnum, Reliability, ReviewDecision (+3 more)
+Cohesion: 0.27
+Nodes (10): CollectionMethod, EvidenceGrade, LifecycleStatus, PrivacyLevel, datetime, StrEnum, Reliability, ReviewDecision (+2 more)
 
 ### Community 95 - "DataSourcePage.tsx"
 Cohesion: 0.19
@@ -810,9 +801,9 @@ Nodes (6): allSearchData, hotSearches, recentSearches, SearchPanelProps, SearchR
 Cohesion: 0.39
 Nodes (5): load_compose(), test_api_and_postgres_have_separate_network_boundaries(), test_api_container_is_read_only_and_drops_capabilities(), test_compose_has_no_host_or_public_ports(), test_secrets_are_file_mounted_and_fixture_values_are_explicitly_nonproduction()
 
-### Community 110 - "SnapshotRegistryService"
-Cohesion: 0.09
-Nodes (39): AuditEvent, Base, IdempotencyRecord, Snapshot, ApiModel, AuditEventResponse, BaseModel, SnapshotCreate (+31 more)
+### Community 110 - "RegistryError"
+Cohesion: 0.10
+Nodes (39): AuditEvent, Base, IdempotencyRecord, Snapshot, AuditEventResponse, SnapshotCreate, SnapshotListResponse, SnapshotResponse (+31 more)
 
 ### Community 111 - "graphify reference: extra exports and benchmark"
 Cohesion: 0.22
@@ -859,8 +850,8 @@ Cohesion: 0.43
 Nodes (5): ToggleGroup(), ToggleGroupContext, ToggleGroupItem(), Toggle(), toggleVariants
 
 ### Community 122 - "properties"
-Cohesion: 0.09
-Nodes (23): $ref, minLength, type, $ref, $ref, $ref, minLength, type (+15 more)
+Cohesion: 0.05
+Nodes (37): $ref, minLength, type, $ref, $ref, $ref, sourceRegistryId, minLength (+29 more)
 
 ### Community 123 - "BE-01 后端部署形态决策"
 Cohesion: 0.06
@@ -919,8 +910,8 @@ Cohesion: 0.83
 Nodes (3): publish_private_amazon_audit(), run_step(), semi-monthly-refresh-local-static.sh script
 
 ### Community 137 - "test_review_registry_api.py"
-Cohesion: 0.20
-Nodes (32): analyst_headers(), Session, sessionmaker, TestClient, test_concurrent_review_transition_cannot_silently_overwrite(), test_pending_review_can_be_withdrawn_directly(), test_review_permissions_and_creation_open_pending_reviews(), test_review_validation_missing_entities_and_uninitialized_state_fail_closed() (+24 more)
+Cohesion: 0.14
+Nodes (40): client(), Session, sessionmaker, TestClient, session_factory(), analyst_headers(), Session, sessionmaker (+32 more)
 
 ### Community 138 - "BrandIcon.tsx"
 Cohesion: 0.50
@@ -980,7 +971,7 @@ Nodes (1): PerformanceMetrics
 
 ### Community 153 - "source_api.py"
 Cohesion: 0.15
-Nodes (29): get_db_session(), Request, Session, WithdrawSourceRequest, create_source(), get_source(), list_source_audit(), list_sources() (+21 more)
+Nodes (28): get_db_session(), Request, Session, WithdrawSourceRequest, create_source(), get_source(), list_source_audit(), list_sources() (+20 more)
 
 ### Community 155 - "graphify reference: GitHub clone and cross-repo merge"
 Cohesion: 0.67
@@ -1004,7 +995,7 @@ Nodes (8): Identity contract, Local verification, mkt53 backend · BE-07 local r
 
 ### Community 160 - "SourceRegistryService"
 Cohesion: 0.22
-Nodes (15): Source, SourceCreate, SourceListResponse, SourceResponse, SourceUpdate, canonical_request_hash(), MutationResult, Any (+7 more)
+Nodes (13): Source, SourceCreate, SourceListResponse, SourceResponse, SourceUpdate, _validate_http_url(), canonical_request_hash(), MutationResult (+5 more)
 
 ### Community 161 - "build-regulation-review-handoff-gate.mjs"
 Cohesion: 0.17
@@ -1014,9 +1005,9 @@ Nodes (24): addError(), allNull(), assertTmpWritePath(), baseBoundaries(), baseD
 Cohesion: 1.00
 Nodes (2): lucide-react, lucide-react
 
-### Community 163 - "source-registry-adapter.test.tsx"
-Cohesion: 0.20
-Nodes (5): DataSourceRegistryStatus(), Props, DataSourceRegistryLoadError, resolveDataSourceRegistryRuntime(), apiRuntime
+### Community 163 - "prioritize-source-gaps.mjs"
+Cohesion: 0.14
+Nodes (25): acceptanceGate(), allowedCurrentDisplayState(), BATCH_FIELDS, buildBatches(), buildReport(), buildSummary(), CORE_BUSINESS_PAGES, countBy() (+17 more)
 
 ### Community 164 - "@radix-ui/react-accordion"
 Cohesion: 1.00
@@ -1031,12 +1022,12 @@ Cohesion: 1.00
 Nodes (2): @radix-ui/react-avatar, @radix-ui/react-avatar
 
 ### Community 167 - "project-regulation-intake-to-sku-draft.mjs"
-Cohesion: 0.18
-Nodes (20): assertTmpWritePath(), buildLineage(), buildMatrix(), buildRecord(), canonicalize(), canonicalSha256(), emptyMatrix(), isIsoDateTime() (+12 more)
+Cohesion: 0.17
+Nodes (21): assertTmpWritePath(), buildLineage(), buildMatrix(), buildRecord(), canonicalize(), canonicalSha256(), emptyMatrix(), isIsoDateTime() (+13 more)
 
 ### Community 168 - "publication"
-Cohesion: 0.20
-Nodes (10): items, type, uniqueItems, type, blockedReasons, canDisplayAsComplianceFact, publication, additionalProperties (+2 more)
+Cohesion: 0.14
+Nodes (14): items, type, uniqueItems, type, notLegalAdvice, blockedReasons, canDisplayAsComplianceFact, publication (+6 more)
 
 ### Community 169 - "react-hook-form"
 Cohesion: 1.00
@@ -1079,8 +1070,8 @@ Cohesion: 1.00
 Nodes (2): @radix-ui/react-scroll-area, @radix-ui/react-scroll-area
 
 ### Community 179 - "usePeriodicManifest"
-Cohesion: 0.24
-Nodes (10): CollectionManifestPath, CollectionManifestStatus, fetchCollectionManifest(), formatManifestDateTime(), PeriodicCollectionManifest, usePeriodicManifest(), CustomsData(), CustomsPublicAdapterManifest (+2 more)
+Cohesion: 0.22
+Nodes (11): CollectionManifestPath, CollectionManifestStatus, fetchCollectionManifest(), formatManifestDateTime(), PeriodicCollectionManifest, usePeriodicManifest(), HomePage(), CustomsData() (+3 more)
 
 ### Community 180 - "@radix-ui/react-separator"
 Cohesion: 1.00
@@ -1158,9 +1149,9 @@ Nodes (47): devDependencies, autoprefixer, eslint, @eslint/js, eslint-plugin-rea
 Cohesion: 0.22
 Nodes (8): 1. 结果, 2. API 合同, 3. 并发与幂等语义, 4. 数据模型与迁移, 5. 新鲜验证, 6. 生产停止条件, 7. 下一批建议, BE-03 Source Registry 本地 API
 
-### Community 199 - "required"
-Cohesion: 0.20
-Nodes (10): expiresAt, skuOwnership, additionalProperties, required, type, authorizationEvidenceRef, ownerRole, skuIds (+2 more)
+### Community 199 - "HTTPException"
+Cohesion: 0.16
+Nodes (20): get_review(), list_review_events(), list_reviews(), alias, DatabaseSession, ge, Header, JSONResponse (+12 more)
 
 ### Community 200 - "Q: 同意下一步，开始执行"
 Cohesion: 0.40
@@ -1168,7 +1159,7 @@ Nodes (4): Answer, Outcome, Q: 同意下一步，开始执行, Source Nodes
 
 ### Community 201 - "models.py"
 Cohesion: 0.18
-Nodes (5): datetime, utc_now(), Session, sessionmaker, test_concurrent_source_update_cannot_silently_overwrite()
+Nodes (6): datetime, utc_now(), Session, sessionmaker, test_audit_event_rejects_orm_update_and_delete(), test_review_event_rejects_orm_update_and_delete()
 
 ### Community 202 - "Q: 下一批的执行建议是？"
 Cohesion: 0.40
@@ -1194,9 +1185,9 @@ Nodes (2): embla-carousel-react, embla-carousel-react
 Cohesion: 0.40
 Nodes (4): downgrade(), Establish only Alembic's version marker for BE-02., No domain schema exists in the BE-02 baseline., upgrade()
 
-### Community 208 - "required"
-Cohesion: 0.22
-Nodes (9): withdrawalGovernance, additionalProperties, required, type, affectedSurfaces, auditEventRequired, propagationSlaHours, reasonRequired (+1 more)
+### Community 208 - "properties"
+Cohesion: 0.11
+Nodes (18): $ref, const, affectedSurfaces, auditEventRequired, reasonRequired, withdrawalGovernance, withdrawalOwnerId, const (+10 more)
 
 ### Community 209 - "OverseasSentiment.tsx"
 Cohesion: 0.29
@@ -1218,9 +1209,9 @@ Nodes (7): 1. 结果, 2. 原子提交清单, 3. `codex-review` 发现与处置, 
 Cohesion: 0.67
 Nodes (5): _find_step(), _load_workflow(), Any, test_backend_ci_preserves_recovery_report_and_cleanup_evidence(), test_backend_ci_runs_the_frozen_be07_gate_without_external_mutations()
 
-### Community 214 - "test_config.py"
-Cohesion: 0.48
-Nodes (6): production_settings(), test_database_url_hides_password_when_stringified(), test_nonproduction_allows_fixture_defaults_but_keeps_dev_identity_disabled(), test_production_accepts_empty_or_exact_https_origin(), test_production_configuration_fails_closed(), test_production_disables_openapi()
+### Community 214 - "required"
+Cohesion: 0.17
+Nodes (12): sourceScope, additionalProperties, required, type, allowedDocumentTypes, collectionWindowEnd, collectionWindowStart, jurisdictionCodes (+4 more)
 
 ### Community 215 - "Q: How should GitHub Actions enforce the mkt53 BE-03-07 backend quality gate without production side effects?"
 Cohesion: 0.40
@@ -1243,8 +1234,8 @@ Cohesion: 1.00
 Nodes (1): weekly-refresh-and-deploy.sh script
 
 ### Community 220 - "properties"
-Cohesion: 0.15
-Nodes (13): $ref, $ref, $ref, authorizationEvidenceRef, expiresAt, ownerRole, skuIds, skuOwnerId (+5 more)
+Cohesion: 0.09
+Nodes (23): $ref, $ref, expiresAt, $ref, authorizationEvidenceRef, expiresAt, ownerRole, skuIds (+15 more)
 
 ### Community 221 - "deploy-static-and-verify.sh"
 Cohesion: 1.00
@@ -1299,8 +1290,8 @@ Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: 同意下一批建议, Source Nodes
 
 ### Community 248 - "properties"
-Cohesion: 0.14
-Nodes (14): properties, rationale, reason, reviewedAt, reviewerId, scopeBasis, status, minLength (+6 more)
+Cohesion: 0.10
+Nodes (20): enum, properties, applicability, rationale, reason, reviewedAt, reviewerId, scopeBasis (+12 more)
 
 ### Community 249 - "Q: 同意下一批建议"
 Cohesion: 0.40
@@ -1310,9 +1301,9 @@ Nodes (4): Answer, Outcome, Q: 同意下一批建议, Source Nodes
 Cohesion: 0.17
 Nodes (11): 1. 结果, 2. API 合同, 3.1 Artifact hash, 3.2 Canonical metadata hash, 3.3 幂等与冲突, 3. Hash 与重复导入合同, 4. 数据库不可变性, 5. 新鲜验证 (+3 more)
 
-### Community 251 - "Settings"
-Cohesion: 0.12
-Nodes (10): Any, Environment-aware settings with explicit production fail-closed checks., Settings, test_database_readiness_redacts_sqlalchemy_error(), test_database_readiness_revision_contract(), test_development_exposes_openapi_for_local_work(), test_production_disables_docs_redoc_and_openapi(), BaseSettings (+2 more)
+### Community 251 - "Batch 27：GitHub CI、定向复审修复与草稿 PR 交接"
+Cohesion: 0.25
+Nodes (7): 1. 结果, 2. 本批修复, 3. Review 结论, 4. 使用与复核, 5. 回滚, 6. 下一门与 TODO, Batch 27：GitHub CI、定向复审修复与草稿 PR 交接
 
 ### Community 252 - "required"
 Cohesion: 0.18
@@ -1320,7 +1311,7 @@ Nodes (11): additionalProperties, required, type, reviewerId, decision, applicab
 
 ### Community 253 - "validate-regulation-source-legal-intake.mjs"
 Cohesion: 0.15
-Nodes (29): addError(), addMissing(), ALLOWED_DOCUMENT_TYPES, arraysEqual(), asArray(), buildReadinessGroups(), buildRegulationSourceLegalIntakeReport(), findSensitiveKeys() (+21 more)
+Nodes (29): OFFICIAL_SOURCE_REGISTRY_IDS, addError(), addMissing(), ALLOWED_DOCUMENT_TYPES, arraysEqual(), asArray(), buildReadinessGroups(), findSensitiveKeys() (+21 more)
 
 ### Community 255 - "quality-be02.sh"
 Cohesion: 1.00
@@ -1407,8 +1398,8 @@ Cohesion: 0.67
 Nodes (3): formatNumber(), formatUsdMillions(), SelfInsight()
 
 ### Community 277 - "properties"
-Cohesion: 0.07
-Nodes (29): $ref, $ref, $ref, $ref, $ref, allowedDocumentTypes, collectionWindowEnd, collectionWindowStart (+21 more)
+Cohesion: 0.12
+Nodes (17): $ref, $ref, $ref, $ref, $ref, allowedDocumentTypes, collectionWindowEnd, collectionWindowStart (+9 more)
 
 ### Community 278 - "quality-be05.sh"
 Cohesion: 1.00
@@ -1426,9 +1417,9 @@ Nodes (2): @radix-ui/react-select, @radix-ui/react-select
 Cohesion: 1.00
 Nodes (2): cmdk, cmdk
 
-### Community 282 - "sku"
-Cohesion: 0.29
-Nodes (7): sku, additionalProperties, required, type, productFamily, skuId, targetMarket
+### Community 282 - "properties"
+Cohesion: 0.18
+Nodes (11): minLength, type, id, sku, properties, additionalProperties, required, type (+3 more)
 
 ### Community 283 - "properties"
 Cohesion: 0.14
@@ -1438,9 +1429,9 @@ Nodes (14): $ref, $ref, approved, rejected, withdrawn, properties, decisionPolic
 Cohesion: 0.15
 Nodes (13): const, format, type, enum, properties, contractVersion, generatedAt, inputClass (+5 more)
 
-### Community 285 - "properties"
-Cohesion: 0.17
-Nodes (12): $ref, const, maximum, minimum, affectedSurfaces, auditEventRequired, propagationSlaHours, reasonRequired (+4 more)
+### Community 285 - "@hookform/resolvers"
+Cohesion: 1.00
+Nodes (2): @hookform/resolvers, @hookform/resolvers
 
 ### Community 286 - "required"
 Cohesion: 0.17
@@ -1452,7 +1443,7 @@ Nodes (8): 1. 结论, 2. 隔离与 fail-closed 边界, 3. 实现, 4. 演练流�
 
 ### Community 288 - "validate-regulation-sku-contract.mjs"
 Cohesion: 0.21
-Nodes (22): addError(), APPLICABILITY_VALUES, buildRegulationSkuContractReport(), DECISION_STATUSES, DECISIVE_STATUSES, EVIDENCE_CLASSES, isAllowedOfficialSourceUrl(), isIsoDate() (+14 more)
+Nodes (21): addError(), APPLICABILITY_VALUES, buildRegulationSkuContractReport(), DECISION_STATUSES, DECISIVE_STATUSES, EVIDENCE_CLASSES, isAllowedOfficialSourceUrl(), isIsoDate() (+13 more)
 
 ### Community 289 - "properties"
 Cohesion: 0.20
@@ -1462,17 +1453,17 @@ Nodes (10): minLength, type, productFamily, skuId, targetMarket, properties, min
 Cohesion: 0.18
 Nodes (10): 1. 结论, 2. 设计逻辑, 3. 使用手册, 4. 验证结果, 5. 未覆盖与停止条件, 6. 下一批建议, DATA-REG 合成 Intake → SKU Draft 投影演练, 幂等合同 (+2 more)
 
-### Community 291 - "@hookform/resolvers"
+### Community 291 - "@radix-ui/react-checkbox"
 Cohesion: 1.00
-Nodes (2): @hookform/resolvers, @hookform/resolvers
+Nodes (2): @radix-ui/react-checkbox, @radix-ui/react-checkbox
 
 ### Community 292 - "properties"
 Cohesion: 0.10
 Nodes (20): $ref, $ref, legalWorkflowConfirmedBy, ownerSubmissionRef, skuScopeConfirmedBy, sourceScopeConfirmedBy, submissionConfirmations, submittedAt (+12 more)
 
 ### Community 293 - "null"
-Cohesion: 0.24
-Nodes (10): maximum, minimum, type, null, type, approvalSlaHours, retentionDays, minimum (+2 more)
+Cohesion: 0.18
+Nodes (13): maximum, minimum, type, null, maximum, minimum, type, approvalSlaHours (+5 more)
 
 ### Community 294 - "P0-03 vendor-charts Bundle 临时例外退出方案"
 Cohesion: 0.14
@@ -1482,17 +1473,17 @@ Nodes (13): 1. 结论, 2. 问题与退出标准, 3. 完整设计逻辑, 4. 构�
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: 同意下一批建议, Source Nodes
 
-### Community 296 - "config.py"
-Cohesion: 0.24
-Nodes (7): get_url(), run_migrations_offline(), run_migrations_online(), get_settings(), test_secret_files_are_loaded_from_explicit_directory(), test_expected_revision_matches_review_state_machine_file(), Path
+### Community 296 - "isValidIsoCalendarDate"
+Cohesion: 0.90
+Nodes (4): isNonEmptyString(), isValidIsoCalendarDate(), isValidIsoDateOrDateTime(), isValidTimezoneIsoDateTime()
 
-### Community 297 - "record"
-Cohesion: 0.22
-Nodes (9): $defs, nullableNonEmptyString, record, null, string, minLength, type, additionalProperties (+1 more)
+### Community 297 - "required"
+Cohesion: 0.12
+Nodes (16): $defs, nullableNonEmptyString, record, null, string, minLength, type, additionalProperties (+8 more)
 
-### Community 298 - "required"
-Cohesion: 0.29
-Nodes (7): required, decision, evidence, id, publication, sku, source
+### Community 298 - ".__init__"
+Cohesion: 0.67
+Nodes (1): Session
 
 ### Community 299 - "quality-be07.sh"
 Cohesion: 1.00
@@ -1507,8 +1498,8 @@ Cohesion: 0.14
 Nodes (14): const, enum, format, type, $ref, properties, contractVersion, evidenceClass (+6 more)
 
 ### Community 302 - "regulation-sku-matrix.schema.json"
-Cohesion: 0.29
-Nodes (6): additionalProperties, description, $id, $schema, title, type
+Cohesion: 0.15
+Nodes (12): additionalProperties, description, $id, contractVersion, disclosure, generatedAt, required, $schema (+4 more)
 
 ### Community 303 - "properties"
 Cohesion: 0.17
@@ -1527,8 +1518,8 @@ Cohesion: 0.19
 Nodes (6): readinessGroups, RegulationIntakeReadinessPanel(), contractFields, evidenceCounts, getIndustrySidebarItems(), RegulationDetail()
 
 ### Community 307 - "required"
-Cohesion: 0.18
-Nodes (11): additionalProperties, required, type, notLegalAdvice, disclosure, required, blockedReasons, canDisplayAsComplianceFact (+3 more)
+Cohesion: 0.29
+Nodes (7): additionalProperties, required, type, disclosure, officialSnapshots, publishableComplianceFacts, reviewedSkuDecisions
 
 ### Community 308 - "chart-routes.spec.ts"
 Cohesion: 1.00
@@ -1546,25 +1537,13 @@ Nodes (4): Answer, Outcome, Q: 同意下一批建议, Source Nodes
 Cohesion: 0.20
 Nodes (9): 1. 结论, 2. 盘点结果, 3. 合同结构, 4. Fail-closed 规则, 5. 页面披露, 6. 验证, 7. 未覆盖与停止条件, 8. 下一批建议 (+1 more)
 
-### Community 312 - "required"
-Cohesion: 0.18
-Nodes (11): sourceRegistryId, required, authority, claimScope, contentSha256, effectiveFrom, effectiveTo, jurisdiction (+3 more)
-
 ### Community 313 - "六组输入"
 Cohesion: 0.18
 Nodes (10): 1. 官方来源范围, 2. SKU owner, 3. 法务 reviewer 与 SLA, 4. 证据交接, 5. 撤回治理, 6. 提交确认, DATA-REG 来源与法务输入准备包, 使用方式 (+2 more)
 
-### Community 314 - "enum"
-Cohesion: 0.33
-Nodes (6): enum, applicability, conditional, in-scope, out-of-scope, unknown
-
 ### Community 315 - "properties"
 Cohesion: 0.15
 Nodes (13): properties, const, const, const, const, const, const, noApproveReject (+5 more)
-
-### Community 316 - "@radix-ui/react-checkbox"
-Cohesion: 1.00
-Nodes (2): @radix-ui/react-checkbox, @radix-ui/react-checkbox
 
 ### Community 317 - "required"
 Cohesion: 0.20
@@ -1586,14 +1565,6 @@ Nodes (4): Answer, Outcome, Q: 同意下一批建议, Source Nodes
 Cohesion: 0.18
 Nodes (11): snapshotId, sourceRegistryId, additionalProperties, required, type, officialSnapshot, artifactSha256, contentRetrievedAt (+3 more)
 
-### Community 322 - "required"
-Cohesion: 0.33
-Nodes (6): contractVersion, disclosure, generatedAt, required, evidenceClass, records
-
-### Community 323 - "auth.py"
-Cohesion: 0.29
-Nodes (9): _authentication_error(), _authorization_error(), get_current_principal(), _parse_roles(), alias, Header, Request, StrEnum (+1 more)
-
 ### Community 324 - "DATA-REG 来源与法务 Intake Readiness"
 Cohesion: 0.20
 Nodes (9): 1. 结论, 2. 六组 Readiness 输入, 3. 状态机, 4. 安全边界, 5. 页面披露, 6. 验证, 7. 未覆盖与停止条件, 8. 下一批建议 (+1 more)
@@ -1601,14 +1572,6 @@ Nodes (9): 1. 结论, 2. 六组 Readiness 输入, 3. 状态机, 4. 安全边界,
 ### Community 325 - "DATA-REG 合成 Draft → Review Handoff 门禁"
 Cohesion: 0.18
 Nodes (10): 1. 结论, 2. 设计逻辑, 3. 使用手册, 4. 实测结果, 5. 未覆盖与停止条件, 6. 下一执行门, DATA-REG 合成 Draft → Review Handoff 门禁, Review handoff 合同 (+2 more)
-
-### Community 326 - "session_factory"
-Cohesion: 0.21
-Nodes (11): client(), Session, sessionmaker, TestClient, ready_probe(), session_factory(), settings(), Session (+3 more)
-
-### Community 327 - "test_recovery_drill.py"
-Cohesion: 0.25
-Nodes (5): isolated_settings(), Session, sessionmaker, test_recovery_helper_accepts_only_allowlisted_test_databases(), test_seed_withdraw_and_replay_are_deterministic()
 
 ### Community 328 - "properties"
 Cohesion: 0.20
@@ -1618,10 +1581,6 @@ Nodes (10): const, format, type, enum, properties, contractVersion, generatedAt,
 Cohesion: 0.20
 Nodes (10): additionalProperties, required, type, noFactPromotion, noProductionWrites, noRealSkuEvaluation, notLegalAdvice, disclosure (+2 more)
 
-### Community 330 - "test_health.py"
-Cohesion: 0.43
-Nodes (7): TestClient, test_internal_live_does_not_call_database(), test_internal_ready_redacts_probe_reason(), test_internal_ready_returns_redacted_success(), test_public_health_requires_identity(), test_public_health_returns_redacted_not_ready(), test_request_id_is_preserved_only_when_valid()
-
 ### Community 331 - "Sidebar.tsx"
 Cohesion: 0.09
 Nodes (16): SidebarChildItem(), SidebarItemComponent(), SidebarProps, newProducts2025, newProducts2026, PublicEvidenceManifest, PublicEvidenceRecord, sidebarItems (+8 more)
@@ -1629,10 +1588,6 @@ Nodes (16): SidebarChildItem(), SidebarItemComponent(), SidebarProps, newProduct
 ### Community 332 - "required"
 Cohesion: 0.20
 Nodes (10): expiresAt, reviewerId, reviewerRole, reviewerAuthorization, additionalProperties, required, type, authorizationRef (+2 more)
-
-### Community 333 - "properties"
-Cohesion: 0.29
-Nodes (7): minLength, type, id, source, properties, additionalProperties, type
 
 ### Community 334 - "nullableNonEmptyString"
 Cohesion: 0.22
@@ -1675,9 +1630,9 @@ Cohesion: 1.00
 Nodes (2): @radix-ui/react-navigation-menu, @radix-ui/react-navigation-menu
 
 ## Knowledge Gaps
-- **1855 isolated node(s):** `$schema`, `style`, `rsc`, `tsx`, `config` (+1850 more)
+- **1862 isolated node(s):** `$schema`, `style`, `rsc`, `tsx`, `config` (+1857 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **69 thin communities (<0 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **70 thin communities (<0 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Work-memory lessons
 
@@ -1697,16 +1652,16 @@ Nodes (2): @radix-ui/react-navigation-menu, @radix-ui/react-navigation-menu
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `cn()` connect `cn` to `menubar.tsx`, `sidebar.tsx`, `field.tsx`, `context-menu.tsx`, `Sidebar.tsx`, `dropdown-menu.tsx`, `react`, `carousel.tsx`, `empty.tsx`, `utils.ts`, `input-group.tsx`, `command.tsx`, `toggle-group.tsx`, `item.tsx`, `alert-dialog.tsx`, `drawer.tsx`?**
-  _High betweenness centrality (0.046) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `dependencies` to `package.json`, `next-themes`, `@radix-ui/react-select`, `cmdk`, `lucide-react`, `@hookform/resolvers`, `@radix-ui/react-accordion`, `@radix-ui/react-avatar`, `react-hook-form`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `date-fns`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `@radix-ui/react-checkbox`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `tailwind-merge`, `vaul`, `zod`, `embla-carousel-react`, `@radix-ui/react-context-menu`, `@radix-ui/react-alert-dialog`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-collapsible`, `react`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
-- **Why does `react` connect `react` to `sidebar.tsx`, `field.tsx`, `carousel.tsx`, `dependencies`, `toggle-group.tsx`, `alert-dialog.tsx`?**
+  _High betweenness centrality (0.050) - this node is a cross-community bridge._
+- **Why does `dependencies` connect `dependencies` to `package.json`, `next-themes`, `@radix-ui/react-select`, `cmdk`, `@hookform/resolvers`, `lucide-react`, `@radix-ui/react-checkbox`, `@radix-ui/react-accordion`, `@radix-ui/react-avatar`, `react-hook-form`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `date-fns`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `tailwind-merge`, `vaul`, `zod`, `embla-carousel-react`, `@radix-ui/react-context-menu`, `@radix-ui/react-alert-dialog`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-collapsible`, `react`?**
   _High betweenness centrality (0.027) - this node is a cross-community bridge._
+- **Why does `react` connect `react` to `sidebar.tsx`, `field.tsx`, `carousel.tsx`, `dependencies`, `toggle-group.tsx`, `alert-dialog.tsx`?**
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
 - **Are the 13 inferred relationships involving `Settings` (e.g. with `get_current_principal()` and `Permission`) actually correct?**
   _`Settings` has 13 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 8 inferred relationships involving `SourceRegistryService` (e.g. with `AuditEvent` and `IdempotencyRecord`) actually correct?**
   _`SourceRegistryService` has 8 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `$schema`, `style`, `rsc` to the rest of the system?**
-  _1855 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1862 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `scripts` be split into smaller, more focused modules?**
   _Cohesion score 0.02127659574468085 - nodes in this community are weakly interconnected._
