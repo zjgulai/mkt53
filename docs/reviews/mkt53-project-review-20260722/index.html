@@ -396,7 +396,7 @@
             <h3>本次证据</h3>
             <ul class="checklist">
               <li>Graphify 首次 code-only AST 覆盖 249 个代码文件；Batch 29 已增量同步最终复审、事实展示门、并发 ETag 与响应式导航关系，全程 0 模型 token。</li>
-              <li>当前候选图谱：4,599 nodes / 7,308 edges / 347 communities；已同步 Batch 29 文档与实现，最终提交后再次核对 built-from commit。</li>
+              <li>当前 canonical 图谱：4,599 nodes / 7,308 edges / 347 communities；报告 built from <code>db04b38</code>，由 <code>13e72a8</code> 对齐提交。</li>
               <li>数据一致性审计：43 pages / 107 tables / 53 sources / 0 issues。</li>
               <li>深度审计：888 claims；P0-04 仅执行授权的数据/automation/cron 写入，<code>providerCalls=false</code>。</li>
               <li>本地 build、lint、串行 unit tests 与 GitHub-hosted PR run 均为新鲜候选证据；生产仅发布 H2 数据文件，未部署应用 bundle。</li>
@@ -988,7 +988,7 @@ npm run test:e2e</span>
             <tr><td>本地候选</td><td><span class="status verified">通过</span> 24 files / 189 unit、lint、2,384 modules、78 JS assets、43/107/53 audit、888 claims、Chromium 154/154</td><td>桌面与移动双视口；用户 gate 导航使用可见性断言</td></tr>
             <tr><td>后端</td><td><span class="status verified">65/65</span> 92.74%；Ruff/format 与 Compose 隔离恢复通过</td><td>L2 fixture-only；未部署 backend，production DB writes=false</td></tr>
             <tr><td>GitHub CI</td><td><span class="status verified">app + backend success</span> 精确 SHA <code>91fe393</code>；两个 job annotations=0</td><td>run <a href="https://github.com/zjgulai/mkt53/actions/runs/30266769844">30266769844</a>；不是生产验证</td></tr>
-            <tr><td>Graphify</td><td>4,599 nodes / 7,308 edges / 347 communities；Batch 29 文档与实现已同步</td><td>最终 docs 提交后再次核对 built-from；60 个 zero-AST 源文件须看原文</td></tr>
+            <tr><td>Graphify</td><td>4,599 nodes / 7,308 edges / 347 communities；report built from <code>db04b38</code></td><td>由 <code>13e72a8</code> 对齐提交；60 个 zero-AST 源文件须看原文</td></tr>
             <tr><td>PR #32</td><td><span class="status verified">open / Ready</span> merge state <code>CLEAN</code></td><td>CodeRabbit 294-file 完整复审 pending/requeued；未 merge、未 deploy</td></tr>
           </tbody></table></div>
           <p><a href="./p0-pr-ready-handoff-20260727.md">阅读 Batch 29 PR Ready、使用与回滚手册</a> · <a href="./evidence/p0-pr-ready-handoff-20260727.json">打开 Batch 29 机器证据</a> · <a href="https://github.com/zjgulai/mkt53/pull/32">打开 Ready PR #32</a>。</p>
@@ -1165,7 +1165,7 @@ graphify-out/
   references/</span>
           </div>
         </div>
-        <div class="callout" style="margin-top:18px"><strong>后续维护：</strong>业务代码变化后运行 <code>graphify update .</code>，再运行 <code>graphify cluster-only . --min-community-size=0</code>；当前 347 个社区已重聚类。Graphify 本轮仍报告 60 个 JSON/config 等源文件产出 zero AST nodes，因此图谱不能替代这些原文核对。Batch 29 文档与实现已进入候选图谱，最终 docs 提交后再次核对 built-from commit。模块状态变化时同步 source registry、manifest、页面 gate、测试与本 HTML 的状态表。不要只改文案制造“已接入”。</div>
+        <div class="callout" style="margin-top:18px"><strong>后续维护：</strong>业务代码变化后运行 <code>graphify update .</code>，再运行 <code>graphify cluster-only . --min-community-size=0</code>；当前 347 个社区已重聚类。Graphify 本轮仍报告 60 个 JSON/config 等源文件产出 zero AST nodes，因此图谱不能替代这些原文核对。当前报告 built from <code>db04b38a</code>，canonical 图谱由提交 <code>13e72a8</code> 固化。模块状态变化时同步 source registry、manifest、页面 gate、测试与本 HTML 的状态表。不要只改文案制造“已接入”。</div>
       </section>
 
       <footer>

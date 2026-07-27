@@ -60,8 +60,8 @@
     "backend": { "testsPassed": 65, "coveragePercent": 92.74, "isolatedRecovery": "passed", "productionDatabaseWrites": false }
   },
   "graphify": {
-    "graphCommit": "91fe39359dcd1119cebd8d342e0d5ae055770c56",
-    "reportBuiltFromCommit": "99cfc3da515fe469148eaa8bdeedb2fb12cbc506",
+    "graphCommit": "13e72a831c9adacfb8f92fc220f2dcaaabfa7866",
+    "reportBuiltFromCommit": "db04b38a9ee5783ce483f0e546ceb91c6b4f7d4b",
     "nodes": 4599,
     "edges": 7308,
     "communities": 347,

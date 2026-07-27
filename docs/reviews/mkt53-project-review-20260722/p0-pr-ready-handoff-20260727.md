@@ -61,7 +61,7 @@ graphify update .
 graphify cluster-only . --min-community-size=0
 ```
 
-文档同步后的候选图谱为 4,599 nodes / 7,308 edges / 347 communities。60 个 JSON/config 等源文件仍产生 zero nodes，图谱不替代这些文件的原文与运行证据；最终提交后需再次核对 built-from commit。
+当前 canonical 图谱由 `13e72a8` 提交，报告 built from `db04b38a`：4,599 nodes / 7,308 edges / 347 communities。60 个 JSON/config 等源文件仍产生 zero nodes，图谱不替代这些文件的原文与运行证据。
 
 ## 6. PR Ready 操作与外部门禁
 
