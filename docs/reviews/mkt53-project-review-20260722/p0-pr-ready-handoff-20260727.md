@@ -1,6 +1,6 @@
 ---
 title: Batch 29 最终复审、PR Ready 门禁与合并前交接
-status: pr-ready-review-fixes-local-green-awaiting-exact-head-ci-not-merged-not-deployed
+status: pr-ready-exact-head-ci-green-high-priority-threads-resolved-coderabbit-recheck-queued-not-merged-not-deployed
 created: 2026-07-27
 updated: 2026-07-27
 owner: engineering
@@ -13,7 +13,7 @@ source: git+github-actions+codex-review+coderabbit+graphify
 
 本批在 Batch 28 完整分支复核基础上执行最终 PR Ready 门禁。PR [#32](https://github.com/zjgulai/mkt53/pull/32) 已从 Draft 转为 Ready for review，当前仍为 open；没有执行 merge、应用部署、生产写入、nginx 修改、cron 操作或 provider/connector 调用。
 
-第一轮远端候选绑定精确 SHA `91fe39359dcd1119cebd8d342e0d5ae055770c56`。GitHub Actions [run 30266769844](https://github.com/zjgulai/mkt53/actions/runs/30266769844) 的 app/backend 均为 success，两个 check-run annotations 均为 0。PR 转为 Ready 后，CodeRabbit 完成 294 文件差异复审，给出 3 个 Critical inline finding 和 1 个 Major outside-diff finding；本批已逐项复现并在代码提交 `f880ea5d7f379c6422f95a87bc1f9daa212bbef9` 中关闭。文档固化时这些提交尚待推送后的 exact-head GitHub CI 与 CodeRabbit recheck，因此不把本地绿色写成远端终态。
+第一轮远端候选绑定精确 SHA `91fe39359dcd1119cebd8d342e0d5ae055770c56`。PR 转为 Ready 后，CodeRabbit 完成 294 文件差异复审，给出 3 个 Critical inline finding 和 1 个 Major outside-diff finding；本批已逐项复现并在代码提交 `f880ea5d7f379c6422f95a87bc1f9daa212bbef9` 中关闭。包含代码、图谱和本文档的精确 PR head `7ae8a1993b175f66503f65878f003b03f1a43044` 已由 GitHub Actions [run 30271729225](https://github.com/zjgulai/mkt53/actions/runs/30271729225) 验证：app 4m20s、backend 1m1s，均为 success，两个 check-run annotations 均为 0。3 个 Critical inline thread 已回复并全部 resolved；CodeRabbit 对新 head 的 recheck 仍为 `Review queued`，因此 merge state 为 `UNSTABLE`，不能写成外部复审终态通过。
 
 ## 2. 本批关闭的缺口
 
@@ -45,7 +45,7 @@ source: git+github-actions+codex-review+coderabbit+graphify
 | `f880ea5` | 关闭 CodeRabbit 3 Critical、1 Major 与 Codex Review 1 P2，并新增回归 |
 | `5360ea6` | 从 `f880ea5` 重建 Graphify 图谱与全部非文件社区 |
 
-`91fe393` 及此前提交已经推送；`f880ea5`、`5360ea6` 与本交接文档将在本批统一推送到 `codex/mkt53-release-candidate-20260630`，不改写共享历史。推送成功和 exact-head CI 需要以 GitHub 实际回执为准。
+以上提交均已推送到 `codex/mkt53-release-candidate-20260630`，没有改写共享历史。实现/图谱/交接文档的远端验证 head 为 `7ae8a1993b175f66503f65878f003b03f1a43044`；随后用于记录这份远端回执的提交只改变文档，业务代码树仍由 `f880ea5` 定义。
 
 ## 4. 本地验证
 
@@ -82,21 +82,21 @@ graphify cluster-only . --min-community-size=0
 5. 执行 `gh pr ready 32 --repo zjgulai/mkt53`；
 6. 接收 CodeRabbit 3 个 Critical inline 与 1 个 Major outside-diff finding；
 7. 在 `f880ea5` 修复，并以 Codex Review 发现和关闭额外 latest 摘要 P2；
-8. 从修复提交重建图谱，准备推送后 exact-head CI 与 CodeRabbit recheck。
+8. 从修复提交重建图谱并推送；
+9. 精确 head `7ae8a19` 的 app/backend CI 成功、annotations=0；
+10. 回复并 resolve 3/3 Critical inline threads；CodeRabbit recheck 进入 `Review queued`。
 
-CodeRabbit 的 3 个 Critical inline finding 已有代码修复，但在 GitHub 上仍需在新 SHA 推送后回复、recheck 并解决线程；1 个 Major 因 GitHub outside-diff 限制没有独立线程。其余 33 个 Minor 建议不混入本次高优先级安全/正确性批次，后续应按风险和产品价值分批验证，不能笼统写成已关闭。
+CodeRabbit 的 3 个 Critical inline finding 已修复、回复并 resolved；1 个 Major 因 GitHub outside-diff 限制没有独立线程，已在 PR 总结评论中记录修复。recheck 的 `Review queued` 是外部审查未决，不等于失败，也不等于通过。其余 33 个 Minor 建议不混入本次高优先级安全/正确性批次，后续应按风险和产品价值分批验证，不能笼统写成已关闭。
 
 ## 7. 合并前 TODO
 
-1. 推送 `f880ea5`、`5360ea6` 与交接文档，重新绑定精确 PR head；
-2. 等待 app/backend exact-head CI 完成并核对 annotations；
-3. 回复并解决 3 个已修复的 Critical inline threads，检查 recheck 是否产生新高优先级 finding；
-4. 对 33 个 Minor 建议建立独立批次，逐项验证后再决定修复或保留；
-5. 由人工 reviewer 做最终业务边界确认；
-6. 单独决定是否 merge；本批不含 merge 授权；
-7. merge 后仍需独立部署授权，不能把合并解释为生产发布；
-8. 2026-08-01 09:00 后只读观察首次半月 cron 日志、run report 与双路径哈希；
-9. DATA-REG 继续等待六组真实 owner/source/SKU/legal/evidence/withdrawal 输入与独立法务授权。
+1. 等待 CodeRabbit recheck 从 `Review queued` 进入明确终态，若产生新高优先级 finding 则重新走复现、修复与 exact-head CI；
+2. 对 33 个 Minor 建议建立独立批次，逐项验证后再决定修复或保留；
+3. 由人工 reviewer 做最终业务边界确认；
+4. 单独决定是否 merge；本批不含 merge 授权；
+5. merge 后仍需独立部署授权，不能把合并解释为生产发布；
+6. 2026-08-01 09:00 后只读观察首次半月 cron 日志、run report 与双路径哈希；
+7. DATA-REG 继续等待六组真实 owner/source/SKU/legal/evidence/withdrawal 输入与独立法务授权。
 
 ## 8. 回滚
 
