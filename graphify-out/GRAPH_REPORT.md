@@ -9,7 +9,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4b7b687f`
+- Built from commit: `257c1aae`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -176,7 +176,7 @@
 - build-regulation-review-handoff-gate.mjs
 - lucide-react
 - source-registry.ts
-- @radix-ui/react-accordion
+- test_config.py
 - Batch 25：P0 后端 CI 质量门禁
 - @radix-ui/react-avatar
 - project-regulation-intake-to-sku-draft.mjs
@@ -329,7 +329,7 @@
 - required
 - NewCompetition.tsx
 - required
-- test_config.py
+- next-themes
 - nullableNonEmptyString
 - required
 - class-variance-authority
@@ -718,7 +718,7 @@ Nodes (13): 1. 本轮目标, 2.1 新鲜命令证据, 2.2 页面与报告代码�
 
 ### Community 86 - "dependencies"
 Cohesion: 0.18
-Nodes (11): dependencies, clsx, input-otp, next-themes, @radix-ui/react-aspect-ratio, recharts, clsx, input-otp (+3 more)
+Nodes (11): dependencies, clsx, input-otp, @radix-ui/react-accordion, @radix-ui/react-aspect-ratio, recharts, clsx, input-otp (+3 more)
 
 ### Community 87 - "input-group.tsx"
 Cohesion: 0.21
@@ -1020,9 +1020,9 @@ Nodes (2): lucide-react, lucide-react
 Cohesion: 0.26
 Nodes (9): FactDisplayGate(), FactDisplayGateProps, isFactDisplayReady(), getSourceRegistryItem(), getSourceRegistryItemsByModule(), getVerificationStatusMeta(), SourceReliability, VerificationStatus (+1 more)
 
-### Community 164 - "@radix-ui/react-accordion"
-Cohesion: 1.00
-Nodes (2): @radix-ui/react-accordion, @radix-ui/react-accordion
+### Community 164 - "test_config.py"
+Cohesion: 0.48
+Nodes (6): production_settings(), test_database_url_hides_password_when_stringified(), test_nonproduction_allows_fixture_defaults_but_keeps_dev_identity_disabled(), test_production_accepts_empty_or_exact_https_origin(), test_production_configuration_fails_closed(), test_production_disables_openapi()
 
 ### Community 165 - "Batch 25：P0 后端 CI 质量门禁"
 Cohesion: 0.11
@@ -1632,9 +1632,9 @@ Nodes (8): newProducts2025, newProducts2026, PublicEvidenceManifest, PublicEvide
 Cohesion: 0.20
 Nodes (10): expiresAt, reviewerId, reviewerRole, reviewerAuthorization, additionalProperties, required, type, authorizationRef (+2 more)
 
-### Community 333 - "test_config.py"
-Cohesion: 0.48
-Nodes (6): production_settings(), test_database_url_hides_password_when_stringified(), test_nonproduction_allows_fixture_defaults_but_keeps_dev_identity_disabled(), test_production_accepts_empty_or_exact_https_origin(), test_production_configuration_fails_closed(), test_production_disables_openapi()
+### Community 333 - "next-themes"
+Cohesion: 1.00
+Nodes (2): next-themes, next-themes
 
 ### Community 334 - "nullableNonEmptyString"
 Cohesion: 0.22
@@ -1708,7 +1708,7 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `cn()` connect `cn` to `menubar.tsx`, `sidebar.tsx`, `field.tsx`, `PageEvidenceNotice.tsx`, `context-menu.tsx`, `dropdown-menu.tsx`, `react`, `carousel.tsx`, `empty.tsx`, `utils.ts`, `input-group.tsx`, `command.tsx`, `toggle-group.tsx`, `item.tsx`, `alert-dialog.tsx`, `drawer.tsx`?**
   _High betweenness centrality (0.048) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `dependencies` to `package.json`, `@radix-ui/react-select`, `cmdk`, `@hookform/resolvers`, `lucide-react`, `@radix-ui/react-checkbox`, `@radix-ui/react-accordion`, `@radix-ui/react-avatar`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `date-fns`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `tailwind-merge`, `vaul`, `zod`, `embla-carousel-react`, `class-variance-authority`, `react-hook-form`, `@radix-ui/react-context-menu`, `@radix-ui/react-alert-dialog`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-collapsible`, `react`?**
+- **Why does `dependencies` connect `dependencies` to `package.json`, `@radix-ui/react-select`, `cmdk`, `@hookform/resolvers`, `lucide-react`, `@radix-ui/react-checkbox`, `@radix-ui/react-avatar`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `date-fns`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `tailwind-merge`, `vaul`, `zod`, `next-themes`, `embla-carousel-react`, `class-variance-authority`, `react-hook-form`, `@radix-ui/react-context-menu`, `@radix-ui/react-alert-dialog`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-collapsible`, `react`?**
   _High betweenness centrality (0.028) - this node is a cross-community bridge._
 - **Why does `react` connect `react` to `sidebar.tsx`, `field.tsx`, `carousel.tsx`, `dependencies`, `toggle-group.tsx`, `alert-dialog.tsx`?**
   _High betweenness centrality (0.025) - this node is a cross-community bridge._
