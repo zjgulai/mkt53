@@ -371,7 +371,7 @@
         <div class="grid grid-3" style="margin-top:18px">
           <article class="card finding good"><span class="status verified">已形成能力</span><h3>可信边界可见</h3><p><code>PageEvidenceNotice</code>、<code>EvidenceGatePage</code>、source registry 与全路由 E2E 已把示例、待复核、公开来源和内部 proxy 的边界写进 UI 与测试。</p></article>
           <article class="card finding warn"><span class="status review">主要瓶颈</span><h3>真实数据未闭环</h3><p>本地 manifest 仍有 28 条 connector-required、9 条 manual-required；Amazon、CRM、VOC、YouTube、贸易和 ERP 自动刷新都不能被公开网页样本替代。</p></article>
-          <article class="card finding good"><span class="status verified">PR Ready · 未合并未部署</span><h3>Batch 29 最终候选门禁已闭环</h3><p>在 Batch 28 完整复核基础上，本批再关闭 pending review 旧 ETag、用户事实展示、三条严格日期、gate 导航和移动端可见性共 5 项缺口。精确 SHA <code>91fe393</code> 的 GitHub-hosted app/backend 双 job 全绿且 annotations 为 0；本地 189 unit 与 154 条 E2E 通过。PR #32 已转 Ready，CodeRabbit 完整复审仍在外部队列中；未 merge 或部署。</p></article>
+          <article class="card finding good"><span class="status verified">PR Ready · 高优先级复审修复完成</span><h3>Batch 29 候选门禁继续收敛</h3><p>在原 5 项增量缺口之后，CodeRabbit 完整复审识别 3 个 Critical 与 1 个 Major，Codex Review 再识别 latest 摘要覆盖 adapter 的 1 个 P2；均已在 <code>f880ea5</code> 关闭。本地 190 unit、66 backend 与 154 条 E2E 通过，Graphify 已从修复提交重建。PR #32 保持 Ready；exact-head CI/recheck 尚待推送回执，未 merge 或部署。</p></article>
         </div>
         <div class="callout" style="margin-top:18px"><strong>生产恢复：</strong>2026-07-24 在完整 root-only 备份和完整配置 <code>nginx -t</code> 通过后，仅激活 mkt server block 并 reload nginx。未授权 root、deep route 与 manifest 均 302 到 apex login，真实会话首页与数据管理页可访问，生产 E2E 8/8；旧 2/8 结果保留为修复前基线。</div>
         <div class="callout" style="margin-top:12px"><strong>BE-01 / BE-02：</strong>Phase 1 采用同机独立 Compose、同源 <code>/api/v1/</code>、PostgreSQL 双网络隔离的可逆形态；BE-02 已建立并隔离验证本地 identity/RBAC 骨架。该结果是 L1 local validation，静态前端仍 canonical，后端未部署生产。</div>
@@ -395,8 +395,8 @@
           <div class="card flat">
             <h3>本次证据</h3>
             <ul class="checklist">
-              <li>Graphify 首次 code-only AST 覆盖 249 个代码文件；Batch 29 已增量同步最终复审、事实展示门、并发 ETag 与响应式导航关系，全程 0 模型 token。</li>
-              <li>当前 canonical 图谱：4,599 nodes / 7,308 edges / 347 communities；报告 built from <code>db04b38</code>，由 <code>13e72a8</code> 对齐提交。</li>
+              <li>Graphify 首次 code-only AST 覆盖 249 个代码文件；Batch 29 已增量同步评审修复、事实展示门、并发 ETag、响应式导航、数据库超时与 customs 产物一致性关系，全程 0 模型 token。</li>
+              <li>当前 canonical 图谱：4,600 nodes / 7,312 edges / 346 communities；报告 built from <code>f880ea5</code>，由 <code>5360ea6</code> 对齐提交。</li>
               <li>数据一致性审计：43 pages / 107 tables / 53 sources / 0 issues。</li>
               <li>深度审计：888 claims；P0-04 仅执行授权的数据/automation/cron 写入，<code>providerCalls=false</code>。</li>
               <li>本地 build、lint、串行 unit tests 与 GitHub-hosted PR run 均为新鲜候选证据；生产仅发布 H2 数据文件，未部署应用 bundle。</li>
@@ -412,9 +412,9 @@
           <div><h2>代码知识图谱分析</h2><p class="section-intro">Graphify 被安装为项目级 Codex skill，并生成可查询的 AST 图谱。它有效揭示跨文件中心节点，但任何 INFERRED 边仍需回到源码验证。</p></div>
         </div>
         <div class="grid grid-4">
-          <div class="card metric"><b>4,599</b><span>节点</span><small>代码、符号、依赖与查询记忆</small></div>
-          <div class="card metric"><b>7,308</b><span>边</span><small>imports / calls / contains 等</small></div>
-          <div class="card metric"><b>347</b><span>社区</span><small>min community size 0</small></div>
+          <div class="card metric"><b>4,600</b><span>节点</span><small>代码、符号、依赖与查询记忆</small></div>
+          <div class="card metric"><b>7,312</b><span>边</span><small>imports / calls / contains 等</small></div>
+          <div class="card metric"><b>346</b><span>社区</span><small>min community size 0</small></div>
           <div class="card metric"><b>60.5×</b><span>平均查询 token 降幅</span><small>121,500 words → scoped traversal</small></div>
         </div>
         <div class="grid grid-2" style="margin-top:18px">
@@ -429,7 +429,7 @@
           </div>
           <div class="card">
             <h3>图谱的局限</h3>
-            <p>Batch 29 查询继续核对 review/source optimistic locking、FactDisplayGate、Sidebar 与用户子页的跨文件关系；60 个 JSON/config 等源文件仍是 zero-AST 可见性限制。</p>
+            <p>Batch 29 查询继续核对 review/source optimistic locking、FactDisplayGate、Sidebar、数据库 session timeout 与 customs adapter/summary 的跨文件关系；60 个 JSON/config 等源文件仍是 zero-AST 可见性限制。</p>
             <div class="callout"><strong>使用原则：</strong>图谱负责缩小搜索范围；事实声明由 EXTRACTED source location、相邻源码、测试与运行结果共同确认。</div>
           </div>
         </div>
@@ -780,7 +780,7 @@ npm run test:e2e</span>
             <tr><td>BE-03–07</td><td>Registry / snapshot / review / adapter / recovery</td><td><span class="status verified">本地完成 + GitHub CI 通过</span> 版本化 source、不可变 snapshot、review 状态机、前端只读 adapter、隔离恢复与独立 backend CI 均有机器证据；64 tests / 92.73% coverage；生产激活仍待独立决策</td><td>L1–L2 local + GitHub-hosted validation</td></tr>
             <tr><td>DATA-REG</td><td>法规 SKU 合同、gated projection 与 review handoff</td><td><span class="status review">L2 合成门禁</span> 合同、0/6 intake、6/6 synthetic projection、pending handoff、幂等、撤回及 approve/reject 阻断已验证；真实 snapshot / review decision / publishable fact 仍为 0</td><td>L2 fixture / dry-run</td></tr>
           </tbody></table></div>
-          <p><b>Batch 01–29 验收：</b>P0-04/P0-05 已完成各自授权范围内的生产恢复；BE-01–07 已形成可逆后端设计、本地治理 API、前端 adapter、隔离恢复证据与独立 backend CI；DATA-REG 已推进到合同、intake readiness、纯合成投影和 draft-to-review handoff 门禁；两个 bundle 临时例外和 14 个 high advisories 均已退出。Batch 28 完成完整分支 review 并关闭 6 项缺口；Batch 29 再关闭并发 ETag、用户事实展示、严格日期与双层响应式导航共 5 项缺口，精确 SHA 的 GitHub-hosted app/backend 全绿且无 annotation，PR #32 已转 Ready。CodeRabbit 完整复审仍在外部队列；merge 与 deploy 仍是独立后续门，首次 cron 观察仍待 8 月 1 日，后端和 DATA-REG 均未生产激活。</p>
+          <p><b>Batch 01–29 验收：</b>P0-04/P0-05 已完成各自授权范围内的生产恢复；BE-01–07 已形成可逆后端设计、本地治理 API、前端 adapter、隔离恢复证据与独立 backend CI；DATA-REG 已推进到合同、intake readiness、纯合成投影和 draft-to-review handoff 门禁；两个 bundle 临时例外和 14 个 high advisories 均已退出。Batch 28 完成完整分支 review 并关闭 6 项缺口；Batch 29 先关闭并发 ETag、用户事实展示、严格日期与双层响应式导航共 5 项缺口，再关闭 CodeRabbit 的 3 Critical、1 Major 与 Codex Review 的 1 P2。PR #32 已转 Ready；新修复的 exact-head CI/recheck 仍须以推送后回执为准。merge 与 deploy 仍是独立后续门，首次 cron 观察仍待 8 月 1 日，后端和 DATA-REG 均未生产激活。</p>
         </div>
         <div class="card" style="margin-bottom:18px">
           <span class="status example">P0-04 · audit complete / acceptance failed</span>
@@ -980,16 +980,17 @@ npm run test:e2e</span>
           <p><a href="./p0-full-codex-review-closeout-20260727.md">阅读 Batch 28 完整复核、使用与回滚手册</a> · <a href="./evidence/p0-full-codex-review-closeout-20260727.json">打开 Batch 28 机器证据</a> · <a href="https://github.com/zjgulai/mkt53/pull/32">打开草稿 PR #32</a>。</p>
         </div>
         <div class="card" style="margin-bottom:18px">
-          <span class="status verified">Batch 29 · PR Ready / exact-SHA CI green</span>
-          <h3>最终复审、事实展示门与响应式导航已闭环</h3>
+          <span class="status review">Batch 29 · PR Ready / review fixes local green</span>
+          <h3>最终复审、事实展示门、响应式导航与高优先级外部 finding 已闭环</h3>
           <div class="table-wrap"><table><thead><tr><th>验收域</th><th>结果</th><th>边界 / 下一门</th></tr></thead><tbody>
             <tr><td>增量复审</td><td><span class="status verified">5/5 closed</span> 2 个 P1 + 3 个 P2；pending review 旧 ETag、用户事实展示、三条严格日期、gate 导航与移动可见性</td><td>完整复审的首轮重试因 SIGKILL/137 无结论；采用 Batch 28 完整基线 + 本批逐提交复审</td></tr>
-            <tr><td>实现提交</td><td><code>1535602</code>、<code>257c1aa</code>、<code>99cfc3d</code> 及对应 Graphify 对齐提交</td><td>未修改生产数据、连接器、nginx 或 cron</td></tr>
-            <tr><td>本地候选</td><td><span class="status verified">通过</span> 24 files / 189 unit、lint、2,384 modules、78 JS assets、43/107/53 audit、888 claims、Chromium 154/154</td><td>桌面与移动双视口；用户 gate 导航使用可见性断言</td></tr>
-            <tr><td>后端</td><td><span class="status verified">65/65</span> 92.74%；Ruff/format 与 Compose 隔离恢复通过</td><td>L2 fixture-only；未部署 backend，production DB writes=false</td></tr>
-            <tr><td>GitHub CI</td><td><span class="status verified">app + backend success</span> 精确 SHA <code>91fe393</code>；两个 job annotations=0</td><td>run <a href="https://github.com/zjgulai/mkt53/actions/runs/30266769844">30266769844</a>；不是生产验证</td></tr>
-            <tr><td>Graphify</td><td>4,599 nodes / 7,308 edges / 347 communities；report built from <code>db04b38</code></td><td>由 <code>13e72a8</code> 对齐提交；60 个 zero-AST 源文件须看原文</td></tr>
-            <tr><td>PR #32</td><td><span class="status verified">open / Ready</span> merge state <code>CLEAN</code></td><td>CodeRabbit 294-file 完整复审 pending/requeued；未 merge、未 deploy</td></tr>
+            <tr><td>高优先级外部复审</td><td><span class="status verified">5/5 fixed</span> CodeRabbit 3 Critical + 1 Major，Codex Review 1 P2；最终受控只读复审为 <code>No actionable findings.</code></td><td>3 个 GitHub inline thread 待新 SHA 推送后回复/resolve；33 个 Minor 留待独立批次验证</td></tr>
+            <tr><td>实现提交</td><td><code>1535602</code>、<code>257c1aa</code>、<code>99cfc3d</code>；高优先级修复 <code>f880ea5</code>；图谱 <code>5360ea6</code></td><td>未修改生产数据、连接器、nginx 或 cron</td></tr>
+            <tr><td>本地候选</td><td><span class="status verified">通过</span> 24 files / 190 unit、lint、2,384 modules、78 JS assets、43/107/53 audit、888 claims、Chromium 154/154</td><td>customs evidence/adapter/latest/safety counter 一致；桌面与移动双视口</td></tr>
+            <tr><td>后端</td><td><span class="status verified">66/66</span> 92.74%；Ruff/format 与 Compose 隔离恢复通过</td><td>request session 与 readiness probe 共享连接超时；L2 fixture-only</td></tr>
+            <tr><td>GitHub CI</td><td><span class="status review">等待新 head</span> Ready 基线 <code>91fe393</code> 的 app/backend success 且 annotations=0</td><td>新修复和本文档尚待推送后的 exact-head CI；不能沿用旧 run 作为新代码终态</td></tr>
+            <tr><td>Graphify</td><td>4,600 nodes / 7,312 edges / 346 communities；report built from <code>f880ea5</code></td><td>由 <code>5360ea6</code> 对齐提交；60 个 zero-AST 源文件须看原文</td></tr>
+            <tr><td>PR #32</td><td><span class="status verified">open / Ready</span></td><td>CodeRabbit 高优先级 finding 已本地修复；新 SHA recheck、human review 与 merge 决策仍未完成</td></tr>
           </tbody></table></div>
           <p><a href="./p0-pr-ready-handoff-20260727.md">阅读 Batch 29 PR Ready、使用与回滚手册</a> · <a href="./evidence/p0-pr-ready-handoff-20260727.json">打开 Batch 29 机器证据</a> · <a href="https://github.com/zjgulai/mkt53/pull/32">打开 Ready PR #32</a>。</p>
         </div>
@@ -998,7 +999,7 @@ npm run test:e2e</span>
             <span class="status verified">Day 0–15 · 本地 P0 门禁已闭环</span>
             <h3>恢复可信刷新与安全门禁</h3>
             <p><b>已完成：</b>source schema、dependency security、bundle budget、候选证据包、P0-04 生产恢复，以及 P0-05 统一门户与 manifest 门禁生产激活。P0-04 首次定时运行仍待 8 月 1 日时间窗观察。</p>
-            <p><b>验收：</b>本地与 GitHub-hosted audit 为 0，unit 189/189、E2E 154/154；生产 freshness 已恢复到 H2，P0-05 使用独立写入授权和真实授权会话完成正负向验收，production E2E 为 8/8。</p>
+            <p><b>验收：</b>本地 audit 为 0，unit 190/190、E2E 154/154；Ready 基线 GitHub-hosted CI 为绿色，新修复 exact-head CI 待推送回执。生产 freshness 已恢复到 H2，P0-05 使用独立写入授权和真实授权会话完成正负向验收，production E2E 为 8/8。</p>
           </div>
           <div class="timeline-item card">
             <span class="status verified">Day 16–30 · BE-01–07 本地链路已验证</span>
@@ -1051,11 +1052,11 @@ npm run test:e2e</span>
           <div class="card">
             <h3>本次验证</h3>
             <div class="table-wrap"><table><thead><tr><th>检查</th><th>结果</th></tr></thead><tbody>
-              <tr><td>Graphify AST + cluster</td><td id="graphifyStatus"><span class="status verified">通过</span> 4,574 nodes / 7,249 edges / 335 communities；0 model tokens</td></tr>
+              <tr><td>Graphify AST + cluster</td><td id="graphifyStatus"><span class="status verified">通过</span> 4,600 nodes / 7,312 edges / 346 communities；0 model tokens</td></tr>
               <tr><td>Graph health</td><td><span class="status verified">通过</span> 0 integrity defects</td></tr>
-              <tr><td>Vitest</td><td><span class="status verified">通过</span> 24 files / 189 tests；FactDisplayGate 与严格日期聚焦回归通过；无失败</td></tr>
+              <tr><td>Vitest</td><td><span class="status verified">通过</span> 24 files / 190 tests；FactDisplayGate、严格日期与 customs 产物一致性回归通过；无失败</td></tr>
               <tr><td>ESLint</td><td><span class="status verified">通过</span> ESLint 10；未禁用新增生命周期规则</td></tr>
-              <tr><td>TypeScript + Vite build</td><td><span class="status verified">通过</span> 2,383 modules</td></tr>
+              <tr><td>TypeScript + Vite build</td><td><span class="status verified">通过</span> 2,384 modules</td></tr>
               <tr><td>Data consistency</td><td><span class="status verified">通过</span> 0 issues</td></tr>
               <tr><td>Deep audit</td><td><span class="status verified">通过</span> 888 low-risk claims</td></tr>
               <tr><td>npm audit</td><td><span class="status verified">通过</span> 14 high → 0 vulnerabilities；依赖树完整</td></tr>
@@ -1073,8 +1074,8 @@ npm run test:e2e</span>
               <tr><td>Production freshness</td><td><span class="status verified">已恢复</span> production H2；cron installed；first scheduled observation pending；upstream unknown-gated</td></tr>
               <tr><td>Production static smoke</td><td><span class="status verified">通过</span> 站点、静态资产与已发布 manifest 可读</td></tr>
               <tr><td>Production E2E</td><td id="prodE2EStatus"><span class="status verified">通过</span> 8 / 8；2026-07-24 P0-05 激活后桌面/移动 landing、root、deep routes 与 manifest 门禁全部通过</td></tr>
-              <tr><td>GitHub Actions</td><td><span class="status verified">通过</span> Ready PR #32；精确 SHA <code>91fe393</code>；app/backend success；两项 job annotations=0；CodeRabbit 完整复审 pending/requeued</td></tr>
-              <tr><td>Codex review</td><td id="codexReviewStatus"><span class="status verified">11/11 findings closed</span> Batch 28 的 6 项完整分支 finding 与 Batch 29 的 5 项增量 finding 均已修复回归；最终响应式修复复审无新 finding</td></tr>
+              <tr><td>GitHub Actions</td><td><span class="status review">新 head 待验证</span> Ready 基线 SHA <code>91fe393</code> 的 app/backend success 且两项 job annotations=0；<code>f880ea5</code> 修复待推送后 exact-head CI</td></tr>
+              <tr><td>Codex review</td><td id="codexReviewStatus"><span class="status verified">16/16 identified findings fixed</span> Batch 28 6 项 + Batch 29 首轮 5 项 + CodeRabbit 高优先级 4 项 + Codex Review 1 项；最终受控只读复审无 actionable finding</td></tr>
             </tbody></table></div>
           </div>
           <div class="card">
@@ -1090,7 +1091,7 @@ npm run test:e2e</span>
               <li>本地证据写入 <code>app/tmp/release-evidence/latest.json</code>；CI 同名 artifact 保留 14 天。</li>
               <li>DataManage 与 <code>vendor-charts</code> 临时例外均已删除；shared chart core 使用 required、无 exception 的 180 KiB 永久规则。</li>
               <li>当前新鲜 <code>npm audit</code> 为 0 vulnerabilities；Node ≥22.22、最低安全版本和禁止 <code>react-router-dom</code> 回流已由永久合同保护。</li>
-              <li>Batch 29 已完成最终复审、5 项修复、push、精确 SHA GitHub-hosted CI 并把 PR #32 转为 Ready；CodeRabbit 完整复审仍在外部队列，merge、应用部署与生产验证继续需要各自独立决策或授权。</li>
+              <li>Batch 29 已把 PR #32 转为 Ready，并完成原 5 项增量修复及 CodeRabbit/Codex Review 的 5 项高优先级修复；新修复的 push、exact-head CI、thread resolve 与 recheck 是当前收口门，merge、应用部署与生产验证继续需要各自独立决策或授权。</li>
             </ul>
           </div>
         </div>
@@ -1165,7 +1166,7 @@ graphify-out/
   references/</span>
           </div>
         </div>
-        <div class="callout" style="margin-top:18px"><strong>后续维护：</strong>业务代码变化后运行 <code>graphify update .</code>，再运行 <code>graphify cluster-only . --min-community-size=0</code>；当前 347 个社区已重聚类。Graphify 本轮仍报告 60 个 JSON/config 等源文件产出 zero AST nodes，因此图谱不能替代这些原文核对。当前报告 built from <code>db04b38a</code>，canonical 图谱由提交 <code>13e72a8</code> 固化。模块状态变化时同步 source registry、manifest、页面 gate、测试与本 HTML 的状态表。不要只改文案制造“已接入”。</div>
+        <div class="callout" style="margin-top:18px"><strong>后续维护：</strong>业务代码变化后运行 <code>graphify update .</code>，再运行 <code>graphify cluster-only . --min-community-size=0</code>；当前 346 个社区已重聚类。Graphify 本轮仍报告 60 个 JSON/config 等源文件产出 zero AST nodes，因此图谱不能替代这些原文核对。当前报告 built from <code>f880ea5</code>，canonical 图谱由提交 <code>5360ea6</code> 固化。模块状态变化时同步 source registry、manifest、页面 gate、测试与本 HTML 的状态表。不要只改文案制造“已接入”。</div>
       </section>
 
       <footer>
