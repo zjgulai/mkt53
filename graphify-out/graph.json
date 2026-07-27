@@ -7511,8 +7511,8 @@
       "source_file": "app/package.json",
       "source_location": "L132",
       "_origin": "ast",
-      "community": 336,
-      "community_name": "class-variance-authority",
+      "community": 86,
+      "community_name": "dependencies",
       "norm_label": "class-variance-authority",
       "id": "app_package_dependencies_class_variance_authority"
     },
@@ -7522,8 +7522,8 @@
       "source_file": "app/package.json",
       "source_location": "L132",
       "_origin": "ast",
-      "community": 336,
-      "community_name": "class-variance-authority",
+      "community": 86,
+      "community_name": "dependencies",
       "norm_label": "class-variance-authority",
       "id": "class_variance_authority"
     },
@@ -7599,8 +7599,8 @@
       "source_file": "app/package.json",
       "source_location": "L136",
       "_origin": "ast",
-      "community": 86,
-      "community_name": "dependencies",
+      "community": 336,
+      "community_name": "embla-carousel-react",
       "norm_label": "embla-carousel-react",
       "id": "app_package_dependencies_embla_carousel_react"
     },
@@ -7610,8 +7610,8 @@
       "source_file": "app/package.json",
       "source_location": "L136",
       "_origin": "ast",
-      "community": 86,
-      "community_name": "dependencies",
+      "community": 336,
+      "community_name": "embla-carousel-react",
       "norm_label": "embla-carousel-react",
       "id": "embla_carousel_react"
     },
@@ -134514,5 +134514,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "91fe39359dcd1119cebd8d342e0d5ae055770c56"
+  "built_at_commit": "db04b38a9ee5783ce483f0e546ceb91c6b4f7d4b"
 }
