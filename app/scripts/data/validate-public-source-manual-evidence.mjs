@@ -108,6 +108,25 @@ const ALLOWED_DECISIONS = new Set([
   'rejected_scope_mismatch',
   'blocked_vendor_access',
 ]);
+const REQUIRED_MANUAL_EVIDENCE_FIELDS = [
+  'source_id',
+  'metric',
+  'publisher',
+  'source_url',
+  'evidence_type',
+  'visible_or_authorized_artifact_path',
+  'artifact_sha256',
+  'publication_date_or_report_year',
+  'accessed_at',
+  'reviewer',
+  'business_scope',
+  'quoted_or_summarized_fact',
+  'unit_and_currency',
+  'region_scope',
+  'product_scope',
+  'decision',
+  'limitations',
+];
 
 const FORBIDDEN_TOKEN_RE = /password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i;
 const SHA256_RE = /^(?:sha256:)?[a-f0-9]{64}$/i;
@@ -296,15 +315,37 @@ function buildPacketValidation(packetRows, acceptanceGateRows, questionValidatio
 
   return packetRows.map((packet) => {
     const packetQuestions = questionValidationRows.filter((question) => question.task_id === packet.task_id);
-    const completeQuestions = packetQuestions.filter((question) => question.validation_status === 'complete_for_manual_release_review');
-    const decisionQuestion = packetQuestions.find((question) => question.required_field === 'decision');
+    const questionsByField = new Map(
+      REQUIRED_MANUAL_EVIDENCE_FIELDS.map((field) => [
+        field,
+        packetQuestions.filter((question) => question.required_field === field && question.source_id === packet.source_id),
+      ]),
+    );
+    const completeQuestions = REQUIRED_MANUAL_EVIDENCE_FIELDS.filter((field) => {
+      const questions = questionsByField.get(field) ?? [];
+      return questions.length === 1 && questions[0].validation_status === 'complete_for_manual_release_review';
+    });
+    const decisionQuestion = questionsByField.get('decision')?.[0];
     const manualDecision = decisionQuestion?.decision_status ?? 'missing_decision';
     const allowedDecision = ALLOWED_DECISIONS.has(manualDecision);
     const invalidHashCount = packetQuestions.filter((question) => question.hash_validation_status === 'invalid_hash_shape').length;
     const forbiddenTokenRowCount = packetQuestions.filter((question) => question.forbidden_token_detected === 'true').length;
-    const missingFieldCount = Math.max(packetQuestions.length - completeQuestions.length, 0);
-    const readyForManualReleaseReview = packetQuestions.length > 0 && missingFieldCount === 0 && allowedDecision;
+    const missingFieldCount = REQUIRED_MANUAL_EVIDENCE_FIELDS.length - completeQuestions.length;
     const gate = acceptanceByTaskId.get(packet.task_id);
+    const questionnaireShapeValid =
+      packetQuestions.length === REQUIRED_MANUAL_EVIDENCE_FIELDS.length &&
+      packetQuestions.every(
+        (question) =>
+          question.source_id === packet.source_id &&
+          REQUIRED_MANUAL_EVIDENCE_FIELDS.includes(question.required_field) &&
+          (questionsByField.get(question.required_field)?.length ?? 0) === 1,
+      );
+    const acceptanceGateMatches = gate?.source_id === packet.source_id;
+    const readyForManualReleaseReview =
+      questionnaireShapeValid &&
+      acceptanceGateMatches &&
+      missingFieldCount === 0 &&
+      allowedDecision;
 
     return {
       task_id: packet.task_id,
@@ -316,7 +357,7 @@ function buildPacketValidation(packetRows, acceptanceGateRows, questionValidatio
       current_status: packet.current_status,
       current_http_status: packet.current_http_status,
       manual_decision: manualDecision,
-      required_field_count: packetQuestions.length,
+      required_field_count: REQUIRED_MANUAL_EVIDENCE_FIELDS.length,
       complete_field_count: completeQuestions.length,
       missing_field_count: missingFieldCount,
       invalid_hash_count: invalidHashCount,

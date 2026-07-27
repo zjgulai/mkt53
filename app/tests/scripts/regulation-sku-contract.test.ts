@@ -13,6 +13,45 @@ function readFixture() {
   return JSON.parse(readFileSync(fixturePath, 'utf8'));
 }
 
+function officialFixture() {
+  const fixture = readFixture();
+  const record = fixture.records[0];
+  fixture.evidenceClass = 'official-source-snapshot';
+  Object.assign(record.source, {
+    sourceRegistryId: 'policy-cpsc-efiling',
+    jurisdiction: 'US',
+    authority: 'U.S. Consumer Product Safety Commission',
+    title: 'CPSC eFiling',
+    officialUrl: 'https://www.cpsc.gov/eFiling',
+    retrievedAt: '2026-07-24T00:00:00Z',
+    contentSha256: 'a'.repeat(64),
+    effectiveFrom: '2026-01-01',
+    effectiveTo: null,
+  });
+  Object.assign(record.decision, {
+    applicability: 'in-scope',
+    status: 'approved',
+    reviewerId: 'reviewer-1',
+    reviewedAt: '2026-07-24T01:00:00Z',
+    reason: 'Fixture verifies the official-source publication contract.',
+  });
+  Object.assign(record.evidence, {
+    snapshotId: 'snap-cpsc-efiling-20260724',
+    reviewDecisionId: 'review-cpsc-efiling-20260724',
+    sourceEvidencePath: 'tmp/regulation/cpsc-efiling.json',
+  });
+  Object.assign(record.publication, {
+    canDisplayAsComplianceFact: true,
+    blockedReasons: [],
+  });
+  Object.assign(fixture.disclosure, {
+    officialSnapshots: 1,
+    reviewedSkuDecisions: 1,
+    publishableComplianceFacts: 1,
+  });
+  return fixture;
+}
+
 describe('DATA-REG regulation to SKU contract', () => {
   it('accepts the contract-only synthetic fixture with zero publishable facts', () => {
     const report = buildRegulationSkuContractReport(readFixture(), fixturePath);
@@ -76,11 +115,33 @@ describe('DATA-REG regulation to SKU contract', () => {
     expect(result.passed).toBe(false);
     expect(result.errors.map((error: { code: string }) => error.code)).toEqual(expect.arrayContaining([
       'source-not-allowlisted',
-      'official-https-required',
+      'official-host-not-allowlisted',
       'sha256-required',
       'snapshot-required',
       'reviewer-required',
       'review-decision-required',
+    ]));
+  });
+
+  it('accepts a complete official snapshot only for its registry-specific authority host', () => {
+    expect(validateRegulationSkuContract(officialFixture())).toEqual({ passed: true, errors: [] });
+  });
+
+  it('rejects an untrusted authority host, unsafe evidence path, and invalid effective dates', () => {
+    const fixture = officialFixture();
+    Object.assign(fixture.records[0].source, {
+      officialUrl: 'https://evil.example/phish',
+      effectiveFrom: 'not-a-date',
+      effectiveTo: 'also-not-a-date',
+    });
+    fixture.records[0].evidence.sourceEvidencePath = '/arbitrary/path';
+
+    const result = validateRegulationSkuContract(fixture);
+    expect(result.passed).toBe(false);
+    expect(result.errors.map((error: { code: string }) => error.code)).toEqual(expect.arrayContaining([
+      'official-host-not-allowlisted',
+      'effective-date-required',
+      'safe-evidence-path-required',
     ]));
   });
 

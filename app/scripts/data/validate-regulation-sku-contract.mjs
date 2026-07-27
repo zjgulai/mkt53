@@ -9,12 +9,18 @@ export const OFFICIAL_SOURCE_REGISTRY_IDS = new Set([
   'policy-cpsc-efiling',
   'policy-eu-mdr-transition',
 ]);
+const OFFICIAL_SOURCE_HOSTS_BY_REGISTRY_ID = new Map([
+  ['ds-016', new Set(['health.ec.europa.eu', 'www.gov.uk', 'www.canada.ca', 'www.tuv.com'])],
+  ['policy-cpsc-efiling', new Set(['www.cpsc.gov'])],
+  ['policy-eu-mdr-transition', new Set(['health.ec.europa.eu'])],
+]);
 
 const EVIDENCE_CLASSES = new Set(['synthetic-contract-fixture', 'official-source-snapshot']);
 const APPLICABILITY_VALUES = new Set(['unknown', 'in-scope', 'out-of-scope', 'conditional']);
 const DECISION_STATUSES = new Set(['draft', 'legal-review-required', 'approved', 'rejected', 'withdrawn']);
 const DECISIVE_STATUSES = new Set(['approved', 'rejected']);
 const SHA256_PATTERN = /^[a-f0-9]{64}$/;
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 function isObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -26,6 +32,36 @@ function isNonEmptyString(value) {
 
 function isIsoDateTime(value) {
   return isNonEmptyString(value) && !Number.isNaN(Date.parse(value));
+}
+
+function isIsoDate(value) {
+  return isNonEmptyString(value) && ISO_DATE_PATTERN.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
+}
+
+function isAllowedOfficialSourceUrl(sourceRegistryId, value) {
+  if (!isNonEmptyString(value)) return false;
+
+  try {
+    const url = new URL(value);
+    const allowedHosts = OFFICIAL_SOURCE_HOSTS_BY_REGISTRY_ID.get(sourceRegistryId);
+    return (
+      url.protocol === 'https:' &&
+      url.username === '' &&
+      url.password === '' &&
+      url.port === '' &&
+      allowedHosts?.has(url.hostname) === true
+    );
+  } catch {
+    return false;
+  }
+}
+
+function isSafeLocalEvidencePath(value) {
+  if (!isNonEmptyString(value) || value.startsWith('/') || value.includes('\\')) return false;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(value)) return false;
+
+  const segments = value.split('/');
+  return ['tmp', 'configs', 'docs'].includes(segments[0]) && segments.every((segment) => segment !== '' && segment !== '..');
 }
 
 function addError(errors, path, code, message) {
@@ -125,11 +161,14 @@ function validateRecord(record, index, evidenceClass, errors) {
     if (!OFFICIAL_SOURCE_REGISTRY_IDS.has(record.source.sourceRegistryId)) addError(errors, `${path}.source.sourceRegistryId`, 'source-not-allowlisted', 'Official evidence must reference an allowlisted source registry id.');
     if (!isNonEmptyString(record.source.authority)) addError(errors, `${path}.source.authority`, 'official-authority-required', 'Official source authority is required.');
     if (!isNonEmptyString(record.source.title)) addError(errors, `${path}.source.title`, 'official-title-required', 'Official source title is required.');
-    if (!isNonEmptyString(record.source.officialUrl) || !record.source.officialUrl.startsWith('https://')) addError(errors, `${path}.source.officialUrl`, 'official-https-required', 'Official source URL must use HTTPS.');
+    if (!isAllowedOfficialSourceUrl(record.source.sourceRegistryId, record.source.officialUrl)) addError(errors, `${path}.source.officialUrl`, 'official-host-not-allowlisted', 'Official source URL must use HTTPS and match the registry-specific authority host.');
     if (!isIsoDateTime(record.source.retrievedAt)) addError(errors, `${path}.source.retrievedAt`, 'retrieved-at-required', 'Official source retrievedAt must be a date-time.');
     if (!SHA256_PATTERN.test(record.source.contentSha256 ?? '')) addError(errors, `${path}.source.contentSha256`, 'sha256-required', 'Official source content SHA-256 is required.');
+    if (record.source.effectiveFrom !== null && !isIsoDate(record.source.effectiveFrom)) addError(errors, `${path}.source.effectiveFrom`, 'effective-date-required', 'effectiveFrom must be null or an ISO date.');
+    if (record.source.effectiveTo !== null && !isIsoDate(record.source.effectiveTo)) addError(errors, `${path}.source.effectiveTo`, 'effective-date-required', 'effectiveTo must be null or an ISO date.');
+    if (isIsoDate(record.source.effectiveFrom) && isIsoDate(record.source.effectiveTo) && record.source.effectiveFrom > record.source.effectiveTo) addError(errors, `${path}.source.effectiveTo`, 'effective-date-order', 'effectiveTo must not precede effectiveFrom.');
     if (!isNonEmptyString(record.evidence.snapshotId)) addError(errors, `${path}.evidence.snapshotId`, 'snapshot-required', 'Official source evidence requires an immutable snapshot id.');
-    if (!isNonEmptyString(record.evidence.sourceEvidencePath)) addError(errors, `${path}.evidence.sourceEvidencePath`, 'evidence-path-required', 'Official source evidence requires a local evidence path.');
+    if (!isSafeLocalEvidencePath(record.evidence.sourceEvidencePath)) addError(errors, `${path}.evidence.sourceEvidencePath`, 'safe-evidence-path-required', 'Official source evidence requires a repository-relative path under tmp/, configs/, or docs/.');
   }
 
   if (isDecisive) {

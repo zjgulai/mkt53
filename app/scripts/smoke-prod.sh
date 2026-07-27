@@ -42,30 +42,27 @@ assert_remote_file() {
 for route in "${routes[@]}"; do
   headers_path="${TMP_DIR}/headers-${route//\//_}.txt"
   status_code="$(curl -sS -o "${TMP_DIR}/page.html" -D "${headers_path}" -w "%{http_code}" "${BASE_URL}${route}")"
-  if [[ "${status_code}" == "200" ]]; then
-    continue
-  fi
-
   if [[ "${status_code}" == "302" ]] && grep -Eiq '^location:[[:space:]]*https://lute-tlz-dddd.top/login.html\?next=https://mkt\.lute-tlz-dddd\.top' "${headers_path}"; then
     protected_route_count=$((protected_route_count + 1))
     continue
   fi
 
-    echo "Route smoke failed: ${BASE_URL}${route} returned ${status_code}" >&2
-    exit 1
+  echo "Portal auth smoke failed: ${BASE_URL}${route} returned ${status_code} without the required apex login redirect" >&2
+  exit 1
 done
 
-if [[ "${protected_route_count}" -gt 0 ]]; then
-  mkt53_require_ssh_key "${KEY_PATH}" "auth-protected production static check"
-
-  remote_cat "index.html" > "${TMP_DIR}/index.html"
-  remote_cat "periodic-data/latest.json" > "${TMP_DIR}/periodic-latest.json"
-  remote_cat "periodic-data/public-evidence-samples.json" > "${TMP_DIR}/public-evidence-samples.json"
-
-  node -e "const fs=require('fs'); const latest=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const evidence=JSON.parse(fs.readFileSync(process.argv[2],'utf8')); if (latest.refreshCadence !== 'semi-monthly') throw new Error('unexpected refreshCadence'); if (!/^\\d{4}-\\d{2}-H[12]$/.test(latest.period)) throw new Error('unexpected period'); if (evidence.summary?.businessDataWrites !== 0) throw new Error('public evidence wrote business data');" "${TMP_DIR}/periodic-latest.json" "${TMP_DIR}/public-evidence-samples.json"
-else
-  curl -fsSL "${BASE_URL}/" -o "${TMP_DIR}/index.html"
+if [[ "${protected_route_count}" -ne "${#routes[@]}" ]]; then
+  echo "Portal auth smoke failed: protected ${protected_route_count}/${#routes[@]} routes" >&2
+  exit 1
 fi
+
+mkt53_require_ssh_key "${KEY_PATH}" "auth-protected production static check"
+
+remote_cat "index.html" > "${TMP_DIR}/index.html"
+remote_cat "periodic-data/latest.json" > "${TMP_DIR}/periodic-latest.json"
+remote_cat "periodic-data/public-evidence-samples.json" > "${TMP_DIR}/public-evidence-samples.json"
+
+node -e "const fs=require('fs'); const latest=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const evidence=JSON.parse(fs.readFileSync(process.argv[2],'utf8')); if (latest.refreshCadence !== 'semi-monthly') throw new Error('unexpected refreshCadence'); if (!/^\\d{4}-\\d{2}-H[12]$/.test(latest.period)) throw new Error('unexpected period'); if (evidence.summary?.businessDataWrites !== 0) throw new Error('public evidence wrote business data');" "${TMP_DIR}/periodic-latest.json" "${TMP_DIR}/public-evidence-samples.json"
 
 assets=()
 while IFS= read -r asset; do
@@ -83,11 +80,7 @@ fi
 
 for asset in "${assets[@]}"; do
   asset_path="${TMP_DIR}/$(basename "${asset}")"
-  if [[ "${protected_route_count}" -gt 0 ]]; then
-    remote_cat "${asset}" > "${asset_path}"
-  else
-    curl -fsSL "${BASE_URL}${asset}" -o "${asset_path}"
-  fi
+  remote_cat "${asset}" > "${asset_path}"
   if grep -Eq 'sk-[A-Za-z0-9]{30,}|ghp_[A-Za-z0-9_]{30,}|Authorization:[[:space:]]*Bearer|code-path=|react-simple-maps|2026-08452' "${asset_path}"; then
     echo "Sensitive or removed dependency marker found in ${asset}" >&2
     exit 1

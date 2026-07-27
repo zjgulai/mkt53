@@ -366,8 +366,27 @@ function buildPacketValidation(packetRows, releaseGateRows, questionValidationRo
     const evidenceCount = requiredQuestions.filter((question) => question.evidence_reference_status === 'submitted_reference' && question.hash_validation_status === 'valid_sha256').length;
     const invalidHashCount = requiredQuestions.filter((question) => question.evidence_hash && question.hash_validation_status !== 'valid_sha256').length;
     const forbiddenTokenRowCount = requiredQuestions.filter((question) => question.forbidden_token_detected === 'true').length;
-    const missingRequiredCount = Math.max(requiredQuestions.length - completeQuestions.length, 0);
-    const readyForManualReview = requiredQuestions.length > 0 && missingRequiredCount === 0;
+    const expectedRequiredCount = Number.parseInt(gate?.required_question_count ?? '', 10);
+    const uniqueQuestionIds = new Set(requiredQuestions.map((question) => question.question_id));
+    const gateMatchesPacket =
+      Number.isInteger(expectedRequiredCount) &&
+      expectedRequiredCount > 0 &&
+      gate?.packet_id === packet.packet_id &&
+      gate?.owner_lane === packet.owner_lane &&
+      gate?.source_ids === packet.source_ids;
+    const questionnaireShapeValid =
+      gateMatchesPacket &&
+      requiredQuestions.length === expectedRequiredCount &&
+      uniqueQuestionIds.size === expectedRequiredCount &&
+      requiredQuestions.every(
+        (question) =>
+          question.owner_lane === packet.owner_lane &&
+          question.source_ids === packet.source_ids,
+      );
+    const missingRequiredCount = Number.isInteger(expectedRequiredCount) && expectedRequiredCount > 0
+      ? Math.max(expectedRequiredCount - completeQuestions.length, 0)
+      : Math.max(requiredQuestions.length - completeQuestions.length, 1);
+    const readyForManualReview = questionnaireShapeValid && missingRequiredCount === 0;
 
     return {
       release_gate_id: gate?.release_gate_id ?? `owner-intake-validation:${packet.packet_id}`,
@@ -375,7 +394,9 @@ function buildPacketValidation(packetRows, releaseGateRows, questionValidationRo
       owner_lane: packet.owner_lane,
       priority: packet.priority,
       source_ids: packet.source_ids,
-      required_question_count: requiredQuestions.length,
+      required_question_count: Number.isInteger(expectedRequiredCount) && expectedRequiredCount > 0
+        ? expectedRequiredCount
+        : requiredQuestions.length,
       answered_question_count: answeredQuestions.length,
       complete_required_question_count: completeQuestions.length,
       submitted_evidence_count: evidenceCount,

@@ -162,6 +162,9 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(script).toContain('react-simple-maps');
     expect(script).toContain('2026-08452');
     expect(script).toContain('/images/world-map.jpg');
+    expect(script).toContain('without the required apex login redirect');
+    expect(script).toContain('"${protected_route_count}" -ne "${#routes[@]}"');
+    expect(script).not.toContain('if [[ "${status_code}" == "200" ]]');
     expect(packageJson.scripts['smoke:prod:routes']).toContain('scripts/smoke-prod-routes.mjs');
     expect(routeSmokeScript).toContain("channel: 'chrome'");
     expect(routeSmokeScript).toContain("boundary: 'production-read-only'");
@@ -324,6 +327,42 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       expect(payload.samplePacketValidation.every((packet) => packet.can_write_source_registry === 'false')).toBe(true);
       expect(payload.samplePacketValidation.every((packet) => packet.can_update_page_display === 'false')).toBe(true);
       expect(payload.samplePacketValidation.every((packet) => packet.can_export_as_fact_csv === 'false')).toBe(true);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it('keeps manual evidence blocked when a packet submits only its decision row', () => {
+    const tempDir = copyManualEvidencePackToTemp();
+
+    try {
+      const questionnairePath = join(tempDir, 'manual_evidence_questionnaire.csv');
+      const rows = readFileSync(questionnairePath, 'utf8').trimEnd().split('\n');
+      const header = rows[0];
+      const incompleteRows = rows.slice(1).filter(
+        (row) => !row.startsWith('public-source-review:ds-002,') || row.includes(',decision,'),
+      );
+      writeFileSync(questionnairePath, `${[header, ...incompleteRows].join('\n')}\n`);
+
+      const output = execFileSync(
+        'node',
+        ['scripts/data/validate-public-source-manual-evidence.mjs', '--intake', tempDir, '--json', '--no-write'],
+        { cwd: process.cwd(), encoding: 'utf8' },
+      );
+      const payload = JSON.parse(output) as {
+        summary: { readyForManualReleaseReviewCount: number; blockedPacketCount: number };
+        samplePacketValidation: Array<Record<string, string | number>>;
+      };
+
+      expect(payload.summary.readyForManualReleaseReviewCount).toBe(2);
+      expect(payload.summary.blockedPacketCount).toBe(1);
+      expect(payload.samplePacketValidation.find((packet) => packet.source_id === 'ds-002')).toMatchObject({
+        required_field_count: 17,
+        complete_field_count: 1,
+        missing_field_count: 16,
+        packet_validation_status: 'blocked_manual_evidence_incomplete',
+        ready_for_manual_release_review: 'false',
+      });
     } finally {
       rmSync(tempDir, { recursive: true, force: true });
     }
@@ -1123,6 +1162,29 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(result.sampleQuestionValidation.some((question) => question.blockers.includes('missing-required-answer'))).toBe(true);
     expect(existsSync(outDir)).toBe(false);
     expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    const truncatedQuestionnaire = [questionHeader, ...questionRows.filter((row) => !row.startsWith('p0-amazon-connector-owner-01,Q2,'))];
+    writeFileSync(join(intakeDir, 'owner_intake_questionnaire.csv'), `${truncatedQuestionnaire.join('\n')}\n`);
+    const truncatedOutput = execFileSync(
+      'node',
+      ['scripts/data/validate-source-gap-owner-intake.mjs', '--intake', intakeDir, '--out', outDir, '--json', '--no-write'],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      },
+    );
+    const truncatedResult = JSON.parse(truncatedOutput) as {
+      samplePacketValidation: Array<Record<string, string | number>>;
+    };
+    expect(
+      truncatedResult.samplePacketValidation.find((packet) => packet.packet_id === 'p0-amazon-connector-owner-01'),
+    ).toMatchObject({
+      required_question_count: 2,
+      complete_required_question_count: 1,
+      missing_required_questions: 1,
+      packet_validation_status: 'blocked_owner_submission_incomplete',
+      ready_for_manual_review: 'false',
+    });
 
     rmSync(tempDir, { recursive: true, force: true });
   });
@@ -1947,7 +2009,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
             generatedAt: '2026-07-02T00:00:00.000Z',
             summary: {
               total: 2,
-              networkCalls: 0,
+              networkCalls: 2,
               businessDataWrites: 0,
             },
             records: [
@@ -2005,7 +2067,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       expect(adapter.status).toBe('ready-for-public-query-planning');
       expect(adapter.sourceId).toBe('ds-006');
       expect(adapter.boundaries).toMatchObject({
-        networkCalls: 0,
+        networkCalls: 2,
         businessDataWrites: 0,
         factPromotion: false,
         shipmentRowsIncluded: false,

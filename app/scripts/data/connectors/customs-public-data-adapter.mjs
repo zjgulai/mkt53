@@ -125,7 +125,9 @@ export function buildCustomsPublicDataAdapter(options = {}) {
   const publicEvidenceReady = evidenceRecords.every((record) => record.ready);
   const sourceAvailabilityReady = tradeSourceRecord?.ready === true;
   const classificationReady = classificationRecord?.ready === true;
-  const safetyReady = (evidenceInput.data?.summary?.businessDataWrites ?? 0) === 0;
+  const inputNetworkCalls = evidenceInput.data?.summary?.networkCalls ?? 0;
+  const inputBusinessDataWrites = evidenceInput.data?.summary?.businessDataWrites ?? 0;
+  const safetyReady = inputBusinessDataWrites === 0;
   const checks = [
     buildCheck(
       'publicEvidenceBundle',
@@ -162,8 +164,8 @@ export function buildCustomsPublicDataAdapter(options = {}) {
       'safetyBoundary',
       safetyReady,
       {
-        networkCalls: evidenceInput.data?.summary?.networkCalls ?? 0,
-        businessDataWrites: evidenceInput.data?.summary?.businessDataWrites ?? 0,
+        networkCalls: inputNetworkCalls,
+        businessDataWrites: inputBusinessDataWrites,
         rawTextPublicBundleAllowed: false,
         shipmentFactsGenerated: false,
       },
@@ -193,8 +195,8 @@ export function buildCustomsPublicDataAdapter(options = {}) {
       factPromotion: false,
       sourceRegistryWrites: false,
       pageWrites: false,
-      networkCalls: 0,
-      businessDataWrites: 0,
+      networkCalls: inputNetworkCalls,
+      businessDataWrites: inputBusinessDataWrites,
       rawTextIncluded: false,
       shipmentRowsIncluded: false,
       importerExporterIncluded: false,
