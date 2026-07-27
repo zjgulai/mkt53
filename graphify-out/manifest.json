@@ -1355,8 +1355,8 @@
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/index.html": {
-    "mtime": 1785151871.2315097,
-    "ast_hash": "a55d2fd67cdf220612969475b33e6083",
+    "mtime": 1785158434.3334515,
+    "ast_hash": "37942933982d4aade2112ae65ff57e37",
     "semantic_hash": ""
   },
   "docs/workflows/workflow-quality-gate-stable.md": {
@@ -3637,6 +3637,16 @@
   "docs/reviews/mkt53-project-review-20260722/p0-full-codex-review-closeout-20260727.md": {
     "mtime": 1785152068.62296,
     "ast_hash": "69a060091dac75bed6cbb28d871cfeab",
+    "semantic_hash": ""
+  },
+  "docs/reviews/mkt53-project-review-20260722/evidence/p0-pr-ready-handoff-20260727.json": {
+    "mtime": 1785158491.8085532,
+    "ast_hash": "ceb4e47a0033707302a2dc9457be6804",
+    "semantic_hash": ""
+  },
+  "docs/reviews/mkt53-project-review-20260722/p0-pr-ready-handoff-20260727.md": {
+    "mtime": 1785158434.330519,
+    "ast_hash": "bd688581fc526cbbbe1794700c74b8ba",
     "semantic_hash": ""
   }
 }
