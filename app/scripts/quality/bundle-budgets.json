@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "baselineDate": "2026-07-23",
+  "units": "uncompressed-bytes",
+  "defaultRule": {
+    "id": "route-default-120-kib",
+    "pattern": ".*\\.js$",
+    "targetBytes": 122880,
+    "maxBytes": 122880
+  },
+  "rules": [
+    {
+      "id": "vendor-chart-core-180-kib",
+      "pattern": "^vendor-chart-core-.*\\.js$",
+      "targetBytes": 184320,
+      "maxBytes": 184320,
+      "required": true
+    },
+    {
+      "id": "vendor-react-220-kib",
+      "pattern": "^vendor-react-.*\\.js$",
+      "targetBytes": 225280,
+      "maxBytes": 225280,
+      "required": true
+    }
+  ]
+}

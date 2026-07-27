@@ -121,7 +121,15 @@ export function extractSourceRegistry(appRoot = process.cwd()) {
 }
 
 export function extractDataModules(appRoot = process.cwd()) {
-  const modules = arrayFromVariable(join(appRoot, 'src/pages/DataManage.tsx'), 'dataModules');
+  const coreModules = arrayFromVariable(
+    join(appRoot, 'src/features/data-manage/catalog-core.tsx'),
+    'coreDataModules',
+  );
+  const erpModules = arrayFromVariable(
+    join(appRoot, 'src/features/data-manage/catalog-erp.tsx'),
+    'erpDataModules',
+  );
+  const modules = [...coreModules.slice(0, 5), ...erpModules, ...coreModules.slice(5)];
 
   return modules.map((module) => ({
     id: module.id,
@@ -142,7 +150,10 @@ export function extractDataModules(appRoot = process.cwd()) {
 }
 
 export function extractTableGovernanceIds(appRoot = process.cwd()) {
-  return objectKeysFromVariable(join(appRoot, 'src/pages/DataManage.tsx'), 'tableGovernance');
+  return objectKeysFromVariable(
+    join(appRoot, 'src/features/data-manage/governance.ts'),
+    'tableGovernance',
+  );
 }
 
 export function listPageComponents(appRoot = process.cwd()) {

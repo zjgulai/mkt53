@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import ts from 'typescript';
@@ -140,8 +140,12 @@ function businessFiles(appRoot) {
     return true;
   });
   const dataFiles = walkFiles(join(srcRoot, 'data'), (path) => path.endsWith('.ts') && !path.endsWith('source-registry.ts'));
+  const featureRoot = join(srcRoot, 'features');
+  const featureFiles = existsSync(featureRoot)
+    ? walkFiles(featureRoot, (path) => path.endsWith('.ts') || path.endsWith('.tsx'))
+    : [];
 
-  return unique([...pages, ...components, ...dataFiles]).sort();
+  return unique([...pages, ...components, ...dataFiles, ...featureFiles]).sort();
 }
 
 function lineNumber(sourceFile, node) {
@@ -427,6 +431,7 @@ function componentForFile(appRoot, path) {
   const rel = relative(join(appRoot, 'src'), path);
   const base = basename(path).replace(/\.(tsx|ts)$/, '');
   if (rel.startsWith(`data/`)) return base;
+  if (rel.startsWith(join('features', 'data-manage'))) return 'DataManage';
   return base;
 }
 

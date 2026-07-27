@@ -12,6 +12,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:prod": "playwright test -c playwright.prod.config.ts",
+    "quality:bundle-budget": "node scripts/quality/check-bundle-budget.mjs",
     "data:audit": "node scripts/data/audit-consistency.mjs",
     "data:audit:json": "node scripts/data/audit-consistency.mjs --json",
     "data:audit:deep": "node scripts/data/audit-deep.mjs",
