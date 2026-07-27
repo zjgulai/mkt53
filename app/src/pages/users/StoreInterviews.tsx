@@ -16,6 +16,7 @@ import {
 import Sidebar from '@/components/Sidebar';
 import InterviewAgents from '@/components/InterviewAgents';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import FactDisplayGate from '@/components/FactDisplayGate';
 import { exportToCsv } from '@/utils/csvExport';
 
 // ─── 月度客流与转化趋势 ───
@@ -150,6 +151,12 @@ export default function StoreInterviews() {
   const avgRevenuePerSqm = (efficiencyData.reduce((s, e) => s + e.revenuePerSqm, 0) / efficiencyData.length).toLocaleString();
 
   return (
+    <FactDisplayGate
+      sourceIds={['ds-042']}
+      title="门店访谈仅保留治理状态"
+      description="当前缺少门店运营快照、访谈授权、现场记录、计算口径和证据哈希，不能展示转化率、坪效、NPS、客流或营收。"
+      layout="page"
+    >
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex gap-8">
@@ -461,5 +468,6 @@ export default function StoreInterviews() {
         </div>
       </div>
     </div>
+    </FactDisplayGate>
   );
 }

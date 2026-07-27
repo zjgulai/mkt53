@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
+import { isValidIsoDateOrDateTime } from './lib/strict-iso-date.mjs';
 
 const QUESTIONNAIRE_REQUIRED_COLUMNS = [
   'packet_id',
@@ -111,7 +112,6 @@ const CHAT_QUESTION_REQUIRED_COLUMNS = [
 
 const FORBIDDEN_TOKEN_RE = /password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i;
 const SHA256_RE = /^(?:sha256:)?[a-f0-9]{64}$/i;
-const ISO_DATE_OR_DATETIME_RE = /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z?)?$/;
 
 function parseArgs(argv) {
   const options = {
@@ -364,7 +364,7 @@ function statusForSubmittedAnswer(answer) {
     answer.evidence_hash &&
     SHA256_RE.test(answer.evidence_hash) &&
     answer.answered_by &&
-    ISO_DATE_OR_DATETIME_RE.test(answer.answered_at)
+    isValidIsoDateOrDateTime(answer.answered_at)
   ) {
     return 'answered';
   }

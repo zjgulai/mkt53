@@ -4,6 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Users, Target, MapPin, Globe, Star, Zap, Palette, MessageCircle, Store, Heart, TrendingUp, Lightbulb, AlertTriangle, ThumbsUp, ChevronRight } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import FactDisplayGate from '@/components/FactDisplayGate';
 
 // ═══════════════════════════════════════════════════════════════════
 // Momcozy 看用户 · 全面重构
@@ -257,6 +258,11 @@ export default function UsersPage() {
   // 社交声量面板
   // ═══════════════════════════════════════════════════════════════
   const renderSocialBoard = () => (
+    <FactDisplayGate
+      sourceIds={['ds-013']}
+      title="社交声量证据尚未达到事实展示门槛"
+      description="仍缺授权社媒连接器、查询词、语言与地区过滤、采样窗口、去重规则、字段字典和证据哈希。"
+    >
     <div className="space-y-6">
       {activeChild === '母婴舆情' && (
         <div className="space-y-6">
@@ -383,12 +389,18 @@ export default function UsersPage() {
         </div>
       )}
     </div>
+    </FactDisplayGate>
   );
 
   // ═══════════════════════════════════════════════════════════════
   // 用户研究面板 — 消费者/渠道/店铺访谈摘要
   // ═══════════════════════════════════════════════════════════════
   const renderResearchBoard = () => (
+    <FactDisplayGate
+      sourceIds={activeChild === '消费者访谈' ? ['ds-014'] : activeChild === '渠道访谈' ? ['ds-041'] : ['ds-042']}
+      title="用户研究证据尚未达到事实展示门槛"
+      description="仍缺业务 owner 签核、样本与招募口径、脱敏访谈原文、授权状态、运营快照和证据哈希。"
+    >
     <div className="space-y-6">
       {activeChild === '消费者访谈' && (
         <div className="space-y-5">
@@ -578,12 +590,18 @@ export default function UsersPage() {
         </div>
       )}
     </div>
+    </FactDisplayGate>
   );
 
   // ═══════════════════════════════════════════════════════════════
   // 区域用户画像面板（完整6类画像）
   // ═══════════════════════════════════════════════════════════════
   const renderRegionalPersona = () => (
+    <FactDisplayGate
+      sourceIds={['ds-011', 'ds-043', 'ds-012']}
+      title="组合用户画像尚未达到事实展示门槛"
+      description="中国线上有孩家庭、美国公开哺乳调研与未接入 CRM 不能合并为区域或全球 Momcozy 客户画像。页面必须先拆分口径并补齐 CRM 授权证据。"
+    >
     <div className="space-y-6">
       {/* 1. 用户人群画像分类表 */}
       <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
@@ -753,12 +771,18 @@ export default function UsersPage() {
         </div>
       </div>
     </div>
+    </FactDisplayGate>
   );
 
   // ═══════════════════════════════════════════════════════════════
   // 全球用户画像面板（全面重写）
   // ═══════════════════════════════════════════════════════════════
   const renderGlobalPersona = () => (
+    <FactDisplayGate
+      sourceIds={['ds-011', 'ds-043', 'ds-012']}
+      title="全球画像与 RFM 尚未达到事实展示门槛"
+      description="公开地域样本不能外推为全球客户分群；RFM 必须等待授权 CRM 快照、字段字典、计算口径和独立复核。"
+    >
     <div className="space-y-6">
       {activeChild === '用户画像' && (
         <>
@@ -916,6 +940,7 @@ export default function UsersPage() {
         </div>
       )}
     </div>
+    </FactDisplayGate>
   );
 
   // ═══════════════════════════════════════════════════════════════

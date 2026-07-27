@@ -17,6 +17,7 @@ import {
 import Sidebar from '@/components/Sidebar';
 import InterviewAgents from '@/components/InterviewAgents';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import FactDisplayGate from '@/components/FactDisplayGate';
 import { exportToCsv } from '@/utils/csvExport';
 
 // ─── NPS分布 ───
@@ -181,6 +182,12 @@ export default function ConsumerInterviews() {
   const avgNPS = (interviews.reduce((s, i) => s + i.nps, 0) / interviews.length).toFixed(0);
 
   return (
+    <FactDisplayGate
+      sourceIds={['ds-014']}
+      title="消费者访谈仅保留治理状态"
+      description="当前缺少业务 owner 签核、样本窗口、招募条件、脱敏原文、授权状态和证据哈希，不能展示 NPS、满意度、原话或主题占比。"
+      layout="page"
+    >
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex gap-8">
@@ -485,5 +492,6 @@ export default function ConsumerInterviews() {
         </div>
       </div>
     </div>
+    </FactDisplayGate>
   );
 }

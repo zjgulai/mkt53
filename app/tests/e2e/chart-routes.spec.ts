@@ -1,17 +1,17 @@
 import { expect, test } from '@playwright/test';
 
 const chartRoutes = [
-  '/',
-  '/#/market',
-  '/#/users',
-  '/#/users/aesthetics',
-  '/#/users/consumer',
-  '/#/users/store',
-];
+  { path: '/', expectation: 'chart' },
+  { path: '/#/market', expectation: 'chart' },
+  { path: '/#/users', expectation: 'gate' },
+  { path: '/#/users/aesthetics', expectation: 'chart' },
+  { path: '/#/users/consumer', expectation: 'gate' },
+  { path: '/#/users/store', expectation: 'gate' },
+] as const;
 
 test.describe('route-aware chart bundle guard', () => {
   for (const route of chartRoutes) {
-    test(`${route} renders charts without runtime or layout regressions`, async ({ page }) => {
+    test(`${route.path} renders its evidence-aware visualization state without runtime or layout regressions`, async ({ page }) => {
       const consoleErrors: string[] = [];
       const pageErrors: string[] = [];
 
@@ -20,11 +20,16 @@ test.describe('route-aware chart bundle guard', () => {
       });
       page.on('pageerror', (error) => pageErrors.push(error.message));
 
-      await page.goto(route);
+      await page.goto(route.path);
       await page.waitForLoadState('networkidle');
 
-      await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
-      expect(await page.locator('.recharts-wrapper').count()).toBeGreaterThan(0);
+      if (route.expectation === 'chart') {
+        await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
+        expect(await page.locator('.recharts-wrapper').count()).toBeGreaterThan(0);
+      } else {
+        await expect(page.getByTestId('fact-display-gate').first()).toBeVisible();
+        await expect(page.locator('.recharts-wrapper')).toHaveCount(0);
+      }
 
       const hasHorizontalOverflow = await page.evaluate(
         () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,

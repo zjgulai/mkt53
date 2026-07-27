@@ -8,7 +8,7 @@ const pages = [
   { path: '/#/competition/new', title: /新品竞争监测/ },
   { path: '/#/competition/products', title: /竞品产品信息管理/ },
   { path: '/#/users', title: /用户洞察来源口径/ },
-  { path: '/#/users/consumer', title: /消费者深度访谈/ },
+  { path: '/#/users/consumer', title: /消费者访谈仅保留治理状态/ },
   { path: '/#/industry', title: /全球母婴标准与法规地图/ },
   { path: '/#/industry/regulation', title: /行业法规与标准解读/ },
   { path: '/#/industry/supply', title: /供应链情报/ },
@@ -84,7 +84,9 @@ test.describe('core pages visual guard', () => {
       }
 
       if (pageConfig.path === '/#/users/consumer') {
-        await expect(page.getByText('消费者访谈样本口径')).toBeVisible();
+        await expect(page.getByTestId('fact-display-gate')).toBeVisible();
+        await expect(page.getByText('消费者深度访谈')).toHaveCount(0);
+        await expect(page.locator('.recharts-wrapper')).toHaveCount(0);
       }
 
       if (pageConfig.path === '/#/industry') {

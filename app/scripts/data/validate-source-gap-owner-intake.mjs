@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { isValidIsoDateOrDateTime } from './lib/strict-iso-date.mjs';
 
 const QUESTIONNAIRE_REQUIRED_COLUMNS = [
   'packet_id',
@@ -149,7 +150,6 @@ const SOURCE_VALIDATION_FIELDS = [
 const ALLOWED_ANSWER_STATUSES = new Set(['missing', 'answered', 'not_applicable', 'rejected', 'needs_owner_update']);
 const FORBIDDEN_TOKEN_RE = /password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i;
 const SHA256_RE = /^(?:sha256:)?[a-f0-9]{64}$/i;
-const ISO_DATE_OR_DATETIME_RE = /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z?)?$/;
 
 function parseArgs(argv) {
   const options = {
@@ -304,7 +304,7 @@ function validateQuestion(row) {
   if (status === 'answered') {
     if (!ownerAnswer) blockers.push('missing-owner-answer');
     if (!answeredBy) blockers.push('missing-answered-by');
-    if (!answeredAt || !ISO_DATE_OR_DATETIME_RE.test(answeredAt)) blockers.push('invalid-answered-at');
+    if (!isValidIsoDateOrDateTime(answeredAt)) blockers.push('invalid-answered-at');
     if (!evidenceReference) blockers.push('missing-evidence-reference');
     if (!evidenceHash) blockers.push('missing-evidence-hash');
     if (evidenceHash && !SHA256_RE.test(evidenceHash)) blockers.push('invalid-evidence-hash');
@@ -313,7 +313,7 @@ function validateQuestion(row) {
   if (['not_applicable', 'rejected', 'needs_owner_update'].includes(status)) {
     if (!ownerAnswer) blockers.push('missing-owner-note');
     if (!answeredBy) blockers.push('missing-answered-by');
-    if (!answeredAt || !ISO_DATE_OR_DATETIME_RE.test(answeredAt)) blockers.push('invalid-answered-at');
+    if (!isValidIsoDateOrDateTime(answeredAt)) blockers.push('invalid-answered-at');
   }
 
   const forbiddenTokenDetected = [

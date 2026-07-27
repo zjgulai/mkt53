@@ -3,6 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Globe, MessageCircle, ThumbsUp, ThumbsDown, AlertTriangle } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import FactDisplayGate from '@/components/FactDisplayGate';
 
 // audit-source: ds-013; sample-only; 待复核; canDisplayAsFact=false
 const sentimentTrend = [
@@ -60,6 +61,12 @@ export default function OverseasSentiment() {
   const tabs = ['总览', '正面舆情', '负面舆情', '危机预警'];
 
   return (
+    <FactDisplayGate
+      sourceIds={['ds-013']}
+      title="海外舆情仅保留连接器治理状态"
+      description="当前缺少授权社媒连接器、查询词、语言与地区过滤、采样窗口、去重规则、字段字典和证据哈希，不能展示声量、情绪占比、话题排名或用户帖子。"
+      layout="page"
+    >
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex gap-8">
@@ -201,5 +208,6 @@ export default function OverseasSentiment() {
         </div>
       </div>
     </div>
+    </FactDisplayGate>
   );
 }

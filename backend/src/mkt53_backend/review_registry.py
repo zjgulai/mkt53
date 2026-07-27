@@ -101,6 +101,9 @@ def reopen_review(
 ) -> bool:
     review = _get_review_subject(session, entity_type, entity_id)
     if review.state == "pending":
+        # Invalidate a review ETag that may already be held by a reviewer when
+        # the linked entity changes, even though the state remains pending.
+        review.updated_at = utc_now()
         return False
     _record_linked_transition(
         session,

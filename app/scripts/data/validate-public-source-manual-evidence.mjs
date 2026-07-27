@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { isValidIsoDateOrDateTime } from './lib/strict-iso-date.mjs';
 
 const PACKET_REQUIRED_COLUMNS = [
   'task_id',
@@ -130,7 +131,6 @@ const REQUIRED_MANUAL_EVIDENCE_FIELDS = [
 
 const FORBIDDEN_TOKEN_RE = /password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i;
 const SHA256_RE = /^(?:sha256:)?[a-f0-9]{64}$/i;
-const DATE_OR_DATETIME_RE = /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z?)?$/;
 
 function parseArgs(argv) {
   const options = {
@@ -281,7 +281,7 @@ function validateQuestion(row) {
 
   if (!answer) blockers.push('missing-answer');
   if (!reviewer) blockers.push('missing-reviewer');
-  if (!answeredAt || !DATE_OR_DATETIME_RE.test(answeredAt)) blockers.push('invalid-answered-at');
+  if (!isValidIsoDateOrDateTime(answeredAt)) blockers.push('invalid-answered-at');
   if (!evidencePath) blockers.push('missing-evidence-path');
   if (!artifactSha) blockers.push('missing-artifact-sha256');
   if (artifactSha && !SHA256_RE.test(artifactSha)) blockers.push('invalid-artifact-sha256');
@@ -297,7 +297,7 @@ function validateQuestion(row) {
     required_field: requiredField,
     answer_status: answer ? 'answered' : 'missing',
     reviewer_status: reviewer ? 'present' : 'missing',
-    answered_at_status: answeredAt && DATE_OR_DATETIME_RE.test(answeredAt) ? 'valid_date' : 'invalid_or_missing_date',
+    answered_at_status: isValidIsoDateOrDateTime(answeredAt) ? 'valid_date' : 'invalid_or_missing_date',
     evidence_reference_status: evidencePath ? 'submitted_reference' : 'missing_reference',
     hash_validation_status: artifactSha ? (SHA256_RE.test(artifactSha) ? 'valid_sha256' : 'invalid_hash_shape') : 'missing_hash',
     decision_status: requiredField === 'decision' ? (ALLOWED_DECISIONS.has(decision) ? decision : 'invalid_or_missing_decision') : 'not_decision_field',

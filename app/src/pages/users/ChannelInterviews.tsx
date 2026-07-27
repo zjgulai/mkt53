@@ -17,6 +17,7 @@ import {
 import Sidebar from '@/components/Sidebar';
 import InterviewAgents from '@/components/InterviewAgents';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import FactDisplayGate from '@/components/FactDisplayGate';
 import { exportToCsv } from '@/utils/csvExport';
 
 // ─── 渠道销售表现 ───
@@ -153,6 +154,12 @@ export default function ChannelInterviews() {
   const avgGrowth = Math.round(channelPerformance.reduce((s, c) => s + c.growth, 0) / channelPerformance.length);
 
   return (
+    <FactDisplayGate
+      sourceIds={['ds-041']}
+      title="渠道访谈仅保留治理状态"
+      description="当前缺少渠道访谈记录、受访者授权、销售快照版本、字段字典和证据哈希，不能展示渠道健康度、利润率、销售占比或增长率。"
+      layout="page"
+    >
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex gap-8">
@@ -440,5 +447,6 @@ export default function ChannelInterviews() {
         </div>
       </div>
     </div>
+    </FactDisplayGate>
   );
 }

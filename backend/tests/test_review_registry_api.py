@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from mkt53_backend.models import Source
 from mkt53_backend.review_registry import ReviewError, ReviewRegistryService
-from mkt53_backend.schemas import ReviewTransitionRequest, SourceCreate
+from mkt53_backend.schemas import ReviewTransitionRequest, SourceCreate, SourceUpdate
+from mkt53_backend.source_registry import SourceRegistryService, source_etag
 from tests.test_snapshot_registry_api import create_snapshot, seed_source
 from tests.test_source_registry_api import create_source, reviewer_headers, source_payload
 
@@ -432,6 +433,68 @@ def test_concurrent_review_transition_cannot_silently_overwrite(
     finally:
         session_a.close()
         session_b.close()
+
+
+def test_pending_source_update_invalidates_a_reviewers_stale_decision(
+    client: TestClient,
+    trusted_headers: dict[str, str],
+    session_factory: sessionmaker[Session],
+) -> None:
+    assert (
+        create_source(
+            client,
+            trusted_headers,
+            key="review-source-update-race-0001",
+            payload=source_payload("ds-local-review-source-update-race"),
+        ).status_code
+        == 201
+    )
+
+    reviewer_session = session_factory()
+    updater_session = session_factory()
+    try:
+        reviewer_service = ReviewRegistryService(reviewer_session)
+        stale_review = reviewer_service.get_review("source", "ds-local-review-source-update-race")
+        stale_review_etag = '"review:source:ds-local-review-source-update-race:v1"'
+        assert stale_review.version == 1
+
+        source = updater_session.get(Source, "ds-local-review-source-update-race")
+        assert source is not None
+        updated = SourceRegistryService(updater_session).update_source(
+            source.id,
+            SourceUpdate(note="Metadata changed while a reviewer held the pending decision."),
+            if_match=source_etag(source),
+            actor="user:source-updater",
+            request_id="review-source-update-race-request-update",
+            idempotency_key="review-source-update-race-key-update",
+        )
+        assert updated.status_code == 200
+
+        with pytest.raises(ReviewError, match="etag_mismatch") as error:
+            reviewer_service.transition(
+                "source",
+                source.id,
+                ReviewTransitionRequest(
+                    targetState="approved",
+                    reason="A stale reviewer must not approve changed metadata.",
+                ),
+                if_match=stale_review_etag,
+                actor="user:stale-reviewer",
+                request_id="review-source-update-race-request-review",
+                idempotency_key="review-source-update-race-key-review",
+            )
+        assert error.value.status_code == 412
+    finally:
+        reviewer_session.close()
+        updater_session.close()
+
+    with session_factory() as verification_session:
+        current_review = ReviewRegistryService(verification_session).get_review(
+            "source",
+            "ds-local-review-source-update-race",
+        )
+        assert current_review.state == "pending"
+        assert current_review.version == 2
 
 
 def test_review_validation_missing_entities_and_uninitialized_state_fail_closed(

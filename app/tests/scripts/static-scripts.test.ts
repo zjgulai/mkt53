@@ -368,6 +368,33 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     }
   });
 
+  it('rejects impossible dates in public source manual evidence intake', () => {
+    const tempDir = copyManualEvidencePackToTemp();
+
+    try {
+      const questionnairePath = join(tempDir, 'manual_evidence_questionnaire.csv');
+      const questionnaire = readFileSync(questionnairePath, 'utf8').replaceAll('2026-07-01', '2026-02-30');
+      writeFileSync(questionnairePath, questionnaire);
+
+      const output = execFileSync(
+        'node',
+        ['scripts/data/validate-public-source-manual-evidence.mjs', '--intake', tempDir, '--json', '--no-write'],
+        { cwd: process.cwd(), encoding: 'utf8' },
+      );
+      const payload = JSON.parse(output) as {
+        summary: { readyForManualReleaseReviewCount: number; blockedPacketCount: number };
+        sampleQuestionValidation: Array<{ answered_at_status: string; blockers: string }>;
+      };
+
+      expect(payload.summary.readyForManualReleaseReviewCount).toBe(0);
+      expect(payload.summary.blockedPacketCount).toBe(3);
+      expect(payload.sampleQuestionValidation.every((row) => row.answered_at_status === 'invalid_or_missing_date')).toBe(true);
+      expect(payload.sampleQuestionValidation.every((row) => row.blockers.includes('invalid-answered-at'))).toBe(true);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   it('keeps public source manual release review empty when current intake is blocked', () => {
     const { tempRoot, validationDir } = buildBlockedManualEvidenceValidationToTemp();
 
@@ -1222,6 +1249,26 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(existsSync(outDir)).toBe(false);
     expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
 
+    const impossibleDateRows = questionRows.map((row) => row.replaceAll('2026-06-30', '2026-02-30'));
+    writeFileSync(join(intakeDir, 'owner_intake_questionnaire.csv'), `${questionHeader}\n${impossibleDateRows.join('\n')}\n`);
+    const impossibleDateOutput = execFileSync(
+      'node',
+      ['scripts/data/validate-source-gap-owner-intake.mjs', '--intake', intakeDir, '--out', outDir, '--json', '--no-write'],
+      { cwd: process.cwd(), encoding: 'utf8' },
+    );
+    const impossibleDateResult = JSON.parse(impossibleDateOutput) as {
+      samplePacketValidation: Array<Record<string, string | number>>;
+      sampleQuestionValidation: Array<{ blockers: string }>;
+    };
+    expect(
+      impossibleDateResult.samplePacketValidation.find((packet) => packet.packet_id === 'p0-amazon-connector-owner-01'),
+    ).toMatchObject({
+      packet_validation_status: 'blocked_owner_submission_incomplete',
+      ready_for_manual_review: 'false',
+    });
+    expect(impossibleDateResult.sampleQuestionValidation.slice(0, 2).every((question) => question.blockers.includes('invalid-answered-at'))).toBe(true);
+
+    writeFileSync(join(intakeDir, 'owner_intake_questionnaire.csv'), `${questionHeader}\n${questionRows.join('\n')}\n`);
     const truncatedQuestionnaire = [questionHeader, ...questionRows.filter((row) => !row.startsWith('p0-amazon-connector-owner-01,Q2,'))];
     writeFileSync(join(intakeDir, 'owner_intake_questionnaire.csv'), `${truncatedQuestionnaire.join('\n')}\n`);
     const truncatedOutput = execFileSync(
@@ -1650,6 +1697,37 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     });
     expect(existsSync(outDir)).toBe(false);
     expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    const impossibleDateAnswers = JSON.parse(readFileSync(answersPath, 'utf8')) as { answeredAt: string };
+    impossibleDateAnswers.answeredAt = '2026-02-30';
+    writeFileSync(answersPath, `${JSON.stringify(impossibleDateAnswers, null, 2)}\n`);
+    const impossibleDateOutput = execFileSync(
+      'node',
+      [
+        'scripts/data/merge-source-gap-owner-chat-answers.mjs',
+        '--intake',
+        intakeDir,
+        '--chat-pack',
+        chatPackDir,
+        '--answers',
+        answersPath,
+        '--out',
+        outDir,
+        '--batch-id',
+        'owner-chat-batch-01-p0',
+        '--json',
+        '--no-write',
+      ],
+      { cwd: process.cwd(), encoding: 'utf8' },
+    );
+    const impossibleDateResult = JSON.parse(impossibleDateOutput) as {
+      summary: { mergedQuestionCount: number; needsUpdateQuestionCount: number; readyCandidatePacketCount: number };
+      sampleMergedQuestions: Array<{ answer_status: string }>;
+    };
+    expect(impossibleDateResult.summary.mergedQuestionCount).toBe(0);
+    expect(impossibleDateResult.summary.needsUpdateQuestionCount).toBe(2);
+    expect(impossibleDateResult.summary.readyCandidatePacketCount).toBe(0);
+    expect(impossibleDateResult.sampleMergedQuestions.every((question) => question.answer_status === 'needs_owner_update')).toBe(true);
 
     rmSync(tempDir, { recursive: true, force: true });
   });
