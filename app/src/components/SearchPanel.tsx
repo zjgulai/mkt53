@@ -2,7 +2,7 @@
 // 全局搜索面板 — 搜索产品/报告/法规/数据
 // ═══════════════════════════════════════════════════════════════
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Search, X, FileText, Target, Shield, BarChart3, Clock, TrendingUp } from 'lucide-react';
 
 interface SearchResult {

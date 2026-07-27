@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Label } from 'recharts';
 import { Star, Zap, TrendingUp, BarChart3, Users, Shield, FileText, Cpu, Globe, Award, Bell, ChevronRight, Target, ShoppingBag, MessageSquare, Lightbulb, BookOpen, MapPin, ExternalLink, CheckCircle } from 'lucide-react';
 import { getSourceRegistryItem } from '@/data/source-registry';

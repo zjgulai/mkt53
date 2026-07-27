@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Cell, ScatterChart, Scatter, ZAxis, RadarChart, Radar, PolarGrid, PolarAngleAxis } from 'recharts';
 import { Users, Target, MapPin, Globe, Star, Zap, Palette, MessageCircle, Store, Heart, TrendingUp, Lightbulb, AlertTriangle, ThumbsUp, ChevronRight } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';

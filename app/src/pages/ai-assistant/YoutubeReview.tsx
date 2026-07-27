@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { aiAssistantSidebarItems } from './constants';
 import { Youtube } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { Menu, X, ChevronDown, Globe, Bell, Search, User, Home, BarChart3, Target, Users, Shield, Eye, Sparkles, Image, Database } from 'lucide-react';
 import SearchPanel from './SearchPanel';
 import NotificationCenter from './NotificationCenter';

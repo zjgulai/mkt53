@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import Navbar from '@/components/Navbar';
 import { useScrollTop } from '@/hooks/useScrollTop';
 import NotFoundPage from '@/pages/NotFoundPage';
