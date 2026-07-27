@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Database, ExternalLink, AlertTriangle, CheckCircle, Info, Shield, TrendingUp, BarChart3, Globe, Users, Target } from 'lucide-react';
-import { getVerificationStatusMeta, sourceRegistry, type SourceRegistryItem } from '@/data/source-registry';
+import { DataSourceRegistryStatus } from '@/components/DataSourceRegistryStatus';
+import { getVerificationStatusMeta, type SourceRegistryItem } from '@/data/source-registry';
+import { useDataSourceRegistry } from '@/hooks/useDataSourceRegistry';
 import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -12,8 +14,6 @@ type DataSource = SourceRegistryItem;
 
 type DataSourceTabId = 'sources' | 'divergence' | 'models';
 type FactDisplayFilter = 'all' | 'displayable' | 'gated' | 'private';
-
-const dataSources: DataSource[] = [...sourceRegistry];
 
 // R46: 数据可信度趋势分析 (todo: 未来实现图表)
 /* const reliabilityTrend = [
@@ -64,36 +64,27 @@ function getDisplaySourceType(source: DataSource) {
 }
 
 function getPrivacyLevel(source: DataSource) {
-  if (source.privacyLevel) return source.privacyLevel;
-  if (source.sourceType.includes('内部') || /ERP|CRM|内部/i.test(`${source.sourceName} ${source.note}`)) return 'private/internal';
-  return 'public';
+  return source.privacyLevel;
 }
 
 function getEvidenceGrade(source: DataSource) {
-  if (source.evidenceGrade) return source.evidenceGrade;
-  if (source.verificationStatus === 'example') return 'LO-S-synthetic';
-  if (source.verificationStatus === 'verified' && (source.sourceType === '代码资产' || source.sourceUrl)) return 'L1-public-or-runtime';
-  if (source.verificationStatus === 'verified') return 'L2-fixture-or-dry-run';
-  return 'L0-unverified';
+  return source.evidenceGrade;
 }
 
 function getCanDisplayAsFact(source: DataSource) {
-  if (typeof source.canDisplayAsFact === 'boolean') return source.canDisplayAsFact;
-  return source.verificationStatus === 'verified' && getEvidenceGrade(source) === 'L1-public-or-runtime' && getPrivacyLevel(source) === 'public';
+  return source.canDisplayAsFact;
 }
 
 function getBlockingReason(source: DataSource) {
-  if (source.blockingReason) return source.blockingReason;
-  if (getCanDisplayAsFact(source)) return '';
-  if (source.verificationStatus === 'example') return 'example-data-must-not-display-as-fact';
-  if (getPrivacyLevel(source) === 'private/internal') return 'authorized-connector-or-private-snapshot-required';
-  return source.gap || 'source-evidence-required';
+  return source.blockingReason;
 }
 
 export default function DataSourcePage() {
   const [activeTab, setActiveTab] = useState<DataSourceTabId>('sources');
   const [filterModule, setFilterModule] = useState('全部');
   const [factFilter, setFactFilter] = useState<FactDisplayFilter>('all');
+  const sourceRegistryState = useDataSourceRegistry();
+  const dataSources: DataSource[] = sourceRegistryState.sources;
   const {
     manifest: collectionManifest,
     path: collectionManifestPath,
@@ -158,6 +149,21 @@ export default function DataSourcePage() {
       : collectionStatus === 'loading'
         ? '正在读取半月采集状态'
         : '未生成 public/periodic-data/latest.json';
+  const sourceCountSummary = sourceRegistryState.status === 'ready'
+    ? `${stats.total}条数据溯源 · ${stats.a}A级 · ${stats.needsReview}条待复核`
+    : sourceRegistryState.status === 'empty'
+      ? '0条数据溯源 · API 空结果'
+      : '来源数据未加载 · 统计保持未知';
+  const sourceTotalMetric = sourceRegistryState.status === 'ready'
+    ? sourceRegistryState.runtime.mode === 'api'
+      ? stats.total
+      : collectionTotals.total ?? stats.total
+    : '-';
+  const verifiedSourceMetric = sourceRegistryState.status === 'ready'
+    ? sourceRegistryState.runtime.mode === 'api'
+      ? stats.verified
+      : collectionTotals.ok ?? stats.verified
+    : '-';
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -170,10 +176,12 @@ export default function DataSourcePage() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-[#1d1d1f]">数据来源管理</h1>
-              <p className="text-xs text-[#86868b]">{stats.total}条数据溯源 · {stats.a}A级 · {stats.needsReview}条待复核 · 半月周期 {collectionStatus === 'ready' ? collectionPeriod : '读取中'}</p>
+              <p className="text-xs text-[#86868b]">{sourceCountSummary} · 半月周期 {collectionStatus === 'ready' ? collectionPeriod : '读取中'}</p>
             </div>
           </div>
         </div>
+
+        <DataSourceRegistryStatus {...sourceRegistryState} />
 
         {/* 半月数据状态 */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-[#EDE6DF] mb-6">
@@ -187,8 +195,8 @@ export default function DataSourcePage() {
               {collectionStatus === 'ready' ? <p className="text-[10px] text-[#B5AFA8]">{nextScheduleText}</p> : null}
             </div>
             {[
-              { label: '来源总数', value: collectionTotals.total ?? stats.total, color: '#1d1d1f' },
-              { label: '公开/本地可验证', value: collectionTotals.ok ?? stats.verified, color: '#34c759' },
+              { label: '来源总数', value: sourceTotalMetric, color: '#1d1d1f' },
+              { label: '公开/本地可验证', value: verifiedSourceMetric, color: '#34c759' },
               { label: '连接器待接入', value: connectorRequiredTotal, color: '#ff9500' },
               { label: '人工补录', value: collectionTotals['manual-required'] ?? 0, color: '#5856d6' },
               { label: '请求异常', value: requestErrorTotal, color: '#ff3b30' },
@@ -229,6 +237,7 @@ export default function DataSourcePage() {
           </div>
         </div>
 
+        {sourceRegistryState.status === 'ready' && <>
         {/* R19: 内外部数据分布 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {[
@@ -298,6 +307,7 @@ export default function DataSourcePage() {
             </div>
           ))}
         </div>
+        </>}
 
         {/* Tabs */}
         <div className="flex items-center gap-2 mb-6">
@@ -314,7 +324,7 @@ export default function DataSourcePage() {
         </div>
 
         {/* Tab 1: 数据溯源 */}
-        {activeTab === 'sources' && (
+        {activeTab === 'sources' && sourceRegistryState.status === 'ready' && (
           <>
             {/* 缺口警示 */}
             {stats.critical > 0 && (

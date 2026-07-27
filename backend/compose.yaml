@@ -1,0 +1,112 @@
+name: ${COMPOSE_PROJECT_NAME:-mkt53_backend_local}
+
+x-api-environment: &api-environment
+  MKT53_APP_ENV: ${MKT53_APP_ENV:-development}
+  MKT53_APP_VERSION: ${MKT53_APP_VERSION:-0.5.0-be07}
+  MKT53_DEBUG: "false"
+  MKT53_DEV_IDENTITY_ENABLED: "false"
+  MKT53_ALLOWED_ORIGINS: '[]'
+  MKT53_DATABASE_HOST: postgres
+  MKT53_DATABASE_PORT: "5432"
+  MKT53_DATABASE_NAME: ${MKT53_DATABASE_NAME:-mkt53}
+  MKT53_DATABASE_USER: ${MKT53_DATABASE_USER:-mkt53}
+  MKT53_SECRETS_DIR: /run/secrets
+
+x-api-security: &api-security
+  read_only: true
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  tmpfs:
+    - /tmp:rw,noexec,nosuid,size=32m
+
+services:
+  postgres:
+    image: postgres:17.10-bookworm@sha256:4f736ae292687621d4dbe0d499ffd024a36bd2ee7d8ca6f2ccd4c800f047b394
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${MKT53_DATABASE_NAME:-mkt53}
+      POSTGRES_USER: ${MKT53_DATABASE_USER:-mkt53}
+      POSTGRES_PASSWORD_FILE: /run/secrets/MKT53_DATABASE_PASSWORD
+    secrets:
+      - MKT53_DATABASE_PASSWORD
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+  migrate:
+    image: mkt53-api:be07-local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["alembic", "upgrade", "head"]
+    restart: "no"
+    environment: *api-environment
+    secrets:
+      - MKT53_DATABASE_PASSWORD
+      - MKT53_TRUSTED_PROXY_TOKEN
+    networks:
+      - data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    <<: *api-security
+
+  api:
+    image: mkt53-api:be07-local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment: *api-environment
+    secrets:
+      - MKT53_DATABASE_PASSWORD
+      - MKT53_TRUSTED_PROXY_TOKEN
+    networks:
+      - edge
+      - data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8000/internal/health/live', timeout=2).read()
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+    <<: *api-security
+
+secrets:
+  MKT53_DATABASE_PASSWORD:
+    file: ${MKT53_DATABASE_PASSWORD_FILE:-./tests/fixtures/secrets/MKT53_DATABASE_PASSWORD}
+  MKT53_TRUSTED_PROXY_TOKEN:
+    file: ${MKT53_TRUSTED_PROXY_TOKEN_FILE:-./tests/fixtures/secrets/MKT53_TRUSTED_PROXY_TOKEN}
+
+networks:
+  edge:
+    name: ${MKT53_EDGE_NETWORK_NAME:-mkt53_edge_local}
+    driver: bridge
+  data:
+    name: ${MKT53_DATA_NETWORK_NAME:-mkt53_data_local}
+    driver: bridge
+    internal: true
+
+volumes:
+  postgres_data:
+    name: ${MKT53_POSTGRES_VOLUME_NAME:-mkt53_postgres_data_local}
