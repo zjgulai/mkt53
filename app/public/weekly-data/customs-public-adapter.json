@@ -19,7 +19,7 @@
     "factPromotion": false,
     "sourceRegistryWrites": false,
     "pageWrites": false,
-    "networkCalls": 0,
+    "networkCalls": 39,
     "businessDataWrites": 0,
     "rawTextIncluded": false,
     "shipmentRowsIncluded": false,

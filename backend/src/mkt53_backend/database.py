@@ -63,7 +63,11 @@ class DatabaseReadinessProbe:
 
 class DatabaseSessionManager:
     def __init__(self, settings: Settings) -> None:
-        self.engine: Engine = create_engine(settings.database_url, pool_pre_ping=True)
+        self.engine: Engine = create_engine(
+            settings.database_url,
+            pool_pre_ping=True,
+            connect_args={"connect_timeout": settings.database_connect_timeout_seconds},
+        )
         self.session_factory = sessionmaker(bind=self.engine, expire_on_commit=False)
 
     def dispose(self) -> None:

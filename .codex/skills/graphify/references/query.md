@@ -60,12 +60,12 @@ If the list is empty, say so plainly and stop — do not proceed to traversal.
 
 ### Step 1 — Traversal
 
-Build the **expanded query string** by joining the selected tokens with spaces. Use this string as `QUESTION` below — NOT the original user question. (The original question is preserved only for `save-result` at the end.)
+Build the **expanded query string** by joining the selected tokens with spaces. Store it in `GRAPHIFY_QUESTION` — NOT the original user question. (The original question is preserved only for `save-result` at the end.) Populate all `GRAPHIFY_*` shell variables through the caller's argument/environment mechanism; never paste user-controlled text into shell or Python source and never use `eval`.
 
 Prefer the CLI when it is installed:
 ```bash
-graphify query "QUESTION"
-# or: graphify query "QUESTION" --dfs --budget 3000
+graphify query "${GRAPHIFY_QUESTION:?set GRAPHIFY_QUESTION}"
+# or: graphify query "${GRAPHIFY_QUESTION:?set GRAPHIFY_QUESTION}" --dfs --budget 3000
 ```
 
 If the CLI is unavailable, load `graphify-out/graph.json` and run the traversal inline:
@@ -77,7 +77,12 @@ If the CLI is unavailable, load `graphify-out/graph.json` and run the traversal 
 5. If the graph lacks enough information, say so - do not hallucinate edges.
 
 ```bash
-$(cat graphify-out/.graphify_python) -c "
+GRAPHIFY_PYTHON="$(<graphify-out/.graphify_python)"
+GRAPHIFY_QUESTION="${GRAPHIFY_QUESTION:?set GRAPHIFY_QUESTION}" \
+GRAPHIFY_MODE="${GRAPHIFY_MODE:-bfs}" \
+GRAPHIFY_BUDGET="${GRAPHIFY_BUDGET:-2000}" \
+"$GRAPHIFY_PYTHON" - <<'PY'
+import os
 import sys, json
 from networkx.readwrite import json_graph
 import networkx as nx
@@ -86,8 +91,10 @@ from pathlib import Path
 data = json.loads(Path('graphify-out/graph.json').read_text(encoding='utf-8'))
 G = json_graph.node_link_graph(data, edges='links')
 
-question = 'QUESTION'
-mode = 'MODE'  # 'bfs' or 'dfs'
+question = os.environ['GRAPHIFY_QUESTION']
+mode = os.environ['GRAPHIFY_MODE']
+if mode not in {'bfs', 'dfs'}:
+    raise SystemExit('GRAPHIFY_MODE must be bfs or dfs')
 terms = [t.lower() for t in question.split() if len(t) >= 3]  # match the vocab threshold; keeps api/jwt/ios (#1392)
 
 # Find best-matching start nodes
@@ -137,7 +144,12 @@ else:
         frontier = next_frontier
 
 # Token-budget aware output: rank by relevance, cut at budget (~4 chars/token)
-token_budget = BUDGET  # default 2000
+try:
+    token_budget = int(os.environ['GRAPHIFY_BUDGET'])
+except ValueError as exc:
+    raise SystemExit('GRAPHIFY_BUDGET must be an integer') from exc
+if not 1 <= token_budget <= 100000:
+    raise SystemExit('GRAPHIFY_BUDGET must be between 1 and 100000')
 char_budget = token_budget * 4
 
 # Score each node by term overlap for ranked output
@@ -160,18 +172,23 @@ output = '\n'.join(lines)
 if len(output) > char_budget:
     output = output[:char_budget] + f'\n... (truncated at ~{token_budget} token budget - use --budget N for more)'
 print(output)
-"
+PY
 ```
 
-Replace `QUESTION` with the **expanded** query string, `MODE` with `bfs` or `dfs`, and `BUDGET` with the token budget (default `2000`, or whatever `--budget N` specifies). Then answer based on the subgraph output above, using only what the graph contains.
+Set `GRAPHIFY_QUESTION` to the **expanded** query string, `GRAPHIFY_MODE` to `bfs` or `dfs`, and `GRAPHIFY_BUDGET` to the token budget (default `2000`, or whatever `--budget N` specifies). The quoted heredoc keeps those values out of Python source. Then answer based on the subgraph output above, using only what the graph contains.
 
 After writing the answer, save it back into the graph so it improves future queries. Include the expanded tokens inside the `--answer` text (e.g. `"Expanded from original query via vocab: [tokens]. Then traversed..."`) so the next `--update` extracts the expansion history as a graph node:
 
 ```bash
-$(cat graphify-out/.graphify_python) -m graphify save-result --question "ORIGINAL_QUESTION" --answer "ANSWER" --type query --nodes NODE1 NODE2
+GRAPHIFY_PYTHON="$(<graphify-out/.graphify_python)"
+"$GRAPHIFY_PYTHON" -m graphify save-result \
+  --question "${GRAPHIFY_ORIGINAL_QUESTION:?set GRAPHIFY_ORIGINAL_QUESTION}" \
+  --answer "${GRAPHIFY_ANSWER:?set GRAPHIFY_ANSWER}" \
+  --type query \
+  --nodes "${GRAPHIFY_NODES[@]}"
 ```
 
-Replace `ORIGINAL_QUESTION` with the user's verbatim question, `ANSWER` with your full answer text (containing the expanded-token trace), `NODE1 NODE2` with the list of node labels you cited. This closes the feedback loop: the next `--update` will extract this Q&A as a node in the graph.
+Set `GRAPHIFY_ORIGINAL_QUESTION` to the user's verbatim question, `GRAPHIFY_ANSWER` to your full answer text (containing the expanded-token trace), and the `GRAPHIFY_NODES` shell array to the node labels you cited. Keep the expansions quoted exactly as shown. This closes the feedback loop: the next `--update` will extract this Q&A as a node in the graph.
 
 **Work memory (self-improving loop).** Add an `--outcome` so future sessions learn from this one — append `--outcome useful|dead_end|corrected` to the `save-result` command (and `--correction "the right answer"` when correcting):
 
@@ -188,14 +205,17 @@ At the **start** of graph work, refresh and read the lessons: run `graphify refl
 Find the shortest path between two named concepts in the graph. Prefer the CLI when installed:
 
 ```bash
-graphify path "NODE_A" "NODE_B"
+graphify path "${GRAPHIFY_NODE_A:?set GRAPHIFY_NODE_A}" "${GRAPHIFY_NODE_B:?set GRAPHIFY_NODE_B}"
 ```
 
 If the CLI is unavailable, run it inline:
 
 ```bash
-$(cat graphify-out/.graphify_python) -c "
-import json, sys
+GRAPHIFY_PYTHON="$(<graphify-out/.graphify_python)"
+GRAPHIFY_NODE_A="${GRAPHIFY_NODE_A:?set GRAPHIFY_NODE_A}" \
+GRAPHIFY_NODE_B="${GRAPHIFY_NODE_B:?set GRAPHIFY_NODE_B}" \
+"$GRAPHIFY_PYTHON" - <<'PY'
+import json, os, sys
 import networkx as nx
 from networkx.readwrite import json_graph
 from pathlib import Path
@@ -203,8 +223,8 @@ from pathlib import Path
 data = json.loads(Path('graphify-out/graph.json').read_text(encoding='utf-8'))
 G = json_graph.node_link_graph(data, edges='links')
 
-a_term = 'NODE_A'
-b_term = 'NODE_B'
+a_term = os.environ['GRAPHIFY_NODE_A']
+b_term = os.environ['GRAPHIFY_NODE_B']
 
 def find_node(term):
     term = term.lower()
@@ -238,15 +258,20 @@ except nx.NetworkXNoPath:
     print(f'No path found between {a_term!r} and {b_term!r}')
 except nx.NodeNotFound as e:
     print(f'Node not found: {e}')
-"
+PY
 ```
 
-Replace `NODE_A` and `NODE_B` with the actual concept names from the user. Then explain the path in plain language - what each hop means, why it's significant.
+Set `GRAPHIFY_NODE_A` and `GRAPHIFY_NODE_B` to the actual concept names from the user. Then explain the path in plain language - what each hop means, why it's significant.
 
 After writing the explanation, save it back:
 
 ```bash
-$(cat graphify-out/.graphify_python) -m graphify save-result --question "Path from NODE_A to NODE_B" --answer "ANSWER" --type path_query --nodes NODE_A NODE_B
+GRAPHIFY_PYTHON="$(<graphify-out/.graphify_python)"
+"$GRAPHIFY_PYTHON" -m graphify save-result \
+  --question "Path from ${GRAPHIFY_NODE_A:?set GRAPHIFY_NODE_A} to ${GRAPHIFY_NODE_B:?set GRAPHIFY_NODE_B}" \
+  --answer "${GRAPHIFY_ANSWER:?set GRAPHIFY_ANSWER}" \
+  --type path_query \
+  --nodes "$GRAPHIFY_NODE_A" "$GRAPHIFY_NODE_B"
 ```
 
 ---
@@ -256,14 +281,16 @@ $(cat graphify-out/.graphify_python) -m graphify save-result --question "Path fr
 Give a plain-language explanation of a single node - everything connected to it. Prefer the CLI when installed:
 
 ```bash
-graphify explain "NODE_NAME"
+graphify explain "${GRAPHIFY_NODE_NAME:?set GRAPHIFY_NODE_NAME}"
 ```
 
 If the CLI is unavailable, run it inline:
 
 ```bash
-$(cat graphify-out/.graphify_python) -c "
-import json, sys
+GRAPHIFY_PYTHON="$(<graphify-out/.graphify_python)"
+GRAPHIFY_NODE_NAME="${GRAPHIFY_NODE_NAME:?set GRAPHIFY_NODE_NAME}" \
+"$GRAPHIFY_PYTHON" - <<'PY'
+import json, os, sys
 import networkx as nx
 from networkx.readwrite import json_graph
 from pathlib import Path
@@ -271,7 +298,7 @@ from pathlib import Path
 data = json.loads(Path('graphify-out/graph.json').read_text(encoding='utf-8'))
 G = json_graph.node_link_graph(data, edges='links')
 
-term = 'NODE_NAME'
+term = os.environ['GRAPHIFY_NODE_NAME']
 term_lower = term.lower()
 
 # Find best matching node
@@ -299,13 +326,18 @@ for neighbor in G.neighbors(nid):
     conf = edge.get('confidence', '')
     src_file = G.nodes[neighbor].get('source_file', '')
     print(f'  --{rel}--> {nlabel} [{conf}] ({src_file})')
-"
+PY
 ```
 
-Replace `NODE_NAME` with the concept the user asked about. Then write a 3-5 sentence explanation of what this node is, what it connects to, and why those connections are significant. Use the source locations as citations.
+Set `GRAPHIFY_NODE_NAME` to the concept the user asked about. Then write a 3-5 sentence explanation of what this node is, what it connects to, and why those connections are significant. Use the source locations as citations.
 
 After writing the explanation, save it back:
 
 ```bash
-$(cat graphify-out/.graphify_python) -m graphify save-result --question "Explain NODE_NAME" --answer "ANSWER" --type explain --nodes NODE_NAME
+GRAPHIFY_PYTHON="$(<graphify-out/.graphify_python)"
+"$GRAPHIFY_PYTHON" -m graphify save-result \
+  --question "Explain ${GRAPHIFY_NODE_NAME:?set GRAPHIFY_NODE_NAME}" \
+  --answer "${GRAPHIFY_ANSWER:?set GRAPHIFY_ANSWER}" \
+  --type explain \
+  --nodes "$GRAPHIFY_NODE_NAME"
 ```

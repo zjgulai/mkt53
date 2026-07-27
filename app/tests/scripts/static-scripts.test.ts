@@ -2158,6 +2158,33 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     }
   });
 
+  it('keeps committed customs adapter copies and safety counters synchronized', () => {
+    const periodicAdapterText = readFileSync(join(process.cwd(), 'public/periodic-data/customs-public-adapter.json'), 'utf8');
+    const weeklyAdapterText = readFileSync(join(process.cwd(), 'public/weekly-data/customs-public-adapter.json'), 'utf8');
+    const periodicLatestText = readFileSync(join(process.cwd(), 'public/periodic-data/latest.json'), 'utf8');
+    const weeklyLatestText = readFileSync(join(process.cwd(), 'public/weekly-data/latest.json'), 'utf8');
+    const evidence = JSON.parse(
+      readFileSync(join(process.cwd(), 'public/periodic-data/public-evidence-samples.json'), 'utf8'),
+    ) as { summary: { networkCalls: number; businessDataWrites: number } };
+    const adapter = JSON.parse(periodicAdapterText) as {
+      boundaries: { networkCalls: number; businessDataWrites: number };
+      checks: Array<{ id: string; details: { networkCalls?: number; businessDataWrites?: number } }>;
+    };
+    const latest = JSON.parse(periodicLatestText) as {
+      customsPublicAdapter: { networkCalls: number; businessDataWrites: number };
+    };
+    const safetyBoundary = adapter.checks.find((check) => check.id === 'safetyBoundary');
+
+    expect(weeklyAdapterText).toBe(periodicAdapterText);
+    expect(weeklyLatestText).toBe(periodicLatestText);
+    expect(adapter.boundaries.networkCalls).toBe(evidence.summary.networkCalls);
+    expect(adapter.boundaries.businessDataWrites).toBe(evidence.summary.businessDataWrites);
+    expect(safetyBoundary?.details.networkCalls).toBe(adapter.boundaries.networkCalls);
+    expect(safetyBoundary?.details.businessDataWrites).toBe(adapter.boundaries.businessDataWrites);
+    expect(latest.customsPublicAdapter.networkCalls).toBe(adapter.boundaries.networkCalls);
+    expect(latest.customsPublicAdapter.businessDataWrites).toBe(adapter.boundaries.businessDataWrites);
+  });
+
   it('builds customs public adapter from public evidence without promoting shipment facts', () => {
     const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-customs-public-adapter-'));
     const evidencePath = join(tempDir, 'public-evidence-samples.json');

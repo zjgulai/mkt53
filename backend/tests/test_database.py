@@ -7,7 +7,7 @@ import pytest
 from sqlalchemy.exc import OperationalError
 
 from mkt53_backend.config import Settings
-from mkt53_backend.database import EXPECTED_ALEMBIC_REVISION, DatabaseReadinessProbe
+from mkt53_backend.database import EXPECTED_ALEMBIC_REVISION, DatabaseReadinessProbe, DatabaseSessionManager
 
 
 @pytest.mark.parametrize(
@@ -50,4 +50,29 @@ def test_database_readiness_redacts_sqlalchemy_error(monkeypatch: pytest.MonkeyP
     assert result.database == "unavailable"
     assert result.migration == "unknown"
     assert result.reason == "OperationalError"
+    engine.dispose.assert_called_once_with()
+
+
+def test_database_session_manager_uses_configured_connect_timeout(
+    monkeypatch: pytest.MonkeyPatch,
+    settings: Settings,
+) -> None:
+    engine = Mock()
+    create_engine_mock = Mock(return_value=engine)
+    session_factory = Mock()
+    sessionmaker_mock = Mock(return_value=session_factory)
+    monkeypatch.setattr("mkt53_backend.database.create_engine", create_engine_mock)
+    monkeypatch.setattr("mkt53_backend.database.sessionmaker", sessionmaker_mock)
+
+    manager = DatabaseSessionManager(settings)
+
+    create_engine_mock.assert_called_once_with(
+        settings.database_url,
+        pool_pre_ping=True,
+        connect_args={"connect_timeout": settings.database_connect_timeout_seconds},
+    )
+    sessionmaker_mock.assert_called_once_with(bind=engine, expire_on_commit=False)
+    assert manager.session_factory is session_factory
+
+    manager.dispose()
     engine.dispose.assert_called_once_with()

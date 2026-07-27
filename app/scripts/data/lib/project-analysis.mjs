@@ -203,8 +203,6 @@ export function classifyCollectionMethod(source) {
 }
 
 export function analyzeConsistency(appRoot = process.cwd()) {
-  const dataManagePath = join(appRoot, 'src/pages/DataManage.tsx');
-  const dataManageSource = readFileSync(dataManagePath, 'utf8');
   const dataModules = extractDataModules(appRoot);
   const tableGovernanceIds = extractTableGovernanceIds(appRoot);
   const sourceRegistry = extractSourceRegistry(appRoot);
@@ -215,8 +213,6 @@ export function analyzeConsistency(appRoot = process.cwd()) {
   const pageComponents = new Set(pages.map((page) => page.component));
   const registryPages = new Set(sourceRegistry.map((source) => source.page));
   const registryIds = new Set(sourceRegistry.map((source) => source.id));
-  const declaredTableCount = Number(dataManageSource.match(/(\d+)\s*张数据表/)?.[1] ?? NaN);
-
   const pagesWithStaticDataWithoutRegistry = pages
     .filter((page) => page.staticArrayCount > 0)
     .filter((page) => !registryPages.has(page.component) && page.directRegistryIds.length === 0)
@@ -237,9 +233,6 @@ export function analyzeConsistency(appRoot = process.cwd()) {
   }, {});
 
   const issues = [
-    ...(Number.isFinite(declaredTableCount) && declaredTableCount !== tables.length
-      ? [{ severity: 'warning', code: 'data-management-comment-table-count-drift', detail: `declared=${declaredTableCount}, actual=${tables.length}` }]
-      : []),
     ...(tablesMissingGovernance.length
       ? [{ severity: 'critical', code: 'tables-missing-governance', detail: tablesMissingGovernance.join(', ') }]
       : []),

@@ -1858,7 +1858,7 @@
       "sales, GMV, revenue or demand conclusion",
       "Import Genius replacement"
     ],
-    "networkCalls": 0,
+    "networkCalls": 39,
     "businessDataWrites": 0
   }
 }
