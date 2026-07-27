@@ -16,7 +16,13 @@ describe('FactDisplayGate', () => {
 
   it('fails closed and hides children when any source is not displayable as fact', () => {
     render(
-      <FactDisplayGate sourceIds={['ds-011', 'ds-012']} title="CRM evidence gate" description="connector required">
+      <FactDisplayGate
+        sourceIds={['ds-011', 'ds-012']}
+        title="CRM evidence gate"
+        description="connector required"
+        layout="page"
+        navigation={<nav>user research navigation</nav>}
+      >
         <p>must not render this metric</p>
       </FactDisplayGate>,
     );
@@ -24,6 +30,7 @@ describe('FactDisplayGate', () => {
     expect(screen.getByTestId('fact-display-gate')).toBeInTheDocument();
     expect(screen.getByText('CRM evidence gate')).toBeInTheDocument();
     expect(screen.getByText(/ds-012/)).toBeInTheDocument();
+    expect(screen.getByText('user research navigation')).toBeInTheDocument();
     expect(screen.queryByText('must not render this metric')).not.toBeInTheDocument();
   });
 });

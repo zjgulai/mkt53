@@ -156,6 +156,7 @@ export default function StoreInterviews() {
       title="门店访谈仅保留治理状态"
       description="当前缺少门店运营快照、访谈授权、现场记录、计算口径和证据哈希，不能展示转化率、坪效、NPS、客流或营收。"
       layout="page"
+      navigation={<Sidebar items={sidebarItems} />}
     >
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">

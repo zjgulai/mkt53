@@ -5,7 +5,9 @@ const chartRoutes = [
   { path: '/#/market', expectation: 'chart' },
   { path: '/#/users', expectation: 'gate' },
   { path: '/#/users/aesthetics', expectation: 'chart' },
+  { path: '/#/users/overseas', expectation: 'gate' },
   { path: '/#/users/consumer', expectation: 'gate' },
+  { path: '/#/users/channel', expectation: 'gate' },
   { path: '/#/users/store', expectation: 'gate' },
 ] as const;
 
@@ -29,6 +31,7 @@ test.describe('route-aware chart bundle guard', () => {
       } else {
         await expect(page.getByTestId('fact-display-gate').first()).toBeVisible();
         await expect(page.locator('.recharts-wrapper')).toHaveCount(0);
+        await expect(page.locator('aside a', { hasText: '母婴舆情' })).toHaveCount(1);
       }
 
       const hasHorizontalOverflow = await page.evaluate(

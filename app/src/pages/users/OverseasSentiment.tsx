@@ -66,6 +66,7 @@ export default function OverseasSentiment() {
       title="海外舆情仅保留连接器治理状态"
       description="当前缺少授权社媒连接器、查询词、语言与地区过滤、采样窗口、去重规则、字段字典和证据哈希，不能展示声量、情绪占比、话题排名或用户帖子。"
       layout="page"
+      navigation={<Sidebar items={sidebarItems} />}
     >
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">

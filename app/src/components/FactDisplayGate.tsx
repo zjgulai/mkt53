@@ -12,6 +12,7 @@ interface FactDisplayGateProps {
   description: ReactNode;
   children: ReactNode;
   layout?: 'section' | 'page';
+  navigation?: ReactNode;
 }
 
 function isFactDisplayReady(source: SourceRegistryItem) {
@@ -24,6 +25,7 @@ export default function FactDisplayGate({
   description,
   children,
   layout = 'section',
+  navigation,
 }: FactDisplayGateProps) {
   const sources = sourceIds.map(getSourceRegistryItem);
   const blockers = sources.filter((source) => !isFactDisplayReady(source));
@@ -102,8 +104,13 @@ export default function FactDisplayGate({
 
   if (layout === 'page') {
     return (
-      <main className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto">{panel}</div>
+      <main className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto">
+          <div className="flex gap-8">
+            {navigation}
+            <div className="flex-1 min-w-0">{panel}</div>
+          </div>
+        </div>
       </main>
     );
   }
