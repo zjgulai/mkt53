@@ -366,10 +366,14 @@ function buildPacketValidation(packetRows, releaseGateRows, questionValidationRo
     const evidenceCount = requiredQuestions.filter((question) => question.evidence_reference_status === 'submitted_reference' && question.hash_validation_status === 'valid_sha256').length;
     const invalidHashCount = requiredQuestions.filter((question) => question.evidence_hash && question.hash_validation_status !== 'valid_sha256').length;
     const forbiddenTokenRowCount = requiredQuestions.filter((question) => question.forbidden_token_detected === 'true').length;
-    const expectedRequiredCount = Number.parseInt(gate?.required_question_count ?? '', 10);
+    const expectedRequiredCountText = String(gate?.required_question_count ?? '').trim();
+    const expectedRequiredCount = /^[1-9]\d*$/.test(expectedRequiredCountText)
+      ? Number(expectedRequiredCountText)
+      : Number.NaN;
     const uniqueQuestionIds = new Set(requiredQuestions.map((question) => question.question_id));
     const gateMatchesPacket =
       Number.isInteger(expectedRequiredCount) &&
+      Number.isSafeInteger(expectedRequiredCount) &&
       expectedRequiredCount > 0 &&
       gate?.packet_id === packet.packet_id &&
       gate?.owner_lane === packet.owner_lane &&

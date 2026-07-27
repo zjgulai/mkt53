@@ -131,18 +131,44 @@ describe('DATA-REG regulation to SKU contract', () => {
     const fixture = officialFixture();
     Object.assign(fixture.records[0].source, {
       officialUrl: 'https://evil.example/phish',
-      effectiveFrom: 'not-a-date',
-      effectiveTo: 'also-not-a-date',
+      retrievedAt: '2026-02-30T00:00:00Z',
+      effectiveFrom: '2026-02-30',
+      effectiveTo: '2026-02-31',
     });
+    fixture.records[0].decision.reviewedAt = '2026-02-30T01:00:00Z';
     fixture.records[0].evidence.sourceEvidencePath = '/arbitrary/path';
 
     const result = validateRegulationSkuContract(fixture);
     expect(result.passed).toBe(false);
-    expect(result.errors.map((error: { code: string }) => error.code)).toEqual(expect.arrayContaining([
-      'official-host-not-allowlisted',
-      'effective-date-required',
-      'safe-evidence-path-required',
+    expect(result.errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ path: 'records[0].source.officialUrl', code: 'official-host-not-allowlisted' }),
+      expect.objectContaining({ path: 'records[0].source.retrievedAt', code: 'retrieved-at-required' }),
+      expect.objectContaining({ path: 'records[0].source.effectiveFrom', code: 'effective-date-required' }),
+      expect.objectContaining({ path: 'records[0].source.effectiveTo', code: 'effective-date-required' }),
+      expect.objectContaining({ path: 'records[0].decision.reviewedAt', code: 'reviewed-at-required' }),
+      expect.objectContaining({ path: 'records[0].evidence.sourceEvidencePath', code: 'safe-evidence-path-required' }),
     ]));
+  });
+
+  it('accepts the official Canadian law host but rejects a secondary summary as official evidence', () => {
+    const official = officialFixture();
+    Object.assign(official.records[0].source, {
+      sourceRegistryId: 'ds-016',
+      jurisdiction: 'CA',
+      authority: 'Justice Canada',
+      title: 'Canada Consumer Product Safety Act',
+      officialUrl: 'https://laws-lois.justice.gc.ca/eng/acts/c-1.68/',
+    });
+    expect(validateRegulationSkuContract(official)).toEqual({ passed: true, errors: [] });
+
+    official.records[0].source.authority = 'TUV Rheinland';
+    official.records[0].source.title = 'China standards secondary summary';
+    official.records[0].source.officialUrl =
+      'https://www.tuv.com/regulations-and-standards/en/china-three-gb-standards-on-children-s-product-will-become-effective.html';
+    expect(validateRegulationSkuContract(official)).toMatchObject({
+      passed: false,
+      errors: [expect.objectContaining({ code: 'official-host-not-allowlisted' })],
+    });
   });
 
   it('rejects withdrawn decisions that are still marked publishable', () => {

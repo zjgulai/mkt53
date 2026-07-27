@@ -37,7 +37,7 @@ def test_backend_ci_runs_the_frozen_be07_gate_without_external_mutations() -> No
         "python-version": "3.12.13",
         "working-directory": "backend",
         "enable-cache": True,
-        "cache-dependency-glob": "backend/uv.lock",
+        "cache-dependency-glob": "uv.lock",
     }
 
     assert _find_step(steps, "Sync frozen backend dependencies")["run"] == "uv sync --frozen"

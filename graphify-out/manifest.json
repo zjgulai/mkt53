@@ -410,8 +410,8 @@
     "semantic_hash": ""
   },
   "app/scripts/data/validate-source-gap-owner-intake.mjs": {
-    "mtime": 1785141905.1061769,
-    "ast_hash": "4fb0b7165da8f539259f7b388626916a",
+    "mtime": 1785147452.2626047,
+    "ast_hash": "f9e8b8acdfae4afc415a2108ca305bca",
     "semantic_hash": ""
   },
   "app/scripts/data/weekly-refresh-and-deploy.sh": {
@@ -1185,8 +1185,8 @@
     "semantic_hash": "6a9b5a2f7faf3ce7d54c9e49193cac71"
   },
   "app/tests/scripts/static-scripts.test.ts": {
-    "mtime": 1785141955.118568,
-    "ast_hash": "80e91b535234f7adb5826d153892a2ab",
+    "mtime": 1785147452.2685232,
+    "ast_hash": "0a9b405ddfe8e6062caadf3402cf7df0",
     "semantic_hash": ""
   },
   "app/tests/security/clientBundleGuard.test.ts": {
@@ -1290,8 +1290,8 @@
     "semantic_hash": ""
   },
   ".github/workflows/quality-gate.yml": {
-    "mtime": 1785136065.266882,
-    "ast_hash": "e667df09940217421e5db3c1a5020691",
+    "mtime": 1785147452.2633364,
+    "ast_hash": "e518e33e5048c3026428a51201b9bb38",
     "semantic_hash": ""
   },
   "AGENTS.md": {
@@ -1305,8 +1305,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785136304.97775,
-    "ast_hash": "6e5cfa49ca696f35128aed94b363ae3b",
+    "mtime": 1785142519.3093216,
+    "ast_hash": "b014def4f66638d5c53224e46a2335c5",
     "semantic_hash": ""
   },
   "app/README.md": {
@@ -1355,8 +1355,8 @@
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/index.html": {
-    "mtime": 1785136669.448333,
-    "ast_hash": "5de74a67ec2022652331a26ed1212376",
+    "mtime": 1785142749.3157706,
+    "ast_hash": "c85a27b76685219be6bfb1844e3c29ae",
     "semantic_hash": ""
   },
   "docs/workflows/workflow-quality-gate-stable.md": {
@@ -2790,8 +2790,8 @@
     "semantic_hash": ""
   },
   "docs/product/product-roadmap-execution-20260723.md": {
-    "mtime": 1785136346.4478874,
-    "ast_hash": "5d40216d579e978b881e834023640d77",
+    "mtime": 1785142519.3100698,
+    "ast_hash": "9f217d242b1575382af861d31ff80d8f",
     "semantic_hash": ""
   },
   "app/scripts/quality/build-release-evidence.mjs": {
@@ -3290,8 +3290,8 @@
     "semantic_hash": ""
   },
   "docs/architecture/be-07-audit-recovery-drill-20260724.md": {
-    "mtime": 1784868065.8522227,
-    "ast_hash": "dc9b4dc091671af092ee66c83f75f1d3",
+    "mtime": 1785142885.6790516,
+    "ast_hash": "1e5aef822a6f0590d5188dfc3cab037c",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20260724_044134_\u540c\u610f\u4e0b\u4e00\u6279\u5efa\u8bae.md": {
@@ -3305,8 +3305,8 @@
     "semantic_hash": ""
   },
   "app/scripts/data/validate-regulation-sku-contract.mjs": {
-    "mtime": 1785141905.1007996,
-    "ast_hash": "1a56a780bf6c6971f5cf47bfa3e9e162",
+    "mtime": 1785147452.2614706,
+    "ast_hash": "3f46da48998689ae8f75eb1bcac32def",
     "semantic_hash": ""
   },
   "app/src/components/RegulationSkuContractPanel.tsx": {
@@ -3330,8 +3330,8 @@
     "semantic_hash": ""
   },
   "app/tests/scripts/regulation-sku-contract.test.ts": {
-    "mtime": 1785141944.0268977,
-    "ast_hash": "6854ffeda6e01f2bfb87ebea5d047938",
+    "mtime": 1785147452.265045,
+    "ast_hash": "2f12d7a8a538aadcc1426e9c0edb167f",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20260724_070129_\u540c\u610f\u4e0b\u4e00\u6279\u5efa\u8bae.md": {
@@ -3375,8 +3375,8 @@
     "semantic_hash": ""
   },
   "docs/architecture/data-reg-contract-only-discovery-20260724.md": {
-    "mtime": 1784876623.9918082,
-    "ast_hash": "3fe4b34140863af52312046f16fba9a2",
+    "mtime": 1785142885.6586351,
+    "ast_hash": "b3253e4ca998baa6ec8f860730a3dac4",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20260724_071511_\u540c\u610f\u4e0b\u4e00\u6279\u5efa\u8bae.md": {
@@ -3390,8 +3390,8 @@
     "semantic_hash": ""
   },
   "docs/architecture/data-reg-source-legal-intake-readiness-20260724.md": {
-    "mtime": 1784877795.9320729,
-    "ast_hash": "2c2dbb51c4190378798788c8d797bed9",
+    "mtime": 1785142885.659382,
+    "ast_hash": "20f6a695bbaf2cc25d26a53d3f51b3a3",
     "semantic_hash": ""
   },
   "docs/templates/data-reg-source-legal-intake-readiness-packet.md": {
@@ -3425,8 +3425,8 @@
     "semantic_hash": ""
   },
   "docs/architecture/data-reg-synthetic-intake-draft-projection-20260724.md": {
-    "mtime": 1784882891.9451253,
-    "ast_hash": "64844c7edc9dec02cfa467d4244dd999",
+    "mtime": 1785142885.6612606,
+    "ast_hash": "87bc142f1fdf3522dc12b84daed5664f",
     "semantic_hash": ""
   },
   "app/contracts/regulation-review-handoff-prerequisites.schema.json": {
@@ -3460,8 +3460,8 @@
     "semantic_hash": ""
   },
   "docs/architecture/data-reg-synthetic-draft-review-handoff-gate-20260724.md": {
-    "mtime": 1784884598.7185276,
-    "ast_hash": "7e45745e49d6c55c77b7b91dc3c8bc6d",
+    "mtime": 1785142885.660249,
+    "ast_hash": "2b71c754d94c6dcfc7dd89e0f36cccc7",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20260724_085009_which_local_nodes_implement_the_data_reg_synthetic.md": {
@@ -3515,8 +3515,8 @@
     "semantic_hash": ""
   },
   "docs/architecture/p0-03-datamanage-bundle-exception-retirement-20260724.md": {
-    "mtime": 1784887254.8220947,
-    "ast_hash": "2139c62ea827f22f266f4068c3a5e256",
+    "mtime": 1785142885.6662521,
+    "ast_hash": "201233acb8be6945c5e72962d2e385d4",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20260724_095951_how_was_the_datamanage_temporary_bundle_exception.md": {
@@ -3535,8 +3535,8 @@
     "semantic_hash": ""
   },
   "docs/architecture/p0-03-vendor-charts-bundle-exception-retirement-20260727.md": {
-    "mtime": 1785118987.121566,
-    "ast_hash": "0cc2d0e0d57000f3e3e65529772ba0d3",
+    "mtime": 1785142885.6682413,
+    "ast_hash": "e11541d856833fd3cd0b0644061e2cc9",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20260727_022039_how_was_the_vendor_charts_temporary_exception_reti.md": {
@@ -3555,13 +3555,13 @@
     "semantic_hash": ""
   },
   "docs/architecture/p0-02-dependency-security-refresh-20260727.md": {
-    "mtime": 1785123194.5770183,
-    "ast_hash": "de9e7c9fef1642fd16a9261faa08f07b",
+    "mtime": 1785142885.6649857,
+    "ast_hash": "48e7a0f78de0ae52c2202220bca4a28f",
     "semantic_hash": ""
   },
   "backend/tests/test_ci_workflow_contract.py": {
-    "mtime": 1785136086.9904559,
-    "ast_hash": "b4cc62e3a2243c9b3720cb5f7d630980",
+    "mtime": 1785147452.2643511,
+    "ast_hash": "99768b50ebd6d83c89f6da1a10d835f7",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/evidence/p0-local-release-review-20260727.json": {
@@ -3570,13 +3570,13 @@
     "semantic_hash": ""
   },
   "docs/architecture/p0-backend-ci-quality-gate-20260727.md": {
-    "mtime": 1785136304.9627054,
-    "ast_hash": "bdc813e3a9456587dfcf862c8960495e",
+    "mtime": 1785142885.6693718,
+    "ast_hash": "6d80e53ccb0d9c5681671ec42c485472",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/p0-local-release-review-20260727.md": {
-    "mtime": 1785136346.4527335,
-    "ast_hash": "1a7f6ee8f1c5cd094e292bbff1e7e73a",
+    "mtime": 1785142885.6703243,
+    "ast_hash": "6d5591e3536c9178d722ec4cd9dbb34e",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20260727_071314_how_should_github_actions_enforce_the_mkt53_be_03.md": {
@@ -3592,6 +3592,16 @@
   "graphify-out/memory/query_20260727_082156_which_code_paths_connect_the_batch_26_data_governa.md": {
     "mtime": 1785140516.0856006,
     "ast_hash": "fa9b79197dfbb049ec67ae31f6059a56",
+    "semantic_hash": ""
+  },
+  "docs/reviews/mkt53-project-review-20260722/evidence/p0-local-atomic-commits-20260727.json": {
+    "mtime": 1785142586.3613703,
+    "ast_hash": "a226701198bd11b76f72ca2557f34f61",
+    "semantic_hash": ""
+  },
+  "docs/reviews/mkt53-project-review-20260722/p0-local-atomic-commits-20260727.md": {
+    "mtime": 1785142885.67964,
+    "ast_hash": "1a512e3337d31a01191eb9776259a35c",
     "semantic_hash": ""
   }
 }

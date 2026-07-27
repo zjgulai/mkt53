@@ -1186,6 +1186,32 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       ready_for_manual_review: 'false',
     });
 
+    writeFileSync(join(intakeDir, 'owner_intake_questionnaire.csv'), `${questionHeader}\n${questionRows.join('\n')}\n`);
+    const malformedReleaseRows = [
+      releaseRows[0].replace(',2,0,0,2,', ',2junk,0,0,2,'),
+      releaseRows[1],
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_release_gate.csv'), `${releaseHeader}\n${malformedReleaseRows.join('\n')}\n`);
+    const malformedCountOutput = execFileSync(
+      'node',
+      ['scripts/data/validate-source-gap-owner-intake.mjs', '--intake', intakeDir, '--out', outDir, '--json', '--no-write'],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      },
+    );
+    const malformedCountResult = JSON.parse(malformedCountOutput) as {
+      samplePacketValidation: Array<Record<string, string | number>>;
+    };
+    expect(
+      malformedCountResult.samplePacketValidation.find((packet) => packet.packet_id === 'p0-amazon-connector-owner-01'),
+    ).toMatchObject({
+      required_question_count: 2,
+      missing_required_questions: 1,
+      packet_validation_status: 'blocked_owner_submission_incomplete',
+      ready_for_manual_review: 'false',
+    });
+
     rmSync(tempDir, { recursive: true, force: true });
   });
 

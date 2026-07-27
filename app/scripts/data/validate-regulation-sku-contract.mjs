@@ -10,7 +10,7 @@ export const OFFICIAL_SOURCE_REGISTRY_IDS = new Set([
   'policy-eu-mdr-transition',
 ]);
 const OFFICIAL_SOURCE_HOSTS_BY_REGISTRY_ID = new Map([
-  ['ds-016', new Set(['health.ec.europa.eu', 'www.gov.uk', 'www.canada.ca', 'www.tuv.com'])],
+  ['ds-016', new Set(['health.ec.europa.eu', 'www.gov.uk', 'www.canada.ca', 'laws-lois.justice.gc.ca'])],
   ['policy-cpsc-efiling', new Set(['www.cpsc.gov'])],
   ['policy-eu-mdr-transition', new Set(['health.ec.europa.eu'])],
 ]);
@@ -21,6 +21,7 @@ const DECISION_STATUSES = new Set(['draft', 'legal-review-required', 'approved',
 const DECISIVE_STATUSES = new Set(['approved', 'rejected']);
 const SHA256_PATTERN = /^[a-f0-9]{64}$/;
 const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+const ISO_DATE_TIME_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/;
 
 function isObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -30,12 +31,26 @@ function isNonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0;
 }
 
+function isValidCalendarDate(value) {
+  if (!isNonEmptyString(value) || !ISO_DATE_PATTERN.test(value)) return false;
+  const [year, month, day] = value.split('-').map(Number);
+  const date = new Date(0);
+  date.setUTCFullYear(year, month - 1, day);
+  date.setUTCHours(0, 0, 0, 0);
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
+
 function isIsoDateTime(value) {
-  return isNonEmptyString(value) && !Number.isNaN(Date.parse(value));
+  return (
+    isNonEmptyString(value) &&
+    ISO_DATE_TIME_PATTERN.test(value) &&
+    isValidCalendarDate(value.slice(0, 10)) &&
+    !Number.isNaN(Date.parse(value))
+  );
 }
 
 function isIsoDate(value) {
-  return isNonEmptyString(value) && ISO_DATE_PATTERN.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
+  return isValidCalendarDate(value);
 }
 
 function isAllowedOfficialSourceUrl(sourceRegistryId, value) {
