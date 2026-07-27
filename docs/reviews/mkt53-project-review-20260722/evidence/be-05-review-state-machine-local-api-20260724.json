@@ -1,0 +1,103 @@
+{
+  "schema_version": "mkt53.local-implementation-evidence.v1",
+  "task_id": "BE-05",
+  "generated_at": "2026-07-24T03:34:42Z",
+  "status": "local-validated-not-deployed",
+  "evidence_layer": "L1-local-validation",
+  "scope": {
+    "production_reads": false,
+    "production_writes": false,
+    "production_deploy": false,
+    "provider_calls": false,
+    "connector_calls": false,
+    "business_data_writes": false,
+    "artifact_uploads": false,
+    "frontend_canonical_switch": false,
+    "static_registry_seeded": false,
+    "real_business_reviews": false
+  },
+  "contract": {
+    "alembic_revision": "0004_be05_review_state_machine",
+    "tables": ["review_subjects", "review_events"],
+    "entity_types": ["source", "snapshot"],
+    "states": ["pending", "approved", "rejected", "withdrawn"],
+    "legal_transitions": {
+      "pending": ["approved", "rejected", "withdrawn"],
+      "approved": ["withdrawn"],
+      "rejected": ["withdrawn"],
+      "withdrawn": []
+    },
+    "permissions": ["review:read", "review:write"],
+    "strong_etag": true,
+    "idempotency_required": true,
+    "append_only_review_events": true,
+    "snapshot_metadata_mutated": false
+  },
+  "quality_gate": {
+    "command": "backend/scripts/quality-be05.sh",
+    "tests_passed": 56,
+    "branch_coverage_percent": 92.6,
+    "ruff_format": "passed",
+    "ruff_lint": "passed",
+    "lock_check": "passed",
+    "compose_config": "passed",
+    "published_ports": 0
+  },
+  "isolated_postgresql_smoke": {
+    "compose_project": "mkt53_be05_local_20260724",
+    "migration": "current",
+    "sources": 1,
+    "snapshots": 1,
+    "review_subjects": 2,
+    "normal_decision_and_linked_review_events": 7,
+    "source_transition": ["pending", "approved", "pending", "withdrawn"],
+    "snapshot_transition": ["pending", "rejected", "withdrawn"],
+    "source_update_reopened_review": true,
+    "source_lifecycle_withdraw_synced_review": true,
+    "original_idempotency_replay_status": 200,
+    "duplicate_transition_event_created": false,
+    "illegal_rejected_to_approved_status": 409,
+    "actor_reason_time_complete": true,
+    "database_review_event_update_rejected": true,
+    "triggers": ["audit_events_append_only", "review_events_append_only", "snapshots_immutable"],
+    "migration_backfill_replay": {
+      "downgrade_to": "0003_be04_snapshot_metadata",
+      "upgrade_to": "0004_be05_review_state_machine",
+      "review_subjects": 2,
+      "review_events": 2,
+      "states": ["pending", "pending"],
+      "versions": [1, 1],
+      "actor": "system:migration:0004"
+    },
+    "cleanup": {
+      "matching_containers": 0,
+      "matching_networks": 0,
+      "matching_volumes": 0
+    }
+  },
+  "graphify": {
+    "nodes": 3581,
+    "edges": 5959,
+    "communities": 275,
+    "missing_or_dangling_endpoints": 0,
+    "self_loops": 0,
+    "exact_duplicate_or_collapsed_edges": 0,
+    "zero_ast_source_files": 39
+  },
+  "artifact_sha256": {
+    "backend/src/mkt53_backend/models.py": "336604c2b9c5bd4c8768457501a4924e4f555ac42b3fa2ca3db98351cba2c112",
+    "backend/src/mkt53_backend/schemas.py": "f027bc148f28bae59d1b52cd7a07dc4d165fa22a6a252a63443a394d9b7cf102",
+    "backend/src/mkt53_backend/review_registry.py": "9e1508dce12d44f882a74d0d2064aa03308741f747f31757b13a713ea53ff34e",
+    "backend/src/mkt53_backend/review_api.py": "554b81ff44c101bc3996c8c4d93d592eb75881b1a9013d0928cde9c23287b7c9",
+    "backend/src/mkt53_backend/source_registry.py": "aff7425c0996ef3a7e24c83c60da14c8c9f7b0a42d35c4e2235ed195446bdb2d",
+    "backend/src/mkt53_backend/snapshot_registry.py": "61f443410b45165ba613b621b26367bc9aae6f2af304fb393068853f38746ecf",
+    "backend/src/mkt53_backend/auth.py": "1f467e35478cdef2188bd81add2e06ec0f9e3e143f625879612e715396e4bacc",
+    "backend/src/mkt53_backend/main.py": "f0c635ac7021d8c7288edf6064e576a32f680699714c8e438fc3d66713da855b",
+    "backend/migrations/versions/0004_be05_review_state_machine.py": "f4cc5848728edea8a557795a5b40290d5796059fcc476d683681e99585932a9f",
+    "backend/compose.yaml": "0ffc3add7ed7da664f6377de8ef4b1fc4c60470dbe91d6361ca6fe5b255ec57d",
+    "backend/uv.lock": "d5090f71241a66bb15e84b4a1ad73d5e437c949f40d59a8ca8036a1cd2d6ce39",
+    "backend/requirements.lock": "f626a130826069fb2c0746317c61e6f962dc88236be7aba45a3888bb075f8b6c"
+  },
+  "local_image_id": "sha256:f655a0139d473d3bf81ac936f8ab36b00150e3749eb63f8b7cf55b48624fcafe",
+  "known_warning": "Starlette TestClient reports an httpx migration deprecation warning."
+}

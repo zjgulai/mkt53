@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "mkt53.data-reg-intake-draft-projection-evidence.v1",
+  "generatedAt": "2026-07-24T08:47:08Z",
+  "status": "synthetic-draft-projection-ready-local-l2",
+  "evidenceGrade": "L2-fixture-or-dry-run",
+  "task": "DATA-REG synthetic intake-to-draft projection rehearsal",
+  "contract": {
+    "intakeVersion": "mkt53.regulation-source-legal-intake.v1",
+    "matrixVersion": "mkt53.regulation-sku-matrix.v1",
+    "projectionVersion": "mkt53.data-reg-intake-draft-projection.v1",
+    "withdrawalVersion": "mkt53.regulation-intake-withdrawal-fixture.v1",
+    "inputClass": "synthetic-readiness-fixture",
+    "intakeReadyGroups": 6,
+    "intakeTotalGroups": 6
+  },
+  "activeProjection": {
+    "status": "synthetic-draft-ready-not-authorized",
+    "projectionId": "data-reg-projection-7fdd37a3128395a5ff393845",
+    "records": 1,
+    "inputSha256": "127fc221de728e6a7f9628ba71b15102e853d2509d08b9e0df073bb0b35b5a70",
+    "operationSha256": "e473a391e816252421b7c850a3f6827788d7fb61ddd1c54973bc50663213bfe3",
+    "matrixSha256": "3cc92353aaae3772d576e370ea80ece90bd0ac5e8a13d84470bf4f0c66be1877",
+    "artifactSha256": "e4c640e4b750182e62b2bcda79cac7bc88688b58f4bb9ca9870ef9ba609f9e21",
+    "matrixContractValid": true,
+    "crossContractLineageValid": true,
+    "applicability": "unknown",
+    "decisionStatus": "legal-review-required"
+  },
+  "idempotencyReplay": {
+    "runs": 2,
+    "byteIdentical": true,
+    "firstArtifactSha256": "e4c640e4b750182e62b2bcda79cac7bc88688b58f4bb9ca9870ef9ba609f9e21",
+    "secondArtifactSha256": "e4c640e4b750182e62b2bcda79cac7bc88688b58f4bb9ca9870ef9ba609f9e21",
+    "deterministicReplay": true
+  },
+  "withdrawalProjection": {
+    "status": "blocked-withdrawn",
+    "projectionId": "data-reg-projection-e5e901fa7ac4c5390ea7e633",
+    "records": 0,
+    "operationSha256": "8edcf872257480e0ad33dea47e7a850791ce3f14b743c7bc3974b3db671169a6",
+    "artifactSha256": "00be6aec2bee25e059045aa963e2a3ab73c14c9122a30ec25aa5206d373172d3",
+    "requestMatched": true,
+    "auditEventRecorded": true,
+    "withdrawalBlocked": true,
+    "operationKeyDistinctFromActive": true
+  },
+  "lineage": {
+    "requestBound": true,
+    "sourceScopeBound": true,
+    "snapshotIds": 0,
+    "reviewDecisionIds": 0,
+    "officialSnapshots": 0,
+    "reviewedSkuDecisions": 0,
+    "publishableComplianceFacts": 0
+  },
+  "decision": {
+    "authorizedToCollect": false,
+    "authorizedToEvaluateRealSkus": false,
+    "authorizedToPublish": false,
+    "authorizedToWriteProduction": false
+  },
+  "scope": {
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "connectorCalls": 0,
+    "businessDataWrites": 0,
+    "canonicalPublicWrites": 0,
+    "productionReads": 0,
+    "productionWrites": 0,
+    "productionConfigWrites": 0,
+    "deployment": false,
+    "regulatoryFactsCollected": 0,
+    "realSkusEvaluated": 0,
+    "legalConclusionsGenerated": 0,
+    "gitStageCommitPush": false
+  },
+  "qualityGate": {
+    "batchTargeted": { "filesPassed": 1, "testsPassed": 8, "testsFailed": 0 },
+    "dataRegTargeted": { "filesPassed": 3, "testsPassed": 21, "testsFailed": 0 },
+    "full": { "filesPassed": 20, "testsPassed": 157, "testsFailed": 0, "durationSeconds": 57.95 },
+    "lint": "passed",
+    "npmAuditVulnerabilities": 0,
+    "build": { "status": "passed", "modules": 2328 },
+    "bundleBudget": { "status": "passed", "javascriptAssets": 60, "existingTemporaryExceptions": 2 },
+    "dataConsistency": { "pages": 43, "tables": 107, "sources": 53, "issues": 0 },
+    "deepDataAudit": { "claims": 888, "highRiskClaims": 0, "sourceGaps": 26 }
+  },
+  "implementationSha256": {
+    "app/scripts/data/project-regulation-intake-to-sku-draft.mjs": "707e5590a946d8832c3209c18f5c5be31f8c5e758041b00c0a7fb399ed7b3223",
+    "app/tests/scripts/regulation-intake-draft-projection.test.ts": "50d2b1b7573ad3fa40d8625c9abe4590aae5938d4801708a81385770c3aa5259",
+    "app/tests/fixtures/regulation-source-legal-intake.synthetic.json": "bed03fdad7a1ca9842738820f9a3516f8438f7dd83dd63025e5926f1e4ee9060",
+    "app/tests/fixtures/regulation-intake-withdrawal.synthetic.json": "9a33f679c931b64c6c5eb3b03a898cc0550893402f02dca4e9c0c01b69aa220f"
+  },
+  "graphify": {
+    "status": "updated-and-clustered",
+    "nodes": 4255,
+    "edges": 6853,
+    "communities": 328,
+    "duplicateNodeIds": 0,
+    "missingEndpoints": 0,
+    "danglingEndpoints": 0,
+    "selfLoops": 0,
+    "exactDuplicateEdges": 0,
+    "sameEndpointExtraEdges": 0,
+    "zeroAstSourceFiles": 48
+  },
+  "limitations": [
+    "Only reserved synthetic identities and TEST-ONLY scope were used.",
+    "Planned snapshot and review store references are not materialized snapshot or review event ids.",
+    "No regulatory fact, real SKU evaluation, legal decision, production write, or deployment occurred."
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "schemaVersion": "mkt53.p0-03-vendor-charts-bundle-exception-retirement-evidence.v1",
+  "generatedAt": "2026-07-27T02:21:59Z",
+  "status": "vendor-charts-bundle-exception-retired-local-l1",
+  "evidenceGrade": "L1-local-validated",
+  "releaseCandidateReady": false,
+  "releaseBlocker": "npm-audit-14-high",
+  "task": "P0-03 vendor-charts temporary bundle exception retirement",
+  "baseline": {
+    "chunkName": "vendor-charts",
+    "chunkBytes": 361668,
+    "chunkKiB": 353.19,
+    "targetBytes": 307200,
+    "temporaryMaxBytes": 389120,
+    "exceptionExpiresOn": "2026-08-15"
+  },
+  "result": {
+    "aggregateChunkPresent": false,
+    "temporaryExceptionPresent": false,
+    "temporaryExceptionCount": 0,
+    "sharedCoreChunk": "vendor-chart-core",
+    "sharedCoreBytes": 153109,
+    "sharedCoreKiB": 149.52,
+    "reductionBytes": 208559,
+    "reductionPercent": 57.67,
+    "permanentLimitBytes": 184320,
+    "headroomBytes": 31211,
+    "headroomPercent": 16.93,
+    "requiredRule": true
+  },
+  "chunkFamilies": [
+    {"name": "vendor-chart-core", "bytes": 153109, "kib": 149.52, "budgetRule": "vendor-chart-core-180-kib"},
+    {"name": "YAxis", "bytes": 101677, "kib": 99.29, "budgetRule": "route-default-120-kib"},
+    {"name": "RadarChart", "bytes": 24699, "kib": 24.12, "budgetRule": "route-default-120-kib"},
+    {"name": "BarChart", "bytes": 16541, "kib": 16.15, "budgetRule": "route-default-120-kib"},
+    {"name": "PieChart", "bytes": 13088, "kib": 12.78, "budgetRule": "route-default-120-kib"},
+    {"name": "ScatterChart", "bytes": 10430, "kib": 10.19, "budgetRule": "route-default-120-kib"},
+    {"name": "Line", "bytes": 9710, "kib": 9.48, "budgetRule": "route-default-120-kib"},
+    {"name": "vendor-react", "bytes": 223706, "kib": 218.46, "budgetRule": "vendor-react-220-kib"}
+  ],
+  "design": {
+    "namedSharedModule": "recharts/es6/chart/CartesianChart.js",
+    "namedSharedChunk": "vendor-chart-core",
+    "otherChartModules": "vite-route-aware-auto-split",
+    "directoryFamilyManualChunkExperimentAccepted": false,
+    "directoryFamilyManualChunkExperimentReason": "Rolldown merged dependencies into an approximately 303 KiB Cartesian aggregate.",
+    "limitRaisedToRetireException": false
+  },
+  "qualityGate": {
+    "targeted": {"filesPassed": 3, "testsPassed": 94, "testsFailed": 0},
+    "full": {"filesPassed": 22, "testsPassed": 176, "testsFailed": 0, "durationSeconds": 56.08},
+    "lint": "passed",
+    "dependencyAudit": {
+      "status": "failed",
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 14,
+      "critical": 0,
+      "total": 14,
+      "majorUpgradeCandidatesObserved": ["react-router-8", "eslint-10"]
+    },
+    "build": {"status": "passed", "modules": 2333, "javascriptAssets": 77},
+    "bundleBudget": {"status": "passed", "passedAssets": 77, "temporaryExceptions": 0, "failures": 0},
+    "dataConsistency": {"pages": 43, "tables": 107, "sources": 53, "governanceRecords": 107, "issues": 0},
+    "deepDataAudit": {
+      "claims": 888,
+      "highRiskClaims": 0,
+      "mediumRiskClaims": 0,
+      "unsupportedClaims": 0,
+      "sourceGaps": 26,
+      "providerCalls": false,
+      "productionWrites": false
+    }
+  },
+  "browserAcceptance": {
+    "runner": "Playwright with installed system Chrome",
+    "desktopViewport": "1440x900",
+    "mobileViewport": "390x844",
+    "routes": [
+      "/",
+      "/#/market",
+      "/#/users",
+      "/#/users/aesthetics",
+      "/#/users/consumer",
+      "/#/users/store"
+    ],
+    "testsPassed": 12,
+    "testsFailed": 0,
+    "chartVisible": true,
+    "horizontalOverflowFailures": 0,
+    "consoleErrors": 0,
+    "pageErrors": 0
+  },
+  "implementationSha256": {
+    "app/vite.config.ts": "c16b2ec02c326904d33f4a54cf608da712925c5ce34026f264977a60ed6cd896",
+    "app/scripts/quality/bundle-budgets.json": "a07c414efc8e9e07767c39114669ef9f9eced2527ed55f1fb91fef3955966d3f",
+    "app/tests/scripts/release-quality-gates.test.ts": "56831055226542d67e91159618cea28105cac243ec36867cade6c5dda1849a13",
+    "app/tests/e2e/chart-routes.spec.ts": "476e2e5a0445702e16f7b43285918f1da83db814733d441035d0b291b626c2b0"
+  },
+  "graphify": {
+    "status": "updated-and-clustered",
+    "nodes": 4442,
+    "edges": 7095,
+    "communities": 344,
+    "duplicateNodeIds": 0,
+    "missingEndpoints": 0,
+    "danglingEndpoints": 0,
+    "selfLoops": 0,
+    "exactDuplicateEdges": 0,
+    "sameEndpointExtraEdges": 0,
+    "zeroAstSourceFiles": 52,
+    "savedQuery": "graphify-out/memory/query_20260727_022039_how_was_the_vendor_charts_temporary_exception_reti.md",
+    "reflectedMemories": 24,
+    "usefulMemories": 24
+  },
+  "scope": {
+    "npmRegistrySecurityAudit": true,
+    "businessNetworkCollection": false,
+    "providerCalls": 0,
+    "connectorCalls": 0,
+    "businessDataWrites": 0,
+    "canonicalPublicWrites": 0,
+    "productionReads": 0,
+    "productionWrites": 0,
+    "deployment": false,
+    "gitStageCommitPush": false
+  },
+  "limitations": [
+    "The bundle exception is retired, but the fresh dependency audit has 14 high findings; the whole release candidate is not ready.",
+    "Browser acceptance used the installed system Chrome because this workstation does not have the project Playwright Chromium binary cached.",
+    "No production bundle, public data, connector, provider, database, nginx, cron, or deployment state was changed."
+  ]
+}

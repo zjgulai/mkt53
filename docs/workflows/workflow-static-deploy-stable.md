@@ -5,7 +5,7 @@ module: deployment
 topic: static-deploy
 status: stable
 created: 2026-05-31
-updated: 2026-06-14
+updated: 2026-07-23
 owner: self
 source: human+ai
 ---
@@ -19,7 +19,7 @@ source: human+ai
 | 线上地址 | `https://mkt.lute-tlz-dddd.top` |
 | 宿主入口 | `https://lute-tlz-dddd.top` |
 | 服务器 | `ubuntu@101.34.52.232` |
-| SSH key | 仓库根目录 `ai_video.pem`，已被 `.gitignore` 排除 |
+| SSH key | 默认仓库根目录 `DDDD.pem`；`MKT53_SSH_KEY_PATH` 可指定绝对路径；已被 `*.pem` 排除 |
 | 静态文件路径 | `/opt/mkt53/html/` |
 | 宿主 landing 文件 | `/opt/ai-video/deploy/lighthouse/landing/index.html` |
 | 应用构建目录 | `app/dist/` |
@@ -49,10 +49,13 @@ npm run test
 npm run lint
 npm audit
 npm run build
+npm run quality:bundle-budget
 rsync -az --delete dist/ ubuntu@101.34.52.232:/opt/mkt53/html/
 ```
 
 `rsync --delete` 会让远端静态目录与本地 `dist/` 保持一致。普通生产发布默认使用 `deploy:prod:verified`，避免部署后漏跑生产 smoke 或生产 E2E；只有排查失败阶段才单独使用 `deploy:prod`。
+
+`deploy:prod` 与需要读取受保护静态文件的 `smoke:prod` 共用 `app/scripts/lib/ssh-key-contract.sh`。默认 key 是仓库根目录 `DDDD.pem`；不同机器应设置 `MKT53_SSH_KEY_PATH=/absolute/path/to/key.pem`，旧 `KEY_PATH` 只用于兼容。脚本只检查文件存在且可读，不读取或打印私钥内容。
 
 ## 半月数据刷新部署
 
@@ -109,6 +112,10 @@ npm run data:semi-monthly:report -- --period 2026-06-H1 --json
 
 ## 最新生产验证
 
+2026-07-24 的最新生产证据优先于下方 6 月历史记录：P0-04 已发布 `2026-07-H2` 并安装半月 cron，首次定时运行观察待 8 月 1 日；P0-05 已经独立授权完成生产激活。未授权 root、deep path 与 manifest 均 302 到 apex login 并使用 `private, no-store`，真实授权会话首页与 `/#/data` 可访问，生产 E2E 8/8、auth-gated smoke 通过；完整 root-only 备份仍保留，nginx 仅 reload、未重启或重建。
+
+以下 2026-06-12 至 2026-06-14 结果保留为历史发布证据，不代表当前生产状态：
+
 2026-06-14，沿用 2026-06-13 DNS 恢复后的验证链路后完成半月发布回归：
 
 | 检查项 | 结果 |
@@ -164,12 +171,12 @@ npm run data:semi-monthly:report -- --period 2026-06-H1 --json
 
 ```bash
 ts=$(date +%Y%m%d_%H%M%S)
-ssh -i ai_video.pem ubuntu@101.34.52.232 \
+ssh -i "${MKT53_SSH_KEY_PATH:-./DDDD.pem}" ubuntu@101.34.52.232 \
   "mkdir -p /opt/backups/lute_landing_${ts} && \
    cp /opt/ai-video/deploy/lighthouse/landing/index.html /opt/backups/lute_landing_${ts}/index.html"
 
 # 回滚时把 {backup_dir} 换成实际备份目录
-ssh -i ai_video.pem ubuntu@101.34.52.232 \
+ssh -i "${MKT53_SSH_KEY_PATH:-./DDDD.pem}" ubuntu@101.34.52.232 \
   "cp /opt/backups/{backup_dir}/index.html /opt/ai-video/deploy/lighthouse/landing/index.html"
 ```
 
@@ -195,10 +202,25 @@ BASE_URL=https://example.com npm run smoke:prod
 
 ## nginx 变更
 
+### P0-05 门户门禁候选
+
+候选文件：`app/configs/nginx/mkt53-portal-gate.candidate.conf`。它复用 apex 的 `/_portal_auth` / `auth_request` 合同，将未授权 root、深层路径和 manifest 统一 302 到门户登录，并对授权响应设置 `private, no-store`。
+
+本地隔离验证：
+
+```bash
+cd app
+npm run quality:p0-05-nginx-candidate
+```
+
+该命令仅创建临时本地 Docker 网络和两个容器，使用合成 cookie 验证 nginx wiring；结束后清理容器和网络，不连接或写入生产。2026-07-24 验证通过：nginx syntax、3 个未授权 302、授权 root/manifest 200、内部 auth 404、private/no-store。
+
+生产激活必须满足：远端 mkt block SHA-256 仍为 `4f78ab917e7c61508d374da5b318f4d49ce2de7da9f9142c76714b4eb9206342`；先备份完整 nginx 配置；完整配置 `nginx -t` 通过；仅替换 mkt block；只 reload/recreate nginx；使用真实授权会话验证正向访问；生产 E2E 8/8。任一失败立即恢复完整备份并再次执行 `nginx -t`。本节不构成生产写入授权。
+
 静态文件更新不需要重启 nginx。只有修改 nginx server block、证书挂载、volume 映射或 compose 文件时，才重建 nginx 容器：
 
 ```bash
-ssh -i ai_video.pem ubuntu@101.34.52.232 \
+ssh -i "${MKT53_SSH_KEY_PATH:-./DDDD.pem}" ubuntu@101.34.52.232 \
   "cd /opt/ai-video/deploy/lighthouse && \
    docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate nginx"
 ```

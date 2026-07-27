@@ -1,0 +1,79 @@
+{
+  "schema_version": "mkt53.local-implementation-evidence.v1",
+  "task_id": "BE-04",
+  "generated_at": "2026-07-24T03:09:42Z",
+  "status": "local-validated-not-deployed",
+  "evidence_layer": "L1-local-validation",
+  "scope": {
+    "production_reads": false,
+    "production_writes": false,
+    "production_deploy": false,
+    "provider_calls": false,
+    "connector_calls": false,
+    "business_data_writes": false,
+    "artifact_uploads": false,
+    "frontend_canonical_switch": false,
+    "static_registry_seeded": false
+  },
+  "contract": {
+    "alembic_revision": "0003_be04_snapshot_metadata",
+    "table": "snapshots",
+    "source_foreign_key": true,
+    "metadata_hash_version": "mkt53.snapshot-metadata.v1",
+    "permissions": ["snapshot:read", "snapshot:write"],
+    "mutation_routes": ["POST"],
+    "forbidden_routes": ["PATCH", "PUT", "DELETE"],
+    "duplicate_audit_count": 1
+  },
+  "quality_gate": {
+    "command": "backend/scripts/quality-be04.sh",
+    "tests_passed": 48,
+    "branch_coverage_percent": 92.25,
+    "ruff_format": "passed",
+    "ruff_lint": "passed",
+    "lock_check": "passed",
+    "compose_config": "passed",
+    "published_ports": 0
+  },
+  "isolated_postgresql_smoke": {
+    "compose_project": "mkt53_be04_local_20260724",
+    "migration": "current",
+    "sources": 1,
+    "snapshots": 1,
+    "snapshot_audits": 1,
+    "metadata_sha256": "aacf82fcd91e4479836cd70a258c7184bef384877fbd785250950ff1ff124d78",
+    "original_idempotency_replay_status": 201,
+    "new_key_duplicate_status": 200,
+    "patch_status": 405,
+    "database_update_rejected": true,
+    "idempotency_operation_length": 256,
+    "cleanup": {
+      "matching_containers": 0,
+      "matching_networks": 0,
+      "matching_volumes": 0
+    }
+  },
+  "graphify": {
+    "nodes": 3481,
+    "edges": 5645,
+    "communities": 266,
+    "missing_or_dangling_endpoints": 0,
+    "self_loops": 0,
+    "exact_duplicate_or_collapsed_edges": 0,
+    "zero_ast_source_files": 38
+  },
+  "artifact_sha256": {
+    "backend/src/mkt53_backend/models.py": "af71985adc73e8920b0bd97d791515b50f78af323e78e15e93e8402096224bb3",
+    "backend/src/mkt53_backend/schemas.py": "7e126e678a74b47c17d81b3b6ea5fd69e2be28b938794685bd266a1daf50d394",
+    "backend/src/mkt53_backend/snapshot_registry.py": "512319017986635f83f51d9220ce55d0d170b597aa24d3772f310c01e42be759",
+    "backend/src/mkt53_backend/snapshot_api.py": "2315ffb8f41015b95fd75b902b70c1630556866810e704660b0eddb017c9ad6b",
+    "backend/migrations/versions/0003_be04_snapshot_metadata.py": "2b2e3ef61fac3f3f82ed9e441e4ae01965a2ed17d66706b07d3995489d84924d",
+    "backend/compose.yaml": "d0dde598fd9733834b577aa15e024ff828e7c971f95b674f506fa5b9e4eb263e",
+    "backend/uv.lock": "84f06a9729ec69059a8b8483fbf452414f4571cd72268fecf67ec1d1c017aaea",
+    "backend/requirements.lock": "f626a130826069fb2c0746317c61e6f962dc88236be7aba45a3888bb075f8b6c",
+    "backend/tests/fixtures/snapshots/local-sample.csv": "5eb30dd03ea9d111695b6cb77658b0bb73c6a50810ce6966724604a06ba3da6a",
+    "backend/tests/fixtures/snapshots/schema-v1.json": "4e3cedb3de17e204c2e9adc261e48dc097a51da1b197b4cbb2476551fc0aa8c5"
+  },
+  "local_image_id": "sha256:db264061fb8ec328055ff23f9e00cc9b92de7a6d35fd2fd87aee3f8f05c5901a",
+  "known_warning": "Starlette TestClient reports an httpx migration deprecation warning."
+}

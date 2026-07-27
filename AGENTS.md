@@ -59,6 +59,12 @@ mkt53/
 │   │   └── ai-gallery/ # AI 生成图片
 │   ├── package.json
 │   └── vite.config.ts
+├── backend/           # BE-01–07 本地治理后端链（FastAPI/PostgreSQL/Alembic；未部署生产）
+│   ├── src/mkt53_backend/
+│   ├── migrations/
+│   ├── tests/
+│   ├── compose.yaml   # 独立、零 host port 的本地 Compose 合同
+│   └── pyproject.toml
 └── docx_extracted/    # 原始需求文档（Word 解析产物）
 ```
 
@@ -132,8 +138,20 @@ npm run lint    # 运行 ESLint
 npm run build   # 构建生产产物到 dist/
 npm run data:audit          # 审计页面、数据管理表和 source registry 一致性
 npm run data:refresh:semi-monthly # 生成半月数据采集 manifest
+npm run data:recovery:semi-monthly:candidate # 生成隔离的 L2 恢复候选，不改 public/production
 npm run data:public-evidence:dry-run # 规划公开证据样本，不联网、不写业务数据
+npm run quality:p0-05-nginx-candidate # 本地 Docker 验证门户门禁候选，不写生产
 ```
+
+BE-07 后端本地质量门：
+
+```bash
+cd backend
+uv sync --frozen
+./scripts/quality-be07.sh
+```
+
+`backend/` 当前覆盖 identity/RBAC、版本化 source registry、不可变 snapshot、review 状态机、append-only audit 与隔离恢复演练。该链路仍是本地/fixture 验证：没有接生产 nginx、真实 portal identity、生产数据库、connector 或 provider，前端生产仍以静态数据为 canonical。
 
 ## 部署
 
@@ -143,7 +161,7 @@ npm run data:public-evidence:dry-run # 规划公开证据样本，不联网、�
 |---|---|
 | 服务器 | 101.34.52.232 (腾讯云轻量) |
 | OS | Ubuntu 22.04 LTS |
-| SSH Key | `ai_video.pem`（仓库根目录，已 gitignore）|
+| SSH Key | 默认 `DDDD.pem`；可用 `MKT53_SSH_KEY_PATH` 指定绝对路径（已 gitignore）|
 | 静态文件路径 | `/opt/mkt53/html/` |
 | 宿主 landing 文件 | `/opt/ai-video/deploy/lighthouse/landing/index.html` |
 | nginx 容器 | `ai_video_nginx`（与其他应用共用）|
@@ -171,6 +189,8 @@ npm run test:e2e:prod
 
 2026-06-13 已恢复 `lute-tlz-dddd.top A 101.34.52.232`。DNSPod 权威 NS、1.1.1.1、8.8.8.8 和本机解析均返回 `101.34.52.232`，完整 `npm run test:e2e:prod` 已恢复 14/14 通过。
 
+2026-07-24 经独立 nginx 写入授权和真实授权会话验收，P0-05 门户门禁已激活：完整旧配置以 root-only 备份保留，完整候选 `nginx -t` 通过后仅替换 mkt server block，并只 reload nginx、未重启或重建容器。未授权 root、deep route 与 manifest 均 302 到 apex login 且 `private, no-store`；真实会话首页和 `/#/data` 可访问，生产 E2E 8/8、auth-gated smoke 通过。机器证据见 `docs/reviews/mkt53-project-review-20260722/evidence/p0-05-production-activation-20260724.json`。
+
 半月数据刷新：
 
 ```bash
@@ -179,7 +199,9 @@ npm run data:refresh:semi-monthly
 npm run data:deploy:semi-monthly
 ```
 
-服务器 cron 使用 `/opt/mkt53/automation/app` 内的 `npm run data:publish:semi-monthly:local`，每月 1 日和 16 日 09:00 执行，默认只写入 `/opt/mkt53/html/`。`data:refresh:semi-monthly` 生成 `public/periodic-data/latest.json`、`connectors.json`、`source-tasks.json`，并同步 `public/weekly-data/*` 兼容路径；不要使用 `public/data/`，该路径会与前端 `/data` 路由冲突。
+服务器 cron 的目标合同是在 `/opt/mkt53/automation/app` 内每月 1 日和 16 日 09:00 执行 `npm run data:publish:semi-monthly:local`，默认只写入 `/opt/mkt53/html/`。2026-07-23 经独立生产写入授权，automation 副本已同步并通过 staging gate，`2026-07-H2` periodic/weekly 共 10 个生产文件完成 HTTPS 哈希核对，半月 cron 已唯一安装；首次计划运行是 `2026-08-01T09:00:00+08:00`，在该时间窗前不得声称定时执行已成功。`data:refresh:semi-monthly` 生成 `public/periodic-data/latest.json`、`connectors.json`、`source-tasks.json`，并同步 `public/weekly-data/*` 兼容路径；不要使用 `public/data/`，该路径会与前端 `/data` 路由冲突。
+
+授权前使用 `npm run data:recovery:semi-monthly:candidate` 生成 `tmp/data-collection/recovery-candidates/<period>/` 隔离候选。该命令固定 no-network/dry-run，不覆盖 canonical public 文件，不安装 cron、不部署；`install-semi-monthly-cron.sh --print` 也必须保持零目录写入。候选通过只代表 L2 工作流与副作用边界成立；是否已生产恢复必须以独立授权后的备份、发布、哈希、cron 和运行日志证据为准。
 
 公开证据样本通过 `data:public-evidence:dry-run` / `data:public-evidence:live` 和 `--public-evidence-live` 接入半月刷新。公开证据只保留 URL、标题、hash、匹配项、摘要和本地 `tmp/public-evidence/` 证据路径；不得把 Amazon 公开页样本写成 Amazon 平台级价格、评论、SKU、销量或 BSR 数据。Amazon、CRM、ERP、社交媒体 API、Import Genius、VOC/NLP 和访谈类来源必须保持 `connector-required` 或 `manual-required`，直到授权连接器或人工凭证接入；不得把缺失采集伪装成真实数据。
 
@@ -202,7 +224,7 @@ npm run data:deploy:semi-monthly
 
 ```bash
 # 只重建 nginx，不影响其他容器
-ssh -i ai_video.pem ubuntu@101.34.52.232 \
+ssh -i "${MKT53_SSH_KEY_PATH:-./DDDD.pem}" ubuntu@101.34.52.232 \
   "cd /opt/ai-video/deploy/lighthouse && \
    docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate nginx"
 ```
@@ -236,7 +258,20 @@ server {
 
 ## 注意事项
 
-- `ai_video.pem` 已加入 `.gitignore`，不进仓库，本地保留在项目根目录
+- SSH key 默认使用仓库根目录 `DDDD.pem`；也可设置 `MKT53_SSH_KEY_PATH`，所有 `*.pem` 均不进仓库
 - `app/dist/` 和 `app/node_modules/` 已 gitignore，不提交
-- GitHub Actions 已配置 `quality-gate`，覆盖 `npm ci`、测试、lint、audit、build
+- GitHub Actions `quality-gate` 包含独立 app/backend job：app 执行聚合 release evidence，backend 固定 Python/uv 后执行 lock、Ruff、pytest/coverage、Compose 与 BE-07 隔离恢复门禁
 - `docx_extracted/` 为原始需求文档解析产物，仅供参考，不参与构建
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+When the user types `/graphify`, use the installed graphify skill or instructions before doing anything else.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- Dirty graphify-out/ files are expected after hooks or incremental updates; dirty graph files are not a reason to skip graphify. Only skip graphify if the task is about stale or incorrect graph output, or the user explicitly says not to use it.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` and then `graphify cluster-only . --min-community-size=0` to keep the graph current and render every community that has a non-file node (AST-only, no API cost; file-only communities remain in `graph.json`/`graph.html`).

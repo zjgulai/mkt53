@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "taskId": "P0-05",
+  "batch": "Batch 09",
+  "generatedAt": "2026-07-24T09:14:46+08:00",
+  "status": "production-activation-preflight-blocked-real-session",
+  "authorization": {
+    "productionNginxWriteAuthorizedBy": "user",
+    "productionNginxWriteAuthorizedAt": "2026-07-24",
+    "authorizationConsumed": false,
+    "deferredReason": "a real authorized portal session is unavailable for mandatory positive acceptance",
+    "excluded": [
+      "application bundle deployment",
+      "P0-04 data or cron changes",
+      "provider or restricted connector calls",
+      "git staging, commit, or push"
+    ]
+  },
+  "graphify": {
+    "queryMode": "dfs",
+    "queryTokens": [
+      "nginx",
+      "portal",
+      "login",
+      "session",
+      "redirect",
+      "production",
+      "candidate",
+      "config",
+      "deploy",
+      "validate",
+      "evidence",
+      "manifest"
+    ],
+    "primaryNodes": [
+      "validate-p0-05-nginx-candidate.sh",
+      "expectPortalLoginRedirect()",
+      "deploy-static.sh",
+      "smoke-prod.sh",
+      "nginx/README.md"
+    ],
+    "outcome": "the graph confirmed the candidate validator, production redirect assertions, SSH contract, and deployment verification path"
+  },
+  "candidate": {
+    "path": "app/configs/nginx/mkt53-portal-gate.candidate.conf",
+    "sha256": "f33342abf04bf7f0a25e6549b7d8be5f0298a7e42bf455a09f84946457b9d696",
+    "localValidation": {
+      "status": "passed",
+      "evidenceLayer": "L2-isolated-docker-fixture",
+      "nginxSyntax": "passed",
+      "unauthorizedRootDeepAndManifest": "302",
+      "syntheticAuthorizedRootAndManifest": "200",
+      "internalAuthDirectAccess": "404",
+      "cachePolicy": "private-no-store",
+      "temporaryContainerOrNetworkResidue": 0
+    }
+  },
+  "productionReadonly": {
+    "observedAt": "2026-07-24T09:10:14+08:00",
+    "host": "VM-0-16-ubuntu",
+    "sshKeyContract": {
+      "pathSource": "MKT53_SSH_KEY_PATH or repository DDDD.pem default",
+      "keyMode": "0600",
+      "batchMode": true
+    },
+    "nginx": {
+      "configPath": "/opt/ai-video/deploy/lighthouse/nginx.conf",
+      "configSha256": "fa36f371db7e45f20311b2cb59701f8ffb24515fe4e1ffa6fbad936d4d793eff",
+      "mktServerBlockSha256": "4f78ab917e7c61508d374da5b318f4d49ce2de7da9f9142c76714b4eb9206342",
+      "composeSha256": "77ec0c4bcb7b505353e3ee2965ebaad823a4f6c018866f61cafa0dfc49c2c239",
+      "mktServerBlockHasAuthRequest": false,
+      "syntaxTest": "passed",
+      "container": {
+        "name": "ai_video_nginx",
+        "image": "nginx:alpine",
+        "imageId": "sha256:812d47f806db497c53f9b47e76bdab38bcf5d724c69d3986df5ee4336c210559",
+        "status": "running",
+        "startedAt": "2026-07-19T16:22:53.256636074Z",
+        "mktMount": "/opt/mkt53/html:/var/www/mkt53:ro"
+      }
+    },
+    "portalAuth": {
+      "container": "lute_portal_auth",
+      "status": "running",
+      "health": "healthy",
+      "cookieName": "lute_portal_session",
+      "cookieDomain": ".lute-tlz-dddd.top",
+      "sessionTtlSeconds": 86400,
+      "cookieFlags": [
+        "Path=/",
+        "HttpOnly",
+        "Secure",
+        "SameSite=Lax"
+      ],
+      "contract": "valid session returns 204 from /portal/auth; absent or invalid session returns 401",
+      "hostCompatibility": "the apex-issued cookie is scoped to the parent domain and is therefore eligible for the mkt subdomain"
+    },
+    "http": {
+      "root": 200,
+      "deepPathMarketTrend": 200,
+      "periodicManifest": 200,
+      "periodicConnectors": 200,
+      "weeklyManifest": 200,
+      "redirectLocationPresent": false,
+      "cacheControl": "public, max-age=300, must-revalidate"
+    },
+    "productionE2e": {
+      "command": "npm run test:e2e:prod",
+      "passed": 2,
+      "failed": 6,
+      "total": 8,
+      "passedChecks": [
+        "desktop landing gateway",
+        "mobile landing gateway"
+      ],
+      "failedContracts": [
+        "desktop and mobile mkt root are not redirected to portal login",
+        "desktop and mobile deep routes are not redirected to portal login",
+        "desktop and mobile manifest endpoints return 200 instead of 302"
+      ]
+    }
+  },
+  "realSessionGate": {
+    "browserSurface": "Codex In-app Browser",
+    "availableBrowserSurfaces": 1,
+    "observedTarget": "https://lute-tlz-dddd.top/login.html?next=/systems.html",
+    "sessionPresent": false,
+    "credentialsRead": false,
+    "rawCookieRead": false,
+    "requiredResumeInput": "user completes login in the retained in-app browser tab and confirms it is ready"
+  },
+  "decision": {
+    "productionConfigBackupCreated": false,
+    "productionNginxWritten": false,
+    "productionNginxReloadedOrRestarted": false,
+    "reason": "activation without an immediately available positive authorized-session check could lock out every user and violate the rollback contract",
+    "resumeSequence": [
+      "confirm the retained browser reaches /systems.html with an authorized session",
+      "recheck full config and mkt block hashes",
+      "create a timestamped full nginx.conf backup",
+      "assemble and test the complete candidate configuration",
+      "replace only the mkt server block and reload or recreate only nginx",
+      "run unauthenticated redirects, real-session root and manifest checks, smoke, and production E2E 8/8",
+      "restore the full backup and reload nginx on any failed assertion"
+    ]
+  },
+  "boundaries": {
+    "productionReads": true,
+    "productionWrites": false,
+    "nginxWrites": false,
+    "nginxReloadOrRestart": false,
+    "applicationDeployment": false,
+    "providerCalls": false,
+    "restrictedConnectorCalls": false,
+    "businessDataWrites": false,
+    "gitStage": false,
+    "gitCommit": false,
+    "gitPush": false
+  }
+}

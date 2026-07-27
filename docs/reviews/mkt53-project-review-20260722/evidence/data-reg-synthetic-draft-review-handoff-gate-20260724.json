@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "mkt53.data-reg-review-handoff-gate-evidence.v1",
+  "generatedAt": "2026-07-24T09:18:04Z",
+  "status": "synthetic-review-handoff-gate-ready-local-l2",
+  "evidenceGrade": "L2-fixture-or-dry-run",
+  "task": "DATA-REG synthetic draft-to-review handoff gate",
+  "contract": {
+    "projectionVersion": "mkt53.data-reg-intake-draft-projection.v1",
+    "matrixVersion": "mkt53.regulation-sku-matrix.v1",
+    "prerequisitesVersion": "mkt53.regulation-review-handoff-prerequisites.v1",
+    "handoffVersion": "mkt53.data-reg-review-handoff-gate.v1",
+    "acceptedInputClasses": ["empty-handoff-template", "synthetic-handoff-fixture"],
+    "realInputGroupsReady": 0,
+    "realInputGroupsRequired": 6
+  },
+  "pendingCandidate": {
+    "status": "pending-review-handoff-blocked-prerequisites",
+    "passed": true,
+    "handoffId": "data-reg-review-handoff-e31bf501cca31ce302c9d7ec",
+    "projectionId": "data-reg-projection-7fdd37a3128395a5ff393845",
+    "candidateCount": 1,
+    "readyForReviewerDecision": false,
+    "transitionAuthorized": false,
+    "blockedTransitions": ["approved", "rejected"],
+    "backendSubjectCreated": false,
+    "backendPersisted": false,
+    "reviewEventId": null,
+    "legalDecision": null,
+    "artifactSha256": "4205002c41726e14dbf328698e95f333d0a479ca0c08578da5b0901cae406f8f"
+  },
+  "idempotencyReplay": {
+    "runs": 2,
+    "byteIdentical": true,
+    "firstArtifactSha256": "4205002c41726e14dbf328698e95f333d0a479ca0c08578da5b0901cae406f8f",
+    "secondArtifactSha256": "4205002c41726e14dbf328698e95f333d0a479ca0c08578da5b0901cae406f8f",
+    "operationSha256": "e31bf501cca31ce302c9d7eca3832432a50a7d8f405170a37ffd218d6fa16b01"
+  },
+  "blockedTransitions": {
+    "emptyApprove": {
+      "status": "blocked-review-transition",
+      "transitionAuthorized": false,
+      "artifactSha256": "08210faf77c8a079d56d983b37a26c3b0787f990d973a807988e087c2d126f6e"
+    },
+    "syntheticCompleteApprove": {
+      "status": "blocked-review-transition",
+      "snapshotShapeComplete": true,
+      "reviewerAuthorizationShapeComplete": true,
+      "officialSnapshotReady": false,
+      "independentReviewerAuthorized": false,
+      "transitionAuthorized": false,
+      "artifactSha256": "c2cf39c409813611e58d5fc2f15a62228863999c308b37892bac38047b7ac47f"
+    }
+  },
+  "withdrawnProjection": {
+    "status": "blocked-projection-withdrawn",
+    "handoffCandidateCreated": false,
+    "candidateCount": 0,
+    "transitionAuthorized": false,
+    "artifactSha256": "812a7e19ccfa5e7d52230cb59e10ef17b95e2a710bb79ac6c1e2f0f8247098c7"
+  },
+  "decision": {
+    "authorizedToCreateBackendReviewSubject": false,
+    "authorizedToApprove": false,
+    "authorizedToReject": false,
+    "authorizedToPublish": false,
+    "authorizedToWriteProduction": false
+  },
+  "scope": {
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "connectorCalls": 0,
+    "backendApiCalls": 0,
+    "snapshotWrites": 0,
+    "reviewWrites": 0,
+    "businessDataWrites": 0,
+    "canonicalPublicWrites": 0,
+    "productionReads": 0,
+    "productionWrites": 0,
+    "deployment": false,
+    "realSkusEvaluated": 0,
+    "legalConclusionsGenerated": 0,
+    "factPromotion": false,
+    "gitStageCommitPush": false
+  },
+  "qualityGate": {
+    "batchTargeted": {"filesPassed": 1, "testsPassed": 12, "testsFailed": 0},
+    "dataRegTargeted": {"filesPassed": 4, "testsPassed": 33, "testsFailed": 0},
+    "full": {"filesPassed": 21, "testsPassed": 169, "testsFailed": 0, "durationSeconds": 132.42},
+    "lint": "passed",
+    "npmAuditVulnerabilities": 0,
+    "build": {"status": "passed", "modules": 2328},
+    "bundleBudget": {"status": "passed", "javascriptAssets": 60, "existingTemporaryExceptions": 2},
+    "dataConsistency": {"pages": 43, "tables": 107, "sources": 53, "issues": 0},
+    "deepDataAudit": {"claims": 888, "highRiskClaims": 0, "sourceGaps": 26, "providerCalls": false, "productionWrites": false}
+  },
+  "implementationSha256": {
+    "app/scripts/data/build-regulation-review-handoff-gate.mjs": "2a59a64f5a286729915b434733672bc42f7236e455258152968f6e17a96700a4",
+    "app/contracts/regulation-review-handoff-prerequisites.schema.json": "0bc288d6882a36fed6bd2a18acfab627fcba08e9b36c34c057fa9cbfd8304df3",
+    "app/scripts/data/templates/regulation-review-handoff-prerequisites-template.json": "fca5ac9bde1c559e4e9935bd6d379ee074436ee32be0e4d541fb02ccbeb3959a",
+    "app/tests/fixtures/regulation-review-handoff-prerequisites.synthetic.json": "7e4efc4ebd159cbbccae4141379191098abd1229b8aa682a079c87bb798d9f3d",
+    "app/tests/scripts/regulation-review-handoff-gate.test.ts": "9033580035949a3a685d88bff039a7babc295f7f281c4da25f70fc8262dfafba"
+  },
+  "graphify": {
+    "status": "updated-and-clustered",
+    "nodes": 4405,
+    "edges": 7043,
+    "communities": 343,
+    "duplicateNodeIds": 0,
+    "missingEndpoints": 0,
+    "danglingEndpoints": 0,
+    "selfLoops": 0,
+    "exactDuplicateEdges": 0,
+    "sameEndpointExtraEdges": 0,
+    "zeroAstSourceFiles": 51
+  },
+  "limitations": [
+    "Only empty and reserved synthetic prerequisite inputs were accepted.",
+    "A local handoff candidate is not a backend review subject or review event.",
+    "No official bytes, real SKU evaluation, independent authorization, approve/reject decision, production write, or deployment occurred."
+  ]
+}

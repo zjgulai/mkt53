@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "taskId": "P0-05",
+  "batch": "Batch 09",
+  "generatedAt": "2026-07-24T09:34:38+08:00",
+  "status": "production-activated-and-verified",
+  "evidenceLayers": [
+    "L4-authorized-production-write",
+    "L3-production-readonly",
+    "L2-isolated-docker-fixture"
+  ],
+  "authorization": {
+    "authorizedBy": "user",
+    "authorizedAt": "2026-07-24",
+    "trigger": "已登录，可以继续",
+    "consumed": true,
+    "scope": [
+      "create a recoverable full nginx.conf backup",
+      "replace only the mkt server block",
+      "reload only ai_video_nginx",
+      "run unauthenticated and real-session acceptance",
+      "roll back the full configuration on any failed assertion"
+    ],
+    "excluded": [
+      "application bundle deployment",
+      "static file or P0-04 data changes",
+      "compose or mount changes",
+      "provider or restricted connector calls",
+      "git staging, commit, or push"
+    ]
+  },
+  "worktree": {
+    "branch": "codex/mkt53-release-candidate-20260630",
+    "head": "0d44c3329b759a7886a69e4333bf56917b60e948",
+    "dirtyBeforeActivation": true,
+    "preEvidenceStatusSha256": "501b56db75aba167f0cce9f557a90c578b765066c1dc5fecd06dd5d6f2da9601",
+    "handling": "existing local changes were preserved; no staging, commit, or push was performed"
+  },
+  "realSessionPrecondition": {
+    "browserSurface": "Codex In-app Browser",
+    "verifiedUrl": "https://lute-tlz-dddd.top/systems.html",
+    "verifiedTitle": "路特数据科学平台 / Lute Data Science Hub",
+    "authorizedContent": "31 system entries were visible",
+    "credentialsRead": false,
+    "rawCookieRead": false,
+    "browserStorageRead": false
+  },
+  "preflight": {
+    "observedAt": "2026-07-24T09:27:56+08:00",
+    "sshKeyContract": "MKT53_SSH_KEY_PATH or repository DDDD.pem default",
+    "sshKeyMode": "0600",
+    "candidateSha256": "f33342abf04bf7f0a25e6549b7d8be5f0298a7e42bf455a09f84946457b9d696",
+    "candidateValidation": "passed L2 isolated nginx 1.29.8 fixture",
+    "activeConfigSha256": "fa36f371db7e45f20311b2cb59701f8ffb24515fe4e1ffa6fbad936d4d793eff",
+    "oldMktBlockSha256": "4f78ab917e7c61508d374da5b318f4d49ce2de7da9f9142c76714b4eb9206342",
+    "composeSha256": "77ec0c4bcb7b505353e3ee2965ebaad823a4f6c018866f61cafa0dfc49c2c239",
+    "nginxSyntax": "passed",
+    "nginxStatus": "running",
+    "portalAuthHealth": "healthy"
+  },
+  "backup": {
+    "path": "/opt/ai-video/deploy/lighthouse/nginx.conf.p0-05-backup-20260724T012911Z",
+    "sha256": "fa36f371db7e45f20311b2cb59701f8ffb24515fe4e1ffa6fbad936d4d793eff",
+    "mode": "0600",
+    "owner": "root:root",
+    "retained": true
+  },
+  "completeCandidate": {
+    "hostPath": "/opt/ai-video/deploy/lighthouse/nginx.conf.p0-05-candidate-20260724T012911Z",
+    "containerTestPath": "/tmp/mkt53-nginx-p0-05-20260724T012911Z.conf",
+    "sha256": "f466cffbcecf644f9b3107cba08872f9454280055f2f3ddfdf2db9295923cf2e",
+    "newMktBlockSha256": "6c02b5014ea0ab4a4ec3d20ac95ce5047f8dbcaac42b8cfd9006909a17525544",
+    "nginxSyntaxBeforeActivation": "passed"
+  },
+  "activation": {
+    "activatedAt": "2026-07-24T09:30:07+08:00",
+    "activeConfigPath": "/opt/ai-video/deploy/lighthouse/nginx.conf",
+    "method": "in-place full-config write preserving the bind-mounted inode, followed by nginx -s reload",
+    "activeConfigSha256": "f466cffbcecf644f9b3107cba08872f9454280055f2f3ddfdf2db9295923cf2e",
+    "activeMktBlockSha256": "6c02b5014ea0ab4a4ec3d20ac95ce5047f8dbcaac42b8cfd9006909a17525544",
+    "activeConfigMode": "0644",
+    "activeConfigOwner": "root:root",
+    "activeConfigInode": 430579,
+    "changedServerBlocks": [
+      "mkt.lute-tlz-dddd.top"
+    ],
+    "nginxReloaded": true,
+    "nginxRecreatedOrRestarted": false,
+    "nginxStartedAtBeforeAndAfter": "2026-07-19T16:22:53.256636074Z",
+    "composeChanged": false,
+    "mountChanged": false,
+    "rollbackTriggered": false
+  },
+  "negativeAcceptance": {
+    "cacheControl": "private, no-store",
+    "checks": [
+      {
+        "path": "/",
+        "status": 302,
+        "location": "https://lute-tlz-dddd.top/login.html?next=https://mkt.lute-tlz-dddd.top/"
+      },
+      {
+        "path": "/market/trend",
+        "status": 302,
+        "location": "https://lute-tlz-dddd.top/login.html?next=https://mkt.lute-tlz-dddd.top/market/trend"
+      },
+      {
+        "path": "/periodic-data/latest.json",
+        "status": 302,
+        "location": "https://lute-tlz-dddd.top/login.html?next=https://mkt.lute-tlz-dddd.top/periodic-data/latest.json"
+      },
+      {
+        "path": "/periodic-data/connectors.json",
+        "status": 302,
+        "location": "https://lute-tlz-dddd.top/login.html?next=https://mkt.lute-tlz-dddd.top/periodic-data/connectors.json"
+      },
+      {
+        "path": "/weekly-data/latest.json",
+        "status": 302,
+        "location": "https://lute-tlz-dddd.top/login.html?next=https://mkt.lute-tlz-dddd.top/weekly-data/latest.json"
+      }
+    ],
+    "internalAuthDirectAccess": 404
+  },
+  "positiveAcceptance": {
+    "realSessionRoot": {
+      "url": "https://mkt.lute-tlz-dddd.top/",
+      "title": "Momcozy - Market Insight Platform",
+      "heading": "上午好，Momcozy 市场洞察工作台",
+      "manifestPeriodVisible": "2026-07-H2",
+      "horizontalOverflowPx": 0
+    },
+    "realSessionDataPage": {
+      "url": "https://mkt.lute-tlz-dddd.top/#/data",
+      "headings": [
+        "数据管理",
+        "市场洞察数据"
+      ],
+      "manifestPeriodVisible": "2026-07-H2",
+      "horizontalOverflowPx": 0,
+      "browserErrorLogs": 0
+    },
+    "productionE2e": {
+      "command": "npm run test:e2e:prod",
+      "passed": 8,
+      "failed": 0,
+      "total": 8,
+      "viewports": [
+        "desktop",
+        "mobile"
+      ]
+    },
+    "productionSmoke": "passed auth-gated; remote static files verified"
+  },
+  "finalReadonly": {
+    "observedAt": "2026-07-24T09:33:59+08:00",
+    "nginxSyntax": "passed",
+    "nginxStatus": "running",
+    "nginxImageId": "sha256:812d47f806db497c53f9b47e76bdab38bcf5d724c69d3986df5ee4336c210559",
+    "portalAuthStatus": "running",
+    "portalAuthHealth": "healthy",
+    "composeSha256": "77ec0c4bcb7b505353e3ee2965ebaad823a4f6c018866f61cafa0dfc49c2c239",
+    "manifest": {
+      "period": "2026-07-H2",
+      "generatedAt": "2026-07-23T07:03:59.663Z",
+      "nextScheduledAt": "2026-08-01T09:00:00+08:00"
+    }
+  },
+  "rollbackContract": {
+    "trigger": "any syntax, reload, health, redirect, real-session, smoke, manifest, or production E2E failure",
+    "commandBehavior": "restore the complete root-only backup in place, run nginx -t, and reload only ai_video_nginx",
+    "triggered": false,
+    "backupRetainedForManualRecovery": true
+  },
+  "boundaries": {
+    "productionReads": true,
+    "productionNginxWrite": true,
+    "nginxReload": true,
+    "nginxRestartOrRecreate": false,
+    "applicationDeployment": false,
+    "staticFilesChanged": false,
+    "p0_04DataOrCronChanged": false,
+    "composeChanged": false,
+    "providerCalls": false,
+    "restrictedConnectorCalls": false,
+    "businessDataWrites": false,
+    "gitStage": false,
+    "gitCommit": false,
+    "gitPush": false
+  }
+}

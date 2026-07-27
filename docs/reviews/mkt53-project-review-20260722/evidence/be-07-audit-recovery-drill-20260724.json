@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "mkt53.be07-audit-recovery-evidence.v1",
+  "generatedAt": "2026-07-24T04:39:02.268092Z",
+  "status": "passed",
+  "evidenceGrade": "L2-fixture-or-dry-run",
+  "task": "BE-07 local audit and recovery drill",
+  "scope": {
+    "environment": "test",
+    "dockerEndpoint": "local-socket-only",
+    "allComposeNetworksInternal": true,
+    "hostPortsPublished": false,
+    "sourceDatabase": "mkt53_be07_source",
+    "restoreDatabase": "mkt53_be07_restore",
+    "productionDatabaseRead": false,
+    "productionDatabaseWrite": false,
+    "productionConfigWrite": false,
+    "productionTaskInstall": false,
+    "providerOrConnectorCalls": 0,
+    "deployment": false,
+    "gitStageCommitPush": false
+  },
+  "qualityGate": {
+    "command": "cd backend && ./scripts/quality-be07.sh",
+    "testsPassed": 62,
+    "testsFailed": 0,
+    "branchCoveragePercent": 92.73,
+    "lockCheck": "passed",
+    "ruffFormat": "passed",
+    "ruffLint": "passed",
+    "composeConfig": "passed",
+    "warnings": [
+      "One upstream Starlette TestClient/httpx deprecation warning; no test failure."
+    ]
+  },
+  "drill": {
+    "id": "be07-20260724t043838z-99547",
+    "startedAt": "2026-07-24T04:38:38.849067Z",
+    "completedAt": "2026-07-24T04:39:02.268092Z",
+    "rawLocalReport": "tmp/backend-recovery/be07/be07-20260724t043838z-99547/report.json",
+    "backup": {
+      "format": "PostgreSQL custom logical archive",
+      "sizeBytes": 26163,
+      "sha256": "c91d990471f186bc58f589575b261c83f651951c51f9d60bd5cdb39efc70e263",
+      "mode": "0600",
+      "durationSeconds": 0.449105,
+      "fixtureOnlyUnencrypted": true
+    },
+    "baseline": {
+      "migrationRevision": "0004_be05_review_state_machine",
+      "fingerprintSha256": "2f6523499191bbb88d4e4fb279d8cd5ace8e6bcdc881c72cfe5524901ff0bde3",
+      "canonicalBytes": 9875,
+      "counts": {
+        "sources": 1,
+        "snapshots": 1,
+        "auditEvents": 2,
+        "reviewSubjects": 2,
+        "reviewEvents": 4,
+        "idempotencyRecords": 4
+      }
+    },
+    "restore": {
+      "baselineFingerprintMatched": true,
+      "countsStableAfterSeedReplays": true,
+      "seedReplays": {
+        "sourceCreate": true,
+        "snapshotCreate": true,
+        "sourceApproval": true,
+        "snapshotApproval": true
+      },
+      "sourceWithdrawal": {
+        "initialReplay": false,
+        "exactReplay": true,
+        "lifecycle": "withdrawn",
+        "auditActions": ["create", "withdraw"],
+        "reviewTargets": ["pending", "approved", "withdrawn"]
+      },
+      "appendOnlyAndImmutableProbes": {
+        "auditUpdateRejected": true,
+        "auditDeleteRejected": true,
+        "reviewUpdateRejected": true,
+        "reviewDeleteRejected": true,
+        "snapshotUpdateRejected": true,
+        "snapshotDeleteRejected": true,
+        "fingerprintStableAfterRejectedMutations": true
+      }
+    },
+    "recoveryObjectives": {
+      "rpo": {
+        "targetSeconds": 86400,
+        "measuredSeconds": 0.816373,
+        "passed": true,
+        "definition": "backup completion minus latest committed fixture record included in the archive"
+      },
+      "rto": {
+        "targetSeconds": 14400,
+        "measuredSeconds": 3.006525,
+        "passed": true,
+        "definition": "create restore database through fingerprint, revision, replay, withdrawal, and trigger verification"
+      }
+    },
+    "cleanup": {
+      "containersRemaining": 0,
+      "networksRemaining": 0,
+      "volumesRemaining": 0,
+      "passed": true
+    }
+  },
+  "implementationSha256": {
+    "backend/scripts/recovery_drill_be07.py": "6a236be4d2fee56574d6b3a771479d5fb6a28fd0e316d1a4a5b775efe1f2d9bf",
+    "backend/scripts/recovery-drill-be07.sh": "af9c54ba9d8e55715b93debaeb0be63827cae0fcb6ba53cc27fca264e5ce4139",
+    "backend/compose.recovery-drill.yaml": "7badce9f18ab8ceeb82fb80d658dd90775ee6a6518fdf3125a3c03d63a1bdd1b",
+    "backend/scripts/quality-be07.sh": "f94c02819aa203c13777f8efd741059768c6acc72932d56bf08aafac712e673d",
+    "backend/tests/test_recovery_drill.py": "2c2b15773dc549992cfef37cfbe20ccb6c07d265a7d968e4102a100ae6ee4822"
+  },
+  "graphify": {
+    "nodes": 3712,
+    "edges": 6212,
+    "communities": 299,
+    "duplicateNodeIds": 0,
+    "missingEndpoints": 0,
+    "selfLoops": 0,
+    "exactDuplicateEdges": 0,
+    "sameEndpointExtraEdges": 0,
+    "zeroAstSourceFiles": 41
+  },
+  "limitations": [
+    "Synthetic fixture data only; no production backup or production recovery claim.",
+    "Local archive is mode 0600 but is not the encrypted off-host production copy required by BE-01.",
+    "Measured RPO/RTO describe this isolated local run and do not represent production service performance."
+  ]
+}

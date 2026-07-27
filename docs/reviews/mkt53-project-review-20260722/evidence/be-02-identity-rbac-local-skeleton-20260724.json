@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "taskId": "BE-02",
+  "batch": "Batch 11",
+  "generatedAt": "2026-07-24T10:24:53+08:00",
+  "status": "local-skeleton-validated",
+  "evidenceLayer": "L1-local-validation",
+  "authorization": {
+    "trigger": "同意下一批建议",
+    "scope": [
+      "local backend implementation",
+      "fixture-only identity and RBAC validation",
+      "isolated Docker Compose integration smoke",
+      "local documentation, roadmap, review, and graph synchronization"
+    ],
+    "excluded": [
+      "production compose, nginx, network, database, or secret changes",
+      "production API activation or frontend canonical switch",
+      "real portal identity or credential access",
+      "provider or restricted connector calls",
+      "business data writes or fact promotion",
+      "git staging, commit, push, or pull request"
+    ]
+  },
+  "runtime": {
+    "uv": "0.11.11",
+    "python": "3.12.13",
+    "docker": "29.4.1",
+    "dockerCompose": "5.1.3",
+    "dependencies": {
+      "fastapi": "0.139.2",
+      "starlette": "1.3.1",
+      "pydantic": "2.13.4",
+      "pydantic-settings": "2.14.2",
+      "sqlalchemy": "2.0.51",
+      "alembic": "1.18.5",
+      "psycopg": "3.3.4",
+      "uvicorn": "0.51.0"
+    },
+    "pythonImage": "python:3.12.13-slim-bookworm@sha256:d50fb7611f86d04a3b0471b46d7557818d88983fc3136726336b2a4c657aa30b",
+    "postgresImage": "postgres:17.10-bookworm@sha256:4f736ae292687621d4dbe0d499ffd024a36bd2ee7d8ca6f2ccd4c800f047b394"
+  },
+  "contracts": {
+    "identityHeaders": [
+      "X-Mkt53-Proxy-Token",
+      "X-Portal-Subject",
+      "X-Portal-Roles"
+    ],
+    "roles": [
+      "viewer",
+      "analyst",
+      "reviewer",
+      "admin"
+    ],
+    "routes": [
+      "/internal/health/live",
+      "/internal/health/ready",
+      "/api/v1/health",
+      "/api/v1/authz/me",
+      "/api/v1/authz/write-probe"
+    ],
+    "writeProbeSideEffects": false,
+    "productionDocsEnabled": false,
+    "expectedAlembicRevision": "0001_be02_baseline",
+    "domainTablesCreated": 0
+  },
+  "outputs": [
+    {
+      "path": "backend/pyproject.toml",
+      "sha256": "22dea4752812d49e0223d02431a7a5a4c05df08e8459703193f7116897920b9d"
+    },
+    {
+      "path": "backend/uv.lock",
+      "sha256": "400be9d6e938466e7aaf258845e54ff505922549f744939d397ee8698d018904"
+    },
+    {
+      "path": "backend/requirements.lock",
+      "sha256": "f626a130826069fb2c0746317c61e6f962dc88236be7aba45a3888bb075f8b6c"
+    },
+    {
+      "path": "backend/Dockerfile",
+      "sha256": "93f11e3de585aa01536aed233fd1605f5a99a45e34e20c7cce256a0bee8b13a3"
+    },
+    {
+      "path": "backend/compose.yaml",
+      "sha256": "f1cfd840d07845ddbc83e59f9629cd9be3c6f1cbd2800ac35d5860dabd1665a1"
+    },
+    {
+      "path": "backend/src/mkt53_backend/config.py",
+      "sha256": "8484ca41ab47bea8c5495cc98f6a3bbe5c045d2b5d3316496cbb29bbbbaf556c"
+    },
+    {
+      "path": "backend/src/mkt53_backend/auth.py",
+      "sha256": "34e06647bb05bb409f6c9e0992228de66c9be70fa11c07480763561b7330ab74"
+    },
+    {
+      "path": "backend/src/mkt53_backend/main.py",
+      "sha256": "c3b16d0e5d751adf4b679445a200d0079f4cb974bdc17c00dae8a01f6a661f8e"
+    },
+    {
+      "path": "backend/src/mkt53_backend/database.py",
+      "sha256": "859133ab1b24bd4d16fb6ed3762ce4622010bc574ca402c3b35ff485c4cb6408"
+    },
+    {
+      "path": "backend/migrations/versions/0001_be02_baseline.py",
+      "sha256": "aa254b1a9c2048872070dc484e9a6a61798bd7a4d5eb6472a2d81861ace469e5"
+    },
+    {
+      "path": "backend/scripts/quality-be02.sh",
+      "sha256": "b1b79e88f3cf04a18a121ff74a9530f958e38018aa8f9b4cad761abab9906010"
+    },
+    {
+      "path": "docs/architecture/be-02-identity-rbac-local-skeleton-20260724.md",
+      "sha256": "ff5acbf10e2f5e0b4d24383a2d1cdb35f04319d1568a1351839f3151c3df7b8d"
+    }
+  ],
+  "validation": {
+    "qualityCommand": "cd backend && ./scripts/quality-be02.sh",
+    "lockCheck": "passed",
+    "format": "passed",
+    "lint": "passed",
+    "tests": {
+      "passed": 36,
+      "failed": 0,
+      "branchCoveragePercent": 95.81,
+      "requiredCoveragePercent": 90.0,
+      "warning": "Starlette TestClient reports one httpx migration warning; recorded for dependency migration, not suppressed"
+    },
+    "composeConfig": "passed",
+    "publishedHostPorts": 0,
+    "apiNetworks": [
+      "mkt53_be02_edge_20260724",
+      "mkt53_be02_data_20260724"
+    ],
+    "postgresNetworks": [
+      "mkt53_be02_data_20260724"
+    ],
+    "postgresNetworkInternal": true,
+    "apiReadOnlyRootFilesystem": true,
+    "apiCapDropAll": true,
+    "apiNoNewPrivileges": true,
+    "migration": "0001_be02_baseline (head)",
+    "endpointMatrix": {
+      "internalLive": 200,
+      "internalReady": 200,
+      "missingIdentity": 401,
+      "wrongProxyToken": 401,
+      "viewerIdentity": 200,
+      "viewerWriteProbe": 403,
+      "reviewerWriteProbe": 200,
+      "reviewerWriteProbeSideEffects": false
+    },
+    "secrets": {
+      "mountedAsFiles": true,
+      "databasePasswordInEnvironment": false,
+      "trustedProxyTokenInEnvironment": false,
+      "frontendFixtureSecretScan": "passed"
+    },
+    "cleanup": {
+      "project": "mkt53_be02_local_20260724",
+      "containersRemaining": 0,
+      "networksRemaining": 0,
+      "testVolumesRemaining": 0,
+      "otherComposeProjectsModified": false
+    },
+    "graphify": {
+      "status": "passed",
+      "nodes": 3269,
+      "edges": 5068,
+      "communities": 259,
+      "duplicateNodeIds": 0,
+      "missingEndpointEdges": 0,
+      "selfLoops": 0,
+      "zeroAstNodeSourceFiles": 35,
+      "zeroAstNodeBoundary": "JSON and configuration visibility limitation; these files were not claimed as represented AST nodes"
+    }
+  },
+  "boundaries": {
+    "backendCodeCreated": true,
+    "localContainersStarted": true,
+    "ephemeralLocalDatabaseCreated": true,
+    "ephemeralLocalDatabaseDeleted": true,
+    "fixtureSecretsCreatedOrRead": true,
+    "realSecretsCreatedOrRead": false,
+    "productionReads": false,
+    "productionWrites": false,
+    "productionDeploy": false,
+    "productionPortalIdentityVerified": false,
+    "providerCalls": false,
+    "restrictedConnectorCalls": false,
+    "businessDataWrites": false,
+    "factPromotion": false,
+    "gitStage": false,
+    "gitCommit": false,
+    "gitPush": false
+  },
+  "nextGate": {
+    "taskId": "BE-03",
+    "scope": "local sources schema and versioned source registry API with ETag, If-Match, idempotency, withdrawal, and append-only audit",
+    "frontendCanonicalSwitchAllowed": false,
+    "productionWritesAllowed": false,
+    "connectorCallsAllowed": false
+  }
+}

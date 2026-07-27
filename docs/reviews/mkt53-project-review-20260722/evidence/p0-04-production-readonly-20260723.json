@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "artifactType": "p0-04-production-readonly-freshness-audit",
+  "generatedAt": "2026-07-23T09:14:26+08:00",
+  "boundaries": {
+    "evidenceLayer": "L3-production-readonly",
+    "productionReadOnly": true,
+    "productionWrites": false,
+    "productionDeploy": false,
+    "cronWrites": false,
+    "nginxWrites": false,
+    "providerCalls": false,
+    "restrictedConnectorCalls": false,
+    "publicEvidenceLiveCapture": false,
+    "factPromotion": false
+  },
+  "expectedCurrentPeriod": {
+    "periodType": "semi-monthly",
+    "period": "2026-07-H2",
+    "windowStart": "2026-07-16",
+    "windowEnd": "2026-07-31",
+    "nextScheduledAt": "2026-08-01T09:00:00+08:00",
+    "timezone": "Asia/Shanghai",
+    "scheduleCron": "0 9 1,16 * *"
+  },
+  "localManifest": {
+    "path": "app/public/periodic-data/latest.json",
+    "period": "2026-07-H1",
+    "windowStart": "2026-07-01",
+    "windowEnd": "2026-07-15",
+    "generatedAt": "2026-07-06T03:40:50.013Z",
+    "nextScheduledAt": "2026-07-16T09:00:00+08:00",
+    "sha256": "a584e5c3f810d4546a651602040bf119ef900aeaccfdf620a91d1e3a2fe2e0d1",
+    "stale": true
+  },
+  "productionHttp": {
+    "baseUrl": "https://mkt.lute-tlz-dddd.top",
+    "checkedEndpoints": 6,
+    "http200": 6,
+    "allJsonParseable": true,
+    "allMatchLocalBySha256": true,
+    "cacheControl": "public, max-age=300, must-revalidate",
+    "lastModified": "Mon, 06 Jul 2026 03:46:23 GMT",
+    "files": [
+      {
+        "path": "/periodic-data/latest.json",
+        "sha256": "a584e5c3f810d4546a651602040bf119ef900aeaccfdf620a91d1e3a2fe2e0d1"
+      },
+      {
+        "path": "/periodic-data/connectors.json",
+        "sha256": "63601025124eacd9529497838fb9971d1c289f5aed04884331c2c7abc75f932a"
+      },
+      {
+        "path": "/periodic-data/source-tasks.json",
+        "sha256": "eac1147ab928396f92f0d2aa6bbd4066d8c91899efd90a1bf524b707a4782a21"
+      },
+      {
+        "path": "/periodic-data/public-evidence-samples.json",
+        "sha256": "85ad2748c6c8b90f81071abac2fd5e8cee76aaa8feece88e7d3515d9da840892"
+      },
+      {
+        "path": "/periodic-data/customs-public-adapter.json",
+        "sha256": "d0ef1d20067c662881a46f790b418beb98dbcd9d0f2bbb23467569e47c75faa9"
+      },
+      {
+        "path": "/weekly-data/latest.json",
+        "sha256": "a584e5c3f810d4546a651602040bf119ef900aeaccfdf620a91d1e3a2fe2e0d1"
+      }
+    ],
+    "stale": true
+  },
+  "productionServer": {
+    "observedAt": "2026-07-23T09:11:45+08:00",
+    "timezone": "Asia/Shanghai",
+    "ntpSynchronized": true,
+    "cronService": "active",
+    "staticManifestPath": "/opt/mkt53/html/periodic-data/latest.json",
+    "staticManifestModifiedAt": "2026-07-06T11:46:23.490479500+08:00",
+    "staticManifestSha256": "a584e5c3f810d4546a651602040bf119ef900aeaccfdf620a91d1e3a2fe2e0d1",
+    "mount": {
+      "source": "/opt/mkt53/html",
+      "destination": "/var/www/mkt53",
+      "readOnly": true
+    }
+  },
+  "cron": {
+    "expectedMarker": "mkt53 semi-monthly data refresh",
+    "expectedSchedule": "0 9 1,16 * *",
+    "ubuntuCrontabMatch": false,
+    "rootCrontabMatch": false,
+    "systemCronMatch": false,
+    "systemdTimerMatch": false,
+    "cronJournalMatchSince2026_07_01": false,
+    "installed": false,
+    "stale": true
+  },
+  "automationCopy": {
+    "path": "/opt/mkt53/automation/app",
+    "manifestPeriod": "2026-06-H1",
+    "manifestGeneratedAt": "2026-06-12T02:23:17.911Z",
+    "manifestNextScheduledAt": "2026-06-16T09:00:00+08:00",
+    "manifestModifiedAt": "2026-06-13T12:01:49.029072158+08:00",
+    "manifestSha256": "94e50a842b63c96265468e808b26a9c7852ab766e54e773dfc3b2eed71ab83e9",
+    "lastRecordedRunArtifactAt": "2026-06-11T12:25:52+08:00",
+    "semiMonthlyRefreshLogPresent": false,
+    "weeklyRefreshLogModifiedAt": "2026-06-08T03:15:45.123121065+08:00",
+    "lastWeeklyOutcome": "failed-at-npm-audit",
+    "lastWeeklyFailure": "2 high React Router vulnerabilities in the historical automation copy"
+  },
+  "upstream": {
+    "taskManifestGeneratedAt": "2026-07-06T03:40:50.013Z",
+    "taskCount": 41,
+    "queueTypeCounts": {
+      "connector-readiness": 28,
+      "manual-evidence": 9,
+      "public-source-review": 4
+    },
+    "publicEvidenceGeneratedAt": "2026-07-06T03:40:59.890Z",
+    "publicEvidenceSamples": 39,
+    "publicEvidenceBusinessDataWrites": 0,
+    "actualRestrictedSourceFreshness": "unknown-by-readonly-audit",
+    "classification": "gated-not-proven-fresh"
+  },
+  "productionChecks": {
+    "staticSmoke": {
+      "status": "passed"
+    },
+    "portalContractE2E": {
+      "passed": 2,
+      "total": 8,
+      "failed": 6,
+      "desktopAndMobile": true,
+      "failureClasses": [
+        "mkt root remained on mkt.lute-tlz-dddd.top instead of portal login",
+        "mkt deep route remained on mkt.lute-tlz-dddd.top instead of portal login",
+        "manifest endpoint returned 200 instead of expected 302"
+      ]
+    }
+  },
+  "credentialRouting": {
+    "documentedKeyPathPresent": false,
+    "documentedKeyPath": "/Users/pray/project/mkt53/ai_video.pem",
+    "observedKeyPath": "/Users/pray/project/mkt53/DDDD.pem",
+    "observedKeyMode": "600",
+    "observedKeyFingerprint": "SHA256:bSL6VD1I1Off2vGwmUZd+D2OAfnMi705tBD1nkLSOsY",
+    "privateKeyMaterialReadOrPrinted": false
+  },
+  "conclusion": {
+    "p0_04Audit": "complete",
+    "freshnessAcceptance": "failed",
+    "localStale": true,
+    "productionStale": true,
+    "cronStale": true,
+    "upstreamFreshness": "unknown-gated",
+    "remediation": "blocked-auth",
+    "p0_05ObservedStatus": "contract-failed-no-write"
+  }
+}
