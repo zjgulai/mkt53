@@ -1,35 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Baby, ExternalLink } from 'lucide-react';
 import MarketDataGate from '@/components/MarketDataGate';
-
-interface PublicEvidenceRecord {
-  seedId: string;
-  sourceId: string;
-  page: string;
-  evidenceClass: string;
-  captureStatus: string;
-  title?: string;
-  label?: string;
-  url: string;
-  collectionBoundary: string;
-  notFullPlatformDataset?: boolean;
-  matchedEvidenceTerms?: string[];
-  nonVerbatimSummary?: string;
-  safety?: {
-    networkCalls?: number;
-    businessDataWrites?: number;
-  };
-}
-
-interface PublicEvidenceManifest {
-  mode: string;
-  generatedAt: string;
-  summary?: {
-    total: number;
-    businessDataWrites: number;
-  };
-  records?: PublicEvidenceRecord[];
-}
+import {
+  isEligibleCapturedPublicEvidenceRecord,
+  parsePublicEvidenceManifest,
+  summarizePublicEvidenceSafety,
+  type PublicEvidenceManifest,
+} from '@/lib/public-evidence';
 
 export default function BabyCare() {
   const [publicEvidenceManifest, setPublicEvidenceManifest] = useState<PublicEvidenceManifest | null>(null);
@@ -41,10 +18,11 @@ export default function BabyCare() {
     fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) throw new Error('Public evidence samples unavailable.');
-        return response.json() as Promise<PublicEvidenceManifest>;
+        return response.json();
       })
-      .then((manifest) => {
+      .then((payload: unknown) => {
         if (!active) return;
+        const manifest = parsePublicEvidenceManifest(payload);
         setPublicEvidenceManifest(manifest);
         setPublicEvidenceStatus('ready');
       })
@@ -60,17 +38,16 @@ export default function BabyCare() {
   }, []);
 
   const babyCareEvidence = (publicEvidenceManifest?.records ?? []).filter(
-    (record) => record.sourceId === 'ds-037' || record.page === 'BabyCare',
+    (record) => record.sourceId === 'ds-037' && record.page === 'BabyCare',
   );
-  const capturedBabyCareEvidence = babyCareEvidence.filter((record) => record.captureStatus === 'captured');
-  const babyCareEvidenceNetworkCalls = babyCareEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
-  const babyCareEvidenceBusinessDataWrites = babyCareEvidence.reduce(
-    (total, record) => total + (record.safety?.businessDataWrites ?? 0),
-    0,
+  const eligibleBabyCareEvidence = babyCareEvidence.filter((record) =>
+    isEligibleCapturedPublicEvidenceRecord(record, publicEvidenceManifest?.mode),
   );
+  const { businessDataWrites: babyCareEvidenceBusinessDataWrites, networkCalls: babyCareEvidenceNetworkCalls } =
+    summarizePublicEvidenceSafety(babyCareEvidence);
   const babyCareEvidenceStatusLabel =
     publicEvidenceStatus === 'ready'
-      ? `${capturedBabyCareEvidence.length}/${babyCareEvidence.length} captured`
+      ? `${eligibleBabyCareEvidence.length}/${babyCareEvidence.length} eligible captured`
       : publicEvidenceStatus;
 
   return (
@@ -109,7 +86,7 @@ export default function BabyCare() {
                 mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={babyCareEvidenceNetworkCalls} · businessDataWrites={babyCareEvidenceBusinessDataWrites}
               </p>
             </div>
-            <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${capturedBabyCareEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+            <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleBabyCareEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
               {babyCareEvidenceStatusLabel}
             </span>
           </div>
@@ -117,7 +94,7 @@ export default function BabyCare() {
           <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-4">
             <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
               <p className="text-[10px] text-[#86868b]">公开报告入口</p>
-              <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{capturedBabyCareEvidence.length}/{babyCareEvidence.length || '-'}</p>
+              <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{eligibleBabyCareEvidence.length}/{babyCareEvidence.length || '-'}</p>
             </div>
             <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
               <p className="text-[10px] text-[#86868b]">覆盖细分</p>
@@ -134,7 +111,7 @@ export default function BabyCare() {
           </div>
 
           <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
-            {babyCareEvidence.map((record) => (
+            {eligibleBabyCareEvidence.map((record) => (
               <div key={record.seedId} className="rounded-xl border border-[#EDE6DF] bg-white p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -164,6 +141,11 @@ export default function BabyCare() {
                 </div>
               </div>
             ))}
+            {eligibleBabyCareEvidence.length === 0 ? (
+              <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
+                <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回通过来源、页面、校验与安全边界的 ds-037 captured 样本。</p>
+              </div>
+            ) : null}
           </div>
 
           <p className="mt-3 text-[10px] leading-relaxed text-[#86868b]">

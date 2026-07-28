@@ -2,6 +2,12 @@ import { useEffect, useState } from 'react';
 import { ExternalLink, FileBarChart } from 'lucide-react';
 import MarketDataGate from '@/components/MarketDataGate';
 import {
+  isEligibleCapturedPublicEvidenceRecord,
+  parsePublicEvidenceManifest,
+  summarizePublicEvidenceSafety,
+  type PublicEvidenceManifest,
+} from '@/lib/public-evidence';
+import {
   erpBatch2DisplayPolicy,
   erpBatch7DisplayPolicy,
   erpBatch8ApprovalPolicy,
@@ -22,36 +28,6 @@ function priorityLabel(priority?: string) {
   return priority === 'P0' ? 'urgent review' : 'standard review';
 }
 
-interface PublicEvidenceRecord {
-  seedId: string;
-  sourceId: string;
-  page: string;
-  evidenceClass: string;
-  captureStatus: string;
-  capturedAt?: string;
-  title?: string;
-  label?: string;
-  url: string;
-  collectionBoundary: string;
-  notFullPlatformDataset?: boolean;
-  matchedEvidenceTerms?: string[];
-  nonVerbatimSummary?: string;
-  safety?: {
-    networkCalls?: number;
-    businessDataWrites?: number;
-  };
-}
-
-interface PublicEvidenceManifest {
-  mode: string;
-  generatedAt: string;
-  summary?: {
-    total: number;
-    businessDataWrites: number;
-  };
-  records?: PublicEvidenceRecord[];
-}
-
 export default function CategoryAnalysis() {
   const [publicEvidenceManifest, setPublicEvidenceManifest] = useState<PublicEvidenceManifest | null>(null);
   const [publicEvidenceStatus, setPublicEvidenceStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
@@ -62,10 +38,11 @@ export default function CategoryAnalysis() {
     fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) throw new Error('Public evidence samples unavailable.');
-        return response.json() as Promise<PublicEvidenceManifest>;
+        return response.json();
       })
-      .then((manifest) => {
+      .then((payload: unknown) => {
         if (!active) return;
+        const manifest = parsePublicEvidenceManifest(payload);
         setPublicEvidenceManifest(manifest);
         setPublicEvidenceStatus('ready');
       })
@@ -81,17 +58,16 @@ export default function CategoryAnalysis() {
   }, []);
 
   const categoryEvidence = (publicEvidenceManifest?.records ?? []).filter(
-    (record) => record.sourceId === 'ds-038' || record.page === 'CategoryAnalysis',
+    (record) => record.sourceId === 'ds-038' && record.page === 'CategoryAnalysis',
   );
-  const capturedCategoryEvidence = categoryEvidence.filter((record) => record.captureStatus === 'captured');
-  const categoryEvidenceNetworkCalls = categoryEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
-  const categoryEvidenceBusinessDataWrites = categoryEvidence.reduce(
-    (total, record) => total + (record.safety?.businessDataWrites ?? 0),
-    0,
+  const eligibleCategoryEvidence = categoryEvidence.filter((record) =>
+    isEligibleCapturedPublicEvidenceRecord(record, publicEvidenceManifest?.mode),
   );
+  const { businessDataWrites: categoryEvidenceBusinessDataWrites, networkCalls: categoryEvidenceNetworkCalls } =
+    summarizePublicEvidenceSafety(categoryEvidence);
   const categoryEvidenceStatusLabel =
     publicEvidenceStatus === 'ready'
-      ? `${capturedCategoryEvidence.length}/${categoryEvidence.length} captured`
+      ? `${eligibleCategoryEvidence.length}/${categoryEvidence.length} eligible captured`
       : publicEvidenceStatus;
 
   return (
@@ -138,7 +114,7 @@ export default function CategoryAnalysis() {
                   mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={categoryEvidenceNetworkCalls} · businessDataWrites={categoryEvidenceBusinessDataWrites}
                 </p>
               </div>
-              <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${capturedCategoryEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+              <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleCategoryEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
                 {categoryEvidenceStatusLabel}
               </span>
             </div>
@@ -146,7 +122,7 @@ export default function CategoryAnalysis() {
             <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-4">
               <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
                 <p className="text-[10px] text-[#86868b]">公开报告入口</p>
-                <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{capturedCategoryEvidence.length}/{categoryEvidence.length || '-'}</p>
+                <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{eligibleCategoryEvidence.length}/{categoryEvidence.length || '-'}</p>
               </div>
               <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
                 <p className="text-[10px] text-[#86868b]">证据类型</p>
@@ -163,7 +139,7 @@ export default function CategoryAnalysis() {
             </div>
 
             <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
-              {categoryEvidence.map((record) => (
+              {eligibleCategoryEvidence.map((record) => (
                 <div key={record.seedId} className="rounded-xl border border-[#EDE6DF] bg-white p-3">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -185,9 +161,9 @@ export default function CategoryAnalysis() {
                   </div>
                 </div>
               ))}
-              {categoryEvidence.length === 0 ? (
+              {eligibleCategoryEvidence.length === 0 ? (
                 <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
-                  <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回 ds-038 公开报告证据样本。</p>
+                  <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回通过来源、页面、校验与安全边界的 ds-038 captured 样本。</p>
                 </div>
               ) : null}
             </div>

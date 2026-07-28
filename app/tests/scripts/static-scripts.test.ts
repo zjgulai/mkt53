@@ -308,6 +308,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       const lines = readFileSync(gatePath, 'utf8').trimEnd().split('\n');
       const header = lines[0].split(',');
       const nextGateIndex = header.indexOf('next_gate');
+      expect(nextGateIndex).toBeGreaterThanOrEqual(0);
       const rows = lines.slice(1).map((line) => {
         const row = line.split(',');
         row[nextGateIndex] = '';
@@ -2374,14 +2375,24 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       }
     }
 
-    for (const page of ['BabyCare.tsx', 'NursingProducts.tsx', 'CategoryAnalysis.tsx']) {
+    const marketEvidenceCollections = new Map([
+      ['BabyCare.tsx', 'babyCareEvidence'],
+      ['NursingProducts.tsx', 'nursingEvidence'],
+      ['CategoryAnalysis.tsx', 'categoryEvidence'],
+    ]);
+    for (const [page, scopedRecords] of marketEvidenceCollections) {
       const source = readFileSync(join(process.cwd(), 'src/pages/market', page), 'utf8');
-      expect(source).toContain('record.safety?.businessDataWrites');
+      expect(source).toContain(`summarizePublicEvidenceSafety(${scopedRecords})`);
       expect(source).not.toContain('publicEvidenceManifest?.summary?.businessDataWrites');
     }
-    for (const page of ['CompetitionPage.tsx', 'competition/NewCompetition.tsx', 'competition/RegionCompetition.tsx']) {
+    const competitionEvidenceCollections = new Map([
+      ['CompetitionPage.tsx', 'competitionEvidence'],
+      ['competition/NewCompetition.tsx', 'newCompetitionEvidence'],
+      ['competition/RegionCompetition.tsx', 'regionPublicEvidence'],
+    ]);
+    for (const [page, scopedRecords] of competitionEvidenceCollections) {
       const source = readFileSync(join(process.cwd(), 'src/pages', page), 'utf8');
-      expect(source).toContain('record.safety?.businessDataWrites');
+      expect(source).toContain(`summarizePublicEvidenceSafety(${scopedRecords})`);
       expect(source).not.toContain('publicEvidenceManifest?.summary?.businessDataWrites');
     }
   });

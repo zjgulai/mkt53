@@ -3,6 +3,12 @@ import { Award, Database, ExternalLink, FileBarChart, Globe, LayoutGrid, Map as 
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 import { erpChannelGrowthSnapshot, erpChannelTargetAttainment, erpDerivedBatch3Artifact } from '@/data/market-insight-data';
+import {
+  isEligibleCapturedPublicEvidenceRecord,
+  parsePublicEvidenceManifest,
+  summarizePublicEvidenceSafety,
+  type PublicEvidenceManifest,
+} from '@/lib/public-evidence';
 
 interface CountryEvidence {
   name: string;
@@ -21,42 +27,6 @@ interface RegionEvidence {
   shareStatus: string;
   summary: string;
   countries: CountryEvidence[];
-}
-
-interface PublicEvidenceRecord {
-  seedId: string;
-  sourceId: string;
-  page: string;
-  evidenceClass: string;
-  captureStatus: string;
-  capturedAt?: string;
-  title?: string;
-  label?: string;
-  url: string;
-  collectionBoundary: string;
-  notFullPlatformDataset?: boolean;
-  matchedEvidenceTerms?: string[];
-  missingEvidenceTerms?: string[];
-  nonVerbatimSummary?: string;
-  safety?: {
-    networkCalls?: number;
-    loginAttempted?: boolean;
-    bypassAttempted?: boolean;
-    businessDataWrites?: number;
-  };
-}
-
-interface PublicEvidenceManifest {
-  mode: string;
-  generatedAt: string;
-  summary?: {
-    total: number;
-    captureStatusCounts?: Record<string, number>;
-    evidenceClassCounts?: Record<string, number>;
-    networkCalls: number;
-    businessDataWrites: number;
-  };
-  records?: PublicEvidenceRecord[];
 }
 
 const regionData: RegionEvidence[] = [
@@ -161,10 +131,11 @@ export default function RegionCompetition() {
     fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) throw new Error('Public evidence samples unavailable.');
-        return response.json() as Promise<PublicEvidenceManifest>;
+        return response.json();
       })
-      .then((manifest) => {
+      .then((payload: unknown) => {
         if (!active) return;
+        const manifest = parsePublicEvidenceManifest(payload);
         setPublicEvidenceManifest(manifest);
         setPublicEvidenceStatus('ready');
       })
@@ -180,17 +151,16 @@ export default function RegionCompetition() {
   }, []);
 
   const regionPublicEvidence = (publicEvidenceManifest?.records ?? []).filter(
-    (record) => record.sourceId === 'ds-010' || record.page === 'RegionCompetition',
+    (record) => record.sourceId === 'ds-010' && record.page === 'RegionCompetition',
   );
-  const capturedRegionPublicEvidence = regionPublicEvidence.filter((record) => record.captureStatus === 'captured');
-  const regionEvidenceBusinessDataWrites = regionPublicEvidence.reduce(
-    (total, record) => total + (record.safety?.businessDataWrites ?? 0),
-    0,
+  const eligibleRegionPublicEvidence = regionPublicEvidence.filter((record) =>
+    isEligibleCapturedPublicEvidenceRecord(record, publicEvidenceManifest?.mode),
   );
-  const regionEvidenceNetworkCalls = regionPublicEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
+  const { businessDataWrites: regionEvidenceBusinessDataWrites, networkCalls: regionEvidenceNetworkCalls } =
+    summarizePublicEvidenceSafety(regionPublicEvidence);
   const regionEvidenceStatusLabel =
     publicEvidenceStatus === 'ready'
-      ? `${capturedRegionPublicEvidence.length}/${regionPublicEvidence.length} captured`
+      ? `${eligibleRegionPublicEvidence.length}/${regionPublicEvidence.length} eligible captured`
       : publicEvidenceStatus;
 
   return (
@@ -226,7 +196,7 @@ export default function RegionCompetition() {
                     mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={regionEvidenceNetworkCalls} · businessDataWrites={regionEvidenceBusinessDataWrites}
                   </p>
                 </div>
-                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${capturedRegionPublicEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleRegionPublicEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
                   {regionEvidenceStatusLabel}
                 </span>
               </div>
@@ -234,7 +204,7 @@ export default function RegionCompetition() {
               <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
                 <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
                   <p className="text-[10px] text-[#86868b]">公开来源入口</p>
-                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{capturedRegionPublicEvidence.length}/{regionPublicEvidence.length || '-'}</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{eligibleRegionPublicEvidence.length}/{regionPublicEvidence.length || '-'}</p>
                 </div>
                 <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
                   <p className="text-[10px] text-[#86868b]">覆盖口径</p>
@@ -251,7 +221,7 @@ export default function RegionCompetition() {
               </div>
 
               <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
-                {regionPublicEvidence.map((record) => (
+                {eligibleRegionPublicEvidence.map((record) => (
                   <a
                     key={record.seedId}
                     href={record.url}
@@ -277,6 +247,11 @@ export default function RegionCompetition() {
                     </div>
                   </a>
                 ))}
+                {eligibleRegionPublicEvidence.length === 0 ? (
+                  <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                    <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回通过来源、页面、校验与安全边界的 ds-010 captured 样本。</p>
+                  </div>
+                ) : null}
               </div>
 
               <p className="mt-4 text-[10px] leading-relaxed text-[#86868b]">

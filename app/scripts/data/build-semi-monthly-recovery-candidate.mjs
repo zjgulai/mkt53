@@ -65,25 +65,195 @@ function sha256File(path) {
   return createHash('sha256').update(readFileSync(path)).digest('hex');
 }
 
-function topLevelContract(value) {
-  if (Array.isArray(value)) return { rootType: 'array', itemType: value.length === 0 ? 'unknown' : typeof value[0] };
-  if (value === null || typeof value !== 'object') return { rootType: value === null ? 'null' : typeof value };
+export function describeContract(value) {
+  if (Array.isArray(value)) {
+    const itemContracts = [...new Set(value.map((item) => JSON.stringify(describeContract(item))))]
+      .sort()
+      .map((contract) => JSON.parse(contract));
+    return { type: 'array', itemContracts };
+  }
+  if (value === null) return { type: 'null' };
+  if (typeof value !== 'object') return { type: typeof value };
   return {
-    rootType: 'object',
-    fields: Object.fromEntries(
-      Object.keys(value)
-        .sort()
-        .map((key) => [key, Array.isArray(value[key]) ? 'array' : value[key] === null ? 'null' : typeof value[key]]),
-    ),
+    type: 'object',
+    fields: Object.fromEntries(Object.keys(value).sort().map((key) => [key, describeContract(value[key])])),
   };
 }
 
-function compareCandidateContract(candidatePath, canonicalPath) {
+const dynamicCountMapFields = new Set([
+  'captureStatusCounts',
+  'collectionMethods',
+  'evidenceClassCounts',
+  'ownerTeamCounts',
+  'priorityCounts',
+  'queueTypeCounts',
+  'totals',
+]);
+
+const optionalPublicEvidenceRecordFields = new Set([
+  'error',
+  'finalUrl',
+  'httpStatus',
+  'localEvidence',
+  'matchedEvidenceTerms',
+  'missingEvidenceTerms',
+  'nonVerbatimSummary',
+  'pageErrors',
+  'title',
+  'visibleTextHash',
+  'visibleTextLength',
+  'warnings',
+]);
+
+const optionalPublicEvidenceStringFields = new Set([
+  'error',
+  'finalUrl',
+  'nonVerbatimSummary',
+  'title',
+  'visibleTextHash',
+]);
+
+const optionalPublicEvidenceStringArrayFields = new Set([
+  'matchedEvidenceTerms',
+  'missingEvidenceTerms',
+  'pageErrors',
+  'warnings',
+]);
+
+const optionalPublicEvidenceNumberFields = new Set(['httpStatus', 'visibleTextLength']);
+const modeDependentStringArrayFields = new Set(['missingMatchedTerms', 'missingProofFields', 'readySeedIds']);
+
+function isOptionalField(path, field) {
+  return (
+    path.at(-1) === '[]' &&
+    (path.at(-2) === 'records' || path.at(-2) === 'evidenceRecords') &&
+    optionalPublicEvidenceRecordFields.has(field)
+  );
+}
+
+function isPlainRecord(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function isValidLocalEvidence(value) {
+  if (!isPlainRecord(value)) return false;
+  const allowedFields = new Set(['textArchivePath', 'textArchiveBytes', 'screenshotPath', 'screenshotHash']);
+  if (Object.keys(value).some((field) => !allowedFields.has(field))) return false;
+  if (typeof value.textArchivePath !== 'string' || value.textArchivePath.trim().length === 0) return false;
+  if (!Number.isInteger(value.textArchiveBytes) || value.textArchiveBytes < 0) return false;
+
+  const hasScreenshotPath = Object.hasOwn(value, 'screenshotPath');
+  const hasScreenshotHash = Object.hasOwn(value, 'screenshotHash');
+  if (hasScreenshotPath !== hasScreenshotHash) return false;
+  if (hasScreenshotPath) {
+    if (typeof value.screenshotPath !== 'string' || value.screenshotPath.trim().length === 0) return false;
+    if (typeof value.screenshotHash !== 'string' || !/^[a-f0-9]{64}$/i.test(value.screenshotHash)) return false;
+  }
+
+  return true;
+}
+
+function isValidBlockerArray(value) {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (item) =>
+        isPlainRecord(item) &&
+        Object.keys(item).length === 1 &&
+        typeof item.type === 'string' &&
+        item.type.trim().length > 0,
+    )
+  );
+}
+
+function isValidOptionalFieldValue(field, value) {
+  if (optionalPublicEvidenceStringFields.has(field)) return typeof value === 'string';
+  if (optionalPublicEvidenceStringArrayFields.has(field)) {
+    return Array.isArray(value) && value.every((item) => typeof item === 'string');
+  }
+  if (optionalPublicEvidenceNumberFields.has(field)) return typeof value === 'number' && Number.isFinite(value);
+  if (field === 'localEvidence') return isValidLocalEvidence(value);
+  return false;
+}
+
+function areValuesContractCompatible(candidate, canonical, path = []) {
+  if (candidate === null || canonical === null) return candidate === null && canonical === null;
+  if (Array.isArray(candidate) || Array.isArray(canonical)) {
+    if (!Array.isArray(candidate) || !Array.isArray(canonical)) return false;
+    const fieldName = path.at(-1);
+    if (optionalPublicEvidenceStringArrayFields.has(fieldName)) {
+      return isValidOptionalFieldValue(fieldName, candidate) && isValidOptionalFieldValue(fieldName, canonical);
+    }
+    if (modeDependentStringArrayFields.has(fieldName)) {
+      return (
+        candidate.every((item) => typeof item === 'string') && canonical.every((item) => typeof item === 'string')
+      );
+    }
+    if (fieldName === 'blockers') {
+      return isValidBlockerArray(candidate) && isValidBlockerArray(canonical);
+    }
+    if (candidate.length === 0 || canonical.length === 0) return candidate.length === canonical.length;
+
+    const itemPath = [...path, '[]'];
+    return (
+      candidate.every((candidateItem) =>
+        canonical.some((canonicalItem) => areValuesContractCompatible(candidateItem, canonicalItem, itemPath)),
+      ) &&
+      canonical.every((canonicalItem) =>
+        candidate.some((candidateItem) => areValuesContractCompatible(candidateItem, canonicalItem, itemPath)),
+      )
+    );
+  }
+
+  if (typeof candidate !== 'object' || typeof canonical !== 'object') {
+    return typeof candidate === typeof canonical;
+  }
+
+  const fieldName = path.at(-1);
+  if (dynamicCountMapFields.has(fieldName)) {
+    const candidateValues = Object.values(candidate);
+    const canonicalValues = Object.values(canonical);
+    const countsAreValid = [...candidateValues, ...canonicalValues].every(
+      (value) => typeof value === 'number' && Number.isFinite(value) && value >= 0,
+    );
+    if (!countsAreValid) return false;
+    if (candidateValues.length === 0 || canonicalValues.length === 0) return true;
+    return (
+      candidateValues.every((candidateValue) =>
+        canonicalValues.some((canonicalValue) => areValuesContractCompatible(candidateValue, canonicalValue, [...path, '*'])),
+      ) &&
+      canonicalValues.every((canonicalValue) =>
+        candidateValues.some((candidateValue) => areValuesContractCompatible(candidateValue, canonicalValue, [...path, '*'])),
+      )
+    );
+  }
+
+  const candidateFields = Object.keys(candidate);
+  const canonicalFields = Object.keys(canonical);
+  const allFields = new Set([...candidateFields, ...canonicalFields]);
+  for (const field of allFields) {
+    const candidateHasField = Object.hasOwn(candidate, field);
+    const canonicalHasField = Object.hasOwn(canonical, field);
+    if (!candidateHasField || !canonicalHasField) {
+      if (isOptionalField(path, field)) {
+        const presentValue = candidateHasField ? candidate[field] : canonical[field];
+        if (isValidOptionalFieldValue(field, presentValue)) continue;
+      }
+      return false;
+    }
+    if (!areValuesContractCompatible(candidate[field], canonical[field], [...path, field])) return false;
+  }
+  return true;
+}
+
+export function compareCandidateContract(candidatePath, canonicalPath) {
   if (!existsSync(canonicalPath)) return { compatible: false, reason: 'canonical-file-missing' };
-  const candidateContract = topLevelContract(JSON.parse(readFileSync(candidatePath, 'utf8')));
-  const canonicalContract = topLevelContract(JSON.parse(readFileSync(canonicalPath, 'utf8')));
+  const candidate = JSON.parse(readFileSync(candidatePath, 'utf8'));
+  const canonical = JSON.parse(readFileSync(canonicalPath, 'utf8'));
+  const candidateContract = describeContract(candidate);
+  const canonicalContract = describeContract(canonical);
   return {
-    compatible: JSON.stringify(candidateContract) === JSON.stringify(canonicalContract),
+    compatible: areValuesContractCompatible(candidate, canonical),
     candidateContract,
     canonicalContract,
   };

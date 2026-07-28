@@ -1,8 +1,8 @@
 ---
 title: Batch 29 最终复审、PR Ready 门禁与合并前交接
-status: pr-ready-exact-head-ci-green-high-priority-threads-resolved-coderabbit-recheck-queued-not-merged-not-deployed
+status: pr-ready-c2fe-ci-green-review-follow-up-local-clean-pending-push-ci-external-recheck-not-merged-not-deployed
 created: 2026-07-27
-updated: 2026-07-27
+updated: 2026-07-28
 owner: engineering
 source: git+github-actions+codex-review+coderabbit+graphify
 ---
@@ -13,7 +13,9 @@ source: git+github-actions+codex-review+coderabbit+graphify
 
 本批在 Batch 28 完整分支复核基础上执行最终 PR Ready 门禁。PR [#32](https://github.com/zjgulai/mkt53/pull/32) 已从 Draft 转为 Ready for review，当前仍为 open；没有执行 merge、应用部署、生产写入、nginx 修改、cron 操作或 provider/connector 调用。
 
-第一轮远端候选绑定精确 SHA `91fe39359dcd1119cebd8d342e0d5ae055770c56`。PR 转为 Ready 后，CodeRabbit 完成 294 文件差异复审，给出 3 个 Critical inline finding 和 1 个 Major outside-diff finding；本批已逐项复现并在代码提交 `f880ea5d7f379c6422f95a87bc1f9daa212bbef9` 中关闭。包含代码、图谱和本文档的精确 PR head `7ae8a1993b175f66503f65878f003b03f1a43044` 已由 GitHub Actions [run 30271729225](https://github.com/zjgulai/mkt53/actions/runs/30271729225) 验证：app 4m20s、backend 1m1s，均为 success，两个 check-run annotations 均为 0。3 个 Critical inline thread 已回复并全部 resolved；CodeRabbit 对新 head 的 recheck 仍为 `Review queued`，因此 merge state 为 `UNSTABLE`，不能写成外部复审终态通过。
+第一轮远端候选绑定精确 SHA `91fe39359dcd1119cebd8d342e0d5ae055770c56`。PR 转为 Ready 后，CodeRabbit 完成 294 文件差异复审，给出 3 个 Critical inline finding 和 1 个 Major outside-diff finding；本批已逐项复现并在代码提交 `f880ea5d7f379c6422f95a87bc1f9daa212bbef9` 中关闭。包含代码、图谱和本文档的精确 PR head `7ae8a1993b175f66503f65878f003b03f1a43044` 已由 GitHub Actions [run 30271729225](https://github.com/zjgulai/mkt53/actions/runs/30271729225) 验证：app 4m20s、backend 1m1s，均为 success，两个 check-run annotations 均为 0。3 个 Critical inline thread 已回复并全部 resolved；本文最初生成时 CodeRabbit recheck 仍为 `Review queued`，该状态只保留为当时快照。
+
+2026-07-28 follow-up：CodeRabbit 已在精确 head `c2fe523b05bac1084b15bc91c1a99e043b087539` 完成新一轮 review（run `26df0c06-5f2a-4306-88da-d2e33dc194c2`，GitHub review state=`COMMENTED`），给出 5 项 actionable finding。`CodeRabbit=SUCCESS` 只表示机器人运行完成，不表示批准。recursive contract、runtime manifest/eligible record、ds-008 页面/来源绑定、ABC Kids Expo/Nielsen 错误归因、三条 seed provenance 与测试保护已在本地 5/5 修复。前六轮受控 Codex follow-up 又累计发现 16 项（P1×2 / P2×12 / P3×2），包括 live mode 展示门、SHA-256 格式、`localEvidence` 内层合同、customs 状态依赖数组、跨域重定向与矛盾 validation 元数据，当前 16/16 已修复并通过 25 files / 202 tests、lint、build。第七轮受控、非递归 session `019fa730-f7e9-7910-919b-a1dcc651fc06` completed 且 0 actionable finding；follow-up 推送、精确 head CI 和新一轮 CodeRabbit recheck 完成前，仍不能合并。
 
 ## 2. 本批关闭的缺口
 
@@ -90,7 +92,7 @@ CodeRabbit 的 3 个 Critical inline finding 已修复、回复并 resolved；1 
 
 ## 7. 合并前 TODO
 
-1. 等待 CodeRabbit recheck 从 `Review queued` 进入明确终态，若产生新高优先级 finding 则重新走复现、修复与 exact-head CI；
+1. 提交并推送已经通过最终无 finding Codex recheck 的 CodeRabbit 5 项与 Codex 16 项 finding follow-up，等待新精确 head app/backend CI 与 CodeRabbit recheck；若再产生 finding，继续走复现、修复与 exact-head CI；
 2. 对 33 个 Minor 建议建立独立批次，逐项验证后再决定修复或保留；
 3. 由人工 reviewer 做最终业务边界确认；
 4. 单独决定是否 merge；本批不含 merge 授权；
@@ -100,11 +102,15 @@ CodeRabbit 的 3 个 Critical inline finding 已修复、回复并 resolved；1 
 
 ## 8. 回滚
 
-PR 未合并、未部署时，优先保持共享历史并按逆序创建 revert：
+PR 未合并、未部署时，优先保持共享历史。截至本文验证 head `7ae8a19` 的 Batch 29 提交应按逆序创建 revert：
 
 ```bash
+git revert 7ae8a19
 git revert 5360ea6
 git revert f880ea5
+git revert 32148dc
+git revert 13e72a8
+git revert db04b38
 git revert 91fe393
 git revert 99cfc3d
 git revert 9ccf86a

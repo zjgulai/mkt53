@@ -3,6 +3,12 @@ import { Search, LayoutGrid, Target, FileBarChart, Map as MapIcon, Database, Che
 // Target imported via lucide-react
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
+import {
+  isEligibleCapturedPublicEvidenceRecord,
+  parsePublicEvidenceManifest,
+  summarizePublicEvidenceSafety,
+  type PublicEvidenceManifest,
+} from '@/lib/public-evidence';
 
 interface Product {
   id: number;
@@ -18,42 +24,6 @@ interface Product {
   isMomcozy: boolean;
   category: string;
   firstLetter: string;
-}
-
-interface PublicEvidenceRecord {
-  seedId: string;
-  sourceId: string;
-  page: string;
-  evidenceClass: string;
-  captureStatus: string;
-  capturedAt?: string;
-  title?: string;
-  label?: string;
-  url: string;
-  collectionBoundary: string;
-  notFullPlatformDataset?: boolean;
-  matchedEvidenceTerms?: string[];
-  missingEvidenceTerms?: string[];
-  nonVerbatimSummary?: string;
-  safety?: {
-    networkCalls?: number;
-    loginAttempted?: boolean;
-    bypassAttempted?: boolean;
-    businessDataWrites?: number;
-  };
-}
-
-interface PublicEvidenceManifest {
-  mode: string;
-  generatedAt: string;
-  summary?: {
-    total: number;
-    captureStatusCounts?: Record<string, number>;
-    evidenceClassCounts?: Record<string, number>;
-    networkCalls: number;
-    businessDataWrites: number;
-  };
-  records?: PublicEvidenceRecord[];
 }
 
 const pendingPrice = '授权价格待采集';
@@ -153,10 +123,11 @@ export default function CompetitionPage() {
     fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) throw new Error('Public evidence samples unavailable.');
-        return response.json() as Promise<PublicEvidenceManifest>;
+        return response.json();
       })
-      .then((manifest) => {
+      .then((payload: unknown) => {
         if (!active) return;
+        const manifest = parsePublicEvidenceManifest(payload);
         setPublicEvidenceManifest(manifest);
         setPublicEvidenceStatus('ready');
       })
@@ -214,17 +185,16 @@ export default function CompetitionPage() {
 
   const hasActiveFilters = ownership !== '全部' || category !== '全部' || brandInput || modelInput || activeLetter || activeHotBrand;
   const competitionEvidence = (publicEvidenceManifest?.records ?? []).filter(
-    (record) => record.sourceId === 'ds-007' || record.page === 'CompetitionPage',
+    (record) => record.sourceId === 'ds-007' && record.page === 'CompetitionPage',
   );
-  const capturedCompetitionEvidence = competitionEvidence.filter((record) => record.captureStatus === 'captured');
-  const evidenceBusinessDataWrites = competitionEvidence.reduce(
-    (total, record) => total + (record.safety?.businessDataWrites ?? 0),
-    0,
+  const eligibleCompetitionEvidence = competitionEvidence.filter((record) =>
+    isEligibleCapturedPublicEvidenceRecord(record, publicEvidenceManifest?.mode),
   );
-  const evidenceNetworkCalls = competitionEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
+  const { businessDataWrites: evidenceBusinessDataWrites, networkCalls: evidenceNetworkCalls } =
+    summarizePublicEvidenceSafety(competitionEvidence);
   const evidenceStatusLabel =
     publicEvidenceStatus === 'ready'
-      ? `${capturedCompetitionEvidence.length}/${competitionEvidence.length} captured`
+      ? `${eligibleCompetitionEvidence.length}/${competitionEvidence.length} eligible captured`
       : publicEvidenceStatus;
 
   return (
@@ -281,7 +251,7 @@ export default function CompetitionPage() {
                     mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={evidenceNetworkCalls} · businessDataWrites={evidenceBusinessDataWrites}
                   </p>
                 </div>
-                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${capturedCompetitionEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleCompetitionEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
                   {evidenceStatusLabel}
                 </span>
               </div>
@@ -289,7 +259,7 @@ export default function CompetitionPage() {
               <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
                 <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
                   <p className="text-[10px] text-[#86868b]">公开品牌入口</p>
-                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{capturedCompetitionEvidence.length}/{competitionEvidence.length || '-'}</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{eligibleCompetitionEvidence.length}/{competitionEvidence.length || '-'}</p>
                 </div>
                 <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
                   <p className="text-[10px] text-[#86868b]">覆盖品牌</p>
@@ -306,7 +276,7 @@ export default function CompetitionPage() {
               </div>
 
               <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
-                {competitionEvidence.map((record) => (
+                {eligibleCompetitionEvidence.map((record) => (
                   <a
                     key={record.seedId}
                     href={record.url}
@@ -332,6 +302,11 @@ export default function CompetitionPage() {
                     </div>
                   </a>
                 ))}
+                {eligibleCompetitionEvidence.length === 0 ? (
+                  <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                    <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回通过来源、页面、校验与安全边界的 ds-007 captured 样本。</p>
+                  </div>
+                ) : null}
               </div>
 
               <p className="mt-4 text-[10px] leading-relaxed text-[#86868b]">

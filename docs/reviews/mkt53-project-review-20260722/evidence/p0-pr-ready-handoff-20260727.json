@@ -1,7 +1,7 @@
 {
   "schemaVersion": "mkt53.p0-pr-ready-handoff.v2",
-  "generatedAt": "2026-07-27T13:52:55Z",
-  "status": "pr-ready-exact-head-ci-green-high-priority-threads-resolved-coderabbit-recheck-queued-not-merged-not-deployed",
+  "generatedAt": "2026-07-28T05:34:45Z",
+  "status": "pr-ready-c2fe-ci-green-review-follow-up-local-clean-pending-push-ci-external-recheck-not-merged-not-deployed",
   "repository": "zjgulai/mkt53",
   "branch": "codex/mkt53-release-candidate-20260630",
   "pullRequest": {
@@ -42,7 +42,7 @@
       "fixed": true
     },
     "finalTargetedReview": {
-      "reviewedCommit": "working-tree-that-became-f880ea5d7f379c6422f95a87bc1f9daa212bbef9",
+      "reviewedCommit": "f880ea5d7f379c6422f95a87bc1f9daa212bbef9",
       "mode": "controlled-ephemeral-read-only-no-recursive-review",
       "result": "No actionable findings.",
       "actionableFindings": 0,
@@ -134,7 +134,37 @@
     "minorSuggestionsDeferredToSeparateBatch": 33,
     "actionableThreadsAtGeneration": 0,
     "resolvedCriticalThreads": 3,
-    "terminalConclusionClaimed": false
+    "terminalConclusionClaimed": false,
+    "batch30FollowUp": {
+      "reviewedHead": "c2fe523b05bac1084b15bc91c1a99e043b087539",
+      "runId": "26df0c06-5f2a-4306-88da-d2e33dc194c2",
+      "reviewState": "COMMENTED",
+      "statusContext": "SUCCESS-means-review-completed-not-approved",
+      "actionableFindings": 5,
+      "locallyFixed": 5,
+      "codexControlledFollowUp": {
+        "sessionIds": [
+          "019fa6b9-997c-7ef3-9cc4-4d32295d2ff1",
+          "019fa6d5-5e27-7f92-ad4d-9f7ce9de6a9f",
+          "019fa6f8-6843-7282-8cb5-869fb5296664",
+          "019fa70a-4c60-7470-818e-8b055d6bf9e7",
+          "019fa716-2a69-79c1-90af-b1e5aa92e7bf",
+          "019fa724-6589-7101-bd85-1928e6a70837",
+          "019fa730-f7e9-7910-919b-a1dcc651fc06"
+        ],
+        "actionableFindings": 16,
+        "p1": 2,
+        "p2": 12,
+        "p3": 2,
+        "locallyFixed": 16,
+        "recheck": "completed-clean",
+        "finalReviewSessionId": "019fa730-f7e9-7910-919b-a1dcc651fc06",
+        "finalReviewActionableFindings": 0,
+        "finalResult": "No actionable regressions were found."
+      },
+      "newHeadRecheck": "pending-push",
+      "mergeAllowed": false
+    }
   },
   "authorization": {
     "localImplementation": true,
@@ -152,7 +182,8 @@
     "connectorCalls": 0
   },
   "remainingGates": [
-    "CodeRabbit recheck terminal status and any new high-priority findings",
+    "push the review follow-up and validate the new exact head with app/backend CI",
+    "CodeRabbit recheck terminal status for the new follow-up head",
     "separate verification and prioritization batch for 33 CodeRabbit minor suggestions",
     "human review and explicit merge decision for pull request 32",
     "independent deployment authorization",

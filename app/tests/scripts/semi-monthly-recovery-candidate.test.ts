@@ -1,10 +1,14 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { buildSemiMonthlyRecoveryCandidate } from '../../scripts/data/build-semi-monthly-recovery-candidate.mjs';
+import {
+  buildSemiMonthlyRecoveryCandidate,
+  compareCandidateContract,
+  describeContract,
+} from '../../scripts/data/build-semi-monthly-recovery-candidate.mjs';
 
 const cleanupPaths: string[] = [];
 
@@ -15,6 +19,140 @@ afterEach(() => {
 });
 
 describe('P0-04 semi-monthly recovery candidate', () => {
+  it('captures nested fields and every distinct array item shape in the compatibility contract', () => {
+    const canonical = describeContract({
+      records: [
+        { safety: { networkCalls: 1, businessDataWrites: 0 } },
+        { safety: { networkCalls: 'unknown', businessDataWrites: 0 } },
+      ],
+    });
+    const reordered = describeContract({
+      records: [
+        { safety: { networkCalls: 'unknown', businessDataWrites: 0 } },
+        { safety: { networkCalls: 1, businessDataWrites: 0 } },
+      ],
+    });
+    const missingVariant = describeContract({
+      records: [{ safety: { networkCalls: 1, businessDataWrites: 0 } }],
+    });
+
+    expect(reordered).toEqual(canonical);
+    expect(missingVariant).not.toEqual(canonical);
+  });
+
+  it('accepts live-only evidence fields and changing count-map keys without hiding nested type drift', () => {
+    const root = mkdtempSync(join(tmpdir(), 'mkt53-contract-'));
+    cleanupPaths.push(root);
+    const candidatePath = join(root, 'candidate.json');
+    const canonicalPath = join(root, 'canonical.json');
+    const candidate = {
+      summary: { captureStatusCounts: { planned: 1 } },
+      records: [{ seedId: 'seed-1', safety: { networkCalls: 0, businessDataWrites: 0 } }],
+    };
+    const canonical = {
+      summary: { captureStatusCounts: { captured: 1, 'fetch-error': 1 } },
+      records: [
+        {
+          seedId: 'seed-1',
+          title: 'Captured title',
+          finalUrl: 'https://example.com',
+          matchedEvidenceTerms: ['evidence'],
+          localEvidence: {
+            textArchivePath: 'tmp/public-evidence/text/seed-1.txt',
+            textArchiveBytes: 128,
+            screenshotPath: 'tmp/public-evidence/screenshots/seed-1.png',
+            screenshotHash: 'a'.repeat(64),
+          },
+          safety: { networkCalls: 1, businessDataWrites: 0 },
+        },
+        {
+          seedId: 'seed-2',
+          error: 'timeout',
+          safety: { networkCalls: 1, businessDataWrites: 0 },
+        },
+      ],
+    };
+    writeFileSync(candidatePath, JSON.stringify(candidate));
+    writeFileSync(canonicalPath, JSON.stringify(canonical));
+
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(true);
+
+    canonical.records[0].title = 123 as unknown as string;
+    writeFileSync(canonicalPath, JSON.stringify(canonical));
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(false);
+
+    canonical.records[0].title = 'Captured title';
+    canonical.records[0].matchedEvidenceTerms = 'evidence' as unknown as string[];
+    writeFileSync(canonicalPath, JSON.stringify(canonical));
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(false);
+
+    canonical.records[0].matchedEvidenceTerms = ['evidence'];
+    canonical.records[0].localEvidence.textArchiveBytes = 'oops' as unknown as number;
+    writeFileSync(canonicalPath, JSON.stringify(canonical));
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(false);
+
+    canonical.records[0].localEvidence.textArchiveBytes = 128;
+    canonical.records[0].localEvidence.screenshotHash = 'not-a-sha256';
+    writeFileSync(canonicalPath, JSON.stringify(canonical));
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(false);
+
+    canonical.records[0].localEvidence.screenshotHash = 'a'.repeat(64);
+    canonical.records[1].safety.networkCalls = 'one' as unknown as number;
+    writeFileSync(canonicalPath, JSON.stringify(canonical));
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(false);
+  });
+
+  it('does not treat arbitrary empty and populated arrays as the same contract', () => {
+    const root = mkdtempSync(join(tmpdir(), 'mkt53-array-contract-'));
+    cleanupPaths.push(root);
+    const candidatePath = join(root, 'candidate.json');
+    const canonicalPath = join(root, 'canonical.json');
+    writeFileSync(candidatePath, JSON.stringify({ requiredAccess: [] }));
+    writeFileSync(canonicalPath, JSON.stringify({ requiredAccess: [{ role: 'reviewer' }] }));
+
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(false);
+  });
+
+  it('accepts explicitly modeled customs status arrays without accepting malformed blockers', () => {
+    const root = mkdtempSync(join(tmpdir(), 'mkt53-status-array-contract-'));
+    cleanupPaths.push(root);
+    const candidatePath = join(root, 'candidate.json');
+    const canonicalPath = join(root, 'canonical.json');
+    const candidate = {
+      checks: [{ details: { readySeedIds: [] }, blockers: [{ type: 'missing-public-evidence' }] }],
+      blockers: [{ type: 'missing-public-evidence' }],
+      evidenceRecords: [
+        {
+          seedId: 'seed-1',
+          missingProofFields: ['title'],
+          missingMatchedTerms: ['evidence'],
+        },
+      ],
+    };
+    const canonical = {
+      checks: [{ details: { readySeedIds: ['seed-1'] }, blockers: [] }],
+      blockers: [],
+      evidenceRecords: [
+        {
+          seedId: 'seed-1',
+          title: 'Captured title',
+          visibleTextHash: 'a'.repeat(64),
+          localEvidence: { textArchivePath: 'tmp/public-evidence/text/seed-1.txt', textArchiveBytes: 128 },
+          missingProofFields: [],
+          missingMatchedTerms: [],
+        },
+      ],
+    };
+    writeFileSync(candidatePath, JSON.stringify(candidate));
+    writeFileSync(canonicalPath, JSON.stringify(canonical));
+
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(true);
+
+    candidate.blockers = [{ type: 42 as unknown as string }];
+    writeFileSync(candidatePath, JSON.stringify(candidate));
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(false);
+  });
+
   it('builds an isolated H2 candidate without changing canonical public manifests', async () => {
     const candidateParent = join(process.cwd(), 'tmp/data-collection/recovery-candidates');
     mkdirSync(candidateParent, { recursive: true });

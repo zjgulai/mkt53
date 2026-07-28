@@ -6,13 +6,13 @@
 
 起始 HEAD：`06bf98cb5b9bbafaafb61c84bfbdd3fb955d4350`
 
-状态：本地实现与复审完成，待本批提交、推送及精确 head CI 复核
+状态：实现提交 `c2fe523b05bac1084b15bc91c1a99e043b087539` 的精确 head GitHub app/backend CI 已通过；CodeRabbit 的 5 项 finding 与前六轮受控 Codex review 的 16 项 finding 均已本地修复；第七轮受控复审 completed 且无 actionable finding，待提交推送、新精确 head CI 与外部 recheck
 
 ## 1. 本批结论
 
 本批关闭了 Batch 29 之后保留的 Minor 数据完整性风险。修复重点不是增加业务数据，而是确保数据缺失、结构错配、时间错误或证据不足时系统统一失败关闭，不再产生“看似 ready”“看似已采集”或跨页面误用全局安全计数的状态。
 
-最终 Codex 受控只读复审结论为 `No actionable findings.`。本批没有调用 provider、受限连接器或 live public evidence，没有写入生产、安装 cron、修改 nginx、合并 PR 或部署应用。
+此前写入的“最终 Codex clean”结论已被后续事实覆盖：第一次 follow-up 因递归调用被终止，不能作为 clean 证据；随后检查发现文档仍把 CodeRabbit 写成 queued。前六轮受控 review session `019fa6b9-997c-7ef3-9cc4-4d32295d2ff1`、`019fa6d5-5e27-7f92-ad4d-9f7ce9de6a9f`、`019fa6f8-6843-7282-8cb5-869fb5296664`、`019fa70a-4c60-7470-818e-8b055d6bf9e7`、`019fa716-2a69-79c1-90af-b1e5aa92e7bf`、`019fa724-6589-7101-bd85-1928e6a70837` 累计给出 2 个 P1、12 个 P2、2 个 P3，覆盖 live canonical 合同兼容、恶意字段类型、失败记录安全计数、过时 clean 文案、eligible 空态、严格时间戳与审计数组、live mode 展示门、SHA-256 格式、`localEvidence` 内层合同、customs 状态依赖数组、跨域重定向与矛盾 validation 元数据；当前 16/16 已本地修复。第七轮受控、非递归 review session `019fa730-f7e9-7910-919b-a1dcc651fc06` 以 exit 0 completed，完整检查源码、数据、测试、文档与图谱变更，并重跑 97 项聚焦测试、202 项完整测试、lint、build、两级 data audit 与 diff check，终态为 `No actionable regressions were found.`。本批没有调用 provider、受限连接器或 live public evidence，没有写入生产、安装 cron、修改 nginx、合并 PR 或部署应用。
 
 ## 2. 完整设计逻辑
 
@@ -38,12 +38,17 @@
 - dry-run 记录不再伪造 `finalUrl`；live Amazon 文档发生跨 host 跳转时保留警告。
 - 只要 `missingEvidenceTerms` 非空就记录缺项警告，不再仅在完全零匹配时警告。
 - Customs adapter 对 `generatedAt` 使用严格 ISO 日期/时区校验，CLI 缺少参数值时直接失败。
-- 六个市场/竞争页面从当前页面过滤后的 records 计算 `businessDataWrites`，不再误用全局 summary。
+- 新增共享运行时 manifest parser；`mode`、`generatedAt`、`records` 或 record 基础合同无效时，六个消费页面统一进入 missing，不再用 TypeScript cast 把任意 JSON 当 ready。
+- parser 同时验证 title、hash、summary 等可选展示字段的实际类型；即使服务端 manifest 过期或畸形，也只会失败关闭，不会在渲染阶段调用非字符串 `trim()`。
+- 六个市场/竞争页面同时匹配 `sourceId` 与 `page`；只有 manifest 明确为 `live-browser-capture`，且 record 通过 validation、HTTPS、证据词、无 warning/page error、无登录/绕过/业务写入时，才能进入 badge、计数和卡片。
+- 卡片继续只显示 eligible captured record，但 network/business-write 安全计数改为汇总页面作用域内全部 record，拒绝记录的登录、告警或写入活动不能因过滤而归零；无 eligible 样本时六页均显示明确等待态。
+- 新品页的 ABC Kids Expo / Nielsen 趋势块不再错误归因给 ds-008；来源治理完成前只显示阻断说明，不展示趋势结论。
+- Fortune BI、Global Market Insights breast pads 与 bottle warmer/sterilizer 三条 seed 已修正 label/URL，并通过 no-network H2 生成器同步到 periodic/weekly 字节一致副本。
 - `ds-027` 的 DataManage 文件大小、SHA-256 与 `checkedAt` 已随当前源码刷新。
 
 ### 2.4 恢复候选与敏感草稿
 
-- 半月恢复候选同时校验 periodic/weekly 逐字节一致，并对每个候选与 canonical 文件做顶层字段/类型合同对比；只比较 lane 仍不足以证明兼容的问题已关闭。
+- 半月恢复候选同时校验 periodic/weekly 逐字节一致，并递归描述所有嵌套对象字段与数组中的每一种元素 shape；count map 按 value schema 而不是当前观测键比较，live-only capture 字段按显式 optional 合同处理，`localEvidence` 的 archive path/bytes 与 screenshot path/hash 继续验证内层类型和成对关系，嵌套类型或必填字段漂移仍会令 compatible=false。
 - 法规 draft 覆盖既有文件后强制恢复 `0600`，不依赖文件首次创建时的 mode。
 - 本地 canonical manifest 更新为 `2026-07-H2` dry-run 候选：39/39 planned、`networkCalls=0`、`businessDataWrites=0`；它不表示 live evidence 已刷新。
 
@@ -82,15 +87,17 @@ npm run data:audit:deep:summary
 
 | 门禁 | 结果 |
 |---|---|
-| Vitest | 24 files / 195 tests passed |
+| Vitest | 25 files / 202 tests passed |
 | ESLint | passed |
-| Production build | 2,384 modules transformed / passed |
+| Production build | 2,385 modules transformed / passed |
 | Data audit | 43 pages / 107 tables / 53 sources / 0 issues |
-| Deep audit | 46 routes / 888 claims / 0 high-risk / 0 unsupported |
+| Deep audit | 46 routes / 884 claims / 0 high-risk / 0 medium-risk / 0 unsupported |
 | Safety boundary | `providerCalls=false` / `productionWrites=false` / `publicEvidenceLiveCapture=false` |
-| Focused owner workflow | 87/87 static script tests passed；最终单例回归通过 |
-| Codex review | 多轮 P2 修复后 `No actionable findings.` |
-| Graphify | 4,629 nodes / 7,359 edges / 350 communities；AST-only，0 模型 token |
+| Focused follow-up | 3 files / 97 tests passed；runtime evidence、schema-aware recovery contract 与 static scripts 回归通过 |
+| Codex review | 前六轮累计发现 P1×2 / P2×12 / P3×2，本地 16/16 fixed；第七轮 session `019fa730-f7e9-7910-919b-a1dcc651fc06` completed-clean，0 actionable finding |
+| CodeRabbit | head `c2fe523` / run `26df0c06-5f2a-4306-88da-d2e33dc194c2` / 5 actionable；本地 5/5 fixed，待新 head recheck |
+| Graphify | 4,666 nodes / 7,470 edges / 345 communities；AST-only，0 模型 token；0 dangling / 0 self-loop |
+| GitHub Actions | implementation head `c2fe523`；run `30322464479`；app 4m17s、backend 52s；annotations 均为 0 |
 
 机器可读证据：[`evidence/minor-data-integrity-closeout-20260728.json`](./evidence/minor-data-integrity-closeout-20260728.json)
 
@@ -99,12 +106,18 @@ npm run data:audit:deep:summary
 - 本批尚未产生生产副作用；回滚只需回退本批 Git 提交，不需要恢复服务器、数据库、nginx 或 cron。
 - 若 owner merge 报 question key/count 错配，重新生成 chat pack，不要手改 intake 来绕过校验。
 - 若 canonical H2 dry-run 不适合作为发布候选，保留当前提交并重新执行经授权的 live evidence 流程；不要把旧 live 抓取时间戳伪装成本期数据。
-- 若恢复候选合同失败，比较 candidate 与 `public/periodic-data` / `public/weekly-data` 的顶层 schema；不得跳过门禁直接 rsync。
+- 若恢复候选合同失败，比较 candidate 与 `public/periodic-data` / `public/weekly-data` 的递归字段和数组 shape；不得跳过门禁直接 rsync。
+- Graphify 0.9.28 本机用户级安装已临时修正 report generator 的 thin-community 阈值计算；升级 Graphify 可能覆盖该 hotfix，升级后必须重新检查报告不得出现不可能的 `<0 nodes`。
 
 ## 6. 下一批执行 TODO
 
-- [ ] 推送本批提交后，确认 PR #32 指向精确新 head，并等待 app/backend GitHub Actions 完成。
-- [ ] 将 GitHub check、annotations 与新 review thread 状态写回证据；本地通过不能替代 GitHub-hosted 结果。
+- [x] 推送实现提交 `c2fe523`，确认 PR #32 指向精确 head；GitHub app/backend checks 均成功。
+- [x] 将 run `30322464479`、两个 check 终态和 annotations=0 写回证据。
+- [x] 接收并复现 CodeRabbit 对 `c2fe523` 的 5 项 finding；完成 recursive contract、runtime manifest/eligible record、来源归因、seed 和测试保护修复。
+- [x] 重新生成 H2 no-network periodic/weekly canonical，确认 39 planned、两份字节一致、0 network calls、0 business data writes。
+- [x] 完成六轮受控 Codex review 并修复累计 16 项 finding：live/no-network 合同、字段类型、安全计数、clean 文案、eligible 空态、严格时间戳/审计数组、live mode 展示门、SHA-256 格式、`localEvidence` 内层合同、customs 状态依赖数组、跨域重定向与矛盾 validation 元数据。
+- [x] 完成最终受控、非递归 Codex review；session `019fa730-f7e9-7910-919b-a1dcc651fc06` completed，0 actionable finding。
+- [ ] 提交并推送 follow-up，重新验证新的精确 head GitHub app/backend CI，并等待 CodeRabbit recheck 进入明确终态。
 - [ ] 继续保留 human review 与 merge 为独立决策，不自动合并。
 - [ ] 2026-08-01 09:00 +08:00 后检查首次 cron 日志、生产 period 与 10 个发布文件 hash；时间窗之前不得声称首次定时执行成功。
 - [ ] Amazon、CRM、ERP、VOC/NLP、YouTube、Import Genius 与访谈数据继续保持 connector/manual gate，直到获得独立授权和可复核快照。

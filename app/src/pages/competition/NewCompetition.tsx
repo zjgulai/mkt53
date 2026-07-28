@@ -1,43 +1,13 @@
 import { useEffect, useState } from 'react';
-import { LayoutGrid, FileBarChart, Map as MapIcon, Database, TrendingUp, Zap, Shield, ArrowUpRight, AlertTriangle, CheckCircle, Flame, Cpu, Baby, ExternalLink } from 'lucide-react';
+import { LayoutGrid, FileBarChart, Map as MapIcon, Database, TrendingUp, Zap, Shield, ArrowUpRight, AlertTriangle, CheckCircle, ExternalLink } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
-
-interface PublicEvidenceRecord {
-  seedId: string;
-  sourceId: string;
-  page: string;
-  evidenceClass: string;
-  captureStatus: string;
-  capturedAt?: string;
-  title?: string;
-  label?: string;
-  url: string;
-  collectionBoundary: string;
-  notFullPlatformDataset?: boolean;
-  matchedEvidenceTerms?: string[];
-  missingEvidenceTerms?: string[];
-  nonVerbatimSummary?: string;
-  safety?: {
-    networkCalls?: number;
-    loginAttempted?: boolean;
-    bypassAttempted?: boolean;
-    businessDataWrites?: number;
-  };
-}
-
-interface PublicEvidenceManifest {
-  mode: string;
-  generatedAt: string;
-  summary?: {
-    total: number;
-    captureStatusCounts?: Record<string, number>;
-    evidenceClassCounts?: Record<string, number>;
-    networkCalls: number;
-    businessDataWrites: number;
-  };
-  records?: PublicEvidenceRecord[];
-}
+import {
+  isEligibleCapturedPublicEvidenceRecord,
+  parsePublicEvidenceManifest,
+  summarizePublicEvidenceSafety,
+  type PublicEvidenceManifest,
+} from '@/lib/public-evidence';
 
 const pricePending = '价格待复核';
 const trendPending = '趋势待复核';
@@ -82,16 +52,6 @@ const threatMatrix = [
   { brand: 'Hegen', count: 1, threatLevel: '低', color: '#34c759', reason: 'PCTO进入穿戴式赛道但经验有限', action: '维持关注' },
 ];
 
-// audit-source: ds-008
-const trend2026 = [
-  { title: '加热功能成新差异化', desc: 'Momcozy W1(加热+按摩) vs eufy HeatFlow vs Medela FluidFeel — 温热技术成为2026年核心卖点', color: '#C25B6E', icon: <Flame className="w-4 h-4" /> },
-  { title: 'AI集成加速', desc: 'Willow Sync集成AI助手Ema+Momcozy BM08 AI睡眠监测 — 智能母婴生态扩张', color: '#5856d6', icon: <Cpu className="w-4 h-4" /> },
-  { title: '保险渠道竞争', desc: 'Willow Sync保险独家发售 — 北美保险报销渠道成为必争之地', color: '#ff9500', icon: <Shield className="w-4 h-4" /> },
-  { title: '品类边界扩展', desc: 'Momcozy从吸奶器扩展到孕期护理球+红光治疗+智能监视器 — 全周期母婴生态', color: '#34c759', icon: <Baby className="w-4 h-4" /> },
-  { title: '减负需求线索', desc: 'Nielsen消费者需求结论需补报告页、样本、地区和指标口径后再展示具体比例', color: '#af52de', icon: <TrendingUp className="w-4 h-4" /> },
-  { title: 'Japandi设计趋势', desc: 'ABC Kids Expo 2026趋势：日本极简+北欧温暖融合，北极动物元素 year-round', color: '#ff3b30', icon: <Zap className="w-4 h-4" /> },
-];
-
 const sidebarItems = [
   { label: '看竞争', children: [
     { label: '竞品库', path: '/competition', icon: <LayoutGrid className="w-4 h-4" /> },
@@ -113,10 +73,11 @@ export default function NewCompetition() {
     fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) throw new Error('Public evidence samples unavailable.');
-        return response.json() as Promise<PublicEvidenceManifest>;
+        return response.json();
       })
-      .then((manifest) => {
+      .then((payload: unknown) => {
         if (!active) return;
+        const manifest = parsePublicEvidenceManifest(payload);
         setPublicEvidenceManifest(manifest);
         setPublicEvidenceStatus('ready');
       })
@@ -140,17 +101,16 @@ export default function NewCompetition() {
   const filtered = getFiltered();
   const highThreat = threatMatrix.filter(t => t.threatLevel === '高').length;
   const newCompetitionEvidence = (publicEvidenceManifest?.records ?? []).filter(
-    (record) => record.sourceId === 'ds-008' || record.page === 'NewCompetition',
+    (record) => record.sourceId === 'ds-008' && record.page === 'NewCompetition',
   );
-  const capturedNewCompetitionEvidence = newCompetitionEvidence.filter((record) => record.captureStatus === 'captured');
-  const evidenceBusinessDataWrites = newCompetitionEvidence.reduce(
-    (total, record) => total + (record.safety?.businessDataWrites ?? 0),
-    0,
+  const eligibleNewCompetitionEvidence = newCompetitionEvidence.filter((record) =>
+    isEligibleCapturedPublicEvidenceRecord(record, publicEvidenceManifest?.mode),
   );
-  const evidenceNetworkCalls = newCompetitionEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
+  const { businessDataWrites: evidenceBusinessDataWrites, networkCalls: evidenceNetworkCalls } =
+    summarizePublicEvidenceSafety(newCompetitionEvidence);
   const evidenceStatusLabel =
     publicEvidenceStatus === 'ready'
-      ? `${capturedNewCompetitionEvidence.length}/${newCompetitionEvidence.length} captured`
+      ? `${eligibleNewCompetitionEvidence.length}/${newCompetitionEvidence.length} eligible captured`
       : publicEvidenceStatus;
 
   return (
@@ -198,7 +158,7 @@ export default function NewCompetition() {
                     mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · businessDataWrites={evidenceBusinessDataWrites}
                   </p>
                 </div>
-                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${capturedNewCompetitionEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleNewCompetitionEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
                   {evidenceStatusLabel}
                 </span>
               </div>
@@ -206,7 +166,7 @@ export default function NewCompetition() {
               <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
                 <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
                   <p className="text-[10px] text-[#86868b]">官网/新闻样本</p>
-                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{capturedNewCompetitionEvidence.length}/{newCompetitionEvidence.length || '-'}</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{eligibleNewCompetitionEvidence.length}/{newCompetitionEvidence.length || '-'}</p>
                 </div>
                 <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
                   <p className="text-[10px] text-[#86868b]">网络采集</p>
@@ -223,7 +183,7 @@ export default function NewCompetition() {
               </div>
 
               <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
-                {(newCompetitionEvidence.length > 0 ? newCompetitionEvidence : []).map((record) => (
+                {eligibleNewCompetitionEvidence.map((record) => (
                   <div key={record.seedId} className="rounded-xl border border-[#EDE6DF] bg-white p-3">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -245,9 +205,9 @@ export default function NewCompetition() {
                     </div>
                   </div>
                 ))}
-                {newCompetitionEvidence.length === 0 ? (
+                {eligibleNewCompetitionEvidence.length === 0 ? (
                   <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
-                    <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回 ds-008 公开证据样本。</p>
+                    <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回通过来源、页面、校验与安全边界的 ds-008 captured 样本。</p>
                   </div>
                 ) : null}
               </div>
@@ -335,20 +295,14 @@ export default function NewCompetition() {
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
               <div className="flex items-center gap-4 mb-5">
                 <div className="w-8 h-8 rounded-xl bg-[#5856d6]/10 flex items-center justify-center"><TrendingUp className="w-4 h-4 text-[#5856d6]" strokeWidth={2} /></div>
-                {/* audit-source: ds-008 */}
-                <h3 className="text-sm font-semibold text-[#1d1d1f]">2026年技术趋势洞察</h3>
-                <span className="text-[10px] text-[#86868B] bg-[#FBF8F5] px-2 py-1 rounded-lg ml-auto">ABC Kids Expo 2026 + Nielsen</span>
+                <h3 className="text-sm font-semibold text-[#1d1d1f]">技术趋势洞察（待来源治理）</h3>
+                <span className="text-[10px] text-[#a85f00] bg-[#ff9500]/10 px-2 py-1 rounded-lg ml-auto">来源治理待完成</span>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {trend2026.map((t, i) => (
-                  <div key={i} className="p-3 rounded-xl bg-[#FBF8F5] border-l-2" style={{ borderColor: t.color }}>
-                    <div className="flex items-center gap-2 mb-1">
-                      <div style={{ color: t.color }}>{t.icon}</div>
-                      <p className="text-xs font-semibold" style={{ color: t.color }}>{t.title}</p>
-                    </div>
-                    <p className="text-[10px] text-[#86868b]">{t.desc}</p>
-                  </div>
-                ))}
+              <div className="rounded-xl border border-[#ff9500]/20 bg-[#ff9500]/5 p-4">
+                <p className="text-xs font-semibold text-[#a85f00]">趋势结论暂不展示</p>
+                <p className="mt-1 text-[11px] leading-5 text-[#7A6B6B]">
+                  ABC Kids Expo 与 Nielsen 的报告页、样本、地区、指标口径和 source registry 映射尚未完成，不能由 ds-008 新品公开样本代替。完成来源治理和人工复核后再恢复本区结论。
+                </p>
               </div>
             </div>
           </div>

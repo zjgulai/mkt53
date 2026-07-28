@@ -1,35 +1,12 @@
 import { useEffect, useState } from 'react';
 import { ExternalLink, Shirt } from 'lucide-react';
 import MarketDataGate from '@/components/MarketDataGate';
-
-interface PublicEvidenceRecord {
-  seedId: string;
-  sourceId: string;
-  page: string;
-  evidenceClass: string;
-  captureStatus: string;
-  title?: string;
-  label?: string;
-  url: string;
-  collectionBoundary: string;
-  notFullPlatformDataset?: boolean;
-  matchedEvidenceTerms?: string[];
-  nonVerbatimSummary?: string;
-  safety?: {
-    networkCalls?: number;
-    businessDataWrites?: number;
-  };
-}
-
-interface PublicEvidenceManifest {
-  mode: string;
-  generatedAt: string;
-  summary?: {
-    total: number;
-    businessDataWrites: number;
-  };
-  records?: PublicEvidenceRecord[];
-}
+import {
+  isEligibleCapturedPublicEvidenceRecord,
+  parsePublicEvidenceManifest,
+  summarizePublicEvidenceSafety,
+  type PublicEvidenceManifest,
+} from '@/lib/public-evidence';
 
 export default function NursingProducts() {
   const [publicEvidenceManifest, setPublicEvidenceManifest] = useState<PublicEvidenceManifest | null>(null);
@@ -41,10 +18,11 @@ export default function NursingProducts() {
     fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) throw new Error('Public evidence samples unavailable.');
-        return response.json() as Promise<PublicEvidenceManifest>;
+        return response.json();
       })
-      .then((manifest) => {
+      .then((payload: unknown) => {
         if (!active) return;
+        const manifest = parsePublicEvidenceManifest(payload);
         setPublicEvidenceManifest(manifest);
         setPublicEvidenceStatus('ready');
       })
@@ -60,17 +38,16 @@ export default function NursingProducts() {
   }, []);
 
   const nursingEvidence = (publicEvidenceManifest?.records ?? []).filter(
-    (record) => record.sourceId === 'ds-039' || record.page === 'NursingProducts',
+    (record) => record.sourceId === 'ds-039' && record.page === 'NursingProducts',
   );
-  const capturedNursingEvidence = nursingEvidence.filter((record) => record.captureStatus === 'captured');
-  const nursingEvidenceNetworkCalls = nursingEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
-  const nursingEvidenceBusinessDataWrites = nursingEvidence.reduce(
-    (total, record) => total + (record.safety?.businessDataWrites ?? 0),
-    0,
+  const eligibleNursingEvidence = nursingEvidence.filter((record) =>
+    isEligibleCapturedPublicEvidenceRecord(record, publicEvidenceManifest?.mode),
   );
+  const { businessDataWrites: nursingEvidenceBusinessDataWrites, networkCalls: nursingEvidenceNetworkCalls } =
+    summarizePublicEvidenceSafety(nursingEvidence);
   const nursingEvidenceStatusLabel =
     publicEvidenceStatus === 'ready'
-      ? `${capturedNursingEvidence.length}/${nursingEvidence.length} captured`
+      ? `${eligibleNursingEvidence.length}/${nursingEvidence.length} eligible captured`
       : publicEvidenceStatus;
 
   return (
@@ -109,7 +86,7 @@ export default function NursingProducts() {
                 mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={nursingEvidenceNetworkCalls} · businessDataWrites={nursingEvidenceBusinessDataWrites}
               </p>
             </div>
-            <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${capturedNursingEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+            <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleNursingEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
               {nursingEvidenceStatusLabel}
             </span>
           </div>
@@ -117,7 +94,7 @@ export default function NursingProducts() {
           <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-4">
             <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
               <p className="text-[10px] text-[#86868b]">公开报告入口</p>
-              <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{capturedNursingEvidence.length}/{nursingEvidence.length || '-'}</p>
+              <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{eligibleNursingEvidence.length}/{nursingEvidence.length || '-'}</p>
             </div>
             <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
               <p className="text-[10px] text-[#86868b]">覆盖细分</p>
@@ -134,7 +111,7 @@ export default function NursingProducts() {
           </div>
 
           <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
-            {nursingEvidence.map((record) => (
+            {eligibleNursingEvidence.map((record) => (
               <div key={record.seedId} className="rounded-xl border border-[#EDE6DF] bg-white p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -156,9 +133,9 @@ export default function NursingProducts() {
                 </div>
               </div>
             ))}
-            {nursingEvidence.length === 0 ? (
+            {eligibleNursingEvidence.length === 0 ? (
               <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
-                <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回 ds-039 公开报告证据样本。</p>
+                <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回通过来源、页面、校验与安全边界的 ds-039 captured 样本。</p>
               </div>
             ) : null}
           </div>

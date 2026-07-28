@@ -3,7 +3,7 @@
   "connectorId": "customs-public-data-adapter",
   "mode": "public-customs-source-adapter",
   "status": "blocked",
-  "generatedAt": "2026-07-28T00:45:47.296Z",
+  "generatedAt": "2026-07-28T03:02:42.100Z",
   "sourceId": "ds-006",
   "page": "CustomsData",
   "metric": "HS编码进出口",

@@ -1,10 +1,11 @@
 {
   "schemaVersion": 1,
   "taskId": "batch-30-minor-data-integrity-closeout",
-  "generatedAt": "2026-07-28T02:06:30Z",
+  "generatedAt": "2026-07-28T05:34:45Z",
   "branch": "codex/mkt53-release-candidate-20260630",
   "sourceHeadBeforeBatchCommit": "06bf98cb5b9bbafaafb61c84bfbdd3fb955d4350",
-  "status": "local-reviewed-ready-for-commit",
+  "status": "local-review-clean-pending-commit-push-exact-head-ci-external-recheck",
+  "implementationCommit": "c2fe523b05bac1084b15bc91c1a99e043b087539",
   "scope": [
     "owner-intake-question-contract",
     "owner-chat-pack-and-merge",
@@ -12,18 +13,23 @@
     "page-scoped-safety-counters",
     "semi-monthly-recovery-contract",
     "regulation-draft-file-permissions",
-    "local-h2-dry-run-canonical-refresh"
+    "local-h2-dry-run-canonical-refresh",
+    "recursive-candidate-schema-contract",
+    "runtime-public-evidence-manifest-validation",
+    "eligible-captured-record-display-gate",
+    "public-evidence-seed-provenance-correction",
+    "unsupported-trend-claim-gate"
   ],
   "quality": {
     "tests": {
-      "filesPassed": 24,
-      "testsPassed": 195,
+      "filesPassed": 25,
+      "testsPassed": 202,
       "failed": 0
     },
     "lint": "passed",
     "build": {
       "status": "passed",
-      "modulesTransformed": 2384
+      "modulesTransformed": 2385
     },
     "dataAudit": {
       "pages": 43,
@@ -33,28 +39,142 @@
     },
     "deepAudit": {
       "routes": 46,
-      "claims": 888,
+      "claims": 884,
       "highRiskClaims": 0,
+      "mediumRiskClaims": 0,
       "unsupportedClaims": 0
     },
     "codexReview": {
-      "status": "clean",
-      "finalResult": "No actionable findings."
+      "status": "completed-clean",
+      "initialFollowUp": "terminated-recursive-invocation-not-used-as-clean-evidence",
+      "runs": [
+        {
+          "sessionId": "019fa6b9-997c-7ef3-9cc4-4d32295d2ff1",
+          "actionableFindings": 5,
+          "p1": 1,
+          "p2": 3,
+          "p3": 1,
+          "locallyFixed": 5
+        },
+        {
+          "sessionId": "019fa6d5-5e27-7f92-ad4d-9f7ce9de6a9f",
+          "actionableFindings": 3,
+          "p1": 0,
+          "p2": 2,
+          "p3": 1,
+          "locallyFixed": 3
+        },
+        {
+          "sessionId": "019fa6f8-6843-7282-8cb5-869fb5296664",
+          "actionableFindings": 2,
+          "p1": 0,
+          "p2": 2,
+          "p3": 0,
+          "locallyFixed": 2
+        },
+        {
+          "sessionId": "019fa70a-4c60-7470-818e-8b055d6bf9e7",
+          "actionableFindings": 2,
+          "p1": 0,
+          "p2": 2,
+          "p3": 0,
+          "locallyFixed": 2
+        },
+        {
+          "sessionId": "019fa716-2a69-79c1-90af-b1e5aa92e7bf",
+          "actionableFindings": 2,
+          "p1": 1,
+          "p2": 1,
+          "p3": 0,
+          "locallyFixed": 2
+        },
+        {
+          "sessionId": "019fa724-6589-7101-bd85-1928e6a70837",
+          "actionableFindings": 2,
+          "p1": 0,
+          "p2": 2,
+          "p3": 0,
+          "locallyFixed": 2
+        },
+        {
+          "sessionId": "019fa730-f7e9-7910-919b-a1dcc651fc06",
+          "actionableFindings": 0,
+          "p1": 0,
+          "p2": 0,
+          "p3": 0,
+          "locallyFixed": 0,
+          "status": "completed-clean",
+          "exitCode": 0
+        }
+      ],
+      "totals": {
+        "actionableFindings": 16,
+        "p1": 2,
+        "p2": 12,
+        "p3": 2,
+        "locallyFixed": 16
+      },
+      "finalResult": "No actionable regressions were found.",
+      "finalReviewSessionId": "019fa730-f7e9-7910-919b-a1dcc651fc06"
+    },
+    "codeRabbit": {
+      "reviewedHead": "c2fe523b05bac1084b15bc91c1a99e043b087539",
+      "runId": "26df0c06-5f2a-4306-88da-d2e33dc194c2",
+      "reviewState": "COMMENTED",
+      "statusContext": "SUCCESS-means-review-completed-not-approved",
+      "actionableFindings": 5,
+      "locallyFixed": 5,
+      "newHeadRecheck": "pending-push"
     },
     "graphify": {
-      "nodes": 4629,
-      "edges": 7359,
-      "communities": 350,
-      "modelTokens": 0
+      "nodes": 4666,
+      "edges": 7470,
+      "communities": 345,
+      "zeroAstSourceFiles": 61,
+      "danglingEdges": 0,
+      "selfLoops": 0,
+      "modelTokens": 0,
+      "generatorHotfix": {
+        "scope": "local-user-tool-install",
+        "path": "/Users/pray/.local/share/uv/tools/graphifyy/lib/python3.14/site-packages/graphify/report.py",
+        "change": "thin-community-filter-uses-min-community-size-instead-of-hardcoded-three",
+        "trackedInRepository": false,
+        "upgradeMayOverwrite": true
+      }
+    },
+    "github": {
+      "pullRequest": 32,
+      "runId": 30322464479,
+      "verifiedHead": "c2fe523b05bac1084b15bc91c1a99e043b087539",
+      "app": {
+        "status": "success",
+        "duration": "4m17s",
+        "annotations": 0
+      },
+      "backend": {
+        "status": "success",
+        "duration": "52s",
+        "annotations": 0
+      }
     }
   },
   "localCanonical": {
     "period": "2026-07-H2",
+    "generationMode": "no-network",
     "publicEvidenceMode": "dry-run",
     "plannedRecords": 39,
     "networkCalls": 0,
     "businessDataWrites": 0,
-    "periodicWeeklyByteParity": true
+    "periodicWeeklyByteParity": true,
+    "publicSourceStatus": {
+      "fetchError": 0,
+      "sourceError": 0
+    },
+    "correctedSeeds": [
+      "category-fortune-bi-breast-pump-market",
+      "nursing-products-gmi-breast-pads-market",
+      "babycare-gmi-bottle-warmer-sterilizer-market"
+    ]
   },
   "boundaries": {
     "providerCalls": false,
@@ -70,8 +190,9 @@
     "mergePerformed": false
   },
   "nextGates": [
-    "commit-and-push-current-branch",
-    "verify-pr-32-exact-head-github-checks",
+    "commit-and-push-review-follow-up",
+    "validate-follow-up-on-new-exact-head-ci",
+    "complete-external-coderabbit-recheck-on-new-head",
     "human-review-and-explicit-merge-decision",
     "observe-first-cron-run-after-2026-08-01T09:00:00+08:00"
   ]
