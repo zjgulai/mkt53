@@ -218,13 +218,13 @@ export function derivePublicEvidenceView(
 ): PublicEvidenceView {
   const evidence = (manifest?.records ?? []).filter((record) => record.sourceId === sourceId && record.page === page);
   const safety = summarizePublicEvidenceSafety(evidence);
-  const safetyBoundaryReady = evidence.every(
-    (record) =>
-      record.safety.loginAttempted === false &&
-      record.safety.bypassAttempted === false &&
-      record.safety.businessDataWrites === 0 &&
-      record.safety.rawTextWrittenToPublicBundle === false,
-  );
+  const safetyBoundaryReasons = [
+    evidence.some((record) => record.safety.loginAttempted) ? 'login attempted' : null,
+    evidence.some((record) => record.safety.bypassAttempted) ? 'bypass attempted' : null,
+    safety.businessDataWrites > 0 ? `writes=${safety.businessDataWrites}` : null,
+    evidence.some((record) => record.safety.rawTextWrittenToPublicBundle) ? 'raw text written' : null,
+  ].filter((reason): reason is string => reason !== null);
+  const safetyBoundaryReady = safetyBoundaryReasons.length === 0;
   const eligibleCandidates = evidence.filter((record) => isEligibleCapturedPublicEvidenceRecord(record, manifest?.mode));
   const eligibleEvidence = safetyBoundaryReady ? eligibleCandidates : [];
   const statusLabel =
@@ -232,7 +232,7 @@ export function derivePublicEvidenceView(
       ? status
       : safetyBoundaryReady
         ? `${eligibleEvidence.length}/${evidence.length} eligible captured`
-        : `safety boundary blocked · writes=${safety.businessDataWrites}`;
+        : `safety boundary blocked · ${safetyBoundaryReasons.join(', ')}`;
 
   return {
     evidence,

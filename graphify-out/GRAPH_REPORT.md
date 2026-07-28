@@ -9,7 +9,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3cacb94a`
+- Built from commit: `e971d75c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -94,7 +94,7 @@
 - build-ai-design-governance-batch6.mjs
 - build-ai-review-governance-batch5.mjs
 - SnapshotRegistryService
-- properties
+- evidence
 - mkt53 下一阶段 10 个迭代闭环规划
 - MarketDataGate.tsx
 - carousel.tsx
@@ -271,7 +271,7 @@
 - recovery-drill-be07.sh
 - 0004_be05_review_state_machine.py
 - Q: 同意下一批建议
-- class-variance-authority
+- react-hook-form
 - refresh-semi-monthly-data.mjs
 - properties
 - quality-be05.sh
@@ -285,7 +285,7 @@
 - required
 - BE-07 审计与恢复隔离演练
 - validate-regulation-sku-contract.mjs
-- sku
+- properties
 - DATA-REG 合成 Intake → SKU Draft 投影演练
 - @radix-ui/react-checkbox
 - properties
@@ -634,7 +634,7 @@ Nodes (14): `erpChannelGrowthSnapshot`, `erpChannelTargetAttainment`, `erpDerive
 
 ### Community 65 - "HomePage.tsx"
 Cohesion: 0.11
-Nodes (17): `marketCagrLines`, `marketQuickInsights`, `marketSizeTrendData`, `actionColors2`, `countryColors`, `countryFlags`, `cpscEfilingSource`, `euMdrSource` (+9 more)
+Nodes (17): `brandShareAccessItems`, `marketCagrLines`, `marketQuickInsights`, `actionColors2`, `countryColors`, `countryFlags`, `cpscEfilingSource`, `euMdrSource` (+9 more)
 
 ### Community 66 - "OperationsManual.tsx"
 Cohesion: 0.50
@@ -692,9 +692,9 @@ Nodes (14): `buildArtifacts()`, `csvEscape()`, `__dirname`, `evalQueueRows`, `fi
 Cohesion: 0.19
 Nodes (13): `Snapshot`, `model_validator`, `SnapshotCreate`, `SnapshotListResponse`, `SnapshotResponse`, `canonical_snapshot_metadata()`, `Any`, `date` (+5 more)
 
-### Community 80 - "properties"
-Cohesion: 0.18
-Nodes (11): `additionalProperties`, `required`, `type`, `minLength`, `type`, `snapshotId`, `evidence`, `id` (+3 more)
+### Community 80 - "evidence"
+Cohesion: 0.14
+Nodes (14): `additionalProperties`, `properties`, `required`, `type`, `snapshotId`, `evidence`, `reviewDecisionId`, `snapshotId` (+6 more)
 
 ### Community 81 - "mkt53 下一阶段 10 个迭代闭环规划"
 Cohesion: 0.13
@@ -718,7 +718,7 @@ Nodes (13): `1. 本轮目标`, `2.1 新鲜命令证据`, `2.2 页面与报告代
 
 ### Community 86 - "dependencies"
 Cohesion: 0.18
-Nodes (11): `dependencies`, `clsx`, `input-otp`, `@radix-ui/react-aspect-ratio`, `react-hook-form`, `recharts`, `clsx`, `input-otp` (+3 more)
+Nodes (11): `dependencies`, `class-variance-authority`, `clsx`, `input-otp`, `@radix-ui/react-aspect-ratio`, `recharts`, `class-variance-authority`, `clsx` (+3 more)
 
 ### Community 87 - "input-group.tsx"
 Cohesion: 0.21
@@ -1161,8 +1161,8 @@ Cohesion: 0.22
 Nodes (8): `1. 结果`, `2. API 合同`, `3. 并发与幂等语义`, `4. 数据模型与迁移`, `5. 新鲜验证`, `6. 生产停止条件`, `7. 下一批建议`, `BE-03 Source Registry 本地 API`
 
 ### Community 199 - "properties"
-Cohesion: 0.29
-Nodes (7): `properties`, `reviewDecisionId`, `snapshotId`, `sourceEvidencePath`, `$ref`, `$ref`, `$ref`
+Cohesion: 0.18
+Nodes (11): `minLength`, `type`, `id`, `sku`, `properties`, `additionalProperties`, `required`, `type` (+3 more)
 
 ### Community 200 - "Q: 同意下一步，开始执行"
 Cohesion: 0.40
@@ -1318,7 +1318,7 @@ Nodes (7): `1. 结果`, `2. 本批修复`, `3. Review 结论`, `4. 使用与复�
 
 ### Community 252 - "MarketPage.tsx"
 Cohesion: 0.13
-Nodes (14): `brandShareAccessItems`, `erpInternalMonthlyTrendData`, `erpInternalTrendNotes`, `erpInternalTrendSourceIds`, `marketDenominatorBoundary`, `marketEvidenceSourceIds`, `marketMonthlyTrendData`, `marketRegionalShareData` (+6 more)
+Nodes (14): `erpInternalMonthlyTrendData`, `erpInternalTrendNotes`, `erpInternalTrendSourceIds`, `marketDenominatorBoundary`, `marketEvidenceSourceIds`, `marketMonthlyTrendData`, `marketRegionalShareData`, `marketSizeTrendData` (+6 more)
 
 ### Community 253 - "validate-regulation-source-legal-intake.mjs"
 Cohesion: 0.14
@@ -1400,9 +1400,9 @@ Nodes (3): `_event_uuid()`, `_review_uuid()`, `upgrade()`
 Cohesion: 0.40
 Nodes (4): `Answer`, `Outcome`, `Q: 同意下一批建议`, `Source Nodes`
 
-### Community 275 - "class-variance-authority"
+### Community 275 - "react-hook-form"
 Cohesion: 1.00
-Nodes (2): `class-variance-authority`, `class-variance-authority`
+Nodes (2): `react-hook-form`, `react-hook-form`
 
 ### Community 276 - "refresh-semi-monthly-data.mjs"
 Cohesion: 0.17
@@ -1456,9 +1456,9 @@ Nodes (8): `1. 结论`, `2. 隔离与 fail-closed 边界`, `3. 实现`, `4. 演�
 Cohesion: 0.21
 Nodes (21): `addError()`, `APPLICABILITY_VALUES`, `buildRegulationSkuContractReport()`, `DECISION_STATUSES`, `DECISIVE_STATUSES`, `EVIDENCE_CLASSES`, `isAllowedOfficialSourceUrl()`, `isIsoDate()` (+13 more)
 
-### Community 289 - "sku"
-Cohesion: 0.12
-Nodes (17): `minLength`, `type`, `productFamily`, `sku`, `skuId`, `targetMarket`, `additionalProperties`, `properties` (+9 more)
+### Community 289 - "properties"
+Cohesion: 0.20
+Nodes (10): `minLength`, `type`, `productFamily`, `skuId`, `targetMarket`, `properties`, `minLength`, `type` (+2 more)
 
 ### Community 290 - "DATA-REG 合成 Intake → SKU Draft 投影演练"
 Cohesion: 0.18
@@ -1707,7 +1707,7 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `cn()` connect `cn` to `menubar.tsx`, `sidebar.tsx`, `field.tsx`, `context-menu.tsx`, `dropdown-menu.tsx`, `react`, `Sidebar.tsx`, `carousel.tsx`, `empty.tsx`, `utils.ts`, `input-group.tsx`, `command.tsx`, `toggle-group.tsx`, `item.tsx`, `alert-dialog.tsx`, `drawer.tsx`?**
   _High betweenness centrality (0.048) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `dependencies` to `package.json`, `class-variance-authority`, `@radix-ui/react-select`, `cmdk`, `@radix-ui/react-hover-card`, `lucide-react`, `@radix-ui/react-checkbox`, `@radix-ui/react-avatar`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `react`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `date-fns`, `tailwind-merge`, `vaul`, `zod`, `next-themes`, `embla-carousel-react`, `@radix-ui/react-context-menu`, `@radix-ui/react-accordion`, `@radix-ui/react-alert-dialog`, `@hookform/resolvers`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-collapsible`?**
+- **Why does `dependencies` connect `dependencies` to `package.json`, `react-hook-form`, `@radix-ui/react-select`, `cmdk`, `@radix-ui/react-hover-card`, `lucide-react`, `@radix-ui/react-checkbox`, `@radix-ui/react-avatar`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `react`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `date-fns`, `tailwind-merge`, `vaul`, `zod`, `next-themes`, `embla-carousel-react`, `@radix-ui/react-context-menu`, `@radix-ui/react-accordion`, `@radix-ui/react-alert-dialog`, `@hookform/resolvers`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-collapsible`?**
   _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Why does `react` connect `react` to `sidebar.tsx`, `field.tsx`, `carousel.tsx`, `dependencies`, `toggle-group.tsx`, `alert-dialog.tsx`?**
   _High betweenness centrality (0.025) - this node is a cross-community bridge._

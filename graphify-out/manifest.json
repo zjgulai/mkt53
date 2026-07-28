@@ -1295,7 +1295,7 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1785222980.1481602,
+    "mtime": 1785225237.6663744,
     "ast_hash": "bbf021db6f037823ac4b86c4d22f3214",
     "semantic_hash": ""
   },
@@ -1355,8 +1355,8 @@
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/index.html": {
-    "mtime": 1785223144.4822683,
-    "ast_hash": "baad73d63f360563caf26402bde4f3f9",
+    "mtime": 1785225507.9304855,
+    "ast_hash": "dff60ad545781330e7de8843360e8fbc",
     "semantic_hash": ""
   },
   "docs/workflows/workflow-quality-gate-stable.md": {
@@ -3640,33 +3640,33 @@
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/evidence/p0-pr-ready-handoff-20260727.json": {
-    "mtime": 1785223144.4481928,
-    "ast_hash": "bb527e33f0189060bdd6bf8edb4edbed",
+    "mtime": 1785225410.2861028,
+    "ast_hash": "f5aec51bb8dcf3d6f1d2e0899b14fe81",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/p0-pr-ready-handoff-20260727.md": {
-    "mtime": 1785222815.8470898,
-    "ast_hash": "b2ac1f6472bb29bc6d6ee3d0e707d5db",
+    "mtime": 1785225374.3104575,
+    "ast_hash": "ee08ff400ba7fe507fca8d06b44730d6",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/evidence/minor-data-integrity-closeout-20260728.json": {
-    "mtime": 1785223144.4282136,
-    "ast_hash": "a77c2c5c5e52694ef5bbc2834204bdcf",
+    "mtime": 1785225395.8824496,
+    "ast_hash": "bcf2e9aee75fea181969639e939da892",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/minor-data-integrity-closeout-20260728.md": {
-    "mtime": 1785223144.4022672,
-    "ast_hash": "a5471e7f58900330fd734bc835368376",
+    "mtime": 1785225328.8414664,
+    "ast_hash": "fadf29e47141a74216bf225e9acdf89e",
     "semantic_hash": ""
   },
   "app/src/lib/public-evidence.ts": {
-    "mtime": 1785218506.2998934,
-    "ast_hash": "dd2835655770252ffbfc6cdd04c7d1a9",
+    "mtime": 1785224615.8957527,
+    "ast_hash": "09a27b383b3b66c055118af7fd241db9",
     "semantic_hash": ""
   },
   "app/tests/data/public-evidence.test.ts": {
-    "mtime": 1785219686.8361976,
-    "ast_hash": "1fcde105c23b09d39aedec9b61ad13e6",
+    "mtime": 1785224615.8964708,
+    "ast_hash": "f4025c503ee239a94808bc5a116096c0",
     "semantic_hash": ""
   },
   "app/src/hooks/usePublicEvidence.ts": {

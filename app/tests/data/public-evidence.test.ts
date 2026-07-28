@@ -243,6 +243,31 @@ describe('public evidence runtime gate', () => {
     expect(view.safety).toEqual({ networkCalls: 2, businessDataWrites: 1 });
     expect(view.safetyBoundaryReady).toBe(false);
     expect(view.eligibleEvidence).toEqual([]);
-    expect(view.statusLabel).toBe('safety boundary blocked · writes=1');
+    expect(view.statusLabel).toBe('safety boundary blocked · login attempted, writes=1');
+  });
+
+  it('reports every triggered safety-boundary reason even when no business write occurred', () => {
+    const unsafeSibling: PublicEvidenceRecord = {
+      ...eligibleRecord,
+      seedId: 'seed-multi-reason-unsafe-sibling',
+      safety: {
+        ...eligibleRecord.safety,
+        loginAttempted: true,
+        bypassAttempted: true,
+        rawTextWrittenToPublicBundle: true,
+      },
+    };
+    const manifest = parsePublicEvidenceManifest({
+      mode: 'live-browser-capture',
+      generatedAt: '2026-07-28T00:00:00.000Z',
+      records: [eligibleRecord, unsafeSibling],
+    });
+
+    const view = derivePublicEvidenceView(manifest, 'ready', 'ds-008', 'NewCompetition');
+
+    expect(view.safety).toEqual({ networkCalls: 2, businessDataWrites: 0 });
+    expect(view.safetyBoundaryReady).toBe(false);
+    expect(view.eligibleEvidence).toEqual([]);
+    expect(view.statusLabel).toBe('safety boundary blocked · login attempted, bypass attempted, raw text written');
   });
 });

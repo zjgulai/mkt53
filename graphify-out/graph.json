@@ -2044,7 +2044,7 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 80,
+      "community": 199,
       "community_name": "properties",
       "norm_label": "properties",
       "id": "app_contracts_regulation_sku_matrix_schema_record_properties"
@@ -2055,7 +2055,7 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 80,
+      "community": 199,
       "community_name": "properties",
       "norm_label": "id",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_id"
@@ -2066,7 +2066,7 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 80,
+      "community": 199,
       "community_name": "properties",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_id_type"
@@ -2077,7 +2077,7 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 80,
+      "community": 199,
       "community_name": "properties",
       "norm_label": "minlength",
       "id": "app_contracts_regulation_sku_matrix_schema_id_minlength"
@@ -2495,8 +2495,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L75",
       "_origin": "ast",
-      "community": 289,
-      "community_name": "sku",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "sku",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_sku"
     },
@@ -2506,8 +2506,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L76",
       "_origin": "ast",
-      "community": 289,
-      "community_name": "sku",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_sku_type"
     },
@@ -2517,8 +2517,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L77",
       "_origin": "ast",
-      "community": 289,
-      "community_name": "sku",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "additionalproperties",
       "id": "app_contracts_regulation_sku_matrix_schema_sku_additionalproperties"
     },
@@ -2528,8 +2528,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L78",
       "_origin": "ast",
-      "community": 289,
-      "community_name": "sku",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "required",
       "id": "app_contracts_regulation_sku_matrix_schema_sku_required"
     },
@@ -2539,8 +2539,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L78",
       "_origin": "ast",
-      "community": 289,
-      "community_name": "sku",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "skuid",
       "id": "ref_skuid"
     },
@@ -2550,8 +2550,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L78",
       "_origin": "ast",
-      "community": 289,
-      "community_name": "sku",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "productfamily",
       "id": "ref_productfamily"
     },
@@ -2561,8 +2561,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L78",
       "_origin": "ast",
-      "community": 289,
-      "community_name": "sku",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "targetmarket",
       "id": "ref_targetmarket"
     },
@@ -2573,7 +2573,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "community": 289,
-      "community_name": "sku",
+      "community_name": "properties",
       "norm_label": "properties",
       "id": "app_contracts_regulation_sku_matrix_schema_sku_properties"
     },
@@ -2584,7 +2584,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "community": 289,
-      "community_name": "sku",
+      "community_name": "properties",
       "norm_label": "skuid",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_skuid"
     },
@@ -2595,7 +2595,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "community": 289,
-      "community_name": "sku",
+      "community_name": "properties",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_skuid_type"
     },
@@ -2606,7 +2606,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "community": 289,
-      "community_name": "sku",
+      "community_name": "properties",
       "norm_label": "minlength",
       "id": "app_contracts_regulation_sku_matrix_schema_skuid_minlength"
     },
@@ -2617,7 +2617,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "community": 289,
-      "community_name": "sku",
+      "community_name": "properties",
       "norm_label": "productfamily",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_productfamily"
     },
@@ -2628,7 +2628,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "community": 289,
-      "community_name": "sku",
+      "community_name": "properties",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_productfamily_type"
     },
@@ -2639,7 +2639,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "community": 289,
-      "community_name": "sku",
+      "community_name": "properties",
       "norm_label": "minlength",
       "id": "app_contracts_regulation_sku_matrix_schema_productfamily_minlength"
     },
@@ -2650,7 +2650,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "community": 289,
-      "community_name": "sku",
+      "community_name": "properties",
       "norm_label": "targetmarket",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_targetmarket"
     },
@@ -2661,7 +2661,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "community": 289,
-      "community_name": "sku",
+      "community_name": "properties",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_targetmarket_type"
     },
@@ -2672,7 +2672,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "community": 289,
-      "community_name": "sku",
+      "community_name": "properties",
       "norm_label": "minlength",
       "id": "app_contracts_regulation_sku_matrix_schema_targetmarket_minlength"
     },
@@ -3090,7 +3090,7 @@
       "source_location": "L111",
       "_origin": "ast",
       "community": 80,
-      "community_name": "properties",
+      "community_name": "evidence",
       "norm_label": "evidence",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_evidence"
     },
@@ -3101,7 +3101,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "community": 80,
-      "community_name": "properties",
+      "community_name": "evidence",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_evidence_type"
     },
@@ -3112,7 +3112,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "community": 80,
-      "community_name": "properties",
+      "community_name": "evidence",
       "norm_label": "additionalproperties",
       "id": "app_contracts_regulation_sku_matrix_schema_evidence_additionalproperties"
     },
@@ -3123,7 +3123,7 @@
       "source_location": "L114",
       "_origin": "ast",
       "community": 80,
-      "community_name": "properties",
+      "community_name": "evidence",
       "norm_label": "required",
       "id": "app_contracts_regulation_sku_matrix_schema_evidence_required"
     },
@@ -3134,7 +3134,7 @@
       "source_location": "L114",
       "_origin": "ast",
       "community": 80,
-      "community_name": "properties",
+      "community_name": "evidence",
       "norm_label": "snapshotid",
       "id": "app_contracts_regulation_sku_matrix_schema_json_ref_snapshotid"
     },
@@ -3145,7 +3145,7 @@
       "source_location": "L114",
       "_origin": "ast",
       "community": 80,
-      "community_name": "properties",
+      "community_name": "evidence",
       "norm_label": "reviewdecisionid",
       "id": "ref_reviewdecisionid"
     },
@@ -3156,7 +3156,7 @@
       "source_location": "L114",
       "_origin": "ast",
       "community": 80,
-      "community_name": "properties",
+      "community_name": "evidence",
       "norm_label": "sourceevidencepath",
       "id": "ref_sourceevidencepath"
     },
@@ -3166,8 +3166,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L115",
       "_origin": "ast",
-      "community": 199,
-      "community_name": "properties",
+      "community": 80,
+      "community_name": "evidence",
       "norm_label": "properties",
       "id": "app_contracts_regulation_sku_matrix_schema_evidence_properties"
     },
@@ -3177,8 +3177,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L116",
       "_origin": "ast",
-      "community": 199,
-      "community_name": "properties",
+      "community": 80,
+      "community_name": "evidence",
       "norm_label": "snapshotid",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_snapshotid"
     },
@@ -3188,8 +3188,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L116",
       "_origin": "ast",
-      "community": 199,
-      "community_name": "properties",
+      "community": 80,
+      "community_name": "evidence",
       "norm_label": "$ref",
       "id": "app_contracts_regulation_sku_matrix_schema_snapshotid_ref"
     },
@@ -3199,8 +3199,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L117",
       "_origin": "ast",
-      "community": 199,
-      "community_name": "properties",
+      "community": 80,
+      "community_name": "evidence",
       "norm_label": "reviewdecisionid",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_reviewdecisionid"
     },
@@ -3210,8 +3210,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L117",
       "_origin": "ast",
-      "community": 199,
-      "community_name": "properties",
+      "community": 80,
+      "community_name": "evidence",
       "norm_label": "$ref",
       "id": "app_contracts_regulation_sku_matrix_schema_reviewdecisionid_ref"
     },
@@ -3221,8 +3221,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L118",
       "_origin": "ast",
-      "community": 199,
-      "community_name": "properties",
+      "community": 80,
+      "community_name": "evidence",
       "norm_label": "sourceevidencepath",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_sourceevidencepath"
     },
@@ -3232,8 +3232,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L118",
       "_origin": "ast",
-      "community": 199,
-      "community_name": "properties",
+      "community": 80,
+      "community_name": "evidence",
       "norm_label": "$ref",
       "id": "app_contracts_regulation_sku_matrix_schema_sourceevidencepath_ref"
     },
@@ -7511,8 +7511,8 @@
       "source_file": "app/package.json",
       "source_location": "L132",
       "_origin": "ast",
-      "community": 275,
-      "community_name": "class-variance-authority",
+      "community": 86,
+      "community_name": "dependencies",
       "norm_label": "class-variance-authority",
       "id": "app_package_dependencies_class_variance_authority"
     },
@@ -7522,8 +7522,8 @@
       "source_file": "app/package.json",
       "source_location": "L132",
       "_origin": "ast",
-      "community": 275,
-      "community_name": "class-variance-authority",
+      "community": 86,
+      "community_name": "dependencies",
       "norm_label": "class-variance-authority",
       "id": "class_variance_authority"
     },
@@ -7753,8 +7753,8 @@
       "source_file": "app/package.json",
       "source_location": "L143",
       "_origin": "ast",
-      "community": 86,
-      "community_name": "dependencies",
+      "community": 275,
+      "community_name": "react-hook-form",
       "norm_label": "react-hook-form",
       "id": "app_package_dependencies_react_hook_form"
     },
@@ -7764,8 +7764,8 @@
       "source_file": "app/package.json",
       "source_location": "L143",
       "_origin": "ast",
-      "community": 86,
-      "community_name": "dependencies",
+      "community": 275,
+      "community_name": "react-hook-form",
       "norm_label": "react-hook-form",
       "id": "react_hook_form"
     },
@@ -28522,8 +28522,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "marketsizetrenddata",
       "id": "app_src_data_market_insight_data_marketsizetrenddata"
     },
@@ -29193,8 +29193,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L1384",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "MarketPage.tsx",
+      "community": 65,
+      "community_name": "HomePage.tsx",
       "norm_label": "brandshareaccessitems",
       "id": "app_src_data_market_insight_data_brandshareaccessitems"
     },
@@ -137041,5 +137041,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "3cacb94adc0c813b72e3cfa35514102196c7cdf5"
+  "built_at_commit": "e971d75c5bebf2b96436ae242d997d518657494e"
 }
