@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "taskId": "batch-30-minor-data-integrity-closeout",
-  "generatedAt": "2026-07-28T06:35:17Z",
+  "generatedAt": "2026-07-28T07:11:48Z",
   "branch": "codex/mkt53-release-candidate-20260630",
   "sourceHeadBeforeBatchCommit": "06bf98cb5b9bbafaafb61c84bfbdd3fb955d4350",
-  "status": "local-review-clean-pending-commit-push-exact-head-ci-external-recheck",
-  "implementationCommit": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
+  "status": "3cac-exact-head-ci-green-coderabbit-md038-local-review-clean-pending-commit-push-exact-head-ci-external-recheck",
+  "implementationCommit": "3cacb94adc0c813b72e3cfa35514102196c7cdf5",
   "scope": [
     "owner-intake-question-contract",
     "owner-chat-pack-and-merge",
@@ -128,6 +128,17 @@
           "locallyFixed": 0,
           "status": "completed-clean",
           "exitCode": 0
+        },
+        {
+          "sessionId": "019fa78a-44a6-7181-ba13-eb53d4e2544f",
+          "actionableFindings": 0,
+          "p1": 0,
+          "p2": 0,
+          "p3": 0,
+          "locallyFixed": 0,
+          "status": "completed-clean",
+          "exitCode": 0,
+          "scope": "graphify-generated-artifacts-after-md038-fix"
         }
       ],
       "totals": {
@@ -137,29 +148,35 @@
         "p3": 2,
         "locallyFixed": 17
       },
-      "finalResult": "No actionable defects were found. The full test suite passed (204 tests), along with lint, production build, and diff checks.",
-      "finalReviewSessionId": "019fa764-ac58-7380-99f4-0c5e7fcc3bb7"
+      "finalResult": "The changes only refresh Graphify-generated artifacts. The graph, labels, report, and HTML visualization are internally consistent, parse successfully, and reference the current HEAD.",
+      "finalReviewSessionId": "019fa78a-44a6-7181-ba13-eb53d4e2544f"
     },
     "codeRabbit": {
-      "reviewedHead": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
-      "runId": "7a7909e3-566e-4df4-8009-53e69ace746c",
-      "reviewId": 4794237146,
+      "reviewedHead": "3cacb94adc0c813b72e3cfa35514102196c7cdf5",
+      "runId": "82d9dd21-b45e-4aff-a526-11d755b6bb5c",
+      "reviewId": 4794647488,
       "reviewState": "COMMENTED",
       "statusContext": "SUCCESS-means-review-completed-not-approved",
-      "inlineActionableFindings": 2,
-      "outsideDiffMajorFindings": 1,
-      "acceptedAndLocallyFixed": 3,
+      "inlineActionableFindings": 1,
+      "outsideDiffMajorFindings": 0,
+      "acceptedAndLocallyFixed": 1,
       "fixes": [
-        "static-contract-proves-pages-consume-shared-safety-result",
-        "graph-report-community-labels-avoid-md037",
-        "six-pages-use-shared-fetch-filter-safety-status-hook"
+        "graph-report-nested-backticks-use-variable-length-markdown-code-span-delimiters"
       ],
+      "previousReview": {
+        "reviewedHead": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
+        "runId": "7a7909e3-566e-4df4-8009-53e69ace746c",
+        "reviewId": 4794237146,
+        "inlineActionableFindings": 2,
+        "outsideDiffMajorFindings": 1,
+        "acceptedAndFixedIn": "3cacb94adc0c813b72e3cfa35514102196c7cdf5"
+      },
       "newHeadRecheck": "pending-push"
     },
     "graphify": {
-      "nodes": 4672,
-      "edges": 7458,
-      "communities": 339,
+      "nodes": 4671,
+      "edges": 7457,
+      "communities": 346,
       "zeroAstSourceFiles": 61,
       "danglingEdges": 0,
       "selfLoops": 0,
@@ -167,26 +184,27 @@
       "generatorHotfix": {
         "scope": "local-user-tool-install",
         "path": "/Users/pray/.local/share/uv/tools/graphifyy/lib/python3.14/site-packages/graphify/report.py",
-        "change": "thin-community-filter-uses-min-community-size-and-community-node-labels-use-markdown-code-spans",
+        "change": "thin-community-filter-uses-min-community-size-and-community-node-labels-use-trimmed-variable-length-markdown-code-span-delimiters",
         "trackedInRepository": false,
         "upgradeMayOverwrite": true
       },
-      "graphReportMd037Issues": 0
+      "graphReportMd037Issues": 0,
+      "graphReportMd038Issues": 0
     },
     "github": {
       "pullRequest": 32,
-      "runId": 30332364362,
-      "verifiedHead": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
+      "runId": 30335660462,
+      "verifiedHead": "3cacb94adc0c813b72e3cfa35514102196c7cdf5",
       "app": {
         "status": "success",
-        "jobId": 90190054477,
-        "duration": "4m33s",
+        "jobId": 90199862188,
+        "duration": "4m23s",
         "annotations": 0
       },
       "backend": {
         "status": "success",
-        "jobId": 90190054526,
-        "duration": "58s",
+        "jobId": 90199862142,
+        "duration": "55s",
         "annotations": 0
       }
     }
@@ -223,7 +241,7 @@
     "mergePerformed": false
   },
   "nextGates": [
-    "commit-and-push-review-follow-up",
+    "commit-and-push-graphify-md038-follow-up",
     "validate-follow-up-on-new-exact-head-ci",
     "complete-external-coderabbit-recheck-on-new-head",
     "human-review-and-explicit-merge-decision",

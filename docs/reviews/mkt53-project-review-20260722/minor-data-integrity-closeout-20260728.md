@@ -6,13 +6,13 @@
 
 起始 HEAD：`06bf98cb5b9bbafaafb61c84bfbdd3fb955d4350`
 
-状态：follow-up 提交 `2365bfc965550c1b236ca4b32c1df197a9d2e592` 的精确 head GitHub app/backend CI 已通过；CodeRabbit 随后给出的 2 项 inline finding 与 1 项 outside-diff Major 均已本地修复，缓存复验 P2 也已由最终 Codex review 关闭；当前工作树最终复审 clean，待提交推送、新精确 head CI 与外部 recheck
+状态：共享 evidence gate 提交 `3cacb94adc0c813b72e3cfa35514102196c7cdf5` 的精确 head GitHub app/backend CI 已通过；CodeRabbit 随后发现 Graphify 生成报告中嵌套反引号导致的 1 项 MD038，已在本机 generator 修复并以最终 Codex review 确认生成物内部一致；当前工作树复审 clean，待提交推送、新精确 head CI 与外部 recheck
 
 ## 1. 本批结论
 
 本批关闭了 Batch 29 之后保留的 Minor 数据完整性风险。修复重点不是增加业务数据，而是确保数据缺失、结构错配、时间错误或证据不足时系统统一失败关闭，不再产生“看似 ready”“看似已采集”或跨页面误用全局安全计数的状态。
 
-此前写入的“最终 Codex clean”结论已被后续事实覆盖：第一次 follow-up 因递归调用被终止，不能作为 clean 证据；随后检查发现文档仍把 CodeRabbit 写成 queued。前六轮受控 review session `019fa6b9-997c-7ef3-9cc4-4d32295d2ff1`、`019fa6d5-5e27-7f92-ad4d-9f7ce9de6a9f`、`019fa6f8-6843-7282-8cb5-869fb5296664`、`019fa70a-4c60-7470-818e-8b055d6bf9e7`、`019fa716-2a69-79c1-90af-b1e5aa92e7bf`、`019fa724-6589-7101-bd85-1928e6a70837` 累计给出 2 个 P1、12 个 P2、2 个 P3，当前 16/16 已本地修复。第七轮 session `019fa730-f7e9-7910-919b-a1dcc651fc06` clean 后提交并推送 `2365bfc`；其精确 head GitHub Actions run `30332364362` 已完成，app 4m33s、backend 58s、annotations 均为 0。CodeRabbit run `7a7909e3-566e-4df4-8009-53e69ace746c` / review `4794237146` 随后指出 static test 未证明六页实际使用安全派生结果、Graphify 报告触发 MD037，以及六页重复 fetch/filter/safety/status 逻辑；三项均已本地关闭。修复后的 Codex session `019fa757-aec6-75a3-858c-b0e0157068c7` 发现 1 个 P2：进程生命周期成功缓存会让长会话继续展示旧证据；改为仅合并 in-flight 请求并在结算后释放。最终 session `019fa764-ac58-7380-99f4-0c5e7fcc3bb7` 以 exit 0 completed，重跑 99 项聚焦测试、204 项完整测试、lint、build 与 diff check，终态为 `No actionable defects were found.`。本批没有调用 provider、受限连接器或 live public evidence，没有写入生产、安装 cron、修改 nginx、合并 PR 或部署应用。
+此前写入的“最终 Codex clean”结论已被后续事实覆盖：第一次 follow-up 因递归调用被终止，不能作为 clean 证据；随后检查发现文档仍把 CodeRabbit 写成 queued。前六轮受控 review session `019fa6b9-997c-7ef3-9cc4-4d32295d2ff1`、`019fa6d5-5e27-7f92-ad4d-9f7ce9de6a9f`、`019fa6f8-6843-7282-8cb5-869fb5296664`、`019fa70a-4c60-7470-818e-8b055d6bf9e7`、`019fa716-2a69-79c1-90af-b1e5aa92e7bf`、`019fa724-6589-7101-bd85-1928e6a70837` 累计给出 2 个 P1、12 个 P2、2 个 P3，当前 16/16 已本地修复。第七轮 session `019fa730-f7e9-7910-919b-a1dcc651fc06` clean 后提交并推送 `2365bfc`；其精确 head GitHub Actions run `30332364362` 已完成，app 4m33s、backend 58s、annotations 均为 0。CodeRabbit run `7a7909e3-566e-4df4-8009-53e69ace746c` / review `4794237146` 随后指出 static test 未证明六页实际使用安全派生结果、Graphify 报告触发 MD037，以及六页重复 fetch/filter/safety/status 逻辑；三项均已关闭。修复后的 Codex session `019fa757-aec6-75a3-858c-b0e0157068c7` 发现并关闭长会话 stale cache P2，session `019fa764-ac58-7380-99f4-0c5e7fcc3bb7` 随后 clean。该实现以 `3cacb94adc0c813b72e3cfa35514102196c7cdf5` 提交并推送；精确 head GitHub Actions run `30335660462` 为 success，app job `90199862188` 用时 4m23s、backend job `90199862142` 用时 55s，两个 check annotations 均为 0。CodeRabbit run `82d9dd21-b45e-4aff-a526-11d755b6bb5c` / review `4794647488` 在该 head 发现 1 项 MD038：Graphify 社区节点标签含嵌套反引号时，固定单反引号 code span 会产生无效 Markdown。本机 generator 现按标签内最长反引号连续段选择更长 delimiter，MD037/MD038 均为 0。最新 Codex session `019fa78a-44a6-7181-ba13-eb53d4e2544f` 以 exit 0 completed，结论为生成物内部一致并指向当前 HEAD，0 actionable finding。本批没有调用 provider、受限连接器或 live public evidence，没有写入生产、安装 cron、修改 nginx、合并 PR 或部署应用。
 
 ## 2. 完整设计逻辑
 
@@ -96,10 +96,10 @@ npm run data:audit:deep:summary
 | Deep audit | 46 routes / 884 claims / 0 high-risk / 0 medium-risk / 0 unsupported |
 | Safety boundary | `providerCalls=false` / `productionWrites=false` / `publicEvidenceLiveCapture=false` |
 | Focused follow-up | 3 files / 99 tests passed；runtime evidence、in-flight-only revalidation、schema-aware recovery contract 与 static scripts 回归通过 |
-| Codex review | 历史 16 项已关闭；session `019fa757-aec6-75a3-858c-b0e0157068c7` 的缓存复验 P2 已修复；最终 session `019fa764-ac58-7380-99f4-0c5e7fcc3bb7` completed-clean，0 actionable finding |
-| CodeRabbit | head `2365bfc` / run `7a7909e3-566e-4df4-8009-53e69ace746c` / review `4794237146`；2 inline + 1 outside-diff Major 已本地修复，待新 head recheck |
-| Graphify | 4,672 nodes / 7,458 edges / 339 communities；AST-only，0 模型 token；0 dangling / 0 self-loop；GRAPH_REPORT MD037=0 |
-| GitHub Actions | implementation head `2365bfc`；run `30332364362`；app 4m33s、backend 58s；annotations 均为 0 |
+| Codex review | 历史 17 项已关闭；session `019fa78a-44a6-7181-ba13-eb53d4e2544f` completed-clean，确认 Graphify 生成物内部一致，0 actionable finding |
+| CodeRabbit | head `3cacb94` / run `82d9dd21-b45e-4aff-a526-11d755b6bb5c` / review `4794647488`；1 项 MD038 已本地修复，待新 head recheck |
+| Graphify | 4,671 nodes / 7,457 edges / 346 communities；AST-only，0 模型 token；0 dangling / 0 self-loop；GRAPH_REPORT MD037=0 / MD038=0 |
+| GitHub Actions | implementation head `3cacb94`；run `30335660462`；app 4m23s、backend 55s；annotations 均为 0 |
 
 机器可读证据：[`evidence/minor-data-integrity-closeout-20260728.json`](./evidence/minor-data-integrity-closeout-20260728.json)
 
@@ -109,7 +109,7 @@ npm run data:audit:deep:summary
 - 若 owner merge 报 question key/count 错配，重新生成 chat pack，不要手改 intake 来绕过校验。
 - 若 canonical H2 dry-run 不适合作为发布候选，保留当前提交并重新执行经授权的 live evidence 流程；不要把旧 live 抓取时间戳伪装成本期数据。
 - 若恢复候选合同失败，比较 candidate 与 `public/periodic-data` / `public/weekly-data` 的递归字段和数组 shape；不得跳过门禁直接 rsync。
-- Graphify 0.9.28 本机用户级安装已临时修正 report generator 的 thin-community 阈值计算，并把社区 node label 以 Markdown code span 输出以消除 MD037；升级 Graphify 可能覆盖该 hotfix，升级后必须重新检查报告不得出现不可能的 `<0 nodes`，且 MD037 仍为 0。
+- Graphify 0.9.28 本机用户级安装已临时修正 report generator 的 thin-community 阈值计算；社区 node label 现先去除外层空白，再根据标签中最长反引号连续段选择更长 Markdown code-span delimiter，同时消除 MD037 与嵌套反引号引起的 MD038。升级 Graphify 可能覆盖该 hotfix；升级后必须重新检查报告不得出现不可能的 `<0 nodes`，且 MD037/MD038 仍为 0。
 
 ## 6. 下一批执行 TODO
 
@@ -122,7 +122,9 @@ npm run data:audit:deep:summary
 - [x] 提交并推送 `2365bfc`；精确 head run `30332364362` 的 app/backend 均成功，annotations=0。
 - [x] 接收 CodeRabbit run `7a7909e3-566e-4df4-8009-53e69ace746c` 的 2 项 inline 与 1 项 outside-diff Major，完成共享 Hook、安全结果合同、MD037 与品牌色修复。
 - [x] 修复 Codex session `019fa757-aec6-75a3-858c-b0e0157068c7` 的长会话 stale cache P2；最终 session `019fa764-ac58-7380-99f4-0c5e7fcc3bb7` clean。
-- [ ] 提交并推送本轮 follow-up，重新验证新的精确 head GitHub app/backend CI，并等待 CodeRabbit recheck 进入明确终态。
+- [x] 提交并推送共享 evidence gate 实现 `3cacb94`；精确 head run `30335660462` 的 app/backend 均成功，annotations=0。
+- [x] 接收 CodeRabbit run `82d9dd21-b45e-4aff-a526-11d755b6bb5c` / review `4794647488` 的 1 项 MD038；完成可变长 code-span delimiter 修复，MD037/MD038=0，Codex session `019fa78a-44a6-7181-ba13-eb53d4e2544f` clean。
+- [ ] 提交并推送 Graphify Markdown 生成物 follow-up，重新验证新的精确 head GitHub app/backend CI，并等待 CodeRabbit recheck 进入明确终态。
 - [ ] 继续保留 human review 与 merge 为独立决策，不自动合并。
 - [ ] 2026-08-01 09:00 +08:00 后检查首次 cron 日志、生产 period 与 10 个发布文件 hash；时间窗之前不得声称首次定时执行成功。
 - [ ] Amazon、CRM、ERP、VOC/NLP、YouTube、Import Genius 与访谈数据继续保持 connector/manual gate，直到获得独立授权和可复核快照。

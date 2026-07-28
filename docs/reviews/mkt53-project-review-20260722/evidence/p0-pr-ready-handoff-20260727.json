@@ -1,7 +1,7 @@
 {
   "schemaVersion": "mkt53.p0-pr-ready-handoff.v2",
-  "generatedAt": "2026-07-28T06:35:17Z",
-  "status": "pr-ready-2365-ci-green-coderabbit-follow-up-local-clean-pending-push-ci-external-recheck-not-merged-not-deployed",
+  "generatedAt": "2026-07-28T07:11:48Z",
+  "status": "pr-ready-3cac-ci-green-coderabbit-md038-local-clean-pending-push-ci-external-recheck-not-merged-not-deployed",
   "repository": "zjgulai/mkt53",
   "branch": "codex/mkt53-release-candidate-20260630",
   "pullRequest": {
@@ -13,7 +13,7 @@
     "head": "codex/mkt53-release-candidate-20260630",
     "headShaAtReady": "91fe39359dcd1119cebd8d342e0d5ae055770c56",
     "localCandidateHead": "5360ea6830df6aa30f86125f5c762729f6fa5f8b",
-    "verifiedRemoteHead": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
+    "verifiedRemoteHead": "3cacb94adc0c813b72e3cfa35514102196c7cdf5",
     "mergeStateStatusAtDocumentation": "UNSTABLE",
     "readyAction": "completed"
   },
@@ -133,6 +133,18 @@
       "backend": { "jobId": 90190054526, "conclusion": "success", "duration": "58s", "annotations": 0 }
     }
   },
+  "githubActionsSharedHookExactHead": {
+    "workflow": "quality-gate",
+    "runId": 30335660462,
+    "url": "https://github.com/zjgulai/mkt53/actions/runs/30335660462",
+    "headSha": "3cacb94adc0c813b72e3cfa35514102196c7cdf5",
+    "statusAtDocumentation": "completed",
+    "conclusion": "success",
+    "jobs": {
+      "app": { "jobId": 90199862188, "conclusion": "success", "duration": "4m23s", "annotations": 0 },
+      "backend": { "jobId": 90199862142, "conclusion": "success", "duration": "55s", "annotations": 0 }
+    }
+  },
   "codeRabbit": {
     "runId": "33f0f684-07a1-4a6d-9df3-3f49eeb7852b",
     "selectedFiles": 294,
@@ -185,6 +197,7 @@
       "inlineActionableFindings": 2,
       "outsideDiffMajorFindings": 1,
       "acceptedAndLocallyFixed": 3,
+      "acceptedAndFixedIn": "3cacb94adc0c813b72e3cfa35514102196c7cdf5",
       "codexReviewFinding": {
         "sessionId": "019fa757-aec6-75a3-858c-b0e0157068c7",
         "priority": "P2",
@@ -205,6 +218,25 @@
         "build": { "status": "passed", "modulesTransformed": 2386 },
         "graphify": { "nodes": 4672, "edges": 7458, "communities": 339, "md037Issues": 0 }
       },
+      "newHeadRecheck": "completed-with-md038-follow-up-on-3cacb94",
+      "mergeAllowed": false
+    },
+    "graphifyMarkdownFollowUp": {
+      "reviewedHead": "3cacb94adc0c813b72e3cfa35514102196c7cdf5",
+      "runId": "82d9dd21-b45e-4aff-a526-11d755b6bb5c",
+      "reviewId": 4794647488,
+      "reviewState": "COMMENTED",
+      "inlineActionableFindings": 1,
+      "finding": "generated-markdown-used-invalid-code-spans-for-node-labels-containing-backticks",
+      "acceptedAndLocallyFixed": 1,
+      "markdownlint": { "md037Issues": 0, "md038Issues": 0 },
+      "finalCodexReview": {
+        "sessionId": "019fa78a-44a6-7181-ba13-eb53d4e2544f",
+        "exitCode": 0,
+        "actionableFindings": 0,
+        "result": "Graphify-generated artifacts are internally consistent, parse successfully, and reference the current HEAD."
+      },
+      "graphify": { "nodes": 4671, "edges": 7457, "communities": 346, "danglingEdges": 0, "selfLoops": 0 },
       "newHeadRecheck": "pending-push",
       "mergeAllowed": false
     }
@@ -225,8 +257,8 @@
     "connectorCalls": 0
   },
   "remainingGates": [
-    "push the review follow-up and validate the new exact head with app/backend CI",
-    "CodeRabbit recheck terminal status for the new follow-up head",
+    "push the Graphify MD038 follow-up and validate the new exact head with app/backend CI",
+    "CodeRabbit recheck terminal status for the Graphify follow-up head",
     "separate verification and prioritization batch for 33 CodeRabbit minor suggestions",
     "human review and explicit merge decision for pull request 32",
     "independent deployment authorization",

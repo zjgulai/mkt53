@@ -1,6 +1,6 @@
 ---
 title: Batch 29 最终复审、PR Ready 门禁与合并前交接
-status: pr-ready-2365-ci-green-coderabbit-follow-up-local-clean-pending-push-ci-external-recheck-not-merged-not-deployed
+status: pr-ready-3cac-ci-green-coderabbit-md038-local-clean-pending-push-ci-external-recheck-not-merged-not-deployed
 created: 2026-07-27
 updated: 2026-07-28
 owner: engineering
@@ -15,7 +15,7 @@ source: git+github-actions+codex-review+coderabbit+graphify
 
 第一轮远端候选绑定精确 SHA `91fe39359dcd1119cebd8d342e0d5ae055770c56`。PR 转为 Ready 后，CodeRabbit 完成 294 文件差异复审，给出 3 个 Critical inline finding 和 1 个 Major outside-diff finding；本批已逐项复现并在代码提交 `f880ea5d7f379c6422f95a87bc1f9daa212bbef9` 中关闭。包含代码、图谱和本文档的精确 PR head `7ae8a1993b175f66503f65878f003b03f1a43044` 已由 GitHub Actions [run 30271729225](https://github.com/zjgulai/mkt53/actions/runs/30271729225) 验证：app 4m20s、backend 1m1s，均为 success，两个 check-run annotations 均为 0。3 个 Critical inline thread 已回复并全部 resolved；本文最初生成时 CodeRabbit recheck 仍为 `Review queued`，该状态只保留为当时快照。
 
-2026-07-28 follow-up：CodeRabbit 已在精确 head `c2fe523b05bac1084b15bc91c1a99e043b087539` 完成新一轮 review（run `26df0c06-5f2a-4306-88da-d2e33dc194c2`，GitHub review state=`COMMENTED`），给出 5 项 actionable finding。`CodeRabbit=SUCCESS` 只表示机器人运行完成，不表示批准。recursive contract、runtime manifest/eligible record、ds-008 页面/来源绑定、ABC Kids Expo/Nielsen 错误归因、三条 seed provenance 与测试保护已在本地 5/5 修复。前六轮受控 Codex follow-up 累计发现 16 项（P1×2 / P2×12 / P3×2），全部关闭；第七轮 session `019fa730-f7e9-7910-919b-a1dcc651fc06` clean。随后推送的 `2365bfc965550c1b236ca4b32c1df197a9d2e592` 已由 GitHub Actions run `30332364362` 精确验证：app 4m33s、backend 58s、annotations 均为 0。CodeRabbit run `7a7909e3-566e-4df4-8009-53e69ace746c` / review `4794237146` 在该 head 给出 2 项 inline finding 和 1 项 outside-diff Major；static 结果合同、Graphify MD037、共享 Hook 与品牌色均已本地关闭。Codex session `019fa757-aec6-75a3-858c-b0e0157068c7` 进一步发现并关闭长会话 stale cache P2，最终 session `019fa764-ac58-7380-99f4-0c5e7fcc3bb7` completed 且 0 actionable finding。当前通过 25 files / 204 tests、lint、build；本轮工作树推送、精确 head CI 和 CodeRabbit recheck 完成前，仍不能合并。
+2026-07-28 follow-up：CodeRabbit 已在精确 head `c2fe523b05bac1084b15bc91c1a99e043b087539` 完成新一轮 review（run `26df0c06-5f2a-4306-88da-d2e33dc194c2`，GitHub review state=`COMMENTED`），给出 5 项 actionable finding。`CodeRabbit=SUCCESS` 只表示机器人运行完成，不表示批准。recursive contract、runtime manifest/eligible record、ds-008 页面/来源绑定、ABC Kids Expo/Nielsen 错误归因、三条 seed provenance 与测试保护已在本地 5/5 修复。前六轮受控 Codex follow-up 累计发现 16 项（P1×2 / P2×12 / P3×2），全部关闭；第七轮 session `019fa730-f7e9-7910-919b-a1dcc651fc06` clean。随后推送的 `2365bfc965550c1b236ca4b32c1df197a9d2e592` 已由 GitHub Actions run `30332364362` 精确验证：app 4m33s、backend 58s、annotations 均为 0。CodeRabbit run `7a7909e3-566e-4df4-8009-53e69ace746c` / review `4794237146` 在该 head 给出 2 项 inline finding 和 1 项 outside-diff Major；static 结果合同、Graphify MD037、共享 Hook 与品牌色均已关闭。Codex session `019fa757-aec6-75a3-858c-b0e0157068c7` 进一步发现并关闭长会话 stale cache P2，session `019fa764-ac58-7380-99f4-0c5e7fcc3bb7` clean。共享 gate 实现提交 `3cacb94adc0c813b72e3cfa35514102196c7cdf5` 已由 GitHub Actions run `30335660462` 精确验证：app 4m23s、backend 55s、annotations 均为 0。CodeRabbit run `82d9dd21-b45e-4aff-a526-11d755b6bb5c` / review `4794647488` 在该 head 发现 1 项 Graphify MD038；可变长 code-span delimiter 已本地修复，MD037/MD038=0，Codex session `019fa78a-44a6-7181-ba13-eb53d4e2544f` 对新生成物复审为 0 actionable finding。当前通过 25 files / 204 tests、lint、build；Graphify follow-up 推送、精确 head CI 和 CodeRabbit recheck 完成前，仍不能合并。
 
 ## 2. 本批关闭的缺口
 
@@ -92,7 +92,7 @@ CodeRabbit 的 3 个 Critical inline finding 已修复、回复并 resolved；1 
 
 ## 7. 合并前 TODO
 
-1. 提交并推送已经通过最终无 finding Codex recheck 的共享 public-evidence Hook、页面安全失效关闭、仅 in-flight 去重与 Graphify MD037 follow-up，等待新精确 head app/backend CI 与 CodeRabbit recheck；若再产生 finding，继续走复现、修复与 exact-head CI；
+1. 提交并推送已通过 Codex recheck 的 Graphify MD038 follow-up，等待新精确 head app/backend CI 与 CodeRabbit recheck；若再产生 finding，继续走复现、修复与 exact-head CI；
 2. 对 33 个 Minor 建议建立独立批次，逐项验证后再决定修复或保留；
 3. 由人工 reviewer 做最终业务边界确认；
 4. 单独决定是否 merge；本批不含 merge 授权；

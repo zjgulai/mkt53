@@ -1295,8 +1295,8 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1785218956.9787328,
-    "ast_hash": "b6492c2588f6b2aff078ab296ecc35ea",
+    "mtime": 1785222980.1481602,
+    "ast_hash": "bbf021db6f037823ac4b86c4d22f3214",
     "semantic_hash": ""
   },
   "PLAN.md": {
@@ -1355,8 +1355,8 @@
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/index.html": {
-    "mtime": 1785220800.563437,
-    "ast_hash": "290ffe92f47e48e9e8eb304829f5fcfd",
+    "mtime": 1785223144.4822683,
+    "ast_hash": "baad73d63f360563caf26402bde4f3f9",
     "semantic_hash": ""
   },
   "docs/workflows/workflow-quality-gate-stable.md": {
@@ -3640,23 +3640,23 @@
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/evidence/p0-pr-ready-handoff-20260727.json": {
-    "mtime": 1785220607.0488734,
-    "ast_hash": "271364f4991b6dace7ce9983e4ebd0a6",
+    "mtime": 1785223144.4481928,
+    "ast_hash": "bb527e33f0189060bdd6bf8edb4edbed",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/p0-pr-ready-handoff-20260727.md": {
-    "mtime": 1785220588.2766933,
-    "ast_hash": "5d7b17addd84f8e3152e5e0cf91a48e3",
+    "mtime": 1785222815.8470898,
+    "ast_hash": "b2ac1f6472bb29bc6d6ee3d0e707d5db",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/evidence/minor-data-integrity-closeout-20260728.json": {
-    "mtime": 1785220573.7761483,
-    "ast_hash": "8b1e2309ca5c0c4b8c8a8bd7beb80e7f",
+    "mtime": 1785223144.4282136,
+    "ast_hash": "a77c2c5c5e52694ef5bbc2834204bdcf",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/minor-data-integrity-closeout-20260728.md": {
-    "mtime": 1785220550.2778141,
-    "ast_hash": "2b2feb96e3ab406034733f3b6debb395",
+    "mtime": 1785223144.4022672,
+    "ast_hash": "a5471e7f58900330fd734bc835368376",
     "semantic_hash": ""
   },
   "app/src/lib/public-evidence.ts": {

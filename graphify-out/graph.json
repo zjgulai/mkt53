@@ -2044,7 +2044,7 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 240,
+      "community": 80,
       "community_name": "properties",
       "norm_label": "properties",
       "id": "app_contracts_regulation_sku_matrix_schema_record_properties"
@@ -2055,7 +2055,7 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 240,
+      "community": 80,
       "community_name": "properties",
       "norm_label": "id",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_id"
@@ -2066,7 +2066,7 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 240,
+      "community": 80,
       "community_name": "properties",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_id_type"
@@ -2077,7 +2077,7 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 240,
+      "community": 80,
       "community_name": "properties",
       "norm_label": "minlength",
       "id": "app_contracts_regulation_sku_matrix_schema_id_minlength"
@@ -2088,8 +2088,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L47",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "source",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_source"
     },
@@ -2099,8 +2099,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L48",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_source_type"
     },
@@ -2110,8 +2110,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L49",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "additionalproperties",
       "id": "app_contracts_regulation_sku_matrix_schema_source_additionalproperties"
     },
@@ -2121,8 +2121,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "required",
       "id": "app_contracts_regulation_sku_matrix_schema_source_required"
     },
@@ -2132,8 +2132,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "sourceregistryid",
       "id": "app_contracts_regulation_sku_matrix_schema_json_ref_sourceregistryid"
     },
@@ -2143,8 +2143,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "jurisdiction",
       "id": "ref_jurisdiction"
     },
@@ -2154,8 +2154,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "authority",
       "id": "ref_authority"
     },
@@ -2165,8 +2165,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "title",
       "id": "ref_title"
     },
@@ -2176,8 +2176,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "officialurl",
       "id": "ref_officialurl"
     },
@@ -2187,8 +2187,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "retrievedat",
       "id": "ref_retrievedat"
     },
@@ -2198,8 +2198,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "contentsha256",
       "id": "ref_contentsha256"
     },
@@ -2209,8 +2209,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "effectivefrom",
       "id": "ref_effectivefrom"
     },
@@ -2220,8 +2220,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "effectiveto",
       "id": "ref_effectiveto"
     },
@@ -2231,8 +2231,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 122,
-      "community_name": "properties",
+      "community": 264,
+      "community_name": "required",
       "norm_label": "claimscope",
       "id": "ref_claimscope"
     },
@@ -2495,8 +2495,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L75",
       "_origin": "ast",
-      "community": 240,
-      "community_name": "properties",
+      "community": 289,
+      "community_name": "sku",
       "norm_label": "sku",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_sku"
     },
@@ -2506,8 +2506,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L76",
       "_origin": "ast",
-      "community": 240,
-      "community_name": "properties",
+      "community": 289,
+      "community_name": "sku",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_sku_type"
     },
@@ -2517,8 +2517,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L77",
       "_origin": "ast",
-      "community": 240,
-      "community_name": "properties",
+      "community": 289,
+      "community_name": "sku",
       "norm_label": "additionalproperties",
       "id": "app_contracts_regulation_sku_matrix_schema_sku_additionalproperties"
     },
@@ -2528,8 +2528,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L78",
       "_origin": "ast",
-      "community": 240,
-      "community_name": "properties",
+      "community": 289,
+      "community_name": "sku",
       "norm_label": "required",
       "id": "app_contracts_regulation_sku_matrix_schema_sku_required"
     },
@@ -2539,8 +2539,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L78",
       "_origin": "ast",
-      "community": 240,
-      "community_name": "properties",
+      "community": 289,
+      "community_name": "sku",
       "norm_label": "skuid",
       "id": "ref_skuid"
     },
@@ -2550,8 +2550,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L78",
       "_origin": "ast",
-      "community": 240,
-      "community_name": "properties",
+      "community": 289,
+      "community_name": "sku",
       "norm_label": "productfamily",
       "id": "ref_productfamily"
     },
@@ -2561,8 +2561,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L78",
       "_origin": "ast",
-      "community": 240,
-      "community_name": "properties",
+      "community": 289,
+      "community_name": "sku",
       "norm_label": "targetmarket",
       "id": "ref_targetmarket"
     },
@@ -2573,7 +2573,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "community": 289,
-      "community_name": "properties",
+      "community_name": "sku",
       "norm_label": "properties",
       "id": "app_contracts_regulation_sku_matrix_schema_sku_properties"
     },
@@ -2584,7 +2584,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "community": 289,
-      "community_name": "properties",
+      "community_name": "sku",
       "norm_label": "skuid",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_skuid"
     },
@@ -2595,7 +2595,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "community": 289,
-      "community_name": "properties",
+      "community_name": "sku",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_skuid_type"
     },
@@ -2606,7 +2606,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "community": 289,
-      "community_name": "properties",
+      "community_name": "sku",
       "norm_label": "minlength",
       "id": "app_contracts_regulation_sku_matrix_schema_skuid_minlength"
     },
@@ -2617,7 +2617,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "community": 289,
-      "community_name": "properties",
+      "community_name": "sku",
       "norm_label": "productfamily",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_productfamily"
     },
@@ -2628,7 +2628,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "community": 289,
-      "community_name": "properties",
+      "community_name": "sku",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_productfamily_type"
     },
@@ -2639,7 +2639,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "community": 289,
-      "community_name": "properties",
+      "community_name": "sku",
       "norm_label": "minlength",
       "id": "app_contracts_regulation_sku_matrix_schema_productfamily_minlength"
     },
@@ -2650,7 +2650,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "community": 289,
-      "community_name": "properties",
+      "community_name": "sku",
       "norm_label": "targetmarket",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_targetmarket"
     },
@@ -2661,7 +2661,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "community": 289,
-      "community_name": "properties",
+      "community_name": "sku",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_targetmarket_type"
     },
@@ -2672,7 +2672,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "community": 289,
-      "community_name": "properties",
+      "community_name": "sku",
       "norm_label": "minlength",
       "id": "app_contracts_regulation_sku_matrix_schema_targetmarket_minlength"
     },
@@ -2682,8 +2682,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L85",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "required",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "decision",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_decision"
     },
@@ -2693,8 +2693,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L86",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "required",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_decision_type"
     },
@@ -2704,8 +2704,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L87",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "required",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "additionalproperties",
       "id": "app_contracts_regulation_sku_matrix_schema_decision_additionalproperties"
     },
@@ -2715,8 +2715,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "required",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "required",
       "id": "app_contracts_regulation_sku_matrix_schema_decision_required"
     },
@@ -2726,8 +2726,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "required",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "applicability",
       "id": "ref_applicability"
     },
@@ -2737,8 +2737,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "required",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "status",
       "id": "ref_status"
     },
@@ -2748,8 +2748,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "required",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "scopebasis",
       "id": "ref_scopebasis"
     },
@@ -2759,8 +2759,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "required",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "rationale",
       "id": "ref_rationale"
     },
@@ -2770,8 +2770,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "required",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "reviewerid",
       "id": "app_contracts_regulation_sku_matrix_schema_json_ref_reviewerid"
     },
@@ -2781,8 +2781,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "required",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "reviewedat",
       "id": "ref_reviewedat"
     },
@@ -2792,8 +2792,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 252,
-      "community_name": "required",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "reason",
       "id": "ref_reason"
     },
@@ -2891,8 +2891,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L102",
       "_origin": "ast",
-      "community": 318,
-      "community_name": "enum",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "enum",
       "id": "app_contracts_regulation_sku_matrix_schema_status_enum"
     },
@@ -2902,8 +2902,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L102",
       "_origin": "ast",
-      "community": 318,
-      "community_name": "enum",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "draft",
       "id": "ref_draft"
     },
@@ -2913,8 +2913,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L102",
       "_origin": "ast",
-      "community": 318,
-      "community_name": "enum",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "legal-review-required",
       "id": "ref_legal_review_required"
     },
@@ -2924,8 +2924,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L102",
       "_origin": "ast",
-      "community": 318,
-      "community_name": "enum",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "approved",
       "id": "app_contracts_regulation_sku_matrix_schema_json_ref_approved"
     },
@@ -2935,8 +2935,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L102",
       "_origin": "ast",
-      "community": 318,
-      "community_name": "enum",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "rejected",
       "id": "app_contracts_regulation_sku_matrix_schema_json_ref_rejected"
     },
@@ -2946,8 +2946,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L102",
       "_origin": "ast",
-      "community": 318,
-      "community_name": "enum",
+      "community": 248,
+      "community_name": "properties",
       "norm_label": "withdrawn",
       "id": "app_contracts_regulation_sku_matrix_schema_json_ref_withdrawn"
     },
@@ -3090,7 +3090,7 @@
       "source_location": "L111",
       "_origin": "ast",
       "community": 80,
-      "community_name": "evidence",
+      "community_name": "properties",
       "norm_label": "evidence",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_evidence"
     },
@@ -3101,7 +3101,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "community": 80,
-      "community_name": "evidence",
+      "community_name": "properties",
       "norm_label": "type",
       "id": "app_contracts_regulation_sku_matrix_schema_evidence_type"
     },
@@ -3112,7 +3112,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "community": 80,
-      "community_name": "evidence",
+      "community_name": "properties",
       "norm_label": "additionalproperties",
       "id": "app_contracts_regulation_sku_matrix_schema_evidence_additionalproperties"
     },
@@ -3123,7 +3123,7 @@
       "source_location": "L114",
       "_origin": "ast",
       "community": 80,
-      "community_name": "evidence",
+      "community_name": "properties",
       "norm_label": "required",
       "id": "app_contracts_regulation_sku_matrix_schema_evidence_required"
     },
@@ -3134,7 +3134,7 @@
       "source_location": "L114",
       "_origin": "ast",
       "community": 80,
-      "community_name": "evidence",
+      "community_name": "properties",
       "norm_label": "snapshotid",
       "id": "app_contracts_regulation_sku_matrix_schema_json_ref_snapshotid"
     },
@@ -3145,7 +3145,7 @@
       "source_location": "L114",
       "_origin": "ast",
       "community": 80,
-      "community_name": "evidence",
+      "community_name": "properties",
       "norm_label": "reviewdecisionid",
       "id": "ref_reviewdecisionid"
     },
@@ -3156,7 +3156,7 @@
       "source_location": "L114",
       "_origin": "ast",
       "community": 80,
-      "community_name": "evidence",
+      "community_name": "properties",
       "norm_label": "sourceevidencepath",
       "id": "ref_sourceevidencepath"
     },
@@ -3166,8 +3166,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L115",
       "_origin": "ast",
-      "community": 80,
-      "community_name": "evidence",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "properties",
       "id": "app_contracts_regulation_sku_matrix_schema_evidence_properties"
     },
@@ -3177,8 +3177,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L116",
       "_origin": "ast",
-      "community": 80,
-      "community_name": "evidence",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "snapshotid",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_snapshotid"
     },
@@ -3188,8 +3188,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L116",
       "_origin": "ast",
-      "community": 80,
-      "community_name": "evidence",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "$ref",
       "id": "app_contracts_regulation_sku_matrix_schema_snapshotid_ref"
     },
@@ -3199,8 +3199,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L117",
       "_origin": "ast",
-      "community": 80,
-      "community_name": "evidence",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "reviewdecisionid",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_reviewdecisionid"
     },
@@ -3210,8 +3210,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L117",
       "_origin": "ast",
-      "community": 80,
-      "community_name": "evidence",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "$ref",
       "id": "app_contracts_regulation_sku_matrix_schema_reviewdecisionid_ref"
     },
@@ -3221,8 +3221,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L118",
       "_origin": "ast",
-      "community": 80,
-      "community_name": "evidence",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "sourceevidencepath",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_sourceevidencepath"
     },
@@ -3232,8 +3232,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L118",
       "_origin": "ast",
-      "community": 80,
-      "community_name": "evidence",
+      "community": 199,
+      "community_name": "properties",
       "norm_label": "$ref",
       "id": "app_contracts_regulation_sku_matrix_schema_sourceevidencepath_ref"
     },
@@ -4641,7 +4641,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "community": 54,
-      "community_name": "required",
+      "community_name": "properties",
       "norm_label": "evidencehandoff",
       "id": "app_contracts_regulation_source_legal_intake_schema_properties_evidencehandoff"
     },
@@ -4652,7 +4652,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "community": 54,
-      "community_name": "required",
+      "community_name": "properties",
       "norm_label": "type",
       "id": "app_contracts_regulation_source_legal_intake_schema_evidencehandoff_type"
     },
@@ -4663,7 +4663,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "community": 54,
-      "community_name": "required",
+      "community_name": "properties",
       "norm_label": "additionalproperties",
       "id": "app_contracts_regulation_source_legal_intake_schema_evidencehandoff_additionalproperties"
     },
@@ -4674,7 +4674,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "community": 54,
-      "community_name": "required",
+      "community_name": "properties",
       "norm_label": "required",
       "id": "app_contracts_regulation_source_legal_intake_schema_evidencehandoff_required"
     },
@@ -4685,7 +4685,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "community": 54,
-      "community_name": "required",
+      "community_name": "properties",
       "norm_label": "handoffownerid",
       "id": "ref_handoffownerid"
     },
@@ -4696,7 +4696,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "community": 54,
-      "community_name": "required",
+      "community_name": "properties",
       "norm_label": "snapshotstoreref",
       "id": "ref_snapshotstoreref"
     },
@@ -4707,7 +4707,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "community": 54,
-      "community_name": "required",
+      "community_name": "properties",
       "norm_label": "revieweventstoreref",
       "id": "ref_revieweventstoreref"
     },
@@ -4718,7 +4718,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "community": 54,
-      "community_name": "required",
+      "community_name": "properties",
       "norm_label": "hashalgorithm",
       "id": "ref_hashalgorithm"
     },
@@ -4729,7 +4729,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "community": 54,
-      "community_name": "required",
+      "community_name": "properties",
       "norm_label": "retentiondays",
       "id": "ref_retentiondays"
     },
@@ -4740,7 +4740,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "community": 54,
-      "community_name": "required",
+      "community_name": "properties",
       "norm_label": "requiredartifacts",
       "id": "ref_requiredartifacts"
     },
@@ -4750,8 +4750,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L96",
       "_origin": "ast",
-      "community": 204,
-      "community_name": "const",
+      "community": 54,
+      "community_name": "properties",
       "norm_label": "properties",
       "id": "app_contracts_regulation_source_legal_intake_schema_evidencehandoff_properties"
     },
@@ -4761,8 +4761,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L97",
       "_origin": "ast",
-      "community": 204,
-      "community_name": "const",
+      "community": 54,
+      "community_name": "properties",
       "norm_label": "handoffownerid",
       "id": "app_contracts_regulation_source_legal_intake_schema_properties_handoffownerid"
     },
@@ -4772,8 +4772,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L97",
       "_origin": "ast",
-      "community": 204,
-      "community_name": "const",
+      "community": 54,
+      "community_name": "properties",
       "norm_label": "$ref",
       "id": "app_contracts_regulation_source_legal_intake_schema_handoffownerid_ref"
     },
@@ -4783,8 +4783,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L98",
       "_origin": "ast",
-      "community": 204,
-      "community_name": "const",
+      "community": 54,
+      "community_name": "properties",
       "norm_label": "snapshotstoreref",
       "id": "app_contracts_regulation_source_legal_intake_schema_properties_snapshotstoreref"
     },
@@ -4794,8 +4794,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L98",
       "_origin": "ast",
-      "community": 204,
-      "community_name": "const",
+      "community": 54,
+      "community_name": "properties",
       "norm_label": "$ref",
       "id": "app_contracts_regulation_source_legal_intake_schema_snapshotstoreref_ref"
     },
@@ -4805,8 +4805,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 204,
-      "community_name": "const",
+      "community": 54,
+      "community_name": "properties",
       "norm_label": "revieweventstoreref",
       "id": "app_contracts_regulation_source_legal_intake_schema_properties_revieweventstoreref"
     },
@@ -4816,8 +4816,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 204,
-      "community_name": "const",
+      "community": 54,
+      "community_name": "properties",
       "norm_label": "$ref",
       "id": "app_contracts_regulation_source_legal_intake_schema_revieweventstoreref_ref"
     },
@@ -4827,8 +4827,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L100",
       "_origin": "ast",
-      "community": 204,
-      "community_name": "const",
+      "community": 54,
+      "community_name": "properties",
       "norm_label": "hashalgorithm",
       "id": "app_contracts_regulation_source_legal_intake_schema_properties_hashalgorithm"
     },
@@ -4838,8 +4838,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L100",
       "_origin": "ast",
-      "community": 204,
-      "community_name": "const",
+      "community": 54,
+      "community_name": "properties",
       "norm_label": "const",
       "id": "app_contracts_regulation_source_legal_intake_schema_hashalgorithm_const"
     },
@@ -4882,8 +4882,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L102",
       "_origin": "ast",
-      "community": 204,
-      "community_name": "const",
+      "community": 54,
+      "community_name": "properties",
       "norm_label": "requiredartifacts",
       "id": "app_contracts_regulation_source_legal_intake_schema_properties_requiredartifacts"
     },
@@ -5113,8 +5113,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L121",
       "_origin": "ast",
-      "community": 208,
-      "community_name": "properties",
+      "community": 293,
+      "community_name": "null",
       "norm_label": "propagationslahours",
       "id": "app_contracts_regulation_source_legal_intake_schema_properties_propagationslahours"
     },
@@ -5135,8 +5135,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L121",
       "_origin": "ast",
-      "community": 208,
-      "community_name": "properties",
+      "community": 293,
+      "community_name": "null",
       "norm_label": "minimum",
       "id": "app_contracts_regulation_source_legal_intake_schema_propagationslahours_minimum"
     },
@@ -5146,8 +5146,8 @@
       "source_file": "app/contracts/regulation-source-legal-intake.schema.json",
       "source_location": "L121",
       "_origin": "ast",
-      "community": 208,
-      "community_name": "properties",
+      "community": 293,
+      "community_name": "null",
       "norm_label": "maximum",
       "id": "app_contracts_regulation_source_legal_intake_schema_propagationslahours_maximum"
     },
@@ -7511,7 +7511,7 @@
       "source_file": "app/package.json",
       "source_location": "L132",
       "_origin": "ast",
-      "community": 199,
+      "community": 275,
       "community_name": "class-variance-authority",
       "norm_label": "class-variance-authority",
       "id": "app_package_dependencies_class_variance_authority"
@@ -7522,7 +7522,7 @@
       "source_file": "app/package.json",
       "source_location": "L132",
       "_origin": "ast",
-      "community": 199,
+      "community": 275,
       "community_name": "class-variance-authority",
       "norm_label": "class-variance-authority",
       "id": "class_variance_authority"
@@ -12802,8 +12802,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-intake-batch12.mjs",
       "source_location": "L167",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 72,
+      "community_name": "project-analysis.mjs",
       "norm_label": "relativepath()",
       "id": "app_scripts_data_build_erp_owner_submission_intake_batch12_relativepath"
     },
@@ -12945,8 +12945,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "build-erp-owner-submission-pack-batch13.mjs",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13"
     },
@@ -12956,8 +12956,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "__dirname",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_dirname"
     },
@@ -12967,8 +12967,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "approot",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_approot"
     },
@@ -12978,8 +12978,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "reporoot",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_reporoot"
     },
@@ -12989,8 +12989,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "batch10_dir",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_batch10_dir"
     },
@@ -13000,8 +13000,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "batch12_dir",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_batch12_dir"
     },
@@ -13011,8 +13011,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "output_dir",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_output_dir"
     },
@@ -13022,8 +13022,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "template_dir",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_template_dir"
     },
@@ -13033,8 +13033,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "editable_fields",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_editable_fields"
     },
@@ -13044,8 +13044,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "blank_fields",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_blank_fields"
     },
@@ -13055,8 +13055,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "inputs",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_inputs"
     },
@@ -13066,8 +13066,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "parseargs()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_parseargs"
     },
@@ -13077,8 +13077,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L57",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "parsecsv()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_parsecsv"
     },
@@ -13088,8 +13088,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L103",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "readcsvrows()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_readcsvrows"
     },
@@ -13099,8 +13099,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L108",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "readcsvobjects()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_readcsvobjects"
     },
@@ -13110,8 +13110,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L117",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "csvescape()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_csvescape"
     },
@@ -13121,8 +13121,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L123",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "tocsv()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_tocsv"
     },
@@ -13132,8 +13132,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L127",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "filehash()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_filehash"
     },
@@ -13143,8 +13143,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L131",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "templatefilename()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_templatefilename"
     },
@@ -13154,8 +13154,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L135",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "withbatch12command()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_withbatch12command"
     },
@@ -13165,8 +13165,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L147",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "buildtemplatefiles()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_buildtemplatefiles"
     },
@@ -13176,8 +13176,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L179",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "groupedownerrole()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_groupedownerrole"
     },
@@ -13187,8 +13187,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L183",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "buildpacketindexrows()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_buildpacketindexrows"
     },
@@ -13198,8 +13198,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L201",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "buildtemplatemanifestrows()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_buildtemplatemanifestrows"
     },
@@ -13209,8 +13209,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L219",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "indexrequiredevidence()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_indexrequiredevidence"
     },
@@ -13220,8 +13220,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L223",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "buildchecklistrows()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_buildchecklistrows"
     },
@@ -13231,8 +13231,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L249",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "buildreleasematrixrows()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_buildreleasematrixrows"
     },
@@ -13242,8 +13242,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L270",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "buildhandoffguiderows()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_buildhandoffguiderows"
     },
@@ -13253,8 +13253,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L321",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "outputspecs",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_outputspecs"
     },
@@ -13264,8 +13264,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L402",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "buildartifacts()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_buildartifacts"
     },
@@ -13275,8 +13275,8 @@
       "source_file": "app/scripts/data/build-erp-owner-submission-pack-batch13.mjs",
       "source_location": "L526",
       "_origin": "ast",
-      "community": 15,
-      "community_name": "build-erp-owner-submission-intake-batch12.mjs",
+      "community": 71,
+      "community_name": "build-erp-owner-submission-pack-batch13.mjs",
       "norm_label": "main()",
       "id": "app_scripts_data_build_erp_owner_submission_pack_batch13_main"
     },
@@ -16883,8 +16883,8 @@
       "source_file": "app/scripts/data/collect-weekly-sources.mjs",
       "source_location": "L502",
       "_origin": "ast",
-      "community": 7,
-      "community_name": "build-semi-monthly-recovery-candidate.mjs",
+      "community": 34,
+      "community_name": "collect-weekly-sources.mjs",
       "norm_label": "collectsemimonthlysources()",
       "id": "app_scripts_data_collect_weekly_sources_collectsemimonthlysources"
     },
@@ -16905,7 +16905,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "amazon-commerce-dry-run.mjs",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run"
@@ -16916,7 +16916,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "requiredmappingfields",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_requiredmappingfields"
@@ -16927,7 +16927,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "allowedmappingstatuses",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_allowedmappingstatuses"
@@ -16938,7 +16938,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L47",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "requiredcredentialkeys",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_requiredcredentialkeys"
@@ -16949,7 +16949,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L54",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "requiredmappingscopes",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_requiredmappingscopes"
@@ -16960,7 +16960,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "requiredsourceids",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_requiredsourceids"
@@ -16971,7 +16971,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L66",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "snapshotcontracts",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_snapshotcontracts"
@@ -16982,7 +16982,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L85",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "parseargs()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_parseargs"
@@ -16993,7 +16993,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L125",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "saferetention()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_saferetention"
@@ -17004,7 +17004,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L129",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "readmappingtemplate()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_readmappingtemplate"
@@ -17015,7 +17015,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L133",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "readreadinesstemplate()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_readreadinesstemplate"
@@ -17026,7 +17026,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L137",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "writemappingtemplate()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_writemappingtemplate"
@@ -17037,7 +17037,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L147",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "readmappings()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_readmappings"
@@ -17049,7 +17049,7 @@
       "source_location": "L157",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readreadinessrecord()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_readreadinessrecord"
     },
@@ -17059,7 +17059,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L162",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "validatemapping()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_validatemapping"
@@ -17070,7 +17070,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L184",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "credentialpreflight()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_credentialpreflight"
@@ -17081,7 +17081,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L191",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "mappingpreflight()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_mappingpreflight"
@@ -17092,7 +17092,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L248",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "buildmappingcoverage()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_buildmappingcoverage"
@@ -17103,7 +17103,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L273",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "markdowntable()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_markdowntable"
@@ -17114,7 +17114,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L283",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "buildmappingcoveragereport()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_buildmappingcoveragereport"
@@ -17125,7 +17125,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L321",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "archivemappingcoveragereport()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_archivemappingcoveragereport"
@@ -17137,7 +17137,7 @@
       "source_location": "L396",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "buildamazoncommercereadinessgate()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_buildamazoncommercereadinessgate"
     },
@@ -17147,7 +17147,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L550",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "buildamazoncommercedryrun()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_buildamazoncommercedryrun"
@@ -17158,7 +17158,7 @@
       "source_file": "app/scripts/data/connectors/amazon-commerce-dry-run.mjs",
       "source_location": "L640",
       "_origin": "ast",
-      "community": 8,
+      "community": 214,
       "community_name": "amazon-commerce-dry-run.mjs",
       "norm_label": "main()",
       "id": "app_scripts_data_connectors_amazon_commerce_dry_run_main"
@@ -17489,7 +17489,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "customs-public-data-adapter.mjs",
       "id": "app_scripts_data_connectors_customs_public_data_adapter"
     },
@@ -17500,7 +17500,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "defaultwritepaths",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_defaultwritepaths"
     },
@@ -17511,7 +17511,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "requiredseeds",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_requiredseeds"
     },
@@ -17522,7 +17522,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "parseargs()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_parseargs"
     },
@@ -17533,7 +17533,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "readjsonifexists()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_readjsonifexists"
     },
@@ -17544,7 +17544,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "publicevidencerecords()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_publicevidencerecords"
     },
@@ -17555,7 +17555,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "loadpublicevidence()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_loadpublicevidence"
     },
@@ -17566,7 +17566,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "hasmatchedterms()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_hasmatchedterms"
     },
@@ -17577,7 +17577,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "isnonemptystring()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_isnonemptystring"
     },
@@ -17588,7 +17588,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "isallowedevidenceurl()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_isallowedevidenceurl"
     },
@@ -17599,7 +17599,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "missingprooffields()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_missingprooffields"
     },
@@ -17610,7 +17610,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "isnonnegativeinteger()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_isnonnegativeinteger"
     },
@@ -17621,7 +17621,7 @@
       "source_location": "L111",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "sanitizeevidencerecord()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_sanitizeevidencerecord"
     },
@@ -17632,7 +17632,7 @@
       "source_location": "L145",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "buildcheck()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_buildcheck"
     },
@@ -17643,7 +17643,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "buildcustomspublicdataadapter()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_buildcustomspublicdataadapter"
     },
@@ -17654,7 +17654,7 @@
       "source_location": "L309",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "writejson()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_writejson"
     },
@@ -17665,7 +17665,7 @@
       "source_location": "L315",
       "_origin": "ast",
       "community": 312,
-      "community_name": "refresh-semi-monthly-data.mjs",
+      "community_name": "customs-public-data-adapter.mjs",
       "norm_label": "main()",
       "id": "app_scripts_data_connectors_customs_public_data_adapter_main"
     },
@@ -17676,7 +17676,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "internal-crm-dry-run.mjs",
       "id": "app_scripts_data_connectors_internal_crm_dry_run"
     },
@@ -17687,7 +17687,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "requiredsegments",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_requiredsegments"
     },
@@ -17698,7 +17698,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "snapshotcontracts",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_snapshotcontracts"
     },
@@ -17709,7 +17709,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "parseargs()",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_parseargs"
     },
@@ -17720,7 +17720,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readtemplate()",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_readtemplate"
     },
@@ -17731,7 +17731,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readreadinessrecord()",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_readreadinessrecord"
     },
@@ -17742,7 +17742,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readsnapshotmanifest()",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_readsnapshotmanifest"
     },
@@ -17753,7 +17753,7 @@
       "source_location": "L106",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "buildreadinessview()",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_buildreadinessview"
     },
@@ -17764,7 +17764,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "segmentcountscoverrequiredsegments()",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_segmentcountscoverrequiredsegments"
     },
@@ -17775,7 +17775,7 @@
       "source_location": "L140",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "exportfieldsaresafe()",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_exportfieldsaresafe"
     },
@@ -17786,7 +17786,7 @@
       "source_location": "L144",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "buildinternalcrmreadinessgate()",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_buildinternalcrmreadinessgate"
     },
@@ -17797,7 +17797,7 @@
       "source_location": "L345",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "buildinternalcrmdryrun()",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_buildinternalcrmdryrun"
     },
@@ -17808,7 +17808,7 @@
       "source_location": "L416",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "main()",
       "id": "app_scripts_data_connectors_internal_crm_dry_run_main"
     },
@@ -17819,7 +17819,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "internal-erp-dry-run.mjs",
       "id": "app_scripts_data_connectors_internal_erp_dry_run"
     },
@@ -17830,7 +17830,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "snapshotcontracts",
       "id": "app_scripts_data_connectors_internal_erp_dry_run_snapshotcontracts"
     },
@@ -17841,7 +17841,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "parseargs()",
       "id": "app_scripts_data_connectors_internal_erp_dry_run_parseargs"
     },
@@ -17852,7 +17852,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readtemplate()",
       "id": "app_scripts_data_connectors_internal_erp_dry_run_readtemplate"
     },
@@ -17863,7 +17863,7 @@
       "source_location": "L114",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readreadinessrecord()",
       "id": "app_scripts_data_connectors_internal_erp_dry_run_readreadinessrecord"
     },
@@ -17874,7 +17874,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readsnapshotmanifest()",
       "id": "app_scripts_data_connectors_internal_erp_dry_run_readsnapshotmanifest"
     },
@@ -17885,7 +17885,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "buildreadinessview()",
       "id": "app_scripts_data_connectors_internal_erp_dry_run_buildreadinessview"
     },
@@ -17896,7 +17896,7 @@
       "source_location": "L157",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "exportfieldsaresafe()",
       "id": "app_scripts_data_connectors_internal_erp_dry_run_exportfieldsaresafe"
     },
@@ -17907,7 +17907,7 @@
       "source_location": "L161",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "buildinternalerpreadinessgate()",
       "id": "app_scripts_data_connectors_internal_erp_dry_run_buildinternalerpreadinessgate"
     },
@@ -17918,7 +17918,7 @@
       "source_location": "L373",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "buildinternalerpdryrun()",
       "id": "app_scripts_data_connectors_internal_erp_dry_run_buildinternalerpdryrun"
     },
@@ -17929,7 +17929,7 @@
       "source_location": "L445",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "main()",
       "id": "app_scripts_data_connectors_internal_erp_dry_run_main"
     },
@@ -18391,7 +18391,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "voc-nlp-dry-run.mjs",
       "id": "app_scripts_data_connectors_voc_nlp_dry_run"
     },
@@ -18402,7 +18402,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "snapshotcontracts",
       "id": "app_scripts_data_connectors_voc_nlp_dry_run_snapshotcontracts"
     },
@@ -18413,7 +18413,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "parseargs()",
       "id": "app_scripts_data_connectors_voc_nlp_dry_run_parseargs"
     },
@@ -18424,7 +18424,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readtemplate()",
       "id": "app_scripts_data_connectors_voc_nlp_dry_run_readtemplate"
     },
@@ -18435,7 +18435,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readreadinessrecord()",
       "id": "app_scripts_data_connectors_voc_nlp_dry_run_readreadinessrecord"
     },
@@ -18446,7 +18446,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readsamplemanifest()",
       "id": "app_scripts_data_connectors_voc_nlp_dry_run_readsamplemanifest"
     },
@@ -18457,7 +18457,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "buildreadinessview()",
       "id": "app_scripts_data_connectors_voc_nlp_dry_run_buildreadinessview"
     },
@@ -18468,7 +18468,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "sourcecountscoverrequiredsources()",
       "id": "app_scripts_data_connectors_voc_nlp_dry_run_sourcecountscoverrequiredsources"
     },
@@ -18479,7 +18479,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "buildvocnlpreadinessgate()",
       "id": "app_scripts_data_connectors_voc_nlp_dry_run_buildvocnlpreadinessgate"
     },
@@ -18490,7 +18490,7 @@
       "source_location": "L313",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "buildvocnlpdryrun()",
       "id": "app_scripts_data_connectors_voc_nlp_dry_run_buildvocnlpdryrun"
     },
@@ -18501,7 +18501,7 @@
       "source_location": "L384",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "main()",
       "id": "app_scripts_data_connectors_voc_nlp_dry_run_main"
     },
@@ -18627,7 +18627,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "connector-readiness.mjs",
       "id": "app_scripts_data_lib_connector_readiness"
     },
@@ -18638,7 +18638,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readjsonobject()",
       "id": "app_scripts_data_lib_connector_readiness_readjsonobject"
     },
@@ -18649,7 +18649,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "unwrapjsonobject()",
       "id": "app_scripts_data_lib_connector_readiness_unwrapjsonobject"
     },
@@ -18660,7 +18660,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "isisodate()",
       "id": "app_scripts_data_lib_connector_readiness_isisodate"
     },
@@ -18671,7 +18671,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "numbervalue()",
       "id": "app_scripts_data_lib_connector_readiness_numbervalue"
     },
@@ -18682,7 +18682,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "stringarray()",
       "id": "app_scripts_data_lib_connector_readiness_stringarray"
     },
@@ -18693,7 +18693,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "findforbiddenkeys()",
       "id": "app_scripts_data_lib_connector_readiness_findforbiddenkeys"
     },
@@ -18704,7 +18704,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "buildcheck()",
       "id": "app_scripts_data_lib_connector_readiness_buildcheck"
     },
@@ -18715,7 +18715,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "readinessvalue()",
       "id": "app_scripts_data_lib_connector_readiness_readinessvalue"
     },
@@ -18726,7 +18726,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "configuredpathsource()",
       "id": "app_scripts_data_lib_connector_readiness_configuredpathsource"
     },
@@ -18803,7 +18803,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "community": 8,
-      "community_name": "amazon-commerce-dry-run.mjs",
+      "community_name": "internal-crm-dry-run.mjs",
       "norm_label": "isoweek()",
       "id": "app_scripts_data_lib_project_analysis_isoweek"
     },
@@ -18901,8 +18901,8 @@
       "source_file": "app/scripts/data/lib/project-analysis.mjs",
       "source_location": "L119",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "project-analysis.mjs",
+      "community": 45,
+      "community_name": "source-tasks.mjs",
       "norm_label": "extractsourceregistry()",
       "id": "app_scripts_data_lib_project_analysis_extractsourceregistry"
     },
@@ -18945,8 +18945,8 @@
       "source_file": "app/scripts/data/lib/project-analysis.mjs",
       "source_location": "L177",
       "_origin": "ast",
-      "community": 45,
-      "community_name": "source-tasks.mjs",
+      "community": 34,
+      "community_name": "collect-weekly-sources.mjs",
       "norm_label": "classifycollectionmethod()",
       "id": "app_scripts_data_lib_project_analysis_classifycollectionmethod"
     },
@@ -18956,8 +18956,8 @@
       "source_file": "app/scripts/data/lib/project-analysis.mjs",
       "source_location": "L205",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "project-analysis.mjs",
+      "community": 34,
+      "community_name": "collect-weekly-sources.mjs",
       "norm_label": "analyzeconsistency()",
       "id": "app_scripts_data_lib_project_analysis_analyzeconsistency"
     },
@@ -19924,8 +19924,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "prioritize-source-gaps.mjs",
       "id": "app_scripts_data_prioritize_source_gaps"
     },
@@ -19935,8 +19935,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "source_gap_header",
       "id": "app_scripts_data_prioritize_source_gaps_source_gap_header"
     },
@@ -19946,8 +19946,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "output_fields",
       "id": "app_scripts_data_prioritize_source_gaps_output_fields"
     },
@@ -19957,8 +19957,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "batch_fields",
       "id": "app_scripts_data_prioritize_source_gaps_batch_fields"
     },
@@ -19968,8 +19968,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L67",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "core_business_pages",
       "id": "app_scripts_data_prioritize_source_gaps_core_business_pages"
     },
@@ -19979,8 +19979,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L91",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "parseargs()",
       "id": "app_scripts_data_prioritize_source_gaps_parseargs"
     },
@@ -19990,8 +19990,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L107",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "dateslug()",
       "id": "app_scripts_data_prioritize_source_gaps_dateslug"
     },
@@ -20001,8 +20001,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L118",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "csvescape()",
       "id": "app_scripts_data_prioritize_source_gaps_csvescape"
     },
@@ -20012,8 +20012,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L124",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "writecsv()",
       "id": "app_scripts_data_prioritize_source_gaps_writecsv"
     },
@@ -20023,8 +20023,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L129",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "parsecsv()",
       "id": "app_scripts_data_prioritize_source_gaps_parsecsv"
     },
@@ -20034,8 +20034,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L182",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "countby()",
       "id": "app_scripts_data_prioritize_source_gaps_countby"
     },
@@ -20045,8 +20045,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L190",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "unique()",
       "id": "app_scripts_data_prioritize_source_gaps_unique"
     },
@@ -20056,8 +20056,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L194",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "findlatestsourcegapmatrix()",
       "id": "app_scripts_data_prioritize_source_gaps_findlatestsourcegapmatrix"
     },
@@ -20067,8 +20067,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L208",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "normalizebool()",
       "id": "app_scripts_data_prioritize_source_gaps_normalizebool"
     },
@@ -20078,8 +20078,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L212",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "issourcegap()",
       "id": "app_scripts_data_prioritize_source_gaps_issourcegap"
     },
@@ -20089,8 +20089,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L216",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "ownerlane()",
       "id": "app_scripts_data_prioritize_source_gaps_ownerlane"
     },
@@ -20100,8 +20100,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L234",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "allowedcurrentdisplaystate()",
       "id": "app_scripts_data_prioritize_source_gaps_allowedcurrentdisplaystate"
     },
@@ -20111,8 +20111,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L241",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "nextaction()",
       "id": "app_scripts_data_prioritize_source_gaps_nextaction"
     },
@@ -20122,8 +20122,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L257",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "smallestevidenceneeded()",
       "id": "app_scripts_data_prioritize_source_gaps_smallestevidenceneeded"
     },
@@ -20133,8 +20133,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L270",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "priorityfor()",
       "id": "app_scripts_data_prioritize_source_gaps_priorityfor"
     },
@@ -20144,8 +20144,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L319",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "prioritizerows()",
       "id": "app_scripts_data_prioritize_source_gaps_prioritizerows"
     },
@@ -20155,8 +20155,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L352",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "buildbatches()",
       "id": "app_scripts_data_prioritize_source_gaps_buildbatches"
     },
@@ -20166,8 +20166,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L381",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "acceptancegate()",
       "id": "app_scripts_data_prioritize_source_gaps_acceptancegate"
     },
@@ -20177,8 +20177,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L394",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "buildsummary()",
       "id": "app_scripts_data_prioritize_source_gaps_buildsummary"
     },
@@ -20188,8 +20188,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L418",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "buildreport()",
       "id": "app_scripts_data_prioritize_source_gaps_buildreport"
     },
@@ -20199,8 +20199,8 @@
       "source_file": "app/scripts/data/prioritize-source-gaps.mjs",
       "source_location": "L441",
       "_origin": "ast",
-      "community": 21,
-      "community_name": "build-public-source-manual-release-review.mjs",
+      "community": 205,
+      "community_name": "prioritize-source-gaps.mjs",
       "norm_label": "run()",
       "id": "app_scripts_data_prioritize_source_gaps_run"
     },
@@ -20408,7 +20408,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "refresh-semi-monthly-data.mjs",
       "id": "app_scripts_data_refresh_semi_monthly_data"
@@ -20419,7 +20419,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "args",
       "id": "app_scripts_data_refresh_semi_monthly_data_args"
@@ -20430,7 +20430,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "nonetwork",
       "id": "app_scripts_data_refresh_semi_monthly_data_nonetwork"
@@ -20441,7 +20441,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "timeoutindex",
       "id": "app_scripts_data_refresh_semi_monthly_data_timeoutindex"
@@ -20452,7 +20452,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "maxattemptsindex",
       "id": "app_scripts_data_refresh_semi_monthly_data_maxattemptsindex"
@@ -20463,7 +20463,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "retrydelayindex",
       "id": "app_scripts_data_refresh_semi_monthly_data_retrydelayindex"
@@ -20474,7 +20474,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "publicevidencetimeoutindex",
       "id": "app_scripts_data_refresh_semi_monthly_data_publicevidencetimeoutindex"
@@ -20485,7 +20485,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "publicevidencemaxsourcesindex",
       "id": "app_scripts_data_refresh_semi_monthly_data_publicevidencemaxsourcesindex"
@@ -20496,7 +20496,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "writejson()",
       "id": "app_scripts_data_refresh_semi_monthly_data_writejson"
@@ -20507,7 +20507,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "audit",
       "id": "app_scripts_data_refresh_semi_monthly_data_audit"
@@ -20518,7 +20518,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L56",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "customspublicadapter",
       "id": "app_scripts_data_refresh_semi_monthly_data_customspublicadapter"
@@ -20529,7 +20529,7 @@
       "source_file": "app/scripts/data/refresh-semi-monthly-data.mjs",
       "source_location": "L61",
       "_origin": "ast",
-      "community": 312,
+      "community": 276,
       "community_name": "refresh-semi-monthly-data.mjs",
       "norm_label": "publicmanifest",
       "id": "app_scripts_data_refresh_semi_monthly_data_publicmanifest"
@@ -20540,8 +20540,8 @@
       "source_file": "app/scripts/data/refresh-weekly-data.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "project-analysis.mjs",
+      "community": 327,
+      "community_name": "refresh-weekly-data.mjs",
       "norm_label": "refresh-weekly-data.mjs",
       "id": "app_scripts_data_refresh_weekly_data"
     },
@@ -20551,8 +20551,8 @@
       "source_file": "app/scripts/data/refresh-weekly-data.mjs",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "project-analysis.mjs",
+      "community": 327,
+      "community_name": "refresh-weekly-data.mjs",
       "norm_label": "args",
       "id": "app_scripts_data_refresh_weekly_data_args"
     },
@@ -20562,8 +20562,8 @@
       "source_file": "app/scripts/data/refresh-weekly-data.mjs",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "project-analysis.mjs",
+      "community": 327,
+      "community_name": "refresh-weekly-data.mjs",
       "norm_label": "nonetwork",
       "id": "app_scripts_data_refresh_weekly_data_nonetwork"
     },
@@ -20573,8 +20573,8 @@
       "source_file": "app/scripts/data/refresh-weekly-data.mjs",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "project-analysis.mjs",
+      "community": 327,
+      "community_name": "refresh-weekly-data.mjs",
       "norm_label": "timeoutindex",
       "id": "app_scripts_data_refresh_weekly_data_timeoutindex"
     },
@@ -20584,8 +20584,8 @@
       "source_file": "app/scripts/data/refresh-weekly-data.mjs",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "project-analysis.mjs",
+      "community": 327,
+      "community_name": "refresh-weekly-data.mjs",
       "norm_label": "maxattemptsindex",
       "id": "app_scripts_data_refresh_weekly_data_maxattemptsindex"
     },
@@ -20595,8 +20595,8 @@
       "source_file": "app/scripts/data/refresh-weekly-data.mjs",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "project-analysis.mjs",
+      "community": 327,
+      "community_name": "refresh-weekly-data.mjs",
       "norm_label": "retrydelayindex",
       "id": "app_scripts_data_refresh_weekly_data_retrydelayindex"
     },
@@ -20606,8 +20606,8 @@
       "source_file": "app/scripts/data/refresh-weekly-data.mjs",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "project-analysis.mjs",
+      "community": 327,
+      "community_name": "refresh-weekly-data.mjs",
       "norm_label": "writejson()",
       "id": "app_scripts_data_refresh_weekly_data_writejson"
     },
@@ -20617,8 +20617,8 @@
       "source_file": "app/scripts/data/refresh-weekly-data.mjs",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "project-analysis.mjs",
+      "community": 327,
+      "community_name": "refresh-weekly-data.mjs",
       "norm_label": "audit",
       "id": "app_scripts_data_refresh_weekly_data_audit"
     },
@@ -20628,8 +20628,8 @@
       "source_file": "app/scripts/data/refresh-weekly-data.mjs",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "project-analysis.mjs",
+      "community": 327,
+      "community_name": "refresh-weekly-data.mjs",
       "norm_label": "publicmanifest",
       "id": "app_scripts_data_refresh_weekly_data_publicmanifest"
     },
@@ -21558,8 +21558,8 @@
       "source_file": "app/scripts/data/validate-regulation-source-legal-intake.mjs",
       "source_location": "L272",
       "_origin": "ast",
-      "community": 167,
-      "community_name": "project-regulation-intake-to-sku-draft.mjs",
+      "community": 253,
+      "community_name": "validate-regulation-source-legal-intake.mjs",
       "norm_label": "buildregulationsourcelegalintakereport()",
       "id": "app_scripts_data_validate_regulation_source_legal_intake_buildregulationsourcelegalintakereport"
     },
@@ -22813,7 +22813,7 @@
       "source_file": "app/src/components/AiReportGovernancePanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "aireportgovernancepanel.tsx",
       "id": "app_src_components_aireportgovernancepanel"
@@ -22824,7 +22824,7 @@
       "source_file": "app/src/components/AiReportGovernancePanel.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "aireportgovernancepanelprops",
       "id": "app_src_components_aireportgovernancepanel_aireportgovernancepanelprops"
@@ -22835,7 +22835,7 @@
       "source_file": "app/src/components/AiReportGovernancePanel.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "metricbyfocus",
       "id": "app_src_components_aireportgovernancepanel_metricbyfocus"
@@ -22847,7 +22847,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "aireportgovernancepanel()",
       "id": "app_src_components_aireportgovernancepanel_aireportgovernancepanel"
     },
@@ -23121,7 +23121,7 @@
       "source_file": "app/src/components/EvidenceGatePage.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 55,
+      "community": 10,
       "community_name": "EvidenceGatePage.tsx",
       "norm_label": "evidencegatepage.tsx",
       "id": "app_src_components_evidencegatepage"
@@ -23132,7 +23132,7 @@
       "source_file": "app/src/components/EvidenceGatePage.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 55,
+      "community": 10,
       "community_name": "EvidenceGatePage.tsx",
       "norm_label": "evidencegatepageprops",
       "id": "app_src_components_evidencegatepage_evidencegatepageprops"
@@ -23143,7 +23143,7 @@
       "source_file": "app/src/components/EvidenceGatePage.tsx",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 55,
+      "community": 10,
       "community_name": "EvidenceGatePage.tsx",
       "norm_label": "evidencegatepage()",
       "id": "app_src_components_evidencegatepage_evidencegatepage"
@@ -24045,7 +24045,7 @@
       "source_file": "app/src/components/Sidebar.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 55,
+      "community": 10,
       "community_name": "EvidenceGatePage.tsx",
       "norm_label": "sidebaritem",
       "id": "app_src_components_sidebar_sidebaritem"
@@ -28302,7 +28302,7 @@
       "source_file": "app/src/data/ai-report-governance-data.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "ai-report-governance-data.ts",
       "id": "app_src_data_ai_report_governance_data"
@@ -28313,7 +28313,7 @@
       "source_file": "app/src/data/ai-report-governance-data.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "aireportbatch4artifact",
       "id": "app_src_data_ai_report_governance_data_aireportbatch4artifact"
@@ -28324,7 +28324,7 @@
       "source_file": "app/src/data/ai-report-governance-data.ts",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "aireportbatch4metrics",
       "id": "app_src_data_ai_report_governance_data_aireportbatch4metrics"
@@ -28335,7 +28335,7 @@
       "source_file": "app/src/data/ai-report-governance-data.ts",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "aidatasetreadinessrows",
       "id": "app_src_data_ai_report_governance_data_aidatasetreadinessrows"
@@ -28346,7 +28346,7 @@
       "source_file": "app/src/data/ai-report-governance-data.ts",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "aimodelrunreadinessrows",
       "id": "app_src_data_ai_report_governance_data_aimodelrunreadinessrows"
@@ -28357,7 +28357,7 @@
       "source_file": "app/src/data/ai-report-governance-data.ts",
       "source_location": "L56",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "reportgenerationqueuerows",
       "id": "app_src_data_ai_report_governance_data_reportgenerationqueuerows"
@@ -28368,7 +28368,7 @@
       "source_file": "app/src/data/ai-report-governance-data.ts",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "aierpcontextbridgerows",
       "id": "app_src_data_ai_report_governance_data_aierpcontextbridgerows"
@@ -28379,7 +28379,7 @@
       "source_file": "app/src/data/ai-report-governance-data.ts",
       "source_location": "L73",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "aireportbatch4displaypolicy",
       "id": "app_src_data_ai_report_governance_data_aireportbatch4displaypolicy"
@@ -28489,8 +28489,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "marketevidencesourceids",
       "id": "app_src_data_market_insight_data_marketevidencesourceids"
     },
@@ -28500,8 +28500,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L2",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "erpinternaltrendsourceids",
       "id": "app_src_data_market_insight_data_erpinternaltrendsourceids"
     },
@@ -28511,8 +28511,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "marketsizingfunnel",
       "id": "app_src_data_market_insight_data_marketsizingfunnel"
     },
@@ -28544,8 +28544,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L58",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "marketdenominatorboundary",
       "id": "app_src_data_market_insight_data_marketdenominatorboundary"
     },
@@ -28555,8 +28555,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L101",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "marketmonthlytrenddata",
       "id": "app_src_data_market_insight_data_marketmonthlytrenddata"
     },
@@ -28566,8 +28566,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L117",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "erpinternalmonthlytrenddata",
       "id": "app_src_data_market_insight_data_erpinternalmonthlytrenddata"
     },
@@ -28577,8 +28577,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L186",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "erpinternaltrendnotes",
       "id": "app_src_data_market_insight_data_erpinternaltrendnotes"
     },
@@ -29160,8 +29160,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L1349",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "marketregionalsharedata",
       "id": "app_src_data_market_insight_data_marketregionalsharedata"
     },
@@ -29171,8 +29171,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L1370",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "markettopstats",
       "id": "app_src_data_market_insight_data_markettopstats"
     },
@@ -29193,8 +29193,8 @@
       "source_file": "app/src/data/market-insight-data.ts",
       "source_location": "L1384",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "brandshareaccessitems",
       "id": "app_src_data_market_insight_data_brandshareaccessitems"
     },
@@ -30139,8 +30139,8 @@
       "source_file": "app/src/hooks/usePublicEvidence.ts",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 169,
-      "community_name": "public-evidence.ts",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "usepublicevidence()",
       "id": "app_src_hooks_usepublicevidence_usepublicevidence"
     },
@@ -30459,7 +30459,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "aiassistantpage.tsx",
       "id": "app_src_pages_aiassistantpage"
     },
@@ -30470,7 +30470,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "aiassistantpage()",
       "id": "app_src_pages_aiassistantpage_aiassistantpage"
     },
@@ -30547,7 +30547,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 157,
-      "community_name": "CompetitionPage.tsx",
+      "community_name": "usePublicEvidence",
       "norm_label": "competitionpage.tsx",
       "id": "app_src_pages_competitionpage"
     },
@@ -30558,7 +30558,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "community": 157,
-      "community_name": "CompetitionPage.tsx",
+      "community_name": "usePublicEvidence",
       "norm_label": "product",
       "id": "app_src_pages_competitionpage_product"
     },
@@ -30569,7 +30569,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "community": 157,
-      "community_name": "CompetitionPage.tsx",
+      "community_name": "usePublicEvidence",
       "norm_label": "allproducts",
       "id": "app_src_pages_competitionpage_allproducts"
     },
@@ -30580,7 +30580,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "community": 157,
-      "community_name": "CompetitionPage.tsx",
+      "community_name": "usePublicEvidence",
       "norm_label": "threatmap",
       "id": "app_src_pages_competitionpage_threatmap"
     },
@@ -30591,7 +30591,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "community": 157,
-      "community_name": "CompetitionPage.tsx",
+      "community_name": "usePublicEvidence",
       "norm_label": "hotbrands",
       "id": "app_src_pages_competitionpage_hotbrands"
     },
@@ -30602,7 +30602,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "community": 157,
-      "community_name": "CompetitionPage.tsx",
+      "community_name": "usePublicEvidence",
       "norm_label": "letters",
       "id": "app_src_pages_competitionpage_letters"
     },
@@ -30613,7 +30613,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "community": 157,
-      "community_name": "CompetitionPage.tsx",
+      "community_name": "usePublicEvidence",
       "norm_label": "sidebaritems",
       "id": "app_src_pages_competitionpage_sidebaritems"
     },
@@ -30624,7 +30624,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "community": 157,
-      "community_name": "CompetitionPage.tsx",
+      "community_name": "usePublicEvidence",
       "norm_label": "dropdown()",
       "id": "app_src_pages_competitionpage_dropdown"
     },
@@ -30635,7 +30635,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "community": 157,
-      "community_name": "CompetitionPage.tsx",
+      "community_name": "usePublicEvidence",
       "norm_label": "competitionpage()",
       "id": "app_src_pages_competitionpage_competitionpage"
     },
@@ -31030,8 +31030,8 @@
       "source_file": "app/src/pages/HomePage.tsx",
       "source_location": "L149",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 331,
+      "community_name": "usePeriodicManifest",
       "norm_label": "homepage()",
       "id": "app_src_pages_homepage_homepage"
     },
@@ -31140,8 +31140,8 @@
       "source_file": "app/src/pages/MarketPage.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "marketpage.tsx",
       "id": "app_src_pages_marketpage"
     },
@@ -31151,8 +31151,8 @@
       "source_file": "app/src/pages/MarketPage.tsx",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "categoryoverview",
       "id": "app_src_pages_marketpage_categoryoverview"
     },
@@ -31162,8 +31162,8 @@
       "source_file": "app/src/pages/MarketPage.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "categorypositioning",
       "id": "app_src_pages_marketpage_categorypositioning"
     },
@@ -31173,8 +31173,8 @@
       "source_file": "app/src/pages/MarketPage.tsx",
       "source_location": "L40",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "staticons",
       "id": "app_src_pages_marketpage_staticons"
     },
@@ -31184,8 +31184,8 @@
       "source_file": "app/src/pages/MarketPage.tsx",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 65,
-      "community_name": "HomePage.tsx",
+      "community": 252,
+      "community_name": "MarketPage.tsx",
       "norm_label": "sidebaritems",
       "id": "app_src_pages_marketpage_sidebaritems"
     },
@@ -31305,7 +31305,7 @@
       "source_file": "app/src/pages/ReportsPage.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "reportspage.tsx",
       "id": "app_src_pages_reportspage"
@@ -31316,7 +31316,7 @@
       "source_file": "app/src/pages/ReportsPage.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "reportcatalogitem",
       "id": "app_src_pages_reportspage_reportcatalogitem"
@@ -31327,7 +31327,7 @@
       "source_file": "app/src/pages/ReportsPage.tsx",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "reportcatalog",
       "id": "app_src_pages_reportspage_reportcatalog"
@@ -31338,7 +31338,7 @@
       "source_file": "app/src/pages/ReportsPage.tsx",
       "source_location": "L81",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "categories",
       "id": "app_src_pages_reportspage_categories"
@@ -31349,7 +31349,7 @@
       "source_file": "app/src/pages/ReportsPage.tsx",
       "source_location": "L83",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "categorymeta",
       "id": "app_src_pages_reportspage_categorymeta"
@@ -31360,7 +31360,7 @@
       "source_file": "app/src/pages/ReportsPage.tsx",
       "source_location": "L90",
       "_origin": "ast",
-      "community": 10,
+      "community": 240,
       "community_name": "AiReportGovernancePanel.tsx",
       "norm_label": "reportspage()",
       "id": "app_src_pages_reportspage_reportspage"
@@ -31658,7 +31658,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "commentdata.tsx",
       "id": "app_src_pages_ai_assistant_commentdata"
     },
@@ -31669,7 +31669,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "commentdata()",
       "id": "app_src_pages_ai_assistant_commentdata_commentdata"
     },
@@ -31679,8 +31679,8 @@
       "source_file": "app/src/pages/ai-assistant/DesignAssistant.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 46,
-      "community_name": "AiDesignGovernancePanel.tsx",
+      "community": 10,
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "designassistant.tsx",
       "id": "app_src_pages_ai_assistant_designassistant"
     },
@@ -31690,8 +31690,8 @@
       "source_file": "app/src/pages/ai-assistant/DesignAssistant.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 46,
-      "community_name": "AiDesignGovernancePanel.tsx",
+      "community": 10,
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "designassistant()",
       "id": "app_src_pages_ai_assistant_designassistant_designassistant"
     },
@@ -31702,7 +31702,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "knowledgebase.tsx",
       "id": "app_src_pages_ai_assistant_knowledgebase"
     },
@@ -31713,7 +31713,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "stats",
       "id": "app_src_pages_ai_assistant_knowledgebase_stats"
     },
@@ -31724,7 +31724,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "features",
       "id": "app_src_pages_ai_assistant_knowledgebase_features"
     },
@@ -31735,7 +31735,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "insights",
       "id": "app_src_pages_ai_assistant_knowledgebase_insights"
     },
@@ -31746,7 +31746,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "knowledgebase()",
       "id": "app_src_pages_ai_assistant_knowledgebase_knowledgebase"
     },
@@ -31757,7 +31757,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "reviewanalysis.tsx",
       "id": "app_src_pages_ai_assistant_reviewanalysis"
     },
@@ -31768,7 +31768,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "reviewanalysis()",
       "id": "app_src_pages_ai_assistant_reviewanalysis_reviewanalysis"
     },
@@ -31779,7 +31779,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "webreview.tsx",
       "id": "app_src_pages_ai_assistant_webreview"
     },
@@ -31790,7 +31790,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "stats",
       "id": "app_src_pages_ai_assistant_webreview_stats"
     },
@@ -31801,7 +31801,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "features",
       "id": "app_src_pages_ai_assistant_webreview_features"
     },
@@ -31812,7 +31812,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "insights",
       "id": "app_src_pages_ai_assistant_webreview_insights"
     },
@@ -31823,7 +31823,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "webreview()",
       "id": "app_src_pages_ai_assistant_webreview_webreview"
     },
@@ -31834,7 +31834,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "youtubereview.tsx",
       "id": "app_src_pages_ai_assistant_youtubereview"
     },
@@ -31845,7 +31845,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "stats",
       "id": "app_src_pages_ai_assistant_youtubereview_stats"
     },
@@ -31856,7 +31856,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "features",
       "id": "app_src_pages_ai_assistant_youtubereview_features"
     },
@@ -31867,7 +31867,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "insights",
       "id": "app_src_pages_ai_assistant_youtubereview_insights"
     },
@@ -31878,7 +31878,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "youtubereview()",
       "id": "app_src_pages_ai_assistant_youtubereview_youtubereview"
     },
@@ -31889,7 +31889,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "constants.ts",
       "id": "app_src_pages_ai_assistant_constants"
     },
@@ -31900,7 +31900,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "community": 10,
-      "community_name": "AiReportGovernancePanel.tsx",
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "aiassistantsidebaritems",
       "id": "app_src_pages_ai_assistant_constants_aiassistantsidebaritems"
     },
@@ -31910,8 +31910,8 @@
       "source_file": "app/src/pages/competition/NewCompetition.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "newcompetition.tsx",
       "id": "app_src_pages_competition_newcompetition"
     },
@@ -31921,8 +31921,8 @@
       "source_file": "app/src/pages/competition/NewCompetition.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "newproducts2026",
       "id": "app_src_pages_competition_newcompetition_newproducts2026"
     },
@@ -31932,8 +31932,8 @@
       "source_file": "app/src/pages/competition/NewCompetition.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "newproducts2025",
       "id": "app_src_pages_competition_newcompetition_newproducts2025"
     },
@@ -31943,8 +31943,8 @@
       "source_file": "app/src/pages/competition/NewCompetition.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "upcoming2026",
       "id": "app_src_pages_competition_newcompetition_upcoming2026"
     },
@@ -31954,8 +31954,8 @@
       "source_file": "app/src/pages/competition/NewCompetition.tsx",
       "source_location": "L41",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "threatmatrix",
       "id": "app_src_pages_competition_newcompetition_threatmatrix"
     },
@@ -31965,8 +31965,8 @@
       "source_file": "app/src/pages/competition/NewCompetition.tsx",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "sidebaritems",
       "id": "app_src_pages_competition_newcompetition_sidebaritems"
     },
@@ -31976,8 +31976,8 @@
       "source_file": "app/src/pages/competition/NewCompetition.tsx",
       "source_location": "L59",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "newcompetition()",
       "id": "app_src_pages_competition_newcompetition_newcompetition"
     },
@@ -31987,8 +31987,8 @@
       "source_file": "app/src/pages/competition/ProductManage.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 179,
+      "community_name": "PageEvidenceNotice.tsx",
       "norm_label": "productmanage.tsx",
       "id": "app_src_pages_competition_productmanage"
     },
@@ -31998,8 +31998,8 @@
       "source_file": "app/src/pages/competition/ProductManage.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 179,
+      "community_name": "PageEvidenceNotice.tsx",
       "norm_label": "product",
       "id": "app_src_pages_competition_productmanage_product"
     },
@@ -32009,8 +32009,8 @@
       "source_file": "app/src/pages/competition/ProductManage.tsx",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 179,
+      "community_name": "PageEvidenceNotice.tsx",
       "norm_label": "competitorproducts",
       "id": "app_src_pages_competition_productmanage_competitorproducts"
     },
@@ -32020,8 +32020,8 @@
       "source_file": "app/src/pages/competition/ProductManage.tsx",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 179,
+      "community_name": "PageEvidenceNotice.tsx",
       "norm_label": "sidebaritems",
       "id": "app_src_pages_competition_productmanage_sidebaritems"
     },
@@ -32031,8 +32031,8 @@
       "source_file": "app/src/pages/competition/ProductManage.tsx",
       "source_location": "L54",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 179,
+      "community_name": "PageEvidenceNotice.tsx",
       "norm_label": "competitorbrands",
       "id": "app_src_pages_competition_productmanage_competitorbrands"
     },
@@ -32042,8 +32042,8 @@
       "source_file": "app/src/pages/competition/ProductManage.tsx",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 179,
+      "community_name": "PageEvidenceNotice.tsx",
       "norm_label": "alphabet",
       "id": "app_src_pages_competition_productmanage_alphabet"
     },
@@ -32053,8 +32053,8 @@
       "source_file": "app/src/pages/competition/ProductManage.tsx",
       "source_location": "L57",
       "_origin": "ast",
-      "community": 305,
-      "community_name": "Sidebar.tsx",
+      "community": 179,
+      "community_name": "PageEvidenceNotice.tsx",
       "norm_label": "productmanage()",
       "id": "app_src_pages_competition_productmanage_productmanage"
     },
@@ -32218,8 +32218,8 @@
       "source_file": "app/src/pages/industry/FlavorMap.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 55,
-      "community_name": "EvidenceGatePage.tsx",
+      "community": 57,
+      "community_name": "AiReviewGovernancePanel.tsx",
       "norm_label": "flavormap.tsx",
       "id": "app_src_pages_industry_flavormap"
     },
@@ -32229,8 +32229,8 @@
       "source_file": "app/src/pages/industry/FlavorMap.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 55,
-      "community_name": "EvidenceGatePage.tsx",
+      "community": 57,
+      "community_name": "AiReviewGovernancePanel.tsx",
       "norm_label": "getindustrysidebaritems()",
       "id": "app_src_pages_industry_flavormap_getindustrysidebaritems"
     },
@@ -32240,8 +32240,8 @@
       "source_file": "app/src/pages/industry/FlavorMap.tsx",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 55,
-      "community_name": "EvidenceGatePage.tsx",
+      "community": 57,
+      "community_name": "AiReviewGovernancePanel.tsx",
       "norm_label": "flavormap()",
       "id": "app_src_pages_industry_flavormap_flavormap"
     },
@@ -32285,7 +32285,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 55,
-      "community_name": "EvidenceGatePage.tsx",
+      "community_name": "IPAnalysis.tsx",
       "norm_label": "ipanalysis.tsx",
       "id": "app_src_pages_industry_ipanalysis"
     },
@@ -32296,7 +32296,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "community": 55,
-      "community_name": "EvidenceGatePage.tsx",
+      "community_name": "IPAnalysis.tsx",
       "norm_label": "getindustrysidebaritems()",
       "id": "app_src_pages_industry_ipanalysis_getindustrysidebaritems"
     },
@@ -32307,7 +32307,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "community": 55,
-      "community_name": "EvidenceGatePage.tsx",
+      "community_name": "IPAnalysis.tsx",
       "norm_label": "ipanalysis()",
       "id": "app_src_pages_industry_ipanalysis_ipanalysis"
     },
@@ -32383,7 +32383,7 @@
       "source_file": "app/src/pages/industry/PolicyInsight.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 55,
+      "community": 10,
       "community_name": "EvidenceGatePage.tsx",
       "norm_label": "policyinsight.tsx",
       "id": "app_src_pages_industry_policyinsight"
@@ -32394,7 +32394,7 @@
       "source_file": "app/src/pages/industry/PolicyInsight.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 55,
+      "community": 10,
       "community_name": "EvidenceGatePage.tsx",
       "norm_label": "getindustrysidebaritems()",
       "id": "app_src_pages_industry_policyinsight_getindustrysidebaritems"
@@ -32405,7 +32405,7 @@
       "source_file": "app/src/pages/industry/PolicyInsight.tsx",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 55,
+      "community": 10,
       "community_name": "EvidenceGatePage.tsx",
       "norm_label": "policyinsight()",
       "id": "app_src_pages_industry_policyinsight_policyinsight"
@@ -32482,7 +32482,7 @@
       "source_file": "app/src/pages/industry/TechNews.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 55,
+      "community": 10,
       "community_name": "EvidenceGatePage.tsx",
       "norm_label": "technews.tsx",
       "id": "app_src_pages_industry_technews"
@@ -32493,7 +32493,7 @@
       "source_file": "app/src/pages/industry/TechNews.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 55,
+      "community": 10,
       "community_name": "EvidenceGatePage.tsx",
       "norm_label": "getindustrysidebaritems()",
       "id": "app_src_pages_industry_technews_getindustrysidebaritems"
@@ -32504,7 +32504,7 @@
       "source_file": "app/src/pages/industry/TechNews.tsx",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 55,
+      "community": 10,
       "community_name": "EvidenceGatePage.tsx",
       "norm_label": "technews()",
       "id": "app_src_pages_industry_technews_technews"
@@ -32515,8 +32515,8 @@
       "source_file": "app/src/pages/market/BabyCare.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 169,
-      "community_name": "public-evidence.ts",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "babycare.tsx",
       "id": "app_src_pages_market_babycare"
     },
@@ -32526,8 +32526,8 @@
       "source_file": "app/src/pages/market/BabyCare.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 169,
-      "community_name": "public-evidence.ts",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "babycare()",
       "id": "app_src_pages_market_babycare_babycare"
     },
@@ -32691,8 +32691,8 @@
       "source_file": "app/src/pages/market/NursingProducts.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 169,
-      "community_name": "public-evidence.ts",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "nursingproducts.tsx",
       "id": "app_src_pages_market_nursingproducts"
     },
@@ -32702,8 +32702,8 @@
       "source_file": "app/src/pages/market/NursingProducts.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 169,
-      "community_name": "public-evidence.ts",
+      "community": 157,
+      "community_name": "usePublicEvidence",
       "norm_label": "nursingproducts()",
       "id": "app_src_pages_market_nursingproducts_nursingproducts"
     },
@@ -32713,8 +32713,8 @@
       "source_file": "app/src/pages/users/Aesthetics.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 179,
-      "community_name": "PageEvidenceNotice.tsx",
+      "community": 305,
+      "community_name": "Sidebar.tsx",
       "norm_label": "aesthetics.tsx",
       "id": "app_src_pages_users_aesthetics"
     },
@@ -32724,8 +32724,8 @@
       "source_file": "app/src/pages/users/Aesthetics.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 179,
-      "community_name": "PageEvidenceNotice.tsx",
+      "community": 305,
+      "community_name": "Sidebar.tsx",
       "norm_label": "colorpreference",
       "id": "app_src_pages_users_aesthetics_colorpreference"
     },
@@ -32735,8 +32735,8 @@
       "source_file": "app/src/pages/users/Aesthetics.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 179,
-      "community_name": "PageEvidenceNotice.tsx",
+      "community": 305,
+      "community_name": "Sidebar.tsx",
       "norm_label": "styletrends",
       "id": "app_src_pages_users_aesthetics_styletrends"
     },
@@ -32746,8 +32746,8 @@
       "source_file": "app/src/pages/users/Aesthetics.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 179,
-      "community_name": "PageEvidenceNotice.tsx",
+      "community": 305,
+      "community_name": "Sidebar.tsx",
       "norm_label": "regionstyle",
       "id": "app_src_pages_users_aesthetics_regionstyle"
     },
@@ -32757,8 +32757,8 @@
       "source_file": "app/src/pages/users/Aesthetics.tsx",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 179,
-      "community_name": "PageEvidenceNotice.tsx",
+      "community": 305,
+      "community_name": "Sidebar.tsx",
       "norm_label": "designcases",
       "id": "app_src_pages_users_aesthetics_designcases"
     },
@@ -32768,8 +32768,8 @@
       "source_file": "app/src/pages/users/Aesthetics.tsx",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 179,
-      "community_name": "PageEvidenceNotice.tsx",
+      "community": 305,
+      "community_name": "Sidebar.tsx",
       "norm_label": "sidebaritems",
       "id": "app_src_pages_users_aesthetics_sidebaritems"
     },
@@ -32779,8 +32779,8 @@
       "source_file": "app/src/pages/users/Aesthetics.tsx",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 179,
-      "community_name": "PageEvidenceNotice.tsx",
+      "community": 305,
+      "community_name": "Sidebar.tsx",
       "norm_label": "aesthetics()",
       "id": "app_src_pages_users_aesthetics_aesthetics"
     },
@@ -34099,8 +34099,8 @@
       "source_file": "app/tests/pages/DesignAssistant.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 46,
-      "community_name": "AiDesignGovernancePanel.tsx",
+      "community": 10,
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "designassistant.test.tsx",
       "id": "app_tests_pages_designassistant_test"
     },
@@ -34110,8 +34110,8 @@
       "source_file": "app/tests/pages/DesignAssistant.test.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 46,
-      "community_name": "AiDesignGovernancePanel.tsx",
+      "community": 10,
+      "community_name": "EvidenceGatePage.tsx",
       "norm_label": "renderdesignassistant()",
       "id": "app_tests_pages_designassistant_test_renderdesignassistant"
     },
@@ -36688,8 +36688,8 @@
       "source_file": "backend/src/mkt53_backend/database.py",
       "source_location": "L77",
       "_origin": "ast",
-      "community": 316,
-      "community_name": "session_factory",
+      "community": 330,
+      "community_name": "get_db_session",
       "norm_label": "get_db_session()",
       "id": "backend_src_mkt53_backend_database_get_db_session"
     },
@@ -36699,8 +36699,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 316,
-      "community_name": "session_factory",
+      "community": 330,
+      "community_name": "get_db_session",
       "norm_label": "request",
       "id": "backend_src_mkt53_backend_database_py_request"
     },
@@ -36710,8 +36710,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 316,
-      "community_name": "session_factory",
+      "community": 330,
+      "community_name": "get_db_session",
       "norm_label": "session",
       "id": "backend_src_mkt53_backend_database_py_session"
     },
@@ -36809,8 +36809,8 @@
       "source_file": "backend/src/mkt53_backend/main.py",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 94,
-      "community_name": "Settings",
+      "community": 300,
+      "community_name": "create_app",
       "norm_label": "create_app()",
       "id": "backend_src_mkt53_backend_main_create_app"
     },
@@ -36820,8 +36820,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 94,
-      "community_name": "Settings",
+      "community": 300,
+      "community_name": "create_app",
       "norm_label": "sessionmaker",
       "id": "backend_src_mkt53_backend_main_py_sessionmaker"
     },
@@ -36831,8 +36831,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 94,
-      "community_name": "Settings",
+      "community": 300,
+      "community_name": "create_app",
       "norm_label": "session",
       "id": "backend_src_mkt53_backend_main_py_session"
     },
@@ -36886,8 +36886,8 @@
       "source_file": "backend/src/mkt53_backend/models.py",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 79,
-      "community_name": "RegistryError",
+      "community": 35,
+      "community_name": "ReviewRegistryService",
       "norm_label": "base",
       "id": "backend_src_mkt53_backend_models_base"
     },
@@ -36897,8 +36897,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 79,
-      "community_name": "RegistryError",
+      "community": 35,
+      "community_name": "ReviewRegistryService",
       "norm_label": "declarativebase",
       "id": "declarativebase"
     },
@@ -36919,8 +36919,8 @@
       "source_file": "backend/src/mkt53_backend/models.py",
       "source_location": "L93",
       "_origin": "ast",
-      "community": 79,
-      "community_name": "RegistryError",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": "auditevent",
       "id": "backend_src_mkt53_backend_models_auditevent"
     },
@@ -36930,8 +36930,8 @@
       "source_file": "backend/src/mkt53_backend/models.py",
       "source_location": "L113",
       "_origin": "ast",
-      "community": 79,
-      "community_name": "RegistryError",
+      "community": 35,
+      "community_name": "ReviewRegistryService",
       "norm_label": "idempotencyrecord",
       "id": "backend_src_mkt53_backend_models_idempotencyrecord"
     },
@@ -36942,7 +36942,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "snapshot",
       "id": "backend_src_mkt53_backend_models_snapshot"
     },
@@ -37700,8 +37700,8 @@
       "source_file": "backend/src/mkt53_backend/schemas.py",
       "source_location": "L70",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": "apimodel",
       "id": "backend_src_mkt53_backend_schemas_apimodel"
     },
@@ -37711,8 +37711,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": "basemodel",
       "id": "backend_src_mkt53_backend_schemas_py_basemodel"
     },
@@ -37733,8 +37733,8 @@
       "source_file": "backend/src/mkt53_backend/schemas.py",
       "source_location": "L101",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": "sourcecreate",
       "id": "backend_src_mkt53_backend_schemas_sourcecreate"
     },
@@ -37788,8 +37788,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 160,
-      "community_name": "SourceRegistryService",
+      "community": 79,
+      "community_name": "SnapshotRegistryService",
       "norm_label": "model_validator",
       "id": "backend_src_mkt53_backend_schemas_py_model_validator"
     },
@@ -37799,8 +37799,8 @@
       "source_file": "backend/src/mkt53_backend/schemas.py",
       "source_location": "L165",
       "_origin": "ast",
-      "community": 160,
-      "community_name": "SourceRegistryService",
+      "community": 79,
+      "community_name": "SnapshotRegistryService",
       "norm_label": ".reject_empty_or_null_patch()",
       "id": "backend_src_mkt53_backend_schemas_sourceupdate_reject_empty_or_null_patch"
     },
@@ -37821,8 +37821,8 @@
       "source_file": "backend/src/mkt53_backend/schemas.py",
       "source_location": "L178",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": "sourceresponse",
       "id": "backend_src_mkt53_backend_schemas_sourceresponse"
     },
@@ -37832,8 +37832,8 @@
       "source_file": "backend/src/mkt53_backend/schemas.py",
       "source_location": "L209",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": "sourcelistresponse",
       "id": "backend_src_mkt53_backend_schemas_sourcelistresponse"
     },
@@ -37843,8 +37843,8 @@
       "source_file": "backend/src/mkt53_backend/schemas.py",
       "source_location": "L216",
       "_origin": "ast",
-      "community": 79,
-      "community_name": "RegistryError",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": "auditeventresponse",
       "id": "backend_src_mkt53_backend_schemas_auditeventresponse"
     },
@@ -37855,7 +37855,7 @@
       "source_location": "L229",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "snapshotcreate",
       "id": "backend_src_mkt53_backend_schemas_snapshotcreate"
     },
@@ -37909,8 +37909,8 @@
       "source_file": "backend/src/mkt53_backend/schemas.py",
       "source_location": "L274",
       "_origin": "ast",
-      "community": 160,
-      "community_name": "SourceRegistryService",
+      "community": 79,
+      "community_name": "SnapshotRegistryService",
       "norm_label": ".validate_window()",
       "id": "backend_src_mkt53_backend_schemas_snapshotcreate_validate_window"
     },
@@ -37920,8 +37920,8 @@
       "source_file": "backend/src/mkt53_backend/schemas.py",
       "source_location": "L280",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 79,
+      "community_name": "SnapshotRegistryService",
       "norm_label": "snapshotresponse",
       "id": "backend_src_mkt53_backend_schemas_snapshotresponse"
     },
@@ -37931,8 +37931,8 @@
       "source_file": "backend/src/mkt53_backend/schemas.py",
       "source_location": "L299",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 79,
+      "community_name": "SnapshotRegistryService",
       "norm_label": "snapshotlistresponse",
       "id": "backend_src_mkt53_backend_schemas_snapshotlistresponse"
     },
@@ -38240,7 +38240,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "snapshot_registry.py",
       "id": "backend_src_mkt53_backend_snapshot_registry"
     },
@@ -38251,7 +38251,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "canonical_snapshot_metadata()",
       "id": "backend_src_mkt53_backend_snapshot_registry_canonical_snapshot_metadata"
     },
@@ -38262,7 +38262,7 @@
       "source_location": "",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "any",
       "id": "backend_src_mkt53_backend_snapshot_registry_py_any"
     },
@@ -38273,7 +38273,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "snapshot_metadata_sha256()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshot_metadata_sha256"
     },
@@ -38284,7 +38284,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "snapshot_etag()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshot_etag"
     },
@@ -38295,7 +38295,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "_snapshot_body()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshot_body"
     },
@@ -38306,7 +38306,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "snapshotregistryservice",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshotregistryservice"
     },
@@ -38317,7 +38317,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": ".__init__()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshotregistryservice_init"
     },
@@ -38328,7 +38328,7 @@
       "source_location": "",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "session",
       "id": "backend_src_mkt53_backend_snapshot_registry_py_session"
     },
@@ -38338,8 +38338,8 @@
       "source_file": "backend/src/mkt53_backend/snapshot_registry.py",
       "source_location": "L60",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 79,
+      "community_name": "SnapshotRegistryService",
       "norm_label": ".list_snapshots()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshotregistryservice_list_snapshots"
     },
@@ -38349,8 +38349,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 79,
+      "community_name": "SnapshotRegistryService",
       "norm_label": "date",
       "id": "backend_src_mkt53_backend_snapshot_registry_py_date"
     },
@@ -38361,7 +38361,7 @@
       "source_location": "L95",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": ".get_snapshot()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshotregistryservice_get_snapshot"
     },
@@ -38372,7 +38372,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": ".list_audit_events()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshotregistryservice_list_audit_events"
     },
@@ -38383,7 +38383,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": ".create_snapshot()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshotregistryservice_create_snapshot"
     },
@@ -38394,7 +38394,7 @@
       "source_location": "L196",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "._find_existing()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshotregistryservice_find_existing"
     },
@@ -38405,7 +38405,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "._record_duplicate_replay()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshotregistryservice_record_duplicate_replay"
     },
@@ -38416,7 +38416,7 @@
       "source_location": "L250",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "._recover_create_conflict()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshotregistryservice_recover_create_conflict"
     },
@@ -38427,7 +38427,7 @@
       "source_location": "L275",
       "_origin": "ast",
       "community": 79,
-      "community_name": "RegistryError",
+      "community_name": "SnapshotRegistryService",
       "norm_label": "._idempotent_replay()",
       "id": "backend_src_mkt53_backend_snapshot_registry_snapshotregistryservice_idempotent_replay"
     },
@@ -38745,8 +38745,8 @@
       "source_file": "backend/src/mkt53_backend/source_registry.py",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 35,
-      "community_name": "ReviewRegistryService",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": "source_registry.py",
       "id": "backend_src_mkt53_backend_source_registry"
     },
@@ -38756,8 +38756,8 @@
       "source_file": "backend/src/mkt53_backend/source_registry.py",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 79,
-      "community_name": "RegistryError",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": "registryerror",
       "id": "backend_src_mkt53_backend_source_registry_registryerror"
     },
@@ -38767,8 +38767,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 79,
-      "community_name": "RegistryError",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": "exception",
       "id": "backend_src_mkt53_backend_source_registry_py_exception"
     },
@@ -38789,8 +38789,8 @@
       "source_file": "backend/src/mkt53_backend/source_registry.py",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 79,
-      "community_name": "RegistryError",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": "mutationresult",
       "id": "backend_src_mkt53_backend_source_registry_mutationresult"
     },
@@ -38877,8 +38877,8 @@
       "source_file": "backend/src/mkt53_backend/source_registry.py",
       "source_location": "L56",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 160,
+      "community_name": "SourceRegistryService",
       "norm_label": ".list_sources()",
       "id": "backend_src_mkt53_backend_source_registry_sourceregistryservice_list_sources"
     },
@@ -39043,7 +39043,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 316,
-      "community_name": "session_factory",
+      "community_name": "conftest.py",
       "norm_label": "conftest.py",
       "id": "backend_tests_conftest"
     },
@@ -39054,7 +39054,7 @@
       "source_location": "",
       "_origin": "ast",
       "community": 316,
-      "community_name": "session_factory",
+      "community_name": "conftest.py",
       "norm_label": "fixture",
       "id": "fixture"
     },
@@ -39065,7 +39065,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "community": 316,
-      "community_name": "session_factory",
+      "community_name": "conftest.py",
       "norm_label": "settings()",
       "id": "backend_tests_conftest_settings"
     },
@@ -39076,7 +39076,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "community": 316,
-      "community_name": "session_factory",
+      "community_name": "conftest.py",
       "norm_label": "ready_probe()",
       "id": "backend_tests_conftest_ready_probe"
     },
@@ -39086,8 +39086,8 @@
       "source_file": "backend/tests/conftest.py",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 316,
-      "community_name": "session_factory",
+      "community": 137,
+      "community_name": "test_review_registry_api.py",
       "norm_label": "session_factory()",
       "id": "backend_tests_conftest_session_factory"
     },
@@ -39098,7 +39098,7 @@
       "source_location": "",
       "_origin": "ast",
       "community": 316,
-      "community_name": "session_factory",
+      "community_name": "conftest.py",
       "norm_label": "sessionmaker",
       "id": "backend_tests_conftest_py_sessionmaker"
     },
@@ -39109,7 +39109,7 @@
       "source_location": "",
       "_origin": "ast",
       "community": 316,
-      "community_name": "session_factory",
+      "community_name": "conftest.py",
       "norm_label": "session",
       "id": "backend_tests_conftest_py_session"
     },
@@ -39120,7 +39120,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "community": 316,
-      "community_name": "session_factory",
+      "community_name": "conftest.py",
       "norm_label": "client()",
       "id": "backend_tests_conftest_client"
     },
@@ -39131,7 +39131,7 @@
       "source_location": "",
       "_origin": "ast",
       "community": 316,
-      "community_name": "session_factory",
+      "community_name": "conftest.py",
       "norm_label": "testclient",
       "id": "backend_tests_conftest_py_testclient"
     },
@@ -39142,7 +39142,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "community": 316,
-      "community_name": "session_factory",
+      "community_name": "conftest.py",
       "norm_label": "trusted_headers()",
       "id": "backend_tests_conftest_trusted_headers"
     },
@@ -39471,8 +39471,8 @@
       "source_file": "backend/tests/test_config.py",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 71,
-      "community_name": "test_config.py",
+      "community": 94,
+      "community_name": "Settings",
       "norm_label": "test_config.py",
       "id": "backend_tests_test_config"
     },
@@ -39482,8 +39482,8 @@
       "source_file": "backend/tests/test_config.py",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 71,
-      "community_name": "test_config.py",
+      "community": 94,
+      "community_name": "Settings",
       "norm_label": "production_settings()",
       "id": "backend_tests_test_config_production_settings"
     },
@@ -39493,8 +39493,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 71,
-      "community_name": "test_config.py",
+      "community": 94,
+      "community_name": "Settings",
       "norm_label": "parametrize",
       "id": "backend_tests_test_config_py_parametrize"
     },
@@ -39504,8 +39504,8 @@
       "source_file": "backend/tests/test_config.py",
       "source_location": "L41",
       "_origin": "ast",
-      "community": 71,
-      "community_name": "test_config.py",
+      "community": 94,
+      "community_name": "Settings",
       "norm_label": "test_production_configuration_fails_closed()",
       "id": "backend_tests_test_config_test_production_configuration_fails_closed"
     },
@@ -39515,8 +39515,8 @@
       "source_file": "backend/tests/test_config.py",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 71,
-      "community_name": "test_config.py",
+      "community": 94,
+      "community_name": "Settings",
       "norm_label": "test_production_accepts_empty_or_exact_https_origin()",
       "id": "backend_tests_test_config_test_production_accepts_empty_or_exact_https_origin"
     },
@@ -39526,8 +39526,8 @@
       "source_file": "backend/tests/test_config.py",
       "source_location": "L51",
       "_origin": "ast",
-      "community": 71,
-      "community_name": "test_config.py",
+      "community": 94,
+      "community_name": "Settings",
       "norm_label": "test_production_disables_openapi()",
       "id": "backend_tests_test_config_test_production_disables_openapi"
     },
@@ -39537,8 +39537,8 @@
       "source_file": "backend/tests/test_config.py",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 71,
-      "community_name": "test_config.py",
+      "community": 94,
+      "community_name": "Settings",
       "norm_label": "test_nonproduction_allows_fixture_defaults_but_keeps_dev_identity_disabled()",
       "id": "backend_tests_test_config_test_nonproduction_allows_fixture_defaults_but_keeps_dev_identity_disabled"
     },
@@ -39548,8 +39548,8 @@
       "source_file": "backend/tests/test_config.py",
       "source_location": "L62",
       "_origin": "ast",
-      "community": 71,
-      "community_name": "test_config.py",
+      "community": 94,
+      "community_name": "Settings",
       "norm_label": "test_secret_files_are_loaded_from_explicit_directory()",
       "id": "backend_tests_test_config_test_secret_files_are_loaded_from_explicit_directory"
     },
@@ -39570,8 +39570,8 @@
       "source_file": "backend/tests/test_config.py",
       "source_location": "L71",
       "_origin": "ast",
-      "community": 71,
-      "community_name": "test_config.py",
+      "community": 94,
+      "community_name": "Settings",
       "norm_label": "test_database_url_hides_password_when_stringified()",
       "id": "backend_tests_test_config_test_database_url_hides_password_when_stringified"
     },
@@ -39647,8 +39647,8 @@
       "source_file": "backend/tests/test_health.py",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 94,
-      "community_name": "Settings",
+      "community": 300,
+      "community_name": "create_app",
       "norm_label": "test_health.py",
       "id": "backend_tests_test_health"
     },
@@ -39658,8 +39658,8 @@
       "source_file": "backend/tests/test_health.py",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 94,
-      "community_name": "Settings",
+      "community": 300,
+      "community_name": "create_app",
       "norm_label": "test_internal_live_does_not_call_database()",
       "id": "backend_tests_test_health_test_internal_live_does_not_call_database"
     },
@@ -39669,8 +39669,8 @@
       "source_file": "backend/tests/test_health.py",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 94,
-      "community_name": "Settings",
+      "community": 300,
+      "community_name": "create_app",
       "norm_label": "test_internal_ready_returns_redacted_success()",
       "id": "backend_tests_test_health_test_internal_ready_returns_redacted_success"
     },
@@ -39680,8 +39680,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 94,
-      "community_name": "Settings",
+      "community": 300,
+      "community_name": "create_app",
       "norm_label": "testclient",
       "id": "backend_tests_test_health_py_testclient"
     },
@@ -39691,8 +39691,8 @@
       "source_file": "backend/tests/test_health.py",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 94,
-      "community_name": "Settings",
+      "community": 300,
+      "community_name": "create_app",
       "norm_label": "test_internal_ready_redacts_probe_reason()",
       "id": "backend_tests_test_health_test_internal_ready_redacts_probe_reason"
     },
@@ -39702,8 +39702,8 @@
       "source_file": "backend/tests/test_health.py",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 94,
-      "community_name": "Settings",
+      "community": 300,
+      "community_name": "create_app",
       "norm_label": "test_public_health_requires_identity()",
       "id": "backend_tests_test_health_test_public_health_requires_identity"
     },
@@ -39713,8 +39713,8 @@
       "source_file": "backend/tests/test_health.py",
       "source_location": "L58",
       "_origin": "ast",
-      "community": 94,
-      "community_name": "Settings",
+      "community": 300,
+      "community_name": "create_app",
       "norm_label": "test_public_health_returns_redacted_not_ready()",
       "id": "backend_tests_test_health_test_public_health_returns_redacted_not_ready"
     },
@@ -39724,8 +39724,8 @@
       "source_file": "backend/tests/test_health.py",
       "source_location": "L75",
       "_origin": "ast",
-      "community": 94,
-      "community_name": "Settings",
+      "community": 300,
+      "community_name": "create_app",
       "norm_label": "test_request_id_is_preserved_only_when_valid()",
       "id": "backend_tests_test_health_test_request_id_is_preserved_only_when_valid"
     },
@@ -40021,8 +40021,8 @@
       "source_file": "backend/tests/test_review_registry_api.py",
       "source_location": "L438",
       "_origin": "ast",
-      "community": 160,
-      "community_name": "SourceRegistryService",
+      "community": 137,
+      "community_name": "test_review_registry_api.py",
       "norm_label": "test_pending_source_update_invalidates_a_reviewers_stale_decision()",
       "id": "backend_tests_test_review_registry_api_test_pending_source_update_invalidates_a_reviewers_stale_decision"
     },
@@ -40175,8 +40175,8 @@
       "source_file": "backend/tests/test_source_optimistic_locking.py",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 137,
+      "community_name": "test_review_registry_api.py",
       "norm_label": "test_source_optimistic_locking.py",
       "id": "backend_tests_test_source_optimistic_locking"
     },
@@ -40186,8 +40186,8 @@
       "source_file": "backend/tests/test_source_optimistic_locking.py",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 137,
+      "community_name": "test_review_registry_api.py",
       "norm_label": "test_concurrent_source_update_cannot_silently_overwrite()",
       "id": "backend_tests_test_source_optimistic_locking_test_concurrent_source_update_cannot_silently_overwrite"
     },
@@ -40197,8 +40197,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 137,
+      "community_name": "test_review_registry_api.py",
       "norm_label": "sessionmaker",
       "id": "backend_tests_test_source_optimistic_locking_py_sessionmaker"
     },
@@ -40208,8 +40208,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 103,
-      "community_name": "schemas.py",
+      "community": 137,
+      "community_name": "test_review_registry_api.py",
       "norm_label": "session",
       "id": "backend_tests_test_source_optimistic_locking_py_session"
     },
@@ -41774,17 +41774,6 @@
       "community_name": "mkt53 \u2014 Momcozy \u5e02\u573a\u6d1e\u5bdf\u770b\u677f",
       "norm_label": "graphify",
       "id": "agents_graphify"
-    },
-    {
-      "label": "Temporary local review recursion guard",
-      "file_type": "document",
-      "source_file": "AGENTS.md",
-      "source_location": "L279",
-      "_origin": "ast",
-      "community": 67,
-      "community_name": "mkt53 \u2014 Momcozy \u5e02\u573a\u6d1e\u5bdf\u770b\u677f",
-      "norm_label": "temporary local review recursion guard",
-      "id": "agents_temporary_local_review_recursion_guard"
     },
     {
       "label": "PLAN.md",
@@ -127957,17 +127946,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "AGENTS.md",
-      "source_location": "L279",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "agents_mkt53_momcozy_\u5e02\u573a\u6d1e\u5bdf\u770b\u677f",
-      "target": "agents_temporary_local_review_recursion_guard"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "AGENTS.md",
       "source_location": "L248",
       "weight": 1.0,
       "_origin": "ast",
@@ -137063,5 +137041,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2365bfc965550c1b236ca4b32c1df197a9d2e592"
+  "built_at_commit": "3cacb94adc0c813b72e3cfa35514102196c7cdf5"
 }
