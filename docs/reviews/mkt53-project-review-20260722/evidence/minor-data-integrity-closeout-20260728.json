@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "taskId": "batch-30-minor-data-integrity-closeout",
-  "generatedAt": "2026-07-28T05:34:45Z",
+  "generatedAt": "2026-07-28T06:35:17Z",
   "branch": "codex/mkt53-release-candidate-20260630",
   "sourceHeadBeforeBatchCommit": "06bf98cb5b9bbafaafb61c84bfbdd3fb955d4350",
   "status": "local-review-clean-pending-commit-push-exact-head-ci-external-recheck",
-  "implementationCommit": "c2fe523b05bac1084b15bc91c1a99e043b087539",
+  "implementationCommit": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
   "scope": [
     "owner-intake-question-contract",
     "owner-chat-pack-and-merge",
@@ -18,18 +18,22 @@
     "runtime-public-evidence-manifest-validation",
     "eligible-captured-record-display-gate",
     "public-evidence-seed-provenance-correction",
-    "unsupported-trend-claim-gate"
+    "unsupported-trend-claim-gate",
+    "shared-public-evidence-view-hook",
+    "page-scope-safety-boundary-fail-closed",
+    "in-flight-only-manifest-request-deduplication",
+    "graph-report-markdown-safe-community-labels"
   ],
   "quality": {
     "tests": {
       "filesPassed": 25,
-      "testsPassed": 202,
+      "testsPassed": 204,
       "failed": 0
     },
     "lint": "passed",
     "build": {
       "status": "passed",
-      "modulesTransformed": 2385
+      "modulesTransformed": 2386
     },
     "dataAudit": {
       "pages": 43,
@@ -105,31 +109,57 @@
           "locallyFixed": 0,
           "status": "completed-clean",
           "exitCode": 0
+        },
+        {
+          "sessionId": "019fa757-aec6-75a3-858c-b0e0157068c7",
+          "actionableFindings": 1,
+          "p1": 0,
+          "p2": 1,
+          "p3": 0,
+          "locallyFixed": 1,
+          "finding": "process-lifetime-success-cache-prevented-no-store-revalidation"
+        },
+        {
+          "sessionId": "019fa764-ac58-7380-99f4-0c5e7fcc3bb7",
+          "actionableFindings": 0,
+          "p1": 0,
+          "p2": 0,
+          "p3": 0,
+          "locallyFixed": 0,
+          "status": "completed-clean",
+          "exitCode": 0
         }
       ],
       "totals": {
-        "actionableFindings": 16,
+        "actionableFindings": 17,
         "p1": 2,
-        "p2": 12,
+        "p2": 13,
         "p3": 2,
-        "locallyFixed": 16
+        "locallyFixed": 17
       },
-      "finalResult": "No actionable regressions were found.",
-      "finalReviewSessionId": "019fa730-f7e9-7910-919b-a1dcc651fc06"
+      "finalResult": "No actionable defects were found. The full test suite passed (204 tests), along with lint, production build, and diff checks.",
+      "finalReviewSessionId": "019fa764-ac58-7380-99f4-0c5e7fcc3bb7"
     },
     "codeRabbit": {
-      "reviewedHead": "c2fe523b05bac1084b15bc91c1a99e043b087539",
-      "runId": "26df0c06-5f2a-4306-88da-d2e33dc194c2",
+      "reviewedHead": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
+      "runId": "7a7909e3-566e-4df4-8009-53e69ace746c",
+      "reviewId": 4794237146,
       "reviewState": "COMMENTED",
       "statusContext": "SUCCESS-means-review-completed-not-approved",
-      "actionableFindings": 5,
-      "locallyFixed": 5,
+      "inlineActionableFindings": 2,
+      "outsideDiffMajorFindings": 1,
+      "acceptedAndLocallyFixed": 3,
+      "fixes": [
+        "static-contract-proves-pages-consume-shared-safety-result",
+        "graph-report-community-labels-avoid-md037",
+        "six-pages-use-shared-fetch-filter-safety-status-hook"
+      ],
       "newHeadRecheck": "pending-push"
     },
     "graphify": {
-      "nodes": 4666,
-      "edges": 7470,
-      "communities": 345,
+      "nodes": 4672,
+      "edges": 7458,
+      "communities": 339,
       "zeroAstSourceFiles": 61,
       "danglingEdges": 0,
       "selfLoops": 0,
@@ -137,23 +167,26 @@
       "generatorHotfix": {
         "scope": "local-user-tool-install",
         "path": "/Users/pray/.local/share/uv/tools/graphifyy/lib/python3.14/site-packages/graphify/report.py",
-        "change": "thin-community-filter-uses-min-community-size-instead-of-hardcoded-three",
+        "change": "thin-community-filter-uses-min-community-size-and-community-node-labels-use-markdown-code-spans",
         "trackedInRepository": false,
         "upgradeMayOverwrite": true
-      }
+      },
+      "graphReportMd037Issues": 0
     },
     "github": {
       "pullRequest": 32,
-      "runId": 30322464479,
-      "verifiedHead": "c2fe523b05bac1084b15bc91c1a99e043b087539",
+      "runId": 30332364362,
+      "verifiedHead": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
       "app": {
         "status": "success",
-        "duration": "4m17s",
+        "jobId": 90190054477,
+        "duration": "4m33s",
         "annotations": 0
       },
       "backend": {
         "status": "success",
-        "duration": "52s",
+        "jobId": 90190054526,
+        "duration": "58s",
         "annotations": 0
       }
     }

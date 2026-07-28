@@ -1,7 +1,7 @@
 {
   "schemaVersion": "mkt53.p0-pr-ready-handoff.v2",
-  "generatedAt": "2026-07-28T05:34:45Z",
-  "status": "pr-ready-c2fe-ci-green-review-follow-up-local-clean-pending-push-ci-external-recheck-not-merged-not-deployed",
+  "generatedAt": "2026-07-28T06:35:17Z",
+  "status": "pr-ready-2365-ci-green-coderabbit-follow-up-local-clean-pending-push-ci-external-recheck-not-merged-not-deployed",
   "repository": "zjgulai/mkt53",
   "branch": "codex/mkt53-release-candidate-20260630",
   "pullRequest": {
@@ -13,7 +13,7 @@
     "head": "codex/mkt53-release-candidate-20260630",
     "headShaAtReady": "91fe39359dcd1119cebd8d342e0d5ae055770c56",
     "localCandidateHead": "5360ea6830df6aa30f86125f5c762729f6fa5f8b",
-    "verifiedRemoteHead": "7ae8a1993b175f66503f65878f003b03f1a43044",
+    "verifiedRemoteHead": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
     "mergeStateStatusAtDocumentation": "UNSTABLE",
     "readyAction": "completed"
   },
@@ -121,6 +121,18 @@
       "backend": { "jobId": 89995672992, "conclusion": "success", "duration": "1m1s", "annotations": 0 }
     }
   },
+  "githubActionsBatch30FollowUpExactHead": {
+    "workflow": "quality-gate",
+    "runId": 30332364362,
+    "url": "https://github.com/zjgulai/mkt53/actions/runs/30332364362",
+    "headSha": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
+    "statusAtDocumentation": "completed",
+    "conclusion": "success",
+    "jobs": {
+      "app": { "jobId": 90190054477, "conclusion": "success", "duration": "4m33s", "annotations": 0 },
+      "backend": { "jobId": 90190054526, "conclusion": "success", "duration": "58s", "annotations": 0 }
+    }
+  },
   "codeRabbit": {
     "runId": "33f0f684-07a1-4a6d-9df3-3f49eeb7852b",
     "selectedFiles": 294,
@@ -161,6 +173,37 @@
         "finalReviewSessionId": "019fa730-f7e9-7910-919b-a1dcc651fc06",
         "finalReviewActionableFindings": 0,
         "finalResult": "No actionable regressions were found."
+      },
+      "newHeadRecheck": "completed-with-follow-up-findings-on-2365bfc",
+      "mergeAllowed": false
+    },
+    "sharedHookFollowUp": {
+      "reviewedHead": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
+      "runId": "7a7909e3-566e-4df4-8009-53e69ace746c",
+      "reviewId": 4794237146,
+      "reviewState": "COMMENTED",
+      "inlineActionableFindings": 2,
+      "outsideDiffMajorFindings": 1,
+      "acceptedAndLocallyFixed": 3,
+      "codexReviewFinding": {
+        "sessionId": "019fa757-aec6-75a3-858c-b0e0157068c7",
+        "priority": "P2",
+        "finding": "process-lifetime-success-cache-prevented-no-store-revalidation",
+        "locallyFixed": true
+      },
+      "finalCodexReview": {
+        "sessionId": "019fa764-ac58-7380-99f4-0c5e7fcc3bb7",
+        "exitCode": 0,
+        "actionableFindings": 0,
+        "result": "No actionable defects were found."
+      },
+      "localVerification": {
+        "focusedTestsPassed": 99,
+        "fullTestFiles": 25,
+        "fullTestsPassed": 204,
+        "eslint": "passed",
+        "build": { "status": "passed", "modulesTransformed": 2386 },
+        "graphify": { "nodes": 4672, "edges": 7458, "communities": 339, "md037Issues": 0 }
       },
       "newHeadRecheck": "pending-push",
       "mergeAllowed": false

@@ -1,6 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { fetchPublicEvidenceManifest } from '../../src/hooks/usePublicEvidence';
 
 import {
+  derivePublicEvidenceView,
   isEligibleCapturedPublicEvidenceRecord,
   parsePublicEvidenceManifest,
   summarizePublicEvidenceSafety,
@@ -40,6 +43,36 @@ const eligibleRecord: PublicEvidenceRecord = {
 };
 
 describe('public evidence runtime gate', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('deduplicates only in-flight requests and revalidates after they settle', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(() =>
+      Promise.resolve(
+        new Response(
+          JSON.stringify({
+            mode: 'live-browser-capture',
+            generatedAt: '2026-07-28T00:00:00.000Z',
+            records: [eligibleRecord],
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        ),
+      ),
+    );
+
+    const firstRequest = fetchPublicEvidenceManifest();
+    const concurrentRequest = fetchPublicEvidenceManifest();
+
+    expect(concurrentRequest).toBe(firstRequest);
+    await Promise.all([firstRequest, concurrentRequest]);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    await fetchPublicEvidenceManifest();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenNthCalledWith(2, '/periodic-data/public-evidence-samples.json', { cache: 'no-store' });
+  });
+
   it('rejects malformed manifests before the UI enters ready state', () => {
     expect(() => parsePublicEvidenceManifest({ mode: 'dry-run', generatedAt: 'not-a-date', records: [] })).toThrow(
       'generatedAt is invalid',
@@ -186,5 +219,30 @@ describe('public evidence runtime gate', () => {
       networkCalls: 3,
       businessDataWrites: 1,
     });
+  });
+
+  it('fails the scoped display closed when any matching record violates the safety boundary', () => {
+    const unsafeSibling: PublicEvidenceRecord = {
+      ...eligibleRecord,
+      seedId: 'seed-unsafe-sibling',
+      safety: {
+        ...eligibleRecord.safety,
+        loginAttempted: true,
+        businessDataWrites: 1,
+      },
+    };
+    const manifest = parsePublicEvidenceManifest({
+      mode: 'live-browser-capture',
+      generatedAt: '2026-07-28T00:00:00.000Z',
+      records: [eligibleRecord, unsafeSibling, { ...eligibleRecord, seedId: 'other-page', page: 'CompetitionPage' }],
+    });
+
+    const view = derivePublicEvidenceView(manifest, 'ready', 'ds-008', 'NewCompetition');
+
+    expect(view.evidence.map((record) => record.seedId)).toEqual(['seed-1', 'seed-unsafe-sibling']);
+    expect(view.safety).toEqual({ networkCalls: 2, businessDataWrites: 1 });
+    expect(view.safetyBoundaryReady).toBe(false);
+    expect(view.eligibleEvidence).toEqual([]);
+    expect(view.statusLabel).toBe('safety boundary blocked · writes=1');
   });
 });

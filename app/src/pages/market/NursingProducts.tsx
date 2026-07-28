@@ -1,54 +1,16 @@
-import { useEffect, useState } from 'react';
 import { ExternalLink, Shirt } from 'lucide-react';
 import MarketDataGate from '@/components/MarketDataGate';
-import {
-  isEligibleCapturedPublicEvidenceRecord,
-  parsePublicEvidenceManifest,
-  summarizePublicEvidenceSafety,
-  type PublicEvidenceManifest,
-} from '@/lib/public-evidence';
+import { usePublicEvidence } from '@/hooks/usePublicEvidence';
 
 export default function NursingProducts() {
-  const [publicEvidenceManifest, setPublicEvidenceManifest] = useState<PublicEvidenceManifest | null>(null);
-  const [publicEvidenceStatus, setPublicEvidenceStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
-
-  useEffect(() => {
-    let active = true;
-
-    fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
-      .then((response) => {
-        if (!response.ok) throw new Error('Public evidence samples unavailable.');
-        return response.json();
-      })
-      .then((payload: unknown) => {
-        if (!active) return;
-        const manifest = parsePublicEvidenceManifest(payload);
-        setPublicEvidenceManifest(manifest);
-        setPublicEvidenceStatus('ready');
-      })
-      .catch(() => {
-        if (!active) return;
-        setPublicEvidenceManifest(null);
-        setPublicEvidenceStatus('missing');
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const nursingEvidence = (publicEvidenceManifest?.records ?? []).filter(
-    (record) => record.sourceId === 'ds-039' && record.page === 'NursingProducts',
-  );
-  const eligibleNursingEvidence = nursingEvidence.filter((record) =>
-    isEligibleCapturedPublicEvidenceRecord(record, publicEvidenceManifest?.mode),
-  );
-  const { businessDataWrites: nursingEvidenceBusinessDataWrites, networkCalls: nursingEvidenceNetworkCalls } =
-    summarizePublicEvidenceSafety(nursingEvidence);
-  const nursingEvidenceStatusLabel =
-    publicEvidenceStatus === 'ready'
-      ? `${eligibleNursingEvidence.length}/${nursingEvidence.length} eligible captured`
-      : publicEvidenceStatus;
+  const {
+    manifest: publicEvidenceManifest,
+    status: publicEvidenceStatus,
+    evidence: nursingEvidence,
+    eligibleEvidence: eligibleNursingEvidence,
+    safety: { businessDataWrites: nursingEvidenceBusinessDataWrites, networkCalls: nursingEvidenceNetworkCalls },
+    statusLabel: nursingEvidenceStatusLabel,
+  } = usePublicEvidence('ds-039', 'NursingProducts');
 
   return (
     <MarketDataGate
@@ -86,7 +48,7 @@ export default function NursingProducts() {
                 mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={nursingEvidenceNetworkCalls} · businessDataWrites={nursingEvidenceBusinessDataWrites}
               </p>
             </div>
-            <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleNursingEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+            <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleNursingEvidence.length > 0 ? 'bg-[#5B8C5A]/10 text-[#5B8C5A]' : 'bg-[#C44545]/10 text-[#C44545]'}`}>
               {nursingEvidenceStatusLabel}
             </span>
           </div>

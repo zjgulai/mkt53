@@ -890,8 +890,8 @@
     "semantic_hash": ""
   },
   "app/src/pages/CompetitionPage.tsx": {
-    "mtime": 1785214455.9689028,
-    "ast_hash": "dfe8344f76b7ecb835c5caa34c567500",
+    "mtime": 1785218571.4233875,
+    "ast_hash": "e5f871d22345774ba0f23dd3f4adad4f",
     "semantic_hash": ""
   },
   "app/src/pages/DataManage.tsx": {
@@ -985,8 +985,8 @@
     "semantic_hash": "c11694ebf7e3d7d42b1b79e43b814062"
   },
   "app/src/pages/competition/NewCompetition.tsx": {
-    "mtime": 1785214455.9693537,
-    "ast_hash": "a3bb7bc274633e7e886ab72b0207ff04",
+    "mtime": 1785218616.4930108,
+    "ast_hash": "bd6d1038c66bee3d56ab9e476e2af05b",
     "semantic_hash": ""
   },
   "app/src/pages/competition/ProductManage.tsx": {
@@ -995,8 +995,8 @@
     "semantic_hash": "b52be9113c8a96bf5a04781a7bf74996"
   },
   "app/src/pages/competition/RegionCompetition.tsx": {
-    "mtime": 1785214455.9700675,
-    "ast_hash": "b52d17c0f89015754b5ba49158fe38ca",
+    "mtime": 1785218636.4146843,
+    "ast_hash": "0ba47b67b5fcb22c281defbdc4703221",
     "semantic_hash": ""
   },
   "app/src/pages/industry/Exhibition.tsx": {
@@ -1045,8 +1045,8 @@
     "semantic_hash": "c47928efacd62c818a05be40d81001ba"
   },
   "app/src/pages/market/BabyCare.tsx": {
-    "mtime": 1785214455.9762144,
-    "ast_hash": "bc1e741fe161b92925d40494045cd9ea",
+    "mtime": 1785218533.55182,
+    "ast_hash": "df086fb0cd588219512cbc7351489cc3",
     "semantic_hash": ""
   },
   "app/src/pages/market/BreastPump.tsx": {
@@ -1055,8 +1055,8 @@
     "semantic_hash": "85cefd8395bffa99e2a7332df36e296f"
   },
   "app/src/pages/market/CategoryAnalysis.tsx": {
-    "mtime": 1785214455.972175,
-    "ast_hash": "ee46b7a469d719dfd04ba18d2ae2c154",
+    "mtime": 1785218552.514598,
+    "ast_hash": "ff2aaf5cfd45a99c72f4dcd8a328cbf2",
     "semantic_hash": ""
   },
   "app/src/pages/market/CustomsData.tsx": {
@@ -1070,8 +1070,8 @@
     "semantic_hash": "33d5dc422e7149ccf2b9f305347e5914"
   },
   "app/src/pages/market/NursingProducts.tsx": {
-    "mtime": 1785214455.9753633,
-    "ast_hash": "6217f17986a8b3db30907f3cfd51c480",
+    "mtime": 1785218533.5544326,
+    "ast_hash": "de2dea86f9f79b7173ee33137655b506",
     "semantic_hash": ""
   },
   "app/src/pages/users/Aesthetics.tsx": {
@@ -1185,8 +1185,8 @@
     "semantic_hash": "6a9b5a2f7faf3ce7d54c9e49193cac71"
   },
   "app/tests/scripts/static-scripts.test.ts": {
-    "mtime": 1785209592.6742089,
-    "ast_hash": "f4b39f6bc10699c5ea855a11589bbabe",
+    "mtime": 1785218655.9467323,
+    "ast_hash": "8c74a0106a36ec6f96b32f4488f866ff",
     "semantic_hash": ""
   },
   "app/tests/security/clientBundleGuard.test.ts": {
@@ -1295,7 +1295,7 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1785208594.6994283,
+    "mtime": 1785218956.9787328,
     "ast_hash": "b6492c2588f6b2aff078ab296ecc35ea",
     "semantic_hash": ""
   },
@@ -1355,8 +1355,8 @@
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/index.html": {
-    "mtime": 1785215596.1242347,
-    "ast_hash": "853ba3234ced7200ad7f3f123af76aa9",
+    "mtime": 1785220800.563437,
+    "ast_hash": "290ffe92f47e48e9e8eb304829f5fcfd",
     "semantic_hash": ""
   },
   "docs/workflows/workflow-quality-gate-stable.md": {
@@ -2835,8 +2835,8 @@
     "semantic_hash": "afc76ec8398e919401a82b0cf88cbaa6"
   },
   "app/scripts/data/build-semi-monthly-recovery-candidate.mjs": {
-    "mtime": 1785215304.7503111,
-    "ast_hash": "7ac1173f582501c96c1de7ccde48133b",
+    "mtime": 1785218671.9814816,
+    "ast_hash": "e85243b6141cc606f3dca86f8bcd856d",
     "semantic_hash": ""
   },
   "app/tests/scripts/semi-monthly-recovery-candidate.test.ts": {
@@ -3640,33 +3640,38 @@
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/evidence/p0-pr-ready-handoff-20260727.json": {
-    "mtime": 1785215485.7248545,
-    "ast_hash": "f0b9e08238e8c56c216e43dde890cd50",
+    "mtime": 1785220607.0488734,
+    "ast_hash": "271364f4991b6dace7ce9983e4ebd0a6",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/p0-pr-ready-handoff-20260727.md": {
-    "mtime": 1785215470.7693107,
-    "ast_hash": "8915f5572bb936b186d0f30b2bc9c48b",
+    "mtime": 1785220588.2766933,
+    "ast_hash": "5d7b17addd84f8e3152e5e0cf91a48e3",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/evidence/minor-data-integrity-closeout-20260728.json": {
-    "mtime": 1785215596.121509,
-    "ast_hash": "be92dca4f9b7dc3f5c09bdf0a7f3b369",
+    "mtime": 1785220573.7761483,
+    "ast_hash": "8b1e2309ca5c0c4b8c8a8bd7beb80e7f",
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-project-review-20260722/minor-data-integrity-closeout-20260728.md": {
-    "mtime": 1785215596.1209033,
-    "ast_hash": "b2957068487cf71edda61a4252b956bd",
+    "mtime": 1785220550.2778141,
+    "ast_hash": "2b2feb96e3ab406034733f3b6debb395",
     "semantic_hash": ""
   },
   "app/src/lib/public-evidence.ts": {
-    "mtime": 1785216271.8005972,
-    "ast_hash": "6f8fcf1a744dc9f80308ea28a4a1d1d4",
+    "mtime": 1785218506.2998934,
+    "ast_hash": "dd2835655770252ffbfc6cdd04c7d1a9",
     "semantic_hash": ""
   },
   "app/tests/data/public-evidence.test.ts": {
-    "mtime": 1785216222.7033036,
-    "ast_hash": "4d6ed6e0c70ef287a723ebdd28802b28",
+    "mtime": 1785219686.8361976,
+    "ast_hash": "1fcde105c23b09d39aedec9b61ad13e6",
+    "semantic_hash": ""
+  },
+  "app/src/hooks/usePublicEvidence.ts": {
+    "mtime": 1785219686.8341894,
+    "ast_hash": "95d698cdf88849db008fe667195ddbf2",
     "semantic_hash": ""
   }
 }

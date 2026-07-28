@@ -1,14 +1,9 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Search, LayoutGrid, Target, FileBarChart, Map as MapIcon, Database, ChevronDown, X, Download, ExternalLink } from 'lucide-react';
 // Target imported via lucide-react
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
-import {
-  isEligibleCapturedPublicEvidenceRecord,
-  parsePublicEvidenceManifest,
-  summarizePublicEvidenceSafety,
-  type PublicEvidenceManifest,
-} from '@/lib/public-evidence';
+import { usePublicEvidence } from '@/hooks/usePublicEvidence';
 
 interface Product {
   id: number;
@@ -103,8 +98,14 @@ function Dropdown({ label, value, options, onChange }: { label: string; value: s
 
 export default function CompetitionPage() {
   const [compareList, setCompareList] = useState<number[]>([]);
-  const [publicEvidenceManifest, setPublicEvidenceManifest] = useState<PublicEvidenceManifest | null>(null);
-  const [publicEvidenceStatus, setPublicEvidenceStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
+  const {
+    manifest: publicEvidenceManifest,
+    status: publicEvidenceStatus,
+    evidence: competitionEvidence,
+    eligibleEvidence: eligibleCompetitionEvidence,
+    safety: { businessDataWrites: evidenceBusinessDataWrites, networkCalls: evidenceNetworkCalls },
+    statusLabel: evidenceStatusLabel,
+  } = usePublicEvidence('ds-007', 'CompetitionPage');
 
   // Filter states
   const [ownership, setOwnership] = useState('全部');
@@ -116,31 +117,6 @@ export default function CompetitionPage() {
 
   const ownershipOptions = ['全部', 'Momcozy产品', '竞品产品'];
   const categoryOptions = ['全部', '吸奶器', '哺乳用品', '婴儿护理'];
-
-  useEffect(() => {
-    let active = true;
-
-    fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
-      .then((response) => {
-        if (!response.ok) throw new Error('Public evidence samples unavailable.');
-        return response.json();
-      })
-      .then((payload: unknown) => {
-        if (!active) return;
-        const manifest = parsePublicEvidenceManifest(payload);
-        setPublicEvidenceManifest(manifest);
-        setPublicEvidenceStatus('ready');
-      })
-      .catch(() => {
-        if (!active) return;
-        setPublicEvidenceManifest(null);
-        setPublicEvidenceStatus('missing');
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
 
   // Derived brand from hot brand selection or input
   const effectiveBrandFilter = activeHotBrand || brandInput;
@@ -184,19 +160,6 @@ export default function CompetitionPage() {
   };
 
   const hasActiveFilters = ownership !== '全部' || category !== '全部' || brandInput || modelInput || activeLetter || activeHotBrand;
-  const competitionEvidence = (publicEvidenceManifest?.records ?? []).filter(
-    (record) => record.sourceId === 'ds-007' && record.page === 'CompetitionPage',
-  );
-  const eligibleCompetitionEvidence = competitionEvidence.filter((record) =>
-    isEligibleCapturedPublicEvidenceRecord(record, publicEvidenceManifest?.mode),
-  );
-  const { businessDataWrites: evidenceBusinessDataWrites, networkCalls: evidenceNetworkCalls } =
-    summarizePublicEvidenceSafety(competitionEvidence);
-  const evidenceStatusLabel =
-    publicEvidenceStatus === 'ready'
-      ? `${eligibleCompetitionEvidence.length}/${competitionEvidence.length} eligible captured`
-      : publicEvidenceStatus;
-
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
@@ -251,7 +214,7 @@ export default function CompetitionPage() {
                     mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={evidenceNetworkCalls} · businessDataWrites={evidenceBusinessDataWrites}
                   </p>
                 </div>
-                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleCompetitionEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleCompetitionEvidence.length > 0 ? 'bg-[#5B8C5A]/10 text-[#5B8C5A]' : 'bg-[#C44545]/10 text-[#C44545]'}`}>
                   {evidenceStatusLabel}
                 </span>
               </div>

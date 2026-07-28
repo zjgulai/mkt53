@@ -90,21 +90,6 @@ const dynamicCountMapFields = new Set([
   'totals',
 ]);
 
-const optionalPublicEvidenceRecordFields = new Set([
-  'error',
-  'finalUrl',
-  'httpStatus',
-  'localEvidence',
-  'matchedEvidenceTerms',
-  'missingEvidenceTerms',
-  'nonVerbatimSummary',
-  'pageErrors',
-  'title',
-  'visibleTextHash',
-  'visibleTextLength',
-  'warnings',
-]);
-
 const optionalPublicEvidenceStringFields = new Set([
   'error',
   'finalUrl',
@@ -121,6 +106,12 @@ const optionalPublicEvidenceStringArrayFields = new Set([
 ]);
 
 const optionalPublicEvidenceNumberFields = new Set(['httpStatus', 'visibleTextLength']);
+const optionalPublicEvidenceRecordFields = new Set([
+  ...optionalPublicEvidenceStringFields,
+  ...optionalPublicEvidenceStringArrayFields,
+  ...optionalPublicEvidenceNumberFields,
+  'localEvidence',
+]);
 const modeDependentStringArrayFields = new Set(['missingMatchedTerms', 'missingProofFields', 'readySeedIds']);
 
 function isOptionalField(path, field) {
@@ -217,15 +208,7 @@ function areValuesContractCompatible(candidate, canonical, path = []) {
       (value) => typeof value === 'number' && Number.isFinite(value) && value >= 0,
     );
     if (!countsAreValid) return false;
-    if (candidateValues.length === 0 || canonicalValues.length === 0) return true;
-    return (
-      candidateValues.every((candidateValue) =>
-        canonicalValues.some((canonicalValue) => areValuesContractCompatible(candidateValue, canonicalValue, [...path, '*'])),
-      ) &&
-      canonicalValues.every((canonicalValue) =>
-        candidateValues.some((candidateValue) => areValuesContractCompatible(candidateValue, canonicalValue, [...path, '*'])),
-      )
-    );
+    return true;
   }
 
   const candidateFields = Object.keys(candidate);

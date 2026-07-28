@@ -2376,24 +2376,24 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     }
 
     const marketEvidenceCollections = new Map([
-      ['BabyCare.tsx', 'babyCareEvidence'],
-      ['NursingProducts.tsx', 'nursingEvidence'],
-      ['CategoryAnalysis.tsx', 'categoryEvidence'],
+      ['BabyCare.tsx', ['ds-037', 'BabyCare']],
+      ['NursingProducts.tsx', ['ds-039', 'NursingProducts']],
+      ['CategoryAnalysis.tsx', ['ds-038', 'CategoryAnalysis']],
     ]);
-    for (const [page, scopedRecords] of marketEvidenceCollections) {
+    for (const [page, [sourceId, pageName]] of marketEvidenceCollections) {
       const source = readFileSync(join(process.cwd(), 'src/pages/market', page), 'utf8');
-      expect(source).toContain(`summarizePublicEvidenceSafety(${scopedRecords})`);
-      expect(source).not.toContain('publicEvidenceManifest?.summary?.businessDataWrites');
+      expect(source).toContain(`usePublicEvidence('${sourceId}', '${pageName}')`);
+      expect(source).not.toContain("fetch('/periodic-data/public-evidence-samples.json'");
     }
     const competitionEvidenceCollections = new Map([
-      ['CompetitionPage.tsx', 'competitionEvidence'],
-      ['competition/NewCompetition.tsx', 'newCompetitionEvidence'],
-      ['competition/RegionCompetition.tsx', 'regionPublicEvidence'],
+      ['CompetitionPage.tsx', ['ds-007', 'CompetitionPage']],
+      ['competition/NewCompetition.tsx', ['ds-008', 'NewCompetition']],
+      ['competition/RegionCompetition.tsx', ['ds-010', 'RegionCompetition']],
     ]);
-    for (const [page, scopedRecords] of competitionEvidenceCollections) {
+    for (const [page, [sourceId, pageName]] of competitionEvidenceCollections) {
       const source = readFileSync(join(process.cwd(), 'src/pages', page), 'utf8');
-      expect(source).toContain(`summarizePublicEvidenceSafety(${scopedRecords})`);
-      expect(source).not.toContain('publicEvidenceManifest?.summary?.businessDataWrites');
+      expect(source).toContain(`usePublicEvidence('${sourceId}', '${pageName}')`);
+      expect(source).not.toContain("fetch('/periodic-data/public-evidence-samples.json'");
     }
   });
 

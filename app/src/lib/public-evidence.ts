@@ -54,6 +54,16 @@ export interface PublicEvidenceManifest {
   records: PublicEvidenceRecord[];
 }
 
+export type PublicEvidenceStatus = 'loading' | 'ready' | 'missing';
+
+export interface PublicEvidenceView {
+  evidence: PublicEvidenceRecord[];
+  eligibleEvidence: PublicEvidenceRecord[];
+  safety: Pick<PublicEvidenceSafety, 'networkCalls' | 'businessDataWrites'>;
+  safetyBoundaryReady: boolean;
+  statusLabel: string;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
@@ -198,4 +208,37 @@ export function summarizePublicEvidenceSafety(
     }),
     { networkCalls: 0, businessDataWrites: 0 },
   );
+}
+
+export function derivePublicEvidenceView(
+  manifest: PublicEvidenceManifest | null,
+  status: PublicEvidenceStatus,
+  sourceId: string,
+  page: string,
+): PublicEvidenceView {
+  const evidence = (manifest?.records ?? []).filter((record) => record.sourceId === sourceId && record.page === page);
+  const safety = summarizePublicEvidenceSafety(evidence);
+  const safetyBoundaryReady = evidence.every(
+    (record) =>
+      record.safety.loginAttempted === false &&
+      record.safety.bypassAttempted === false &&
+      record.safety.businessDataWrites === 0 &&
+      record.safety.rawTextWrittenToPublicBundle === false,
+  );
+  const eligibleCandidates = evidence.filter((record) => isEligibleCapturedPublicEvidenceRecord(record, manifest?.mode));
+  const eligibleEvidence = safetyBoundaryReady ? eligibleCandidates : [];
+  const statusLabel =
+    status !== 'ready'
+      ? status
+      : safetyBoundaryReady
+        ? `${eligibleEvidence.length}/${evidence.length} eligible captured`
+        : `safety boundary blocked · writes=${safety.businessDataWrites}`;
+
+  return {
+    evidence,
+    eligibleEvidence,
+    safety,
+    safetyBoundaryReady,
+    statusLabel,
+  };
 }

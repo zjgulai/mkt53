@@ -1,13 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { LayoutGrid, FileBarChart, Map as MapIcon, Database, TrendingUp, Zap, Shield, ArrowUpRight, AlertTriangle, CheckCircle, ExternalLink } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
-import {
-  isEligibleCapturedPublicEvidenceRecord,
-  parsePublicEvidenceManifest,
-  summarizePublicEvidenceSafety,
-  type PublicEvidenceManifest,
-} from '@/lib/public-evidence';
+import { usePublicEvidence } from '@/hooks/usePublicEvidence';
 
 const pricePending = '价格待复核';
 const trendPending = '趋势待复核';
@@ -63,34 +58,15 @@ const sidebarItems = [
 
 export default function NewCompetition() {
   const [timeFilter, setTimeFilter] = useState('全部');
-  const [publicEvidenceManifest, setPublicEvidenceManifest] = useState<PublicEvidenceManifest | null>(null);
-  const [publicEvidenceStatus, setPublicEvidenceStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
+  const {
+    manifest: publicEvidenceManifest,
+    status: publicEvidenceStatus,
+    evidence: newCompetitionEvidence,
+    eligibleEvidence: eligibleNewCompetitionEvidence,
+    safety: { businessDataWrites: evidenceBusinessDataWrites, networkCalls: evidenceNetworkCalls },
+    statusLabel: evidenceStatusLabel,
+  } = usePublicEvidence('ds-008', 'NewCompetition');
   const filters = ['全部', '2026年', '2025年', '即将上市'];
-
-  useEffect(() => {
-    let active = true;
-
-    fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
-      .then((response) => {
-        if (!response.ok) throw new Error('Public evidence samples unavailable.');
-        return response.json();
-      })
-      .then((payload: unknown) => {
-        if (!active) return;
-        const manifest = parsePublicEvidenceManifest(payload);
-        setPublicEvidenceManifest(manifest);
-        setPublicEvidenceStatus('ready');
-      })
-      .catch(() => {
-        if (!active) return;
-        setPublicEvidenceManifest(null);
-        setPublicEvidenceStatus('missing');
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
 
   const getFiltered = () => {
     if (timeFilter === '2026年') return newProducts2026;
@@ -100,18 +76,6 @@ export default function NewCompetition() {
   };
   const filtered = getFiltered();
   const highThreat = threatMatrix.filter(t => t.threatLevel === '高').length;
-  const newCompetitionEvidence = (publicEvidenceManifest?.records ?? []).filter(
-    (record) => record.sourceId === 'ds-008' && record.page === 'NewCompetition',
-  );
-  const eligibleNewCompetitionEvidence = newCompetitionEvidence.filter((record) =>
-    isEligibleCapturedPublicEvidenceRecord(record, publicEvidenceManifest?.mode),
-  );
-  const { businessDataWrites: evidenceBusinessDataWrites, networkCalls: evidenceNetworkCalls } =
-    summarizePublicEvidenceSafety(newCompetitionEvidence);
-  const evidenceStatusLabel =
-    publicEvidenceStatus === 'ready'
-      ? `${eligibleNewCompetitionEvidence.length}/${newCompetitionEvidence.length} eligible captured`
-      : publicEvidenceStatus;
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -158,7 +122,7 @@ export default function NewCompetition() {
                     mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · businessDataWrites={evidenceBusinessDataWrites}
                   </p>
                 </div>
-                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleNewCompetitionEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleNewCompetitionEvidence.length > 0 ? 'bg-[#5B8C5A]/10 text-[#5B8C5A]' : 'bg-[#C44545]/10 text-[#C44545]'}`}>
                   {evidenceStatusLabel}
                 </span>
               </div>

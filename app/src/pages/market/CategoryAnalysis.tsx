@@ -1,12 +1,6 @@
-import { useEffect, useState } from 'react';
 import { ExternalLink, FileBarChart } from 'lucide-react';
 import MarketDataGate from '@/components/MarketDataGate';
-import {
-  isEligibleCapturedPublicEvidenceRecord,
-  parsePublicEvidenceManifest,
-  summarizePublicEvidenceSafety,
-  type PublicEvidenceManifest,
-} from '@/lib/public-evidence';
+import { usePublicEvidence } from '@/hooks/usePublicEvidence';
 import {
   erpBatch2DisplayPolicy,
   erpBatch7DisplayPolicy,
@@ -29,46 +23,14 @@ function priorityLabel(priority?: string) {
 }
 
 export default function CategoryAnalysis() {
-  const [publicEvidenceManifest, setPublicEvidenceManifest] = useState<PublicEvidenceManifest | null>(null);
-  const [publicEvidenceStatus, setPublicEvidenceStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
-
-  useEffect(() => {
-    let active = true;
-
-    fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
-      .then((response) => {
-        if (!response.ok) throw new Error('Public evidence samples unavailable.');
-        return response.json();
-      })
-      .then((payload: unknown) => {
-        if (!active) return;
-        const manifest = parsePublicEvidenceManifest(payload);
-        setPublicEvidenceManifest(manifest);
-        setPublicEvidenceStatus('ready');
-      })
-      .catch(() => {
-        if (!active) return;
-        setPublicEvidenceManifest(null);
-        setPublicEvidenceStatus('missing');
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const categoryEvidence = (publicEvidenceManifest?.records ?? []).filter(
-    (record) => record.sourceId === 'ds-038' && record.page === 'CategoryAnalysis',
-  );
-  const eligibleCategoryEvidence = categoryEvidence.filter((record) =>
-    isEligibleCapturedPublicEvidenceRecord(record, publicEvidenceManifest?.mode),
-  );
-  const { businessDataWrites: categoryEvidenceBusinessDataWrites, networkCalls: categoryEvidenceNetworkCalls } =
-    summarizePublicEvidenceSafety(categoryEvidence);
-  const categoryEvidenceStatusLabel =
-    publicEvidenceStatus === 'ready'
-      ? `${eligibleCategoryEvidence.length}/${categoryEvidence.length} eligible captured`
-      : publicEvidenceStatus;
+  const {
+    manifest: publicEvidenceManifest,
+    status: publicEvidenceStatus,
+    evidence: categoryEvidence,
+    eligibleEvidence: eligibleCategoryEvidence,
+    safety: { businessDataWrites: categoryEvidenceBusinessDataWrites, networkCalls: categoryEvidenceNetworkCalls },
+    statusLabel: categoryEvidenceStatusLabel,
+  } = usePublicEvidence('ds-038', 'CategoryAnalysis');
 
   return (
     <MarketDataGate
@@ -114,7 +76,7 @@ export default function CategoryAnalysis() {
                   mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={categoryEvidenceNetworkCalls} · businessDataWrites={categoryEvidenceBusinessDataWrites}
                 </p>
               </div>
-              <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleCategoryEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+              <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleCategoryEvidence.length > 0 ? 'bg-[#5B8C5A]/10 text-[#5B8C5A]' : 'bg-[#C44545]/10 text-[#C44545]'}`}>
                 {categoryEvidenceStatusLabel}
               </span>
             </div>

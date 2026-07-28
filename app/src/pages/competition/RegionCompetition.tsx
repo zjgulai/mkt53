@@ -1,14 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Award, Database, ExternalLink, FileBarChart, Globe, LayoutGrid, Map as MapIcon, MapPin, ShieldAlert, Target } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 import { erpChannelGrowthSnapshot, erpChannelTargetAttainment, erpDerivedBatch3Artifact } from '@/data/market-insight-data';
-import {
-  isEligibleCapturedPublicEvidenceRecord,
-  parsePublicEvidenceManifest,
-  summarizePublicEvidenceSafety,
-  type PublicEvidenceManifest,
-} from '@/lib/public-evidence';
+import { usePublicEvidence } from '@/hooks/usePublicEvidence';
 
 interface CountryEvidence {
   name: string;
@@ -121,47 +116,15 @@ function formatNumber(value: number) {
 
 export default function RegionCompetition() {
   const [activeRegion, setActiveRegion] = useState('北美');
-  const [publicEvidenceManifest, setPublicEvidenceManifest] = useState<PublicEvidenceManifest | null>(null);
-  const [publicEvidenceStatus, setPublicEvidenceStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
+  const {
+    manifest: publicEvidenceManifest,
+    status: publicEvidenceStatus,
+    evidence: regionPublicEvidence,
+    eligibleEvidence: eligibleRegionPublicEvidence,
+    safety: { businessDataWrites: regionEvidenceBusinessDataWrites, networkCalls: regionEvidenceNetworkCalls },
+    statusLabel: regionEvidenceStatusLabel,
+  } = usePublicEvidence('ds-010', 'RegionCompetition');
   const region = regionData.find(r => r.region === activeRegion) || regionData[0];
-
-  useEffect(() => {
-    let active = true;
-
-    fetch('/periodic-data/public-evidence-samples.json', { cache: 'no-store' })
-      .then((response) => {
-        if (!response.ok) throw new Error('Public evidence samples unavailable.');
-        return response.json();
-      })
-      .then((payload: unknown) => {
-        if (!active) return;
-        const manifest = parsePublicEvidenceManifest(payload);
-        setPublicEvidenceManifest(manifest);
-        setPublicEvidenceStatus('ready');
-      })
-      .catch(() => {
-        if (!active) return;
-        setPublicEvidenceManifest(null);
-        setPublicEvidenceStatus('missing');
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const regionPublicEvidence = (publicEvidenceManifest?.records ?? []).filter(
-    (record) => record.sourceId === 'ds-010' && record.page === 'RegionCompetition',
-  );
-  const eligibleRegionPublicEvidence = regionPublicEvidence.filter((record) =>
-    isEligibleCapturedPublicEvidenceRecord(record, publicEvidenceManifest?.mode),
-  );
-  const { businessDataWrites: regionEvidenceBusinessDataWrites, networkCalls: regionEvidenceNetworkCalls } =
-    summarizePublicEvidenceSafety(regionPublicEvidence);
-  const regionEvidenceStatusLabel =
-    publicEvidenceStatus === 'ready'
-      ? `${eligibleRegionPublicEvidence.length}/${regionPublicEvidence.length} eligible captured`
-      : publicEvidenceStatus;
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -196,7 +159,7 @@ export default function RegionCompetition() {
                     mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={regionEvidenceNetworkCalls} · businessDataWrites={regionEvidenceBusinessDataWrites}
                   </p>
                 </div>
-                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleRegionPublicEvidence.length > 0 ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleRegionPublicEvidence.length > 0 ? 'bg-[#5B8C5A]/10 text-[#5B8C5A]' : 'bg-[#C44545]/10 text-[#C44545]'}`}>
                   {regionEvidenceStatusLabel}
                 </span>
               </div>
