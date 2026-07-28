@@ -3,7 +3,7 @@
   "connectorId": "customs-public-data-adapter",
   "mode": "public-customs-source-adapter",
   "status": "blocked",
-  "generatedAt": "2026-07-06T03:40:50.013Z",
+  "generatedAt": "2026-07-28T00:45:47.296Z",
   "sourceId": "ds-006",
   "page": "CustomsData",
   "metric": "HS编码进出口",
@@ -19,7 +19,7 @@
     "factPromotion": false,
     "sourceRegistryWrites": false,
     "pageWrites": false,
-    "networkCalls": 39,
+    "networkCalls": 0,
     "businessDataWrites": 0,
     "rawTextIncluded": false,
     "shipmentRowsIncluded": false,
@@ -36,9 +36,7 @@
           "us-census-merchandise-imports-database",
           "cbp-electric-breast-pump-hts-ruling"
         ],
-        "readySeedIds": [
-          "us-census-merchandise-imports-database"
-        ]
+        "readySeedIds": []
       },
       "blockers": [
         {
@@ -48,16 +46,17 @@
     },
     {
       "id": "officialTradeDataSource",
-      "status": "ready",
+      "status": "blocked",
       "details": {
         "seedId": "us-census-merchandise-imports-database",
         "url": "https://www.census.gov/foreign-trade/data/IMDB.html",
-        "matchedEvidenceTerms": [
-          "Merchandise Trade Imports",
-          "HTSUSA"
-        ]
+        "matchedEvidenceTerms": []
       },
-      "blockers": []
+      "blockers": [
+        {
+          "type": "official-trade-data-source-not-ready"
+        }
+      ]
     },
     {
       "id": "officialClassificationContext",
@@ -78,8 +77,9 @@
       "id": "safetyBoundary",
       "status": "ready",
       "details": {
-        "networkCalls": 39,
+        "networkCalls": 0,
         "businessDataWrites": 0,
+        "countersValid": true,
         "rawTextPublicBundleAllowed": false,
         "shipmentFactsGenerated": false
       },
@@ -89,6 +89,9 @@
   "blockers": [
     {
       "type": "missing-or-incomplete-public-evidence"
+    },
+    {
+      "type": "official-trade-data-source-not-ready"
     },
     {
       "type": "official-hts-classification-context-not-ready"
@@ -101,23 +104,19 @@
       "sourceId": "ds-006",
       "url": "https://www.census.gov/foreign-trade/data/IMDB.html",
       "evidenceClass": "official-trade-data-page",
-      "captureStatus": "captured",
-      "title": "Merchandise Trade Imports",
-      "visibleTextHash": "d43d3d3927e77bd43581aaa2dbf4acc6528f516cada7beb463071ebe26998cf0",
-      "matchedEvidenceTerms": [
+      "captureStatus": "planned",
+      "matchedEvidenceTerms": [],
+      "missingEvidenceTerms": [],
+      "ready": false,
+      "missingProofFields": [
+        "title",
+        "visibleTextHash",
+        "localEvidence.textArchivePath"
+      ],
+      "missingMatchedTerms": [
         "Merchandise Trade Imports",
         "HTSUSA"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "U.S. Census Merchandise Trade Imports database: title captured (25 chars); matched 2/2 expected evidence terms; visible text length 1266.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/us-census-merchandise-imports-database.txt",
-        "textArchiveBytes": 1267,
-        "screenshotPath": "tmp/public-evidence/screenshots/us-census-merchandise-imports-database.png",
-        "screenshotHash": "7d7362274c9cf844a88ee64bc8e62d8645f963f7cec7a974c5f01616da445e5e"
-      },
-      "ready": true,
-      "missingMatchedTerms": []
+      ]
     },
     {
       "seedId": "cbp-electric-breast-pump-hts-ruling",
@@ -125,22 +124,15 @@
       "sourceId": "ds-006",
       "url": "https://rulings.cbp.gov/search?collection=ALL&page=1&pageSize=30&sortBy=RELEVANCE&term=breast+pump",
       "evidenceClass": "official-customs-ruling-page",
-      "captureStatus": "captured",
-      "title": "CROSS Search Results",
-      "visibleTextHash": "4ff594dc5dd9dbdd077c5335dbdcf7646e329d8e77e4b8032cbc9b129a58e786",
+      "captureStatus": "planned",
       "matchedEvidenceTerms": [],
-      "missingEvidenceTerms": [
-        "electric breast pump",
-        "8413.81.0040"
-      ],
-      "nonVerbatimSummary": "CBP CROSS ruling for electric breast pump HTS classification: title captured (20 chars); matched 0/2 expected evidence terms; visible text length 334.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/cbp-electric-breast-pump-hts-ruling.txt",
-        "textArchiveBytes": 337,
-        "screenshotPath": "tmp/public-evidence/screenshots/cbp-electric-breast-pump-hts-ruling.png",
-        "screenshotHash": "a0db2829759cf95570347a2ca21f39dcec63cf018e3cafbfa762ae1fe80b5433"
-      },
+      "missingEvidenceTerms": [],
       "ready": false,
+      "missingProofFields": [
+        "title",
+        "visibleTextHash",
+        "localEvidence.textArchivePath"
+      ],
       "missingMatchedTerms": [
         "electric breast pump",
         "8413.81.0040"

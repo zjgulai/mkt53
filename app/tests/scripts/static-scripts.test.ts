@@ -1,14 +1,27 @@
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { accessSync, chmodSync, constants, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const SCRIPT_INTEGRATION_TIMEOUT_MS = 90_000;
 const FORBIDDEN_ERP_SCRIPT_OUTPUT_RE =
   /AS104-NA00NB|Aeroflow Breastpumps|叶钰铭|Momcozy可穿戴式吸奶器|SHOULD_NOT_LEAK|password|client_secret|cookie|session_token|private_key|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}/i;
 const LOCAL_ERP_ARTIFACT_MISSING_RE = /Missing (?:ERP export input|ERP Batch3 input|Batch\d+ input|Batch\d+ manifest)/;
 const MANUAL_EVIDENCE_EMPTY_FIXTURE_DIR = join(process.cwd(), 'tests/fixtures/manual-evidence-empty-intake');
+const sourceGapTempDirs = new Set<string>();
+
+function createSourceGapTempDir(prefix: string) {
+  const path = mkdtempSync(join(tmpdir(), prefix));
+  sourceGapTempDirs.add(path);
+  return path;
+}
+
+afterEach(() => {
+  for (const path of sourceGapTempDirs) rmSync(path, { recursive: true, force: true });
+  sourceGapTempDirs.clear();
+});
 
 function runOptionalLocalErpArtifactScript(args: string[]) {
   try {
@@ -285,6 +298,34 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(payload.summary.boundaries.sourceRegistryWrites).toBe(false);
     expect(payload.summary.boundaries.productionWrites).toBe(false);
     expect(payload.samplePacketValidation.every((packet) => packet.packet_validation_status === 'blocked_manual_evidence_incomplete')).toBe(true);
+  });
+
+  it('supplies a blocking reason when an acceptance gate leaves next_gate empty', () => {
+    const tempDir = copyManualEvidencePackToTemp();
+
+    try {
+      const gatePath = join(tempDir, 'manual_evidence_acceptance_gate.csv');
+      const lines = readFileSync(gatePath, 'utf8').trimEnd().split('\n');
+      const header = lines[0].split(',');
+      const nextGateIndex = header.indexOf('next_gate');
+      const rows = lines.slice(1).map((line) => {
+        const row = line.split(',');
+        row[nextGateIndex] = '';
+        return row.join(',');
+      });
+      writeFileSync(gatePath, `${[lines[0], ...rows].join('\n')}\n`);
+
+      const output = execFileSync(
+        'node',
+        ['scripts/data/validate-public-source-manual-evidence.mjs', '--intake', tempDir, '--json', '--no-write'],
+        { cwd: process.cwd(), encoding: 'utf8' },
+      );
+      const payload = JSON.parse(output) as { samplePacketValidation: Array<{ blocking_reason: string }> };
+
+      expect(payload.samplePacketValidation.every((packet) => packet.blocking_reason.trim().length > 0)).toBe(true);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
   });
 
   it('accepts complete public source manual evidence intake only as a manual release review queue', () => {
@@ -810,7 +851,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('prioritizes source gaps as a no-write governance queue', () => {
-    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-priority-'));
+    const tempDir = createSourceGapTempDir('mkt53-source-gap-priority-');
     const sourcePath = join(tempDir, 'source_gap_matrix.csv');
     const outDir = join(tempDir, 'out');
     const header =
@@ -856,7 +897,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('builds P0 readiness packets without provider or production side effects', () => {
-    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-packets-'));
+    const tempDir = createSourceGapTempDir('mkt53-source-gap-packets-');
     const sourcePath = join(tempDir, 'source_gap_priority_matrix.csv');
     const outDir = join(tempDir, 'out');
     const header =
@@ -907,8 +948,31 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     rmSync(tempDir, { recursive: true, force: true });
   });
 
+  it('sanitizes owner-derived packet filenames and keeps them inside the packet directory', () => {
+    const tempDir = createSourceGapTempDir('mkt53-source-gap-safe-packet-');
+    const sourcePath = join(tempDir, 'source_gap_priority_matrix.csv');
+    const outDir = join(tempDir, 'out');
+    const header =
+      'priority,priority_reason,owner_lane,recommended_collection_lane,source_id,module,page,metric,source_name,source_type,collection_method,evidence_grade,verification_status,privacy_level,allowed_current_display_state,can_display_as_fact_current,next_action,smallest_evidence_needed,blocking_reason,gap,source_url,evidence_artifact_path,last_verified,action';
+    const row =
+      'P0,Unsafe lane fixture,../../escape,manual-review-artifact,ds-safe,看市场,MarketPage,安全路径,Fixture,定性,manual-required,L0-unverified,needs-review,public,display_as_gate_only,false,Create artifact,Manual evidence,path-safety-required,,,,2026-06-30,补记录';
+    writeFileSync(sourcePath, `${header}\n${row}\n`);
+
+    const output = execFileSync(
+      'node',
+      ['scripts/data/build-source-gap-readiness-packets.mjs', '--source', sourcePath, '--out', outDir, '--json'],
+      { cwd: process.cwd(), encoding: 'utf8' },
+    );
+    const payload = JSON.parse(output) as { packets: Array<{ packet_id: string }> };
+    const packetId = payload.packets[0].packet_id;
+
+    expect(packetId).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+    expect(existsSync(join(outDir, 'packets', `${packetId}.md`))).toBe(true);
+    expect(existsSync(join(tempDir, 'escape-01.md'))).toBe(false);
+  });
+
   it('builds readiness coverage from priority rows and packet outputs', () => {
-    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-coverage-'));
+    const tempDir = createSourceGapTempDir('mkt53-source-gap-coverage-');
     const sourcePath = join(tempDir, 'source_gap_priority_matrix.csv');
     const packetDir = join(tempDir, 'packets');
     const outDir = join(tempDir, 'out');
@@ -987,7 +1051,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('builds P1 manual and public evidence packets without mixing connector gaps', () => {
-    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-p1-packets-'));
+    const tempDir = createSourceGapTempDir('mkt53-source-gap-p1-packets-');
     const sourcePath = join(tempDir, 'source_gap_priority_matrix.csv');
     const outDir = join(tempDir, 'out');
     const header =
@@ -1056,7 +1120,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('builds source gap owner intake templates without promoting approvals', () => {
-    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-owner-intake-'));
+    const tempDir = createSourceGapTempDir('mkt53-source-gap-owner-intake-');
     const packetDir = join(tempDir, 'packets');
     const outDir = join(tempDir, 'out');
     mkdirSync(packetDir, { recursive: true });
@@ -1075,6 +1139,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     const packetRows = [
       'p0-amazon-connector-owner-01,P0,amazon_connector_owner,1,ds-007,CompetitionPage,connector-required,L0-unverified,L3-production-read-only or L4-authorized-live,readiness_packet_only; no provider call; no restricted connector access; no production write; no fact promotion,required evidence artifact is created,artifact_id|owner_alias|evidence_file_path|evidence_hash|display_decision|export_decision,Owner provides authorized read-only snapshot,Do not display these rows as verified facts.',
       'p1-business-owner-manual-review-01,P1,business_owner_manual_review,1,ds-014,ConsumerInterviews,manual-required,L0-unverified,L1-public-or-runtime plus signed manual artifact,readiness_packet_only; no provider call; no restricted connector access; no production write; no fact promotion,required evidence artifact is created,artifact_id|owner_alias|evidence_file_path|evidence_hash|business_owner_signoff,Business owner provides signed review artifact,Do not export these rows as factual CSV data.',
+      'p9-uncovered-owner-99,P9,uncovered_owner,1,ds-uncovered,HiddenPage,manual-required,L0-unverified,L1-public-or-runtime,readiness_packet_only,required evidence artifact is created,artifact_id|owner_alias,Uncovered packet must be ignored,Do not ingest packets absent from coverage.',
     ];
     writeFileSync(join(packetDir, 'readiness_packets.csv'), `${packetHeader}\n${packetRows.join('\n')}\n`);
 
@@ -1084,6 +1149,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       'p0-amazon-connector-owner-01,Q2,amazon_connector_owner,ds-007,Where is the evidence file?,path or URI / sha256,yes',
       'p1-business-owner-manual-review-01,Q1,business_owner_manual_review,ds-014,Who owns this source packet?,owner_alias / owner_role,yes',
       'p1-business-owner-manual-review-01,Q2,business_owner_manual_review,ds-014,Where is the evidence file?,path or URI / sha256,yes',
+      'p9-uncovered-owner-99,Q1,uncovered_owner,ds-uncovered,Should this be included?,no,yes',
     ];
     writeFileSync(join(packetDir, 'owner_questionnaire.csv'), `${questionHeader}\n${questionRows.join('\n')}\n`);
 
@@ -1142,7 +1208,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('validates source gap owner intake submissions without promoting them', () => {
-    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-owner-intake-validation-'));
+    const tempDir = createSourceGapTempDir('mkt53-source-gap-owner-intake-validation-');
     const intakeDir = join(tempDir, 'intake');
     const outDir = join(tempDir, 'out');
     const evidenceHash = 'a'.repeat(64);
@@ -1249,6 +1315,33 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(existsSync(outDir)).toBe(false);
     expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
 
+    const unsupportedQuestionRows = questionRows.map((row) =>
+      row.startsWith('p0-amazon-connector-owner-01,Q1,')
+        ? row.replace('p0-amazon-connector-owner-01,Q1,', 'p0-amazon-connector-owner-01,Q7,')
+        : row,
+    );
+    writeFileSync(
+      join(intakeDir, 'owner_intake_questionnaire.csv'),
+      `${questionHeader}\n${unsupportedQuestionRows.join('\n')}\n`,
+    );
+    const unsupportedQuestionOutput = execFileSync(
+      'node',
+      ['scripts/data/validate-source-gap-owner-intake.mjs', '--intake', intakeDir, '--out', outDir, '--json', '--no-write'],
+      { cwd: process.cwd(), encoding: 'utf8' },
+    );
+    const unsupportedQuestionResult = JSON.parse(unsupportedQuestionOutput) as {
+      samplePacketValidation: Array<Record<string, string | number>>;
+    };
+    expect(
+      unsupportedQuestionResult.samplePacketValidation.find(
+        (packet) => packet.packet_id === 'p0-amazon-connector-owner-01',
+      ),
+    ).toMatchObject({
+      missing_required_questions: 1,
+      packet_validation_status: 'blocked_owner_submission_incomplete',
+      ready_for_manual_review: 'false',
+    });
+
     const impossibleDateRows = questionRows.map((row) => row.replaceAll('2026-06-30', '2026-02-30'));
     writeFileSync(join(intakeDir, 'owner_intake_questionnaire.csv'), `${questionHeader}\n${impossibleDateRows.join('\n')}\n`);
     const impossibleDateOutput = execFileSync(
@@ -1271,6 +1364,11 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     writeFileSync(join(intakeDir, 'owner_intake_questionnaire.csv'), `${questionHeader}\n${questionRows.join('\n')}\n`);
     const truncatedQuestionnaire = [questionHeader, ...questionRows.filter((row) => !row.startsWith('p0-amazon-connector-owner-01,Q2,'))];
     writeFileSync(join(intakeDir, 'owner_intake_questionnaire.csv'), `${truncatedQuestionnaire.join('\n')}\n`);
+    const truncatedReleaseRows = [
+      releaseRows[0].replace(',2,0,0,2,', ',1,0,0,1,'),
+      releaseRows[1],
+    ];
+    writeFileSync(join(intakeDir, 'owner_intake_release_gate.csv'), `${releaseHeader}\n${truncatedReleaseRows.join('\n')}\n`);
     const truncatedOutput = execFileSync(
       'node',
       ['scripts/data/validate-source-gap-owner-intake.mjs', '--intake', intakeDir, '--out', outDir, '--json', '--no-write'],
@@ -1322,7 +1420,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('prefills source gap owner intake from local evidence while keeping release gates closed', () => {
-    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-owner-intake-prefill-'));
+    const tempDir = createSourceGapTempDir('mkt53-source-gap-owner-intake-prefill-');
     const intakeDir = join(tempDir, 'intake');
     const evidenceDir = join(tempDir, 'evidence');
     const outDir = join(tempDir, 'out');
@@ -1343,6 +1441,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     const packetRows = [
       'p1-public-research-owner-01,P1,public_research_owner,1,ds-public,IPAnalysis,public-url-check,L0-unverified,L1-public-or-runtime,artifact_id|owner_alias|evidence_file_path|evidence_hash,Public evidence capture records URL and hash,Do not promote without manual review,awaiting_owner_submission,0,6,false,false,false',
       'p1-business-owner-manual-review-01,P1,business_owner_manual_review,1,ds-manual,ConsumerInterviews,manual-required,L0-unverified,L1-public-or-runtime,artifact_id|owner_alias|evidence_file_path|evidence_hash,Business owner provides signed review artifact,Do not promote without manual review,awaiting_owner_submission,0,6,false,false,false',
+      'p1-zero-question-owner-01,P1,zero_question_owner,1,ds-zero,ZeroQuestionPage,manual-required,L0-unverified,L1-public-or-runtime,artifact_id,Owner answers required,Do not promote without questions,awaiting_owner_submission,0,,false,false,false',
     ];
     writeFileSync(join(intakeDir, 'owner_intake_packet_queue.csv'), `${packetHeader}\n${packetRows.join('\n')}\n`);
 
@@ -1365,6 +1464,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     const releaseRows = [
       'owner-intake-gate:p1-public-research-owner-01,p1-public-research-owner-01,public_research_owner,P1,ds-public,6,0,0,6,blocked_owner_submission_required,false,false,false,owner answers required,future validation batch only',
       'owner-intake-gate:p1-business-owner-manual-review-01,p1-business-owner-manual-review-01,business_owner_manual_review,P1,ds-manual,6,0,0,6,blocked_owner_submission_required,false,false,false,owner answers required,future validation batch only',
+      'owner-intake-gate:p1-zero-question-owner-01,p1-zero-question-owner-01,zero_question_owner,P1,ds-zero,0,0,0,0,blocked_owner_submission_required,false,false,false,questionnaire rows required,future validation batch only',
     ];
     writeFileSync(join(intakeDir, 'owner_intake_release_gate.csv'), `${releaseHeader}\n${releaseRows.join('\n')}\n`);
 
@@ -1415,37 +1515,83 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
         ready_for_fact_display: string;
         ready_for_csv_export: string;
       }>;
-      chatQuestions: Array<{ packet_id: string; missing_source_ids: string }>;
+      chatQuestions: Array<{ packet_id: string; missing_source_ids: string; suggested_question_batch: string }>;
     };
 
     expect(result.summary.sourceGapCount).toBe(2);
-    expect(result.summary.packetCount).toBe(2);
-    expect(result.summary.questionCount).toBe(12);
+    expect(result.summary.packetCount).toBe(3);
+    expect(result.summary.questionCount).toBe(18);
     expect(result.summary.usableEvidenceRowCount).toBe(1);
-    expect(result.summary.prefilledQuestionCount).toBe(6);
-    expect(result.summary.prefilledReadyPacketCount).toBe(1);
-    expect(result.summary.chatQuestionPacketCount).toBe(1);
+    expect(result.summary.prefilledQuestionCount).toBe(5);
+    expect(result.summary.prefilledReadyPacketCount).toBe(0);
+    expect(result.summary.chatQuestionPacketCount).toBe(3);
     expect(result.summary.boundaries.providerCalls).toBe(false);
     expect(result.summary.boundaries.productionWrites).toBe(false);
     expect(result.summary.boundaries.factPromotion).toBe(false);
     expect(result.summary.boundaries.sourceRegistryWrites).toBe(false);
     expect(result.summary.boundaries.pageWrites).toBe(false);
     expect(result.summary.boundaries.csvFactExport).toBe(false);
-    expect(result.readyPackets).toHaveLength(1);
-    expect(result.readyPackets[0]).toMatchObject({
-      packet_id: 'p1-public-research-owner-01',
-      intake_status: 'prefilled_ready_for_validator',
-      submitted_owner_answers: 6,
-      ready_for_registry_binding: 'false',
-      ready_for_fact_display: 'false',
-      ready_for_csv_export: 'false',
-    });
-    expect(result.chatQuestions).toEqual([
+    expect(result.readyPackets).toHaveLength(0);
+    expect(result.chatQuestions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ packet_id: 'p1-public-research-owner-01', missing_source_ids: '' }),
+        expect.objectContaining({ packet_id: 'p1-business-owner-manual-review-01', missing_source_ids: 'ds-manual' }),
+        expect.objectContaining({
+          packet_id: 'p1-zero-question-owner-01',
+          suggested_question_batch: 'Q1|Q2|Q3|Q4|Q5|Q6',
+        }),
+      ]),
+    );
+
+    const questionnaireWithoutQ2 = questionRows.filter(
+      (row) => !row.startsWith('p1-public-research-owner-01,Q2,'),
+    );
+    writeFileSync(
+      join(intakeDir, 'owner_intake_questionnaire.csv'),
+      `${questionHeader}\n${questionnaireWithoutQ2.join('\n')}\n`,
+    );
+    const repairedOutDir = join(tempDir, 'repaired-out');
+    const missingQ2Output = execFileSync(
+      'node',
+      [
+        'scripts/data/prefill-source-gap-owner-intake.mjs',
+        '--intake',
+        intakeDir,
+        '--out',
+        repairedOutDir,
+        '--source-cross-matrix',
+        sourceCrossPath,
+        '--data-point-matrix',
+        join(tempDir, 'missing_data_point_matrix.csv'),
+        '--json',
+      ],
+      { cwd: process.cwd(), encoding: 'utf8' },
+    );
+    const missingQ2Result = JSON.parse(missingQ2Output) as {
+      readyPackets: Array<{ packet_id: string }>;
+      chatQuestions: Array<{
+        packet_id: string;
+        suggested_question_batch: string;
+        chat_prompt: string;
+        blocking_reason: string;
+      }>;
+    };
+    expect(missingQ2Result.readyPackets).toHaveLength(0);
+    expect(missingQ2Result.chatQuestions).toContainEqual(
       expect.objectContaining({
-        packet_id: 'p1-business-owner-manual-review-01',
-        missing_source_ids: 'ds-manual',
+        packet_id: 'p1-public-research-owner-01',
+        suggested_question_batch: 'Q2',
+        blocking_reason: 'one or more owner-required questions cannot be derived from local evidence',
       }),
-    ]);
+    );
+    const missingQ2ChatPrompt = missingQ2Result.chatQuestions.find(
+      (question) => question.packet_id === 'p1-public-research-owner-01',
+    )?.chat_prompt;
+    expect(missingQ2ChatPrompt).toContain('Q2: What is the exact collection window, source system, and claim scope?');
+    expect(missingQ2ChatPrompt).not.toContain('Q1:');
+    expect(missingQ2ChatPrompt).not.toContain('Q3:');
+    const repairedQuestionnaire = readFileSync(join(repairedOutDir, 'owner_intake_questionnaire.csv'), 'utf8');
+    expect(repairedQuestionnaire).toContain('p1-public-research-owner-01,Q2,public_research_owner,ds-public');
     expect(existsSync(outDir)).toBe(false);
     expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
 
@@ -1453,7 +1599,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   });
 
   it('builds owner chat intake batches from remaining source gap packets without merging answers', () => {
-    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-owner-chat-intake-'));
+    const tempDir = createSourceGapTempDir('mkt53-source-gap-owner-chat-intake-');
     const chatQueuePath = join(tempDir, 'owner_intake_prefill_chat_questions.csv');
     const outDir = join(tempDir, 'out');
 
@@ -1461,7 +1607,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       'packet_id,priority,owner_lane,source_ids,pages,missing_source_ids,suggested_question_batch,chat_prompt,blocking_reason';
     const rows = [
       'p1-manual-owner-01,P1,business_owner_manual_review,ds-manual,ConsumerInterviews,ds-manual,Q1-Q6,Answer Q1-Q6 for p1-manual-owner-01,source-level evidence artifact is missing',
-      'p0-connector-owner-01,P0,amazon_connector_owner,ds-amz-a|ds-amz-b,CompetitionPage|ProductManage,ds-amz-a|ds-amz-b,Q1-Q6,Answer Q1-Q6 for p0-connector-owner-01,source-level evidence artifact is missing',
+      'p0-connector-owner-01,P0,amazon_connector_owner,ds-amz-a|ds-amz-b,CompetitionPage|ProductManage,ds-amz-a|ds-amz-b,Q2,Answer Q2 for p0-connector-owner-01,source-level evidence artifact is missing',
       'p2-public-owner-01,P2,public_research_owner,ds-public,IndustryNews,ds-public,Q1-Q6,Answer Q1-Q6 for p2-public-owner-01,source-level evidence artifact is missing',
     ];
     writeFileSync(chatQueuePath, `${header}\n${rows.join('\n')}\n`);
@@ -1498,13 +1644,19 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
         outputs: Record<string, { rowCount: number; headers: string[] }>;
       };
       sampleBatches: Array<{ batch_id: string; priority_mix: string; packet_count: number; question_count: number }>;
-      samplePackets: Array<{ batch_id: string; packet_id: string; answer_status: string; merge_target: string }>;
+      samplePackets: Array<{
+        batch_id: string;
+        packet_id: string;
+        question_count: number;
+        answer_status: string;
+        merge_target: string;
+      }>;
       sampleQuestions: Array<{ packet_id: string; question_id: string; response_key: string; required_for_manual_review: string }>;
     };
 
     expect(result.summary.batchCount).toBe(2);
     expect(result.summary.packetCount).toBe(3);
-    expect(result.summary.questionCount).toBe(18);
+    expect(result.summary.questionCount).toBe(13);
     expect(result.summary.sourceCount).toBe(4);
     expect(result.summary.byPriority.P0).toBe(1);
     expect(result.summary.byPriority.P1).toBe(1);
@@ -1518,27 +1670,79 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(result.summary.boundaries.pageWrites).toBe(false);
     expect(result.summary.boundaries.csvFactExport).toBe(false);
     expect(result.summary.boundaries.answerMerge).toBe(false);
-    expect(result.manifest.outputs['owner_chat_intake_questions.csv']).toMatchObject({ rowCount: 18 });
+    expect(result.manifest.outputs['owner_chat_intake_questions.csv']).toMatchObject({ rowCount: 13 });
     expect(result.manifest.outputs['owner_chat_answer_template.json'].headers).toEqual(['answerBatches']);
     expect(result.sampleBatches[0]).toMatchObject({
       batch_id: 'owner-chat-batch-01-p0',
       packet_count: 2,
-      question_count: 12,
+      question_count: 7,
     });
     expect(result.sampleBatches[0].priority_mix).toContain('P0:1');
     expect(result.samplePackets.every((packet) => packet.answer_status === 'awaiting_chat_owner_answer')).toBe(true);
     expect(result.samplePackets.every((packet) => packet.merge_target === 'owner_intake_questionnaire.csv')).toBe(true);
-    expect(result.sampleQuestions.map((question) => question.question_id)).toEqual(['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6']);
+    expect(result.samplePackets[0]).toMatchObject({ packet_id: 'p0-connector-owner-01', question_count: 1 });
+    expect(result.sampleQuestions.map((question) => question.question_id)).toEqual(['Q2', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5']);
     expect(result.sampleQuestions.every((question) => question.required_for_manual_review === 'yes')).toBe(true);
-    expect(result.sampleQuestions[0].response_key).toBe('p0-connector-owner-01.Q1');
+    expect(result.sampleQuestions[0].response_key).toBe('p0-connector-owner-01.Q2');
     expect(existsSync(outDir)).toBe(false);
     expect(output).not.toMatch(FORBIDDEN_ERP_SCRIPT_OUTPUT_RE);
+
+    execFileSync(
+      'node',
+      [
+        'scripts/data/build-source-gap-owner-chat-intake-pack.mjs',
+        '--chat-queue',
+        chatQueuePath,
+        '--out',
+        outDir,
+        '--batch-size',
+        '2',
+        '--json',
+      ],
+      { cwd: process.cwd(), encoding: 'utf8' },
+    );
+    const ownerTemplate = readFileSync(join(outDir, 'owner_chat_answer_template.md'), 'utf8');
+    const partialPacketSection = ownerTemplate.split('### p0-connector-owner-01')[1]?.split('### ')[0] ?? '';
+    expect(partialPacketSection).toContain('Q2:');
+    expect(partialPacketSection).not.toContain('Q1:');
+    expect(partialPacketSection).not.toContain('Q3:');
+    expect(ownerTemplate).not.toContain('packet_id.Q1-Q6');
+
+    rmSync(tempDir, { recursive: true, force: true });
+  });
+
+  it('rejects malformed owner chat question batches instead of partially matching valid prefixes', () => {
+    const tempDir = createSourceGapTempDir('mkt53-source-gap-owner-chat-invalid-batch-');
+    const chatQueuePath = join(tempDir, 'owner_intake_prefill_chat_questions.csv');
+    const header =
+      'packet_id,priority,owner_lane,source_ids,pages,missing_source_ids,suggested_question_batch,chat_prompt,blocking_reason';
+    const malformedRow =
+      'p1-invalid-owner-01,P1,business_owner_manual_review,ds-manual,ConsumerInterviews,ds-manual,Q10|Q7,Answer invalid batch,source-level evidence artifact is missing';
+    writeFileSync(chatQueuePath, `${header}\n${malformedRow}\n`);
+
+    expect(() =>
+      execFileSync(
+        'node',
+        [
+          'scripts/data/build-source-gap-owner-chat-intake-pack.mjs',
+          '--chat-queue',
+          chatQueuePath,
+          '--json',
+          '--no-write',
+        ],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+          stdio: 'pipe',
+        },
+      ),
+    ).toThrow(/Invalid suggested_question_batch: Q10\|Q7/);
 
     rmSync(tempDir, { recursive: true, force: true });
   });
 
   it('merges owner chat answers into intake CSVs while keeping release gates closed', () => {
-    const tempDir = mkdtempSync(join(tmpdir(), 'mkt53-source-gap-owner-chat-merge-'));
+    const tempDir = createSourceGapTempDir('mkt53-source-gap-owner-chat-merge-');
     const intakeDir = join(tempDir, 'intake');
     const chatPackDir = join(tempDir, 'chat-pack');
     const answersPath = join(tempDir, 'answers.json');
@@ -1550,7 +1754,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     const questionHeader =
       'packet_id,question_id,owner_lane,source_ids,question,expected_answer_format,required_for_promotion,answer_status,owner_answer,evidence_uri_or_path,evidence_hash,answered_by,answered_at,validation_note';
     const questionRows = [
-      'p0-owner-01,Q1,amazon_connector_owner,ds-a,Who owns this source packet?,owner_alias / owner_role,yes,missing,,,,,,Owner answer and evidence are required.',
+      `p0-owner-01,Q1,amazon_connector_owner,ds-a,Who owns this source packet?,owner_alias / owner_role,yes,answered,prefilled owner,tmp/audits/evidence/p0-owner-01.json,${evidenceHash},prefill,2026-06-29,prefilled from local evidence`,
       'p0-owner-01,Q2,amazon_connector_owner,ds-a,Where is the evidence file?,path or URI / sha256,yes,missing,,,,,,Owner answer and evidence are required.',
       'p1-owner-01,Q1,business_owner_manual_review,ds-b,Who owns this source packet?,owner_alias / owner_role,yes,missing,,,,,,Owner answer and evidence are required.',
     ];
@@ -1583,14 +1787,13 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     const chatPacketHeader =
       'batch_id,packet_id,priority,owner_lane,source_ids,pages,missing_source_ids,suggested_question_batch,blocking_reason,question_count,answer_status,merge_target';
     const chatPacketRows = [
-      'owner-chat-batch-01-p0,p0-owner-01,P0,amazon_connector_owner,ds-a,CompetitionPage,ds-a,Q1-Q2,source-level evidence artifact is missing,2,awaiting_chat_owner_answer,owner_intake_questionnaire.csv',
+      'owner-chat-batch-01-p0,p0-owner-01,P0,amazon_connector_owner,ds-a,CompetitionPage,ds-a,Q2,owner answer is required,1,awaiting_chat_owner_answer,owner_intake_questionnaire.csv',
     ];
     writeFileSync(join(chatPackDir, 'owner_chat_intake_packets.csv'), `${chatPacketHeader}\n${chatPacketRows.join('\n')}\n`);
 
     const chatQuestionHeader =
       'batch_id,packet_id,question_id,priority,owner_lane,source_ids,pages,prompt,expected_answer_format,response_key,required_for_manual_review';
     const chatQuestionRows = [
-      'owner-chat-batch-01-p0,p0-owner-01,Q1,P0,amazon_connector_owner,ds-a,CompetitionPage,Confirm owner,owner_alias / owner_role,p0-owner-01.Q1,yes',
       'owner-chat-batch-01-p0,p0-owner-01,Q2,P0,amazon_connector_owner,ds-a,CompetitionPage,Confirm source,source_system / scope,p0-owner-01.Q2,yes',
     ];
     writeFileSync(join(chatPackDir, 'owner_chat_intake_questions.csv'), `${chatQuestionHeader}\n${chatQuestionRows.join('\n')}\n`);
@@ -1609,7 +1812,6 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
               evidence_uri_or_path: 'tmp/audits/evidence/p0-owner-01.json',
               evidence_hash: evidenceHash,
               answers: {
-                Q1: 'pray / market data owner / connector-readiness packet scope only',
                 Q2: '2026-06-01..2026-06-30 / authorized read-only snapshot / CompetitionPage scope',
               },
             },
@@ -1671,10 +1873,10 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     };
 
     expect(result.summary.packetCount).toBe(1);
-    expect(result.summary.questionCount).toBe(2);
+    expect(result.summary.questionCount).toBe(1);
     expect(result.summary.answerPacketCount).toBe(1);
-    expect(result.summary.selectedQuestionCount).toBe(2);
-    expect(result.summary.mergedQuestionCount).toBe(2);
+    expect(result.summary.selectedQuestionCount).toBe(1);
+    expect(result.summary.mergedQuestionCount).toBe(1);
     expect(result.summary.missingQuestionCount).toBe(0);
     expect(result.summary.needsUpdateQuestionCount).toBe(0);
     expect(result.summary.readyCandidatePacketCount).toBe(1);
@@ -1687,7 +1889,8 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(result.sampleMergedQuestions).toHaveLength(2);
     expect(result.sampleMergedQuestions.every((question) => question.answer_status === 'answered')).toBe(true);
     expect(result.sampleMergedQuestions.every((question) => question.evidence_hash === evidenceHash)).toBe(true);
-    expect(result.sampleMergedQuestions.every((question) => question.answered_by === 'pray')).toBe(true);
+    expect(result.sampleMergedQuestions.find((question) => question.question_id === 'Q1')?.answered_by).toBe('prefill');
+    expect(result.sampleMergedQuestions.find((question) => question.question_id === 'Q2')?.answered_by).toBe('pray');
     expect(result.samplePacketQueue[0]).toMatchObject({
       packet_id: 'p0-owner-01',
       intake_status: 'chat_answers_merged_pending_validator',
@@ -1722,12 +1925,42 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     );
     const impossibleDateResult = JSON.parse(impossibleDateOutput) as {
       summary: { mergedQuestionCount: number; needsUpdateQuestionCount: number; readyCandidatePacketCount: number };
-      sampleMergedQuestions: Array<{ answer_status: string }>;
+      sampleMergedQuestions: Array<{ question_id: string; answer_status: string }>;
     };
     expect(impossibleDateResult.summary.mergedQuestionCount).toBe(0);
-    expect(impossibleDateResult.summary.needsUpdateQuestionCount).toBe(2);
+    expect(impossibleDateResult.summary.needsUpdateQuestionCount).toBe(1);
     expect(impossibleDateResult.summary.readyCandidatePacketCount).toBe(0);
-    expect(impossibleDateResult.sampleMergedQuestions.every((question) => question.answer_status === 'needs_owner_update')).toBe(true);
+    expect(impossibleDateResult.sampleMergedQuestions.find((question) => question.question_id === 'Q1')?.answer_status).toBe('answered');
+    expect(impossibleDateResult.sampleMergedQuestions.find((question) => question.question_id === 'Q2')?.answer_status).toBe('needs_owner_update');
+
+    const mismatchedChatQuestionRows = [
+      'owner-chat-batch-01-p0,p0-owner-01,Q6,P0,amazon_connector_owner,ds-a,CompetitionPage,Confirm limitations,limitations / forbidden use,p0-owner-01.Q6,yes',
+    ];
+    writeFileSync(
+      join(chatPackDir, 'owner_chat_intake_questions.csv'),
+      `${chatQuestionHeader}\n${mismatchedChatQuestionRows.join('\n')}\n`,
+    );
+    expect(() =>
+      execFileSync(
+        'node',
+        [
+          'scripts/data/merge-source-gap-owner-chat-answers.mjs',
+          '--intake',
+          intakeDir,
+          '--chat-pack',
+          chatPackDir,
+          '--answers',
+          answersPath,
+          '--out',
+          outDir,
+          '--batch-id',
+          'owner-chat-batch-01-p0',
+          '--json',
+          '--no-write',
+        ],
+        { cwd: process.cwd(), encoding: 'utf8', stdio: 'pipe' },
+      ),
+    ).toThrow(/does not match exactly one required questionnaire row/);
 
     rmSync(tempDir, { recursive: true, force: true });
   });
@@ -2108,6 +2341,51 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(manifest.totals.ok).toBeGreaterThanOrEqual(2);
   });
 
+  it('keeps canonical local snapshots and public evidence invariants current', () => {
+    const dataManagePath = join(process.cwd(), 'src/pages/DataManage.tsx');
+    const dataManageContent = readFileSync(dataManagePath);
+    const expectedHash = createHash('sha256').update(dataManageContent).digest('hex');
+
+    for (const lane of ['periodic-data', 'weekly-data']) {
+      const latest = JSON.parse(readFileSync(join(process.cwd(), 'public', lane, 'latest.json'), 'utf8')) as {
+        sources: Array<{ id: string; checkedAt?: string; fileSizeBytes?: number; sampleHash?: string }>;
+      };
+      const dataManage = latest.sources.find((source) => source.id === 'ds-027');
+      expect(dataManage).toMatchObject({ fileSizeBytes: dataManageContent.length, sampleHash: expectedHash });
+      expect(Date.parse(dataManage?.checkedAt ?? '')).toBeGreaterThanOrEqual(Date.parse('2026-07-27T13:40:21.000Z'));
+
+      const evidence = JSON.parse(readFileSync(join(process.cwd(), 'public', lane, 'public-evidence-samples.json'), 'utf8')) as {
+        records: Array<{
+          url?: string;
+          finalUrl?: string;
+          captureStatus?: string;
+          missingEvidenceTerms?: string[];
+          warnings?: string[];
+        }>;
+      };
+      for (const record of evidence.records) {
+        if (record.url?.includes('developer-docs.amazon.com') && record.captureStatus === 'captured') {
+          expect(record.finalUrl).toBeTruthy();
+          expect(new URL(record.finalUrl!).hostname).toBe(new URL(record.url).hostname);
+        }
+        if ((record.missingEvidenceTerms?.length ?? 0) > 0) {
+          expect(record.warnings).toContain('expected evidence terms were not matched in visible text');
+        }
+      }
+    }
+
+    for (const page of ['BabyCare.tsx', 'NursingProducts.tsx', 'CategoryAnalysis.tsx']) {
+      const source = readFileSync(join(process.cwd(), 'src/pages/market', page), 'utf8');
+      expect(source).toContain('record.safety?.businessDataWrites');
+      expect(source).not.toContain('publicEvidenceManifest?.summary?.businessDataWrites');
+    }
+    for (const page of ['CompetitionPage.tsx', 'competition/NewCompetition.tsx', 'competition/RegionCompetition.tsx']) {
+      const source = readFileSync(join(process.cwd(), 'src/pages', page), 'utf8');
+      expect(source).toContain('record.safety?.businessDataWrites');
+      expect(source).not.toContain('publicEvidenceManifest?.summary?.businessDataWrites');
+    }
+  });
+
   it('falls back from transient ranged public URL failures before marking weekly sources as failed', async () => {
     const originalFetch = globalThis.fetch;
     let callCount = 0;
@@ -2337,6 +2615,15 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     });
     expect(skippedEvidence.status).toBe('blocked');
     expect(skippedEvidence.checks.find((check) => check.id === 'publicEvidenceBundle')?.status).toBe('blocked');
+    expect(() => buildCustomsPublicDataAdapter({ generatedAt: '2026-02-30T00:00:00Z' })).toThrow('Invalid --generated-at value');
+    expect(() => buildCustomsPublicDataAdapter({ generatedAt: '2026-07-02T00:00:00Z' })).not.toThrow();
+    expect(() =>
+      execFileSync('node', ['scripts/data/connectors/customs-public-data-adapter.mjs', '--generated-at', '--json', '--no-write'], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        stdio: 'pipe',
+      }),
+    ).toThrow();
   });
 
   it('runs the Amazon commerce connector in blocked dry-run mode without leaking credentials', () => {

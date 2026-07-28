@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { analyzeConsistency } from './lib/project-analysis.mjs';
@@ -65,6 +65,30 @@ function sha256File(path) {
   return createHash('sha256').update(readFileSync(path)).digest('hex');
 }
 
+function topLevelContract(value) {
+  if (Array.isArray(value)) return { rootType: 'array', itemType: value.length === 0 ? 'unknown' : typeof value[0] };
+  if (value === null || typeof value !== 'object') return { rootType: value === null ? 'null' : typeof value };
+  return {
+    rootType: 'object',
+    fields: Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, Array.isArray(value[key]) ? 'array' : value[key] === null ? 'null' : typeof value[key]]),
+    ),
+  };
+}
+
+function compareCandidateContract(candidatePath, canonicalPath) {
+  if (!existsSync(canonicalPath)) return { compatible: false, reason: 'canonical-file-missing' };
+  const candidateContract = topLevelContract(JSON.parse(readFileSync(candidatePath, 'utf8')));
+  const canonicalContract = topLevelContract(JSON.parse(readFileSync(canonicalPath, 'utf8')));
+  return {
+    compatible: JSON.stringify(candidateContract) === JSON.stringify(canonicalContract),
+    candidateContract,
+    canonicalContract,
+  };
+}
+
 function buildPublicManifest(manifest, publicEvidence, customsPublicAdapter) {
   return {
     ...manifest,
@@ -103,7 +127,7 @@ function cronPreview(appRoot, cronAppDir) {
   });
 }
 
-function buildChecks({ audit, manifest, publicEvidence, periodicWeeklyParity, cron }) {
+function buildChecks({ audit, manifest, publicEvidence, canonicalContractCompatibility, cron }) {
   return [
     {
       id: 'data-consistency',
@@ -154,9 +178,9 @@ function buildChecks({ audit, manifest, publicEvidence, periodicWeeklyParity, cr
       },
     },
     {
-      id: 'periodic-weekly-parity',
-      status: periodicWeeklyParity ? 'passed' : 'failed',
-      facts: { periodicWeeklyParity },
+      id: 'canonical-contract-compatibility',
+      status: canonicalContractCompatibility.every((result) => result.compatible) ? 'passed' : 'failed',
+      facts: { comparisons: canonicalContractCompatibility },
     },
     {
       id: 'cron-print-only',
@@ -214,17 +238,13 @@ export async function buildSemiMonthlyRecoveryCandidate(options = {}) {
   }
   writeText(resolve(candidateRoot, 'cron-preview.txt'), cron);
 
-  const parityPairs = [
-    ['periodic-data/latest.json', 'weekly-data/latest.json'],
-    ['periodic-data/connectors.json', 'weekly-data/connectors.json'],
-    ['periodic-data/source-tasks.json', 'weekly-data/source-tasks.json'],
-    ['periodic-data/customs-public-adapter.json', 'weekly-data/customs-public-adapter.json'],
-    ['periodic-data/public-evidence-samples.json', 'weekly-data/public-evidence-samples.json'],
-  ];
-  const periodicWeeklyParity = parityPairs.every(
-    ([periodicPath, weeklyPath]) => readFileSync(resolve(candidateRoot, periodicPath)).equals(readFileSync(resolve(candidateRoot, weeklyPath))),
-  );
-  const checks = buildChecks({ audit, manifest, publicEvidence, periodicWeeklyParity, cron });
+  const canonicalContractCompatibility = Object.keys(candidateFiles)
+    .filter((path) => path.startsWith('periodic-data/') || path.startsWith('weekly-data/'))
+    .map((path) => ({
+      path,
+      ...compareCandidateContract(resolve(candidateRoot, path), resolve(appRoot, 'public', path)),
+    }));
+  const checks = buildChecks({ audit, manifest, publicEvidence, canonicalContractCompatibility, cron });
   const artifactPaths = [...Object.keys(candidateFiles), 'cron-preview.txt'];
   const report = {
     schemaVersion: 1,

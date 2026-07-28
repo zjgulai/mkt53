@@ -373,7 +373,7 @@ function buildPacketValidation(packetRows, acceptanceGateRows, questionValidatio
       can_export_as_fact_csv: 'false',
       blocking_reason: readyForManualReleaseReview
         ? 'manual evidence intake is complete; separate manual release review is still required before registry or page changes'
-        : gate?.next_gate ?? 'owner must fill all required fields, reviewer metadata, evidence path, sha256, and one allowed decision',
+        : normalize(gate?.next_gate) || 'owner must fill all required fields, reviewer metadata, evidence path, sha256, and one allowed decision',
       next_action: readyForManualReleaseReview
         ? 'run manual release review; keep factPromotion=false until separately approved'
         : 'collect missing manual evidence fields or correct the owner decision',

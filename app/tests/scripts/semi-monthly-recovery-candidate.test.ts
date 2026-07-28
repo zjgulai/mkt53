@@ -56,6 +56,10 @@ describe('P0-04 semi-monthly recovery candidate', () => {
       factPromotion: false,
     });
     expect(report.checks.every((check) => check.status === 'passed')).toBe(true);
+    expect(report.checks.find((check) => check.id === 'canonical-contract-compatibility')).toMatchObject({
+      status: 'passed',
+      facts: { comparisons: expect.arrayContaining([expect.objectContaining({ path: 'periodic-data/latest.json', compatible: true })]) },
+    });
     expect(report.publicEvidenceSummary).toMatchObject({ networkCalls: 0, businessDataWrites: 0 });
     expect(report.sourceStatusCounts['connector-required']).toBeGreaterThan(0);
     expect(report.sourceStatusCounts['manual-required']).toBeGreaterThan(0);
@@ -64,9 +68,14 @@ describe('P0-04 semi-monthly recovery candidate', () => {
       authorizedToPublish: false,
       authorizedToInstallCron: false,
     });
-    expect(readFileSync(join(candidateRoot, 'periodic-data/latest.json'))).toEqual(
-      readFileSync(join(candidateRoot, 'weekly-data/latest.json')),
-    );
+    const periodicLatest = JSON.parse(readFileSync(join(candidateRoot, 'periodic-data/latest.json'), 'utf8'));
+    const weeklyLatest = JSON.parse(readFileSync(join(candidateRoot, 'weekly-data/latest.json'), 'utf8'));
+    expect(periodicLatest.publicEvidence.manifestPath).toBe('public/periodic-data/public-evidence-samples.json');
+    expect(periodicLatest.customsPublicAdapter.manifestPath).toBe('public/periodic-data/customs-public-adapter.json');
+    expect(weeklyLatest).toEqual(periodicLatest);
+    for (const file of ['latest.json', 'connectors.json', 'source-tasks.json', 'customs-public-adapter.json', 'public-evidence-samples.json']) {
+      expect(readFileSync(join(candidateRoot, 'periodic-data', file))).toEqual(readFileSync(join(candidateRoot, 'weekly-data', file)));
+    }
     expect(existsSync(join(candidateRoot, 'recovery-preflight.json'))).toBe(true);
     for (const [path, snapshot] of before) {
       expect(readFileSync(path)).toEqual(snapshot);

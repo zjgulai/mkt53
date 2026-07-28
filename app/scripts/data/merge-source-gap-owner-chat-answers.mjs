@@ -420,7 +420,7 @@ function buildSkeletonMarkdown(batchId, chatPackets, chatQuestions) {
     '- pageWrites=false',
     '- csvFactExport=false',
     '',
-    'Fill every Q1-Q6 plus evidence_uri_or_path, evidence_hash, answered_by, and answered_at before running the merge as a readiness candidate.',
+    'Fill every question listed under each packet plus evidence_uri_or_path, evidence_hash, answered_by, and answered_at before running the merge as a readiness candidate. Already-prefilled question IDs are intentionally omitted.',
     '',
   ];
 
@@ -448,14 +448,14 @@ function buildSkeletonMarkdown(batchId, chatPackets, chatQuestions) {
   return `${lines.join('\n')}\n`;
 }
 
-function mergeQuestionnaire(questionRows, selectedPacketIds, answerMap) {
+function mergeQuestionnaire(questionRows, requestedQuestionKeys, answerMap) {
   let selectedQuestionCount = 0;
   let mergedQuestionCount = 0;
   let missingQuestionCount = 0;
   let needsUpdateQuestionCount = 0;
 
   const mergedRows = questionRows.map((row) => {
-    if (!selectedPacketIds.has(row.packet_id)) return row;
+    if (!requestedQuestionKeys.has(`${row.packet_id}:${row.question_id}`)) return row;
 
     selectedQuestionCount += 1;
     const submitted = answerForQuestion(answerMap.get(row.packet_id), row.question_id);
@@ -485,6 +485,56 @@ function mergeQuestionnaire(questionRows, selectedPacketIds, answerMap) {
   });
 
   return { mergedRows, selectedQuestionCount, mergedQuestionCount, missingQuestionCount, needsUpdateQuestionCount };
+}
+
+function validateRequestedQuestions(questionRows, chatPackets, chatQuestions) {
+  const selectedPacketIds = new Set(chatPackets.map((packet) => packet.packet_id));
+  const packetQuestionCounts = new Map();
+  const requestedQuestionKeys = new Set();
+
+  for (const question of chatQuestions) {
+    if (!selectedPacketIds.has(question.packet_id)) {
+      throw new Error(
+        `Chat question ${question.packet_id}.${question.question_id} does not belong to a selected chat packet`,
+      );
+    }
+
+    const key = `${question.packet_id}:${question.question_id}`;
+    if (requestedQuestionKeys.has(key)) {
+      throw new Error(`Duplicate chat question key: ${question.packet_id}.${question.question_id}`);
+    }
+
+    const matchingRows = questionRows.filter(
+      (row) =>
+        row.packet_id === question.packet_id &&
+        row.question_id === question.question_id &&
+        row.required_for_promotion === 'yes',
+    );
+    if (matchingRows.length !== 1) {
+      throw new Error(
+        `Chat question ${question.packet_id}.${question.question_id} does not match exactly one required questionnaire row`,
+      );
+    }
+
+    requestedQuestionKeys.add(key);
+    packetQuestionCounts.set(question.packet_id, (packetQuestionCounts.get(question.packet_id) ?? 0) + 1);
+  }
+
+  for (const packet of chatPackets) {
+    const declaredQuestionCount = Number(String(packet.question_count ?? '').trim());
+    const actualQuestionCount = packetQuestionCounts.get(packet.packet_id) ?? 0;
+    if (
+      !Number.isSafeInteger(declaredQuestionCount) ||
+      declaredQuestionCount <= 0 ||
+      actualQuestionCount !== declaredQuestionCount
+    ) {
+      throw new Error(
+        `Chat packet ${packet.packet_id} question_count=${packet.question_count} does not match ${actualQuestionCount} chat question rows`,
+      );
+    }
+  }
+
+  return requestedQuestionKeys;
 }
 
 function updatePacketRows(packetRows, selectedPacketIds, mergedQuestionRows) {
@@ -646,10 +696,11 @@ function main() {
   }
 
   const selectedPacketIds = new Set(chatPackets.map((packet) => packet.packet_id));
+  const requestedQuestionKeys = validateRequestedQuestions(questionnaireRows, chatPackets, chatQuestions);
   const rawAnswers = existsSync(answersPath) ? JSON.parse(readFileSync(answersPath, 'utf8')) : {};
   const answerPackets = flattenAnswerSubmission(rawAnswers, options.batchId);
   const answerMap = buildAnswerMap(answerPackets, selectedPacketIds);
-  const mergeStats = mergeQuestionnaire(questionnaireRows, selectedPacketIds, answerMap);
+  const mergeStats = mergeQuestionnaire(questionnaireRows, requestedQuestionKeys, answerMap);
   const mergedPacketRows = updatePacketRows(packetRows, selectedPacketIds, mergeStats.mergedRows);
   const mergedReleaseGateRows = updateReleaseGateRows(releaseGateRows, selectedPacketIds, mergeStats.mergedRows);
   const mergedSourceRows = updateSourceRows(sourceRows, selectedPacketIds, mergedPacketRows);

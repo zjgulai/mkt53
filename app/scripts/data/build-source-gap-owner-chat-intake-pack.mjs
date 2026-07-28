@@ -90,6 +90,40 @@ const QUESTION_SPECS = [
   },
 ];
 
+function questionSpecsForBatch(value) {
+  const text = String(value ?? '').trim().toUpperCase();
+  if (!text) {
+    throw new Error('suggested_question_batch must name at least one question');
+  }
+
+  const selectedIds = new Set();
+  for (const token of text.split('|').map((part) => part.trim())) {
+    const singleMatch = token.match(/^Q([1-6])$/);
+    if (singleMatch) {
+      selectedIds.add(`Q${singleMatch[1]}`);
+      continue;
+    }
+
+    const rangeMatch = token.match(/^Q([1-6])\s*(?:-|–|—|TO)\s*Q([1-6])$/);
+    if (!rangeMatch) {
+      throw new Error(`Invalid suggested_question_batch: ${value}`);
+    }
+
+    const start = Number(rangeMatch[1]);
+    const end = Number(rangeMatch[2]);
+    const step = start <= end ? 1 : -1;
+    for (let question = start; question !== end + step; question += step) {
+      selectedIds.add(`Q${question}`);
+    }
+  }
+
+  const specs = QUESTION_SPECS.filter((spec) => selectedIds.has(spec.id));
+  if (specs.length === 0) {
+    throw new Error(`Invalid suggested_question_batch: ${value}`);
+  }
+  return specs;
+}
+
 const PRIORITY_RANK = new Map([
   ['P0', 0],
   ['P1', 1],
@@ -265,6 +299,10 @@ function buildPackets(rows, batchSize) {
     const pages = unique(chunk.flatMap((row) => splitList(row.pages)));
     const ownerLanes = unique(chunk.map((row) => row.owner_lane));
     const priorityMix = countBy(chunk, (row) => row.priority);
+    const batchQuestionCount = chunk.reduce(
+      (count, packet) => count + questionSpecsForBatch(packet.suggested_question_batch).length,
+      0,
+    );
 
     batches.push({
       batch_id: batchId,
@@ -277,13 +315,14 @@ function buildPackets(rows, batchSize) {
       packet_ids: chunk.map((row) => row.packet_id).join('|'),
       source_ids: sourceIds.join('|'),
       pages: pages.join('|'),
-      question_count: chunk.length * QUESTION_SPECS.length,
-      recommended_response_format: 'Q1-Q6 yes/no plus evidence fields per packet_id',
+      question_count: batchQuestionCount,
+      recommended_response_format: 'answer only the requested question IDs plus evidence fields per packet_id',
       next_step_after_answer:
         'merge answers into owner_intake_questionnaire.csv, then run data:source-gaps:owner-intake:validate',
     });
 
     for (const packet of chunk) {
+      const requestedQuestionSpecs = questionSpecsForBatch(packet.suggested_question_batch);
       packetRows.push({
         batch_id: batchId,
         packet_id: packet.packet_id,
@@ -294,12 +333,12 @@ function buildPackets(rows, batchSize) {
         missing_source_ids: packet.missing_source_ids,
         suggested_question_batch: packet.suggested_question_batch,
         blocking_reason: packet.blocking_reason,
-        question_count: QUESTION_SPECS.length,
+        question_count: requestedQuestionSpecs.length,
         answer_status: 'awaiting_chat_owner_answer',
         merge_target: 'owner_intake_questionnaire.csv',
       });
 
-      for (const spec of QUESTION_SPECS) {
+      for (const spec of requestedQuestionSpecs) {
         questionRows.push({
           batch_id: batchId,
           packet_id: packet.packet_id,
@@ -330,7 +369,7 @@ function buildAnswerTemplateJson(summary, batches, packetRows) {
       owner_lane: row.owner_lane,
       source_ids: row.source_ids,
       pages: row.pages,
-      answers: Object.fromEntries(QUESTION_SPECS.map((spec) => [spec.id, ''])),
+      answers: Object.fromEntries(questionSpecsForBatch(row.suggested_question_batch).map((spec) => [spec.id, ''])),
     });
   }
 
@@ -396,16 +435,11 @@ function buildAnswerTemplateMarkdown(summary, batches, packetRows) {
     '',
     '## Answer Format',
     '',
-    'Paste answers by packet_id. A compact form is acceptable when every Q1-Q6 is explicitly answered:',
+    'Paste answers by packet_id. Answer every question listed for that packet; already-prefilled questions are intentionally omitted:',
     '',
     '```text',
     'packet_id: <packet_id>',
-    'Q1: <owner_alias / owner_role / responsibility_scope>',
-    'Q2: <date_range / source_system / claim_scope / applicable_pages>',
-    'Q3: <evidence_uri_or_path / sha256 / minimum_artifact_if_pending>',
-    'Q4: <field_dictionary / row_or_sample_count / metric_definition / filters>',
-    'Q5: <display_decision / export_decision / gate_decision / approval_boundary>',
-    'Q6: <limitations / forbidden_use / refresh_owner / refresh_cadence>',
+    '<requested_question_id>: <answer in the expected format shown for this packet>',
     '```',
     '',
   ];
@@ -429,7 +463,8 @@ function buildAnswerTemplateMarkdown(summary, batches, packetRows) {
       lines.push(`- blocking_reason=${packet.blocking_reason}`);
       lines.push('');
 
-      for (const spec of QUESTION_SPECS) {
+      const requestedQuestionSpecs = questionSpecsForBatch(packet.suggested_question_batch);
+      for (const spec of requestedQuestionSpecs) {
         lines.push(`- ${spec.id}: ${spec.prompt}`);
         lines.push(`  expected=${spec.expected}`);
       }
@@ -437,7 +472,7 @@ function buildAnswerTemplateMarkdown(summary, batches, packetRows) {
       lines.push('');
       lines.push('```text');
       lines.push(`packet_id: ${packet.packet_id}`);
-      for (const spec of QUESTION_SPECS) {
+      for (const spec of requestedQuestionSpecs) {
         lines.push(`${spec.id}: `);
       }
       lines.push('```');
@@ -449,7 +484,7 @@ function buildAnswerTemplateMarkdown(summary, batches, packetRows) {
 }
 
 function buildRunbook(summary) {
-  return `---\ntitle: mkt53 owner chat intake merge runbook ${dateSlug()}\nstatus: local-runbook\ncreated_at: ${summary.generatedAt}\nprovider_calls: false\nrestricted_connector_access: false\nproduction_writes: false\nsource_registry_writes: false\n---\n\n# mkt53 Owner Chat Intake Merge Runbook ${dateSlug()}\n\n## Boundary\n\n- current_scope=local_owner_answer_merge_guidance\n- providerCalls=false\n- restrictedConnectorAccess=false\n- productionWrites=false\n- productionDeploy=false\n- factPromotion=false\n- sourceRegistryWrites=false\n- pageWrites=false\n- csvFactExport=false\n\n## Steps After Owner Answers\n\n1. Save the chat answers as a local draft artifact under tmp/audits/source-gap-owner-chat-answers-${dateSlug()}/.\n2. Map each packet_id.Q1-Q6 answer into owner_intake_questionnaire.csv fields: owner_answer, evidence_uri_or_path, evidence_hash, answered_by, answered_at, validation_note.\n3. Keep source registry, page display, and CSV fact export gates closed during merge.\n4. Run: npm run data:source-gaps:owner-intake:validate -- --intake <merged_intake_dir> --out tmp/audits/source-gap-owner-intake-chat-validation-${dateSlug()}.\n5. Treat validator ready_for_manual_review as a manual-review queue state, not as source registry write approval or deployment approval.\n\n## Current Pack\n\n- sourceChatQueue=${summary.sourceChatQueue}\n- batchCount=${summary.batchCount}\n- packetCount=${summary.packetCount}\n- questionCount=${summary.questionCount}\n`;
+  return `---\ntitle: mkt53 owner chat intake merge runbook ${dateSlug()}\nstatus: local-runbook\ncreated_at: ${summary.generatedAt}\nprovider_calls: false\nrestricted_connector_access: false\nproduction_writes: false\nsource_registry_writes: false\n---\n\n# mkt53 Owner Chat Intake Merge Runbook ${dateSlug()}\n\n## Boundary\n\n- current_scope=local_owner_answer_merge_guidance\n- providerCalls=false\n- restrictedConnectorAccess=false\n- productionWrites=false\n- productionDeploy=false\n- factPromotion=false\n- sourceRegistryWrites=false\n- pageWrites=false\n- csvFactExport=false\n\n## Steps After Owner Answers\n\n1. Save the chat answers as a local draft artifact under tmp/audits/source-gap-owner-chat-answers-${dateSlug()}/.\n2. Map only each requested packet_id.question_id answer into owner_intake_questionnaire.csv fields: owner_answer, evidence_uri_or_path, evidence_hash, answered_by, answered_at, validation_note.\n3. Keep source registry, page display, and CSV fact export gates closed during merge.\n4. Run: npm run data:source-gaps:owner-intake:validate -- --intake <merged_intake_dir> --out tmp/audits/source-gap-owner-intake-chat-validation-${dateSlug()}.\n5. Treat validator ready_for_manual_review as a manual-review queue state, not as source registry write approval or deployment approval.\n\n## Current Pack\n\n- sourceChatQueue=${summary.sourceChatQueue}\n- batchCount=${summary.batchCount}\n- packetCount=${summary.packetCount}\n- questionCount=${summary.questionCount}\n`;
 }
 
 function buildManifest(summary, outputs) {

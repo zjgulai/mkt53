@@ -64,7 +64,10 @@ export default function BabyCare() {
   );
   const capturedBabyCareEvidence = babyCareEvidence.filter((record) => record.captureStatus === 'captured');
   const babyCareEvidenceNetworkCalls = babyCareEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
-  const babyCareEvidenceBusinessDataWrites = publicEvidenceManifest?.summary?.businessDataWrites ?? 0;
+  const babyCareEvidenceBusinessDataWrites = babyCareEvidence.reduce(
+    (total, record) => total + (record.safety?.businessDataWrites ?? 0),
+    0,
+  );
   const babyCareEvidenceStatusLabel =
     publicEvidenceStatus === 'ready'
       ? `${capturedBabyCareEvidence.length}/${babyCareEvidence.length} captured`

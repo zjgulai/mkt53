@@ -64,7 +64,10 @@ export default function NursingProducts() {
   );
   const capturedNursingEvidence = nursingEvidence.filter((record) => record.captureStatus === 'captured');
   const nursingEvidenceNetworkCalls = nursingEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
-  const nursingEvidenceBusinessDataWrites = publicEvidenceManifest?.summary?.businessDataWrites ?? 0;
+  const nursingEvidenceBusinessDataWrites = nursingEvidence.reduce(
+    (total, record) => total + (record.safety?.businessDataWrites ?? 0),
+    0,
+  );
   const nursingEvidenceStatusLabel =
     publicEvidenceStatus === 'ready'
       ? `${capturedNursingEvidence.length}/${nursingEvidence.length} captured`

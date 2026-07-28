@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { join } from 'node:path';
 
 import {
   projectRegulationIntakeToSkuDraft,
@@ -150,5 +151,25 @@ describe('DATA-REG synthetic intake to SKU draft projection', () => {
       canonicalPath,
     ], { cwd: process.cwd(), encoding: 'utf8', stdio: 'pipe' })).toThrow();
     expect(() => readFileSync(canonicalPath)).toThrow();
+  });
+
+  it('tightens an existing draft artifact to owner-only permissions on overwrite', () => {
+    const tmpRoot = join(process.cwd(), 'tmp');
+    mkdirSync(tmpRoot, { recursive: true });
+    const tempDir = mkdtempSync(join(tmpRoot, 'regulation-draft-permissions-'));
+    const outputPath = join(tempDir, 'draft.json');
+
+    try {
+      writeFileSync(outputPath, '{}\n', { mode: 0o644 });
+      chmodSync(outputPath, 0o644);
+      execFileSync('node', ['scripts/data/project-regulation-intake-to-sku-draft.mjs', '--write', outputPath, '--json'], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+
+      expect(statSync(outputPath).mode & 0o777).toBe(0o600);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
   });
 });

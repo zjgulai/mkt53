@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { chmodSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -329,6 +329,7 @@ function main() {
     const target = assertTmpWritePath(appRoot, options.write);
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, `${serialized}\n`, { encoding: 'utf8', mode: 0o600 });
+    chmodSync(target, 0o600);
   }
   process.stdout.write(`${options.json ? serialized : `${report.status}: ${report.matrixDraft.records.length} draft record(s)`}\n`);
   if (!report.passed) process.exitCode = 1;

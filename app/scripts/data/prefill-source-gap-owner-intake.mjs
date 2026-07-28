@@ -85,6 +85,33 @@ const QUESTIONNAIRE_FIELDS = QUESTIONNAIRE_REQUIRED_COLUMNS;
 const PACKET_QUEUE_FIELDS = PACKET_QUEUE_REQUIRED_COLUMNS;
 const RELEASE_GATE_FIELDS = RELEASE_GATE_REQUIRED_COLUMNS;
 const SOURCE_MATRIX_FIELDS = SOURCE_MATRIX_REQUIRED_COLUMNS;
+const REQUIRED_OWNER_QUESTION_IDS = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6'];
+const OWNER_QUESTION_SPECS = {
+  Q1: {
+    question: 'Who is the owner alias and role accountable for this source packet?',
+    expectedAnswerFormat: 'owner_alias / owner_role',
+  },
+  Q2: {
+    question: 'What is the exact collection window, source system, and claim scope?',
+    expectedAnswerFormat: 'YYYY-MM-DD..YYYY-MM-DD / system / scope text',
+  },
+  Q3: {
+    question: 'Where is the read-only export, snapshot, or evidence file stored, and what is its hash?',
+    expectedAnswerFormat: 'path or URI / sha256 or content hash',
+  },
+  Q4: {
+    question: 'What field dictionary, row count or sample size, and metric definition should be used?',
+    expectedAnswerFormat: 'field dictionary path / count / metric definition',
+  },
+  Q5: {
+    question: 'Can the data be displayed as an internal fact, exported as CSV, both, or only kept as a gate?',
+    expectedAnswerFormat: 'display yes/no + export yes/no + allowed scope',
+  },
+  Q6: {
+    question: 'What limitations, forbidden interpretations, and refresh owner must stay attached?',
+    expectedAnswerFormat: 'limitations / forbidden claims / refresh owner',
+  },
+};
 
 const PREFILL_EVIDENCE_FIELDS = [
   'source_id',
@@ -373,7 +400,6 @@ function buildAnswer(question, packet, packetEvidenceRows) {
   const evidenceSummary = packetEvidenceRows
     .map((row) => `${row.source_id}:${row.evidence_uri_or_path}#sha256:${row.evidence_hash}`)
     .join('; ');
-  const supportedClaims = packetEvidenceRows.map((row) => `${row.source_id}: ${row.supported_claim}`).join(' | ');
   const blockedClaims = packetEvidenceRows.map((row) => `${row.source_id}: ${row.blocked_claims}`).join(' | ');
   const evidencePaths = packetEvidenceRows.map((row) => row.evidence_uri_or_path).join('|');
   const evidenceHashes = `sha256:${createHash('sha256')
@@ -389,11 +415,7 @@ function buildAnswer(question, packet, packetEvidenceRows) {
   }
 
   if (question.question_id === 'Q2') {
-    return {
-      answer: `collection_window=2026-06-24 public evidence snapshot; source_system=local public evidence matrices; claim_scope=${supportedClaims}`,
-      evidencePath: evidencePaths,
-      evidenceHash: evidenceHashes,
-    };
+    return undefined;
   }
 
   if (question.question_id === 'Q3') {
@@ -427,6 +449,77 @@ function buildAnswer(question, packet, packetEvidenceRows) {
   };
 }
 
+function requiredQuestionCount(packet) {
+  const declared = Number(String(packet.required_owner_answers ?? '').trim());
+  return Number.isSafeInteger(declared) && declared > 0 ? declared : REQUIRED_OWNER_QUESTION_IDS.length;
+}
+
+function expectedQuestionIds(packet) {
+  const count = requiredQuestionCount(packet);
+  if (count === 1) return ['Q2'];
+  return REQUIRED_OWNER_QUESTION_IDS.slice(0, Math.min(count, REQUIRED_OWNER_QUESTION_IDS.length));
+}
+
+function completeQuestionnaireRows(packetRows, questionnaireRows) {
+  const completedRows = [...questionnaireRows];
+  const existingKeys = new Set(questionnaireRows.map((row) => `${row.packet_id}:${row.question_id}`));
+
+  for (const packet of packetRows) {
+    for (const questionId of expectedQuestionIds(packet)) {
+      const key = `${packet.packet_id}:${questionId}`;
+      if (existingKeys.has(key)) continue;
+      const spec = OWNER_QUESTION_SPECS[questionId];
+      completedRows.push({
+        packet_id: packet.packet_id,
+        question_id: questionId,
+        owner_lane: packet.owner_lane,
+        source_ids: packet.source_ids,
+        question: spec.question,
+        expected_answer_format: spec.expectedAnswerFormat,
+        required_for_promotion: 'yes',
+        answer_status: 'missing',
+        owner_answer: '',
+        evidence_uri_or_path: '',
+        evidence_hash: '',
+        answered_by: '',
+        answered_at: '',
+        validation_note: 'Questionnaire row restored from the standard owner-intake contract; owner answer and evidence are still required.',
+      });
+      existingKeys.add(key);
+    }
+  }
+
+  return completedRows;
+}
+
+function packetQuestionState(packet, questionnaireRows) {
+  const expectedCount = requiredQuestionCount(packet);
+  const requiredRows = questionnaireRows.filter(
+    (row) => row.packet_id === packet.packet_id && row.required_for_promotion === 'yes',
+  );
+  const questionIds = new Set(requiredRows.map((row) => row.question_id));
+  const expectedQuestionIds =
+    expectedCount === REQUIRED_OWNER_QUESTION_IDS.length ? REQUIRED_OWNER_QUESTION_IDS : ['Q2'];
+  const structurallyMissingQuestionIds = expectedQuestionIds.filter((questionId) => !questionIds.has(questionId));
+  const unansweredQuestionIds = requiredRows
+    .filter((row) => row.answer_status !== 'answered')
+    .map((row) => row.question_id);
+  const missingQuestionIds = [...new Set([...structurallyMissingQuestionIds, ...unansweredQuestionIds])];
+  const shapeValid =
+    requiredRows.length === expectedCount &&
+    questionIds.size === expectedCount &&
+    structurallyMissingQuestionIds.length === 0;
+  const answeredCount = requiredRows.filter((row) => row.answer_status === 'answered').length;
+
+  return {
+    expectedCount,
+    answeredCount,
+    structurallyMissingQuestionIds,
+    missingQuestionIds,
+    ready: shapeValid && answeredCount === expectedCount,
+  };
+}
+
 function buildPrefill({ questionnaireRows, packetRows, evidenceBySource }) {
   const packetById = new Map(packetRows.map((packet) => [packet.packet_id, packet]));
   const packetPrefill = new Map(
@@ -436,12 +529,14 @@ function buildPrefill({ questionnaireRows, packetRows, evidenceBySource }) {
     }),
   );
 
-  const nextQuestionnaire = questionnaireRows.map((question) => {
+  const completeQuestionnaire = completeQuestionnaireRows(packetRows, questionnaireRows);
+  const nextQuestionnaire = completeQuestionnaire.map((question) => {
     const packet = packetById.get(question.packet_id);
     const evidence = packetPrefill.get(question.packet_id);
     if (!packet || !evidence?.isComplete) return question;
 
     const answer = buildAnswer(question, packet, evidence.evidenceRows);
+    if (!answer) return question;
     return {
       ...question,
       answer_status: 'answered',
@@ -454,21 +549,17 @@ function buildPrefill({ questionnaireRows, packetRows, evidenceBySource }) {
     };
   });
 
-  const questionCountByPacket = countBy(nextQuestionnaire, (row) => row.packet_id);
-  const answeredCountByPacket = countBy(
-    nextQuestionnaire.filter((row) => row.answer_status === 'answered'),
-    (row) => row.packet_id,
+  const questionStateByPacket = new Map(
+    packetRows.map((packet) => [packet.packet_id, packetQuestionState(packet, nextQuestionnaire)]),
   );
 
   const nextPacketRows = packetRows.map((packet) => {
-    const required = Number(questionCountByPacket[packet.packet_id] ?? packet.required_owner_answers ?? 0);
-    const answered = Number(answeredCountByPacket[packet.packet_id] ?? 0);
-    const ready = required > 0 && answered === required;
+    const state = questionStateByPacket.get(packet.packet_id);
     return {
       ...packet,
-      intake_status: ready ? 'prefilled_ready_for_validator' : 'awaiting_owner_submission',
-      submitted_owner_answers: answered,
-      required_owner_answers: required,
+      intake_status: state.ready ? 'prefilled_ready_for_validator' : 'awaiting_owner_submission',
+      submitted_owner_answers: state.answeredCount,
+      required_owner_answers: state.expectedCount,
       ready_for_registry_binding: 'false',
       ready_for_fact_display: 'false',
       ready_for_csv_export: 'false',
@@ -477,26 +568,29 @@ function buildPrefill({ questionnaireRows, packetRows, evidenceBySource }) {
 
   const nextReleaseGateRows = packetRows.map((packet) => {
     const evidence = packetPrefill.get(packet.packet_id);
-    const required = Number(questionCountByPacket[packet.packet_id] ?? packet.required_owner_answers ?? 0);
-    const answered = Number(answeredCountByPacket[packet.packet_id] ?? 0);
-    const ready = required > 0 && answered === required;
+    const state = questionStateByPacket.get(packet.packet_id);
     return {
       release_gate_id: `owner-intake-prefill:${packet.packet_id}`,
       packet_id: packet.packet_id,
       owner_lane: packet.owner_lane,
       priority: packet.priority,
       source_ids: packet.source_ids,
-      required_question_count: required,
-      submitted_question_count: answered,
-      submitted_evidence_count: ready ? evidence.evidenceRows.length : 0,
-      missing_required_questions: Math.max(required - answered, 0),
-      gate_status: ready ? 'prefilled_ready_for_validation' : 'blocked_owner_submission_required',
+      required_question_count: state.expectedCount,
+      submitted_question_count: state.answeredCount,
+      submitted_evidence_count: state.ready ? evidence.evidenceRows.length : 0,
+      missing_required_questions: Math.max(
+        state.expectedCount - state.answeredCount,
+        state.missingQuestionIds.length,
+      ),
+      gate_status: state.ready ? 'prefilled_ready_for_validation' : 'blocked_owner_submission_required',
       can_write_source_registry: 'false',
       can_update_page_display: 'false',
       can_export_as_fact_csv: 'false',
-      blocking_reason: ready
+      blocking_reason: state.ready
         ? 'local evidence prefill is complete enough for validator and manual review; release writes remain gated'
-        : `missing evidence for source_ids=${evidence?.missingSourceIds.join('|') || packet.source_ids}`,
+        : state.structurallyMissingQuestionIds.length > 0
+          ? `questionnaire rows missing for question_ids=${state.structurallyMissingQuestionIds.join('|')}`
+          : `missing evidence or owner answers for source_ids=${evidence?.missingSourceIds.join('|') || packet.source_ids}`,
       next_command_after_owner_submission: 'npm run data:source-gaps:owner-intake:validate -- --intake <prefill_dir>',
     };
   });
@@ -504,20 +598,29 @@ function buildPrefill({ questionnaireRows, packetRows, evidenceBySource }) {
   const chatQuestions = packetRows
     .map((packet) => {
       const evidence = packetPrefill.get(packet.packet_id);
-      const ready = evidence?.isComplete === true;
-      if (ready) return undefined;
+      const state = questionStateByPacket.get(packet.packet_id);
+      const missingQuestionIds = state.missingQuestionIds;
+      if (missingQuestionIds.length === 0) return undefined;
+      const requestedQuestionDetails = missingQuestionIds
+        .map((questionId) => {
+          const spec = OWNER_QUESTION_SPECS[questionId];
+          return `${questionId}: ${spec.question} (format: ${spec.expectedAnswerFormat})`;
+        })
+        .join('; ');
       return {
         packet_id: packet.packet_id,
         priority: packet.priority,
         owner_lane: packet.owner_lane,
         source_ids: packet.source_ids,
         pages: packet.pages,
-        missing_source_ids: evidence?.missingSourceIds.join('|') || packet.source_ids,
-        suggested_question_batch: 'Q1-Q6',
-        chat_prompt: `请按 ${packet.packet_id} 回答 Q1-Q6：owner/role、collection window/source system/claim scope、evidence path/hash、field dictionary/count/metric definition、display/export/gate decision、limitations/forbidden use/refresh owner。`,
-        blocking_reason: evidence?.missingSourceIds.length
+        missing_source_ids: evidence?.missingSourceIds.join('|') ?? packet.source_ids,
+        suggested_question_batch: missingQuestionIds.join('|'),
+        chat_prompt: `请按 ${packet.packet_id} 仅回答以下缺失问题：${requestedQuestionDetails}`,
+        blocking_reason: state.structurallyMissingQuestionIds.length > 0
+          ? 'one or more required questionnaire rows are missing and must be created before validation'
+          : evidence?.missingSourceIds.length
           ? 'source-level evidence artifact is missing for at least one source_id'
-          : 'packet has no source-level evidence artifact',
+          : 'one or more owner-required questions cannot be derived from local evidence',
       };
     })
     .filter(Boolean);
@@ -529,20 +632,18 @@ function buildRunbook(summary) {
   return `---\ntitle: mkt53 source gap owner intake prefill ${dateSlug()}\nstatus: local-prefill-only\ncreated_at: ${summary.generatedAt}\nprovider_calls: false\nrestricted_connector_access: false\nproduction_writes: false\nfact_promotion: false\nsource_registry_writes: false\n---\n\n# mkt53 Source Gap Owner Intake Prefill ${dateSlug()}\n\n## Boundary\n\n- current_scope=local_prefill_only\n- providerCalls=false\n- restrictedConnectorAccess=false\n- productionWrites=false\n- productionDeploy=false\n- factPromotion=false\n- sourceRegistryWrites=false\n- pageWrites=false\n- csvFactExport=false\n\nThis package only copies locally matched evidence into an owner-intake-compatible questionnaire. It is not owner approval, release approval, page update, CSV fact export approval, or production deployment.\n\n## Summary\n\n- sourceGapCount=${summary.sourceGapCount}\n- packetCount=${summary.packetCount}\n- questionCount=${summary.questionCount}\n- prefilledQuestionCount=${summary.prefilledQuestionCount}\n- prefilledReadyPacketCount=${summary.prefilledReadyPacketCount}\n- chatQuestionPacketCount=${summary.chatQuestionPacketCount}\n\n## Next Commands\n\n1. npm run data:source-gaps:owner-intake:validate -- --intake ${summary.relativeOutputDir} --out tmp/audits/source-gap-owner-intake-prefill-validation-${dateSlug()}\n2. Use owner_intake_prefill_chat_questions.csv for remaining chat-based owner answers.\n3. Keep manual release review separate from validator readiness.\n`;
 }
 
-function buildSummary({ appRoot, outDir, sourceRows, packetRows, questionnaireRows, nextQuestionnaire, evidenceRows, chatQuestions }) {
+function buildSummary({ appRoot, outDir, sourceRows, packetRows, questionnaireRows, nextQuestionnaire, nextPacketRows, evidenceRows, chatQuestions }) {
   const prefilledQuestionCount = nextQuestionnaire.filter((row) => row.answer_status === 'answered').length;
-  const answeredByPacket = countBy(
-    nextQuestionnaire.filter((row) => row.answer_status === 'answered'),
-    (row) => row.packet_id,
-  );
-  const prefilledReadyPacketCount = packetRows.filter((packet) => Number(answeredByPacket[packet.packet_id] ?? 0) === Number(packet.required_owner_answers)).length;
+  const prefilledReadyPacketCount = nextPacketRows.filter(
+    (packet) => packet.intake_status === 'prefilled_ready_for_validator',
+  ).length;
   return {
     generatedAt: new Date().toISOString(),
     outputDir: outDir,
     relativeOutputDir: outDir.startsWith(`${appRoot}/`) ? outDir.slice(appRoot.length + 1) : outDir,
     sourceGapCount: sourceRows.length,
     packetCount: packetRows.length,
-    questionCount: questionnaireRows.length,
+    questionCount: nextQuestionnaire.length,
     evidenceIndexRowCount: evidenceRows.length,
     usableEvidenceRowCount: evidenceRows.filter((row) => row.prefill_usable === 'true').length,
     prefilledQuestionCount,
@@ -603,6 +704,7 @@ function run(argv = process.argv.slice(2)) {
     packetRows,
     questionnaireRows,
     nextQuestionnaire,
+    nextPacketRows,
     evidenceRows,
     chatQuestions,
   });

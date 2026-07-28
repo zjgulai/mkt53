@@ -302,7 +302,15 @@ function groupRows(rows) {
 
 function buildPackets(priorityRows) {
   return groupRows(priorityRows).map((group, index) => {
-    const packetId = `${group.priority.toLowerCase()}-${group.owner_lane.replaceAll('_', '-')}-${String(index + 1).padStart(2, '0')}`;
+    const safeSegment = (value, fallback) =>
+      String(value ?? '')
+        .normalize('NFKC')
+        .toLowerCase()
+        .replaceAll('_', '-')
+        .replace(/[^a-z0-9-]+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '') || fallback;
+    const packetId = `${safeSegment(group.priority, 'priority')}-${safeSegment(group.owner_lane, 'owner')}-${String(index + 1).padStart(2, '0')}`;
 
     return {
       packet_id: packetId,
@@ -322,6 +330,13 @@ function buildPackets(priorityRows) {
       rows: group.rows,
     };
   });
+}
+
+function packetMarkdownPath(packetDir, packetId) {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(packetId)) {
+    throw new Error(`Unsafe packet_id for artifact filename: ${packetId}`);
+  }
+  return join(packetDir, `${packetId}.md`);
 }
 
 function buildQuestions(packets) {
@@ -466,7 +481,7 @@ function run(argv = process.argv.slice(2)) {
     const packetDir = join(outDir, 'packets');
     mkdirSync(packetDir, { recursive: true });
     for (const packet of packets) {
-      writeFileSync(join(packetDir, `${packet.packet_id}.md`), packetMarkdown(packet, summary.generatedAt));
+      writeFileSync(packetMarkdownPath(packetDir, packet.packet_id), packetMarkdown(packet, summary.generatedAt));
     }
   }
 

@@ -217,7 +217,10 @@ export default function CompetitionPage() {
     (record) => record.sourceId === 'ds-007' || record.page === 'CompetitionPage',
   );
   const capturedCompetitionEvidence = competitionEvidence.filter((record) => record.captureStatus === 'captured');
-  const evidenceBusinessDataWrites = publicEvidenceManifest?.summary?.businessDataWrites ?? 0;
+  const evidenceBusinessDataWrites = competitionEvidence.reduce(
+    (total, record) => total + (record.safety?.businessDataWrites ?? 0),
+    0,
+  );
   const evidenceNetworkCalls = competitionEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
   const evidenceStatusLabel =
     publicEvidenceStatus === 'ready'

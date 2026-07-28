@@ -2,6 +2,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { isValidTimezoneIsoDateTime } from '../lib/strict-iso-date.mjs';
 
 const connectorId = 'customs-public-data-adapter';
 const sourceId = 'ds-006';
@@ -38,7 +39,11 @@ function parseArgs(argv) {
 
   for (let index = 0; index < argv.length; index += 1) {
     if (argv[index] === '--public-evidence') options.publicEvidencePath = argv[index + 1];
-    if (argv[index] === '--generated-at') options.generatedAt = argv[index + 1];
+    if (argv[index] === '--generated-at') {
+      const value = argv[index + 1];
+      if (!value || value.startsWith('--')) throw new Error('--generated-at requires a timezone-qualified ISO date-time value');
+      options.generatedAt = value;
+    }
     if (argv[index] === '--write' && argv[index + 1]) writePaths.push(argv[index + 1]);
   }
 
@@ -148,6 +153,9 @@ function buildCheck(id, ready, details, blocker) {
 
 export function buildCustomsPublicDataAdapter(options = {}) {
   const generatedAt = options.generatedAt ?? new Date().toISOString();
+  if (!isValidTimezoneIsoDateTime(generatedAt)) {
+    throw new Error(`Invalid --generated-at value: ${generatedAt}`);
+  }
   const evidenceInput = options.publicEvidence
     ? { data: options.publicEvidence, path: options.publicEvidencePath ?? 'runtime-public-evidence' }
     : loadPublicEvidence(options.publicEvidencePath);

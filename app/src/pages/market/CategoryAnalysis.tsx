@@ -85,7 +85,10 @@ export default function CategoryAnalysis() {
   );
   const capturedCategoryEvidence = categoryEvidence.filter((record) => record.captureStatus === 'captured');
   const categoryEvidenceNetworkCalls = categoryEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
-  const categoryEvidenceBusinessDataWrites = publicEvidenceManifest?.summary?.businessDataWrites ?? 0;
+  const categoryEvidenceBusinessDataWrites = categoryEvidence.reduce(
+    (total, record) => total + (record.safety?.businessDataWrites ?? 0),
+    0,
+  );
   const categoryEvidenceStatusLabel =
     publicEvidenceStatus === 'ready'
       ? `${capturedCategoryEvidence.length}/${categoryEvidence.length} captured`

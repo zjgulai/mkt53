@@ -81,6 +81,8 @@ const SOURCE_MATRIX_REQUIRED_COLUMNS = [
   'blocking_reason',
 ];
 
+const REQUIRED_OWNER_QUESTION_IDS = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6'];
+
 const QUESTION_VALIDATION_FIELDS = [
   'packet_id',
   'question_id',
@@ -370,26 +372,45 @@ function buildPacketValidation(packetRows, releaseGateRows, questionValidationRo
     const expectedRequiredCount = /^[1-9]\d*$/.test(expectedRequiredCountText)
       ? Number(expectedRequiredCountText)
       : Number.NaN;
+    const declaredRequiredCountText = String(packet.required_owner_answers ?? '').trim();
+    const declaredRequiredCount = /^[1-9]\d*$/.test(declaredRequiredCountText)
+      ? Number(declaredRequiredCountText)
+      : Number.NaN;
     const uniqueQuestionIds = new Set(requiredQuestions.map((question) => question.question_id));
+    const supportedQuestionIdsOnly = [...uniqueQuestionIds].every((questionId) =>
+      REQUIRED_OWNER_QUESTION_IDS.includes(questionId),
+    );
+    const expectedQuestionIds =
+      declaredRequiredCount === REQUIRED_OWNER_QUESTION_IDS.length ? REQUIRED_OWNER_QUESTION_IDS : ['Q2'];
+    const requiredQuestionSetPresent = expectedQuestionIds.every((questionId) => uniqueQuestionIds.has(questionId));
     const gateMatchesPacket =
       Number.isInteger(expectedRequiredCount) &&
       Number.isSafeInteger(expectedRequiredCount) &&
       expectedRequiredCount > 0 &&
+      Number.isInteger(declaredRequiredCount) &&
+      Number.isSafeInteger(declaredRequiredCount) &&
+      declaredRequiredCount > 0 &&
+      expectedRequiredCount === declaredRequiredCount &&
       gate?.packet_id === packet.packet_id &&
       gate?.owner_lane === packet.owner_lane &&
       gate?.source_ids === packet.source_ids;
     const questionnaireShapeValid =
       gateMatchesPacket &&
-      requiredQuestions.length === expectedRequiredCount &&
-      uniqueQuestionIds.size === expectedRequiredCount &&
+      requiredQuestions.length === declaredRequiredCount &&
+      uniqueQuestionIds.size === declaredRequiredCount &&
+      supportedQuestionIdsOnly &&
+      requiredQuestionSetPresent &&
       requiredQuestions.every(
         (question) =>
           question.owner_lane === packet.owner_lane &&
           question.source_ids === packet.source_ids,
       );
-    const missingRequiredCount = Number.isInteger(expectedRequiredCount) && expectedRequiredCount > 0
-      ? Math.max(expectedRequiredCount - completeQuestions.length, 0)
+    const baselineMissingRequiredCount = Number.isInteger(declaredRequiredCount) && declaredRequiredCount > 0
+      ? Math.max(declaredRequiredCount - completeQuestions.length, 0)
       : Math.max(requiredQuestions.length - completeQuestions.length, 1);
+    const missingRequiredCount = questionnaireShapeValid
+      ? baselineMissingRequiredCount
+      : Math.max(baselineMissingRequiredCount, 1);
     const readyForManualReview = questionnaireShapeValid && missingRequiredCount === 0;
 
     return {
@@ -398,8 +419,8 @@ function buildPacketValidation(packetRows, releaseGateRows, questionValidationRo
       owner_lane: packet.owner_lane,
       priority: packet.priority,
       source_ids: packet.source_ids,
-      required_question_count: Number.isInteger(expectedRequiredCount) && expectedRequiredCount > 0
-        ? expectedRequiredCount
+      required_question_count: Number.isInteger(declaredRequiredCount) && declaredRequiredCount > 0
+        ? declaredRequiredCount
         : requiredQuestions.length,
       answered_question_count: answeredQuestions.length,
       complete_required_question_count: completeQuestions.length,
@@ -459,6 +480,10 @@ function buildSummary({ intakeDir, outDir, sourceRows, packetRows, questionRows,
   ).length;
   const packetReadyForManualReviewCount = packetValidationRows.filter((packet) => packet.ready_for_manual_review === 'true').length;
   const sourceReadyForManualReviewCount = sourceValidationRows.filter((source) => source.ready_for_manual_review === 'true').length;
+  const missingRequiredQuestionCount = packetValidationRows.reduce(
+    (total, packet) => total + Number(packet.missing_required_questions),
+    0,
+  );
 
   return {
     generatedAt: new Date().toISOString(),
@@ -470,7 +495,7 @@ function buildSummary({ intakeDir, outDir, sourceRows, packetRows, questionRows,
     requiredQuestionCount: requiredQuestions.length,
     answeredQuestionCount,
     completeRequiredQuestionCount,
-    missingRequiredQuestionCount: requiredQuestions.length - completeRequiredQuestionCount,
+    missingRequiredQuestionCount,
     packetReadyForManualReviewCount,
     packetBlockedCount: packetRows.length - packetReadyForManualReviewCount,
     sourceReadyForManualReviewCount,

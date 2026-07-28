@@ -249,14 +249,25 @@ function readPackets(appRoot, coverageRows) {
   const questionRows = [];
 
   for (const packetDir of packetDirs) {
+    const coveredPacketIds = new Set(
+      coverageRows.filter((row) => row.packet_dir === packetDir).map((row) => row.packet_id).filter(Boolean),
+    );
     const packetPath = resolve(appRoot, packetDir, 'readiness_packets.csv');
     const questionPath = resolve(appRoot, packetDir, 'owner_questionnaire.csv');
 
     if (!existsSync(packetPath)) throw new Error(`Missing readiness_packets.csv: ${packetPath}`);
     if (!existsSync(questionPath)) throw new Error(`Missing owner_questionnaire.csv: ${questionPath}`);
 
-    packetRows.push(...parseCsv(readFileSync(packetPath, 'utf8'), PACKET_REQUIRED_COLUMNS));
-    questionRows.push(...parseCsv(readFileSync(questionPath, 'utf8'), QUESTION_REQUIRED_COLUMNS));
+    const parsedPackets = parseCsv(readFileSync(packetPath, 'utf8'), PACKET_REQUIRED_COLUMNS);
+    const parsedQuestions = parseCsv(readFileSync(questionPath, 'utf8'), QUESTION_REQUIRED_COLUMNS);
+    const parsedPacketIds = new Set(parsedPackets.map((packet) => packet.packet_id));
+    const missingPacketIds = [...coveredPacketIds].filter((packetId) => !parsedPacketIds.has(packetId));
+    if (missingPacketIds.length > 0) {
+      throw new Error(`Coverage references missing readiness packet(s) in ${packetPath}: ${missingPacketIds.join(', ')}`);
+    }
+
+    packetRows.push(...parsedPackets.filter((packet) => coveredPacketIds.has(packet.packet_id)));
+    questionRows.push(...parsedQuestions.filter((question) => coveredPacketIds.has(question.packet_id)));
   }
 
   return { packetDirs, packetRows, questionRows };

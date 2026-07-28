@@ -183,7 +183,10 @@ export default function RegionCompetition() {
     (record) => record.sourceId === 'ds-010' || record.page === 'RegionCompetition',
   );
   const capturedRegionPublicEvidence = regionPublicEvidence.filter((record) => record.captureStatus === 'captured');
-  const regionEvidenceBusinessDataWrites = publicEvidenceManifest?.summary?.businessDataWrites ?? 0;
+  const regionEvidenceBusinessDataWrites = regionPublicEvidence.reduce(
+    (total, record) => total + (record.safety?.businessDataWrites ?? 0),
+    0,
+  );
   const regionEvidenceNetworkCalls = regionPublicEvidence.reduce((total, record) => total + (record.safety?.networkCalls ?? 0), 0);
   const regionEvidenceStatusLabel =
     publicEvidenceStatus === 'ready'

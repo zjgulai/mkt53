@@ -103,7 +103,7 @@ cd app
 npm run data:recovery:semi-monthly:candidate
 ```
 
-该命令固定使用 no-network collection 与公开证据 dry-run，只写 `tmp/data-collection/recovery-candidates/<period>/`。它生成 periodic/weekly 两套候选并逐字节校验兼容路径一致性，同时通过 `install-semi-monthly-cron.sh --print` 记录目标 cron；`--print` 不创建日志目录，也不修改 crontab。
+该命令固定使用 no-network collection 与公开证据 dry-run，只写 `tmp/data-collection/recovery-candidates/<period>/`。它生成内容完全一致的 periodic/weekly 兼容候选，并校验每个候选文件与对应 canonical 文件的顶层字段/类型合同；同时通过 `install-semi-monthly-cron.sh --print` 记录目标 cron，`--print` 不创建日志目录，也不修改 crontab。
 
 候选通过只证明脚本在 L2 副作用边界内可执行。生产发布仍需另行授权，并依次完成 automation 副本校验、现有文件备份、候选复核、静态发布、cron 安装和后续日志观察。2026-07-23 的 H2 候选已按该顺序完成授权发布；候选命令自身的无生产副作用合同不变。
 

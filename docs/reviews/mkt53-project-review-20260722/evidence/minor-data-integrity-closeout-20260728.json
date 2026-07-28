@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "taskId": "batch-30-minor-data-integrity-closeout",
+  "generatedAt": "2026-07-28T02:06:30Z",
+  "branch": "codex/mkt53-release-candidate-20260630",
+  "sourceHeadBeforeBatchCommit": "06bf98cb5b9bbafaafb61c84bfbdd3fb955d4350",
+  "status": "local-reviewed-ready-for-commit",
+  "scope": [
+    "owner-intake-question-contract",
+    "owner-chat-pack-and-merge",
+    "public-evidence-truthfulness",
+    "page-scoped-safety-counters",
+    "semi-monthly-recovery-contract",
+    "regulation-draft-file-permissions",
+    "local-h2-dry-run-canonical-refresh"
+  ],
+  "quality": {
+    "tests": {
+      "filesPassed": 24,
+      "testsPassed": 195,
+      "failed": 0
+    },
+    "lint": "passed",
+    "build": {
+      "status": "passed",
+      "modulesTransformed": 2384
+    },
+    "dataAudit": {
+      "pages": 43,
+      "tables": 107,
+      "sources": 53,
+      "issues": 0
+    },
+    "deepAudit": {
+      "routes": 46,
+      "claims": 888,
+      "highRiskClaims": 0,
+      "unsupportedClaims": 0
+    },
+    "codexReview": {
+      "status": "clean",
+      "finalResult": "No actionable findings."
+    },
+    "graphify": {
+      "nodes": 4629,
+      "edges": 7359,
+      "communities": 350,
+      "modelTokens": 0
+    }
+  },
+  "localCanonical": {
+    "period": "2026-07-H2",
+    "publicEvidenceMode": "dry-run",
+    "plannedRecords": 39,
+    "networkCalls": 0,
+    "businessDataWrites": 0,
+    "periodicWeeklyByteParity": true
+  },
+  "boundaries": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "publicEvidenceLiveCapture": false,
+    "sourceRegistryWrites": false,
+    "pageFactWrites": false,
+    "factPromotion": false,
+    "productionWrites": false,
+    "productionDeploy": false,
+    "nginxChanges": false,
+    "cronChanges": false,
+    "mergePerformed": false
+  },
+  "nextGates": [
+    "commit-and-push-current-branch",
+    "verify-pr-32-exact-head-github-checks",
+    "human-review-and-explicit-merge-decision",
+    "observe-first-cron-run-after-2026-08-01T09:00:00+08:00"
+  ]
+}

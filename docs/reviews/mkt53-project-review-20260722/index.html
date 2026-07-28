@@ -345,7 +345,7 @@
         <p class="hero-lede">mkt53 全项目复盘、产品设计逻辑、操作手册与逐模块迭代方案。本文以证据等级为骨架，把当前真实能力、演示边界、工程债务和 90 天演进路径放在同一份可执行文档中。</p>
         <div class="hero-meta">
           <span>REVIEW DATE · 2026-07-22</span>
-          <span>UPDATED · 2026-07-27 · BATCH 29</span>
+          <span>UPDATED · 2026-07-28 · BATCH 30</span>
           <span>BRANCH · codex/mkt53-release-candidate-20260630</span>
           <span>BASELINE · 0d44c332</span>
           <span>FORMAT · SELF-CONTAINED HTML</span>
@@ -371,7 +371,7 @@
         <div class="grid grid-3" style="margin-top:18px">
           <article class="card finding good"><span class="status verified">已形成能力</span><h3>可信边界可见</h3><p><code>PageEvidenceNotice</code>、<code>EvidenceGatePage</code>、source registry 与全路由 E2E 已把示例、待复核、公开来源和内部 proxy 的边界写进 UI 与测试。</p></article>
           <article class="card finding warn"><span class="status review">主要瓶颈</span><h3>真实数据未闭环</h3><p>本地 manifest 仍有 28 条 connector-required、9 条 manual-required；Amazon、CRM、VOC、YouTube、贸易和 ERP 自动刷新都不能被公开网页样本替代。</p></article>
-          <article class="card finding good"><span class="status verified">PR Ready · exact-head CI green</span><h3>Batch 29 高优先级门禁已闭环</h3><p>在原 5 项增量缺口之后，CodeRabbit 完整复审识别 3 个 Critical 与 1 个 Major，Codex Review 再识别 1 个 P2；均已在 <code>f880ea5</code> 关闭。精确 head <code>7ae8a19</code> 的 app/backend CI 全绿、annotations=0，3/3 Critical threads 已 resolved；CodeRabbit recheck 仍为 <code>Review queued</code>，未 merge 或部署。</p></article>
+          <article class="card finding good"><span class="status verified">Batch 30 · local review clean</span><h3>Minor 数据完整性门禁已闭环</h3><p>owner 问题合同、chat pack/merge、公开证据、页面安全计数、恢复候选和敏感草稿权限已统一失败关闭；24 files / 195 tests、lint、build、两级 audit 通过，最终 Codex 复审为 <code>No actionable findings.</code>。待提交推送及精确 head CI；未 merge 或部署。</p></article>
         </div>
         <div class="callout" style="margin-top:18px"><strong>生产恢复：</strong>2026-07-24 在完整 root-only 备份和完整配置 <code>nginx -t</code> 通过后，仅激活 mkt server block 并 reload nginx。未授权 root、deep route 与 manifest 均 302 到 apex login，真实会话首页与数据管理页可访问，生产 E2E 8/8；旧 2/8 结果保留为修复前基线。</div>
         <div class="callout" style="margin-top:12px"><strong>BE-01 / BE-02：</strong>Phase 1 采用同机独立 Compose、同源 <code>/api/v1/</code>、PostgreSQL 双网络隔离的可逆形态；BE-02 已建立并隔离验证本地 identity/RBAC 骨架。该结果是 L1 local validation，静态前端仍 canonical，后端未部署生产。</div>
@@ -395,11 +395,11 @@
           <div class="card flat">
             <h3>本次证据</h3>
             <ul class="checklist">
-              <li>Graphify 首次 code-only AST 覆盖 249 个代码文件；Batch 29 已增量同步评审修复、事实展示门、并发 ETag、响应式导航、数据库超时与 customs 产物一致性关系，全程 0 模型 token。</li>
-              <li>当前 canonical 图谱：4,600 nodes / 7,312 edges / 346 communities；报告 built from <code>f880ea5</code>，由 <code>5360ea6</code> 对齐提交。</li>
+              <li>Graphify 首次 code-only AST 覆盖 249 个代码文件；Batch 30 已增量同步 owner intake、chat merge、public evidence、恢复候选与法规草稿权限关系，全程 0 模型 token。</li>
+              <li>当前 canonical 图谱：4,629 nodes / 7,359 edges / 350 communities；60 个 JSON/config 等源文件仍是 zero-AST 可见性限制。</li>
               <li>数据一致性审计：43 pages / 107 tables / 53 sources / 0 issues。</li>
               <li>深度审计：888 claims；P0-04 仅执行授权的数据/automation/cron 写入，<code>providerCalls=false</code>。</li>
-              <li>本地 build、lint、串行 unit tests 与 GitHub-hosted PR run 均为新鲜候选证据；生产仅发布 H2 数据文件，未部署应用 bundle。</li>
+              <li>Batch 30 本地 build、lint、24 files / 195 tests 与两级数据审计均为新鲜候选证据；GitHub-hosted PR run 需在本批推送后按精确 head 重新确认。</li>
               <li class="gap">生产 H2、cron 与 P0-05 均来自现场写入、真实会话与回归验证，不由 README 历史记录或本地通过推断。</li>
             </ul>
           </div>
@@ -780,7 +780,7 @@ npm run test:e2e</span>
             <tr><td>BE-03–07</td><td>Registry / snapshot / review / adapter / recovery</td><td><span class="status verified">本地完成 + GitHub CI 通过</span> 版本化 source、不可变 snapshot、review 状态机、前端只读 adapter、隔离恢复与独立 backend CI 均有机器证据；64 tests / 92.73% coverage；生产激活仍待独立决策</td><td>L1–L2 local + GitHub-hosted validation</td></tr>
             <tr><td>DATA-REG</td><td>法规 SKU 合同、gated projection 与 review handoff</td><td><span class="status review">L2 合成门禁</span> 合同、0/6 intake、6/6 synthetic projection、pending handoff、幂等、撤回及 approve/reject 阻断已验证；真实 snapshot / review decision / publishable fact 仍为 0</td><td>L2 fixture / dry-run</td></tr>
           </tbody></table></div>
-          <p><b>Batch 01–29 验收：</b>P0-04/P0-05 已完成各自授权范围内的生产恢复；BE-01–07 已形成可逆后端设计、本地治理 API、前端 adapter、隔离恢复证据与独立 backend CI；DATA-REG 已推进到合同、intake readiness、纯合成投影和 draft-to-review handoff 门禁；两个 bundle 临时例外和 14 个 high advisories 均已退出。Batch 28 完成完整分支 review 并关闭 6 项缺口；Batch 29 先关闭 5 项增量缺口，再关闭 CodeRabbit 的 3 Critical、1 Major 与 Codex Review 的 1 P2。精确 head <code>7ae8a19</code> 的 GitHub CI 全绿、0 annotations、3/3 Critical threads resolved；CodeRabbit recheck 仍 queued。merge 与 deploy 仍是独立后续门，首次 cron 观察仍待 8 月 1 日，后端和 DATA-REG 均未生产激活。</p>
+          <p><b>Batch 01–30 验收：</b>P0-04/P0-05 已完成各自授权范围内的生产恢复；BE-01–07 已形成可逆后端设计、本地治理 API、前端 adapter、隔离恢复证据与独立 backend CI；DATA-REG 已推进到合同、intake readiness、纯合成投影和 draft-to-review handoff 门禁；两个 bundle 临时例外和 14 个 high advisories 均已退出。Batch 28 完成完整分支 review，Batch 29 关闭 PR 高优先级 findings 并转为 Ready；Batch 30 继续关闭 owner intake/chat merge、公开证据、恢复候选与敏感草稿的 Minor 数据完整性风险，最终本地复审无 actionable finding。Batch 29 精确 head <code>7ae8a19</code> 的 GitHub CI 证据仍保留，但 Batch 30 推送后必须重新确认新 head；merge 与 deploy 仍是独立后续门，首次 cron 观察仍待 8 月 1 日，后端和 DATA-REG 均未生产激活。</p>
         </div>
         <div class="card" style="margin-bottom:18px">
           <span class="status example">P0-04 · audit complete / acceptance failed</span>
@@ -994,12 +994,27 @@ npm run test:e2e</span>
           </tbody></table></div>
           <p><a href="./p0-pr-ready-handoff-20260727.md">阅读 Batch 29 PR Ready、使用与回滚手册</a> · <a href="./evidence/p0-pr-ready-handoff-20260727.json">打开 Batch 29 机器证据</a> · <a href="https://github.com/zjgulai/mkt53/pull/32">打开 Ready PR #32</a>。</p>
         </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">Batch 30 · local integrity closeout / review clean</span>
+          <h3>Owner intake、公开证据与恢复候选 Minor 风险已失败关闭</h3>
+          <div class="table-wrap"><table><thead><tr><th>验收域</th><th>结果</th><th>边界 / 下一门</th></tr></thead><tbody>
+            <tr><td>Owner 问题合同</td><td><span class="status verified">通过</span> 空问卷补齐为 missing；Q2 不再伪造采集窗口；模板只请求实际缺项；Q1–Q6 白名单覆盖 builder、merge 与 validator</td><td><code>ready_for_manual_review</code> 仍不授权 registry/page/CSV 写入</td></tr>
+            <tr><td>Chat pack / merge</td><td><span class="status verified">通过</span> 严格解析问题表达式；按 requested key 合并；重复、外部、缺行、计数错配与未知 ID 均失败关闭</td><td>错配时重新生成 pack，不允许手工绕过</td></tr>
+            <tr><td>公开证据</td><td><span class="status verified">真实边界</span> H2 dry-run 39 planned；<code>networkCalls=0</code>、<code>businessDataWrites=0</code>；缺项 warning、redirect host 与严格时间合同已补齐</td><td>planned 不是 captured；Amazon/CRM/ERP/VOC 等仍 gated</td></tr>
+            <tr><td>页面计数</td><td><span class="status verified">6 页修复</span> 三个市场页与三个竞争页按页面过滤 records 汇总 safety counter</td><td>不再把全局 public evidence 计数投射到单页</td></tr>
+            <tr><td>恢复与权限</td><td><span class="status verified">通过</span> periodic/weekly byte parity + canonical 顶层合同；法规 draft 覆盖后强制 <code>0600</code></td><td>候选仍是 L2；没有生产发布、cron 或 nginx 操作</td></tr>
+            <tr><td>本地门禁</td><td><span class="status verified">通过</span> 24 files / 195 tests、lint、2,384 modules、43/107/53 audit、46 routes / 888 claims / 0 high-risk / 0 unsupported</td><td>GitHub-hosted 新 head 尚待推送后确认</td></tr>
+            <tr><td>Codex review</td><td><span class="status verified">clean</span> 多轮结构化 P2 已逐项修复；最终受控只读复审为 <code>No actionable findings.</code></td><td>本地 review 不替代 human review 或 merge 决策</td></tr>
+            <tr><td>Graphify</td><td>4,629 nodes / 7,359 edges / 350 communities；0 模型 token</td><td>60 个 zero-AST 文件仍须结合原始 JSON/config 复核</td></tr>
+          </tbody></table></div>
+          <p><a href="./minor-data-integrity-closeout-20260728.md">阅读 Batch 30 设计、使用、回滚与 TODO 手册</a> · <a href="./evidence/minor-data-integrity-closeout-20260728.json">打开 Batch 30 机器证据</a> · <a href="https://github.com/zjgulai/mkt53/pull/32">打开 Ready PR #32</a>。</p>
+        </div>
         <div class="timeline">
           <div class="timeline-item card">
             <span class="status verified">Day 0–15 · 本地 P0 门禁已闭环</span>
             <h3>恢复可信刷新与安全门禁</h3>
             <p><b>已完成：</b>source schema、dependency security、bundle budget、候选证据包、P0-04 生产恢复，以及 P0-05 统一门户与 manifest 门禁生产激活。P0-04 首次定时运行仍待 8 月 1 日时间窗观察。</p>
-            <p><b>验收：</b>本地 audit 为 0，unit 190/190、E2E 154/154；新修复 exact-head GitHub-hosted app/backend CI 全绿且 0 annotations。生产 freshness 已恢复到 H2，P0-05 使用独立写入授权和真实授权会话完成正负向验收，production E2E 为 8/8。</p>
+            <p><b>验收：</b>Batch 30 本地 audit 为 0、unit 195/195；Batch 29 的本地 E2E 154/154 与 exact-head GitHub-hosted app/backend CI 全绿证据继续保留，但 Batch 30 推送后须重新确认新 head。生产 freshness 已恢复到 H2，P0-05 使用独立写入授权和真实授权会话完成正负向验收，production E2E 为 8/8。</p>
           </div>
           <div class="timeline-item card">
             <span class="status verified">Day 16–30 · BE-01–07 本地链路已验证</span>
@@ -1052,9 +1067,9 @@ npm run test:e2e</span>
           <div class="card">
             <h3>本次验证</h3>
             <div class="table-wrap"><table><thead><tr><th>检查</th><th>结果</th></tr></thead><tbody>
-              <tr><td>Graphify AST + cluster</td><td id="graphifyStatus"><span class="status verified">通过</span> 4,600 nodes / 7,312 edges / 346 communities；0 model tokens</td></tr>
+              <tr><td>Graphify AST + cluster</td><td id="graphifyStatus"><span class="status verified">通过</span> 4,629 nodes / 7,359 edges / 350 communities；0 model tokens</td></tr>
               <tr><td>Graph health</td><td><span class="status verified">通过</span> 0 integrity defects</td></tr>
-              <tr><td>Vitest</td><td><span class="status verified">通过</span> 24 files / 190 tests；FactDisplayGate、严格日期与 customs 产物一致性回归通过；无失败</td></tr>
+              <tr><td>Vitest</td><td><span class="status verified">通过</span> 24 files / 195 tests；owner 问题合同、chat merge、严格日期、恢复候选与 public evidence 回归通过；无失败</td></tr>
               <tr><td>ESLint</td><td><span class="status verified">通过</span> ESLint 10；未禁用新增生命周期规则</td></tr>
               <tr><td>TypeScript + Vite build</td><td><span class="status verified">通过</span> 2,384 modules</td></tr>
               <tr><td>Data consistency</td><td><span class="status verified">通过</span> 0 issues</td></tr>
@@ -1074,8 +1089,8 @@ npm run test:e2e</span>
               <tr><td>Production freshness</td><td><span class="status verified">已恢复</span> production H2；cron installed；first scheduled observation pending；upstream unknown-gated</td></tr>
               <tr><td>Production static smoke</td><td><span class="status verified">通过</span> 站点、静态资产与已发布 manifest 可读</td></tr>
               <tr><td>Production E2E</td><td id="prodE2EStatus"><span class="status verified">通过</span> 8 / 8；2026-07-24 P0-05 激活后桌面/移动 landing、root、deep routes 与 manifest 门禁全部通过</td></tr>
-              <tr><td>GitHub Actions</td><td><span class="status verified">通过</span> 精确 head <code>7ae8a19</code>；run <a href="https://github.com/zjgulai/mkt53/actions/runs/30271729225">30271729225</a>；app/backend success；两项 job annotations=0；CodeRabbit recheck queued</td></tr>
-              <tr><td>Codex review</td><td id="codexReviewStatus"><span class="status verified">16/16 identified findings fixed</span> Batch 28 6 项 + Batch 29 首轮 5 项 + CodeRabbit 高优先级 4 项 + Codex Review 1 项；最终受控只读复审无 actionable finding</td></tr>
+              <tr><td>GitHub Actions</td><td><span class="status review">Batch 30 pending push</span> Batch 29 精确 head <code>7ae8a19</code> 的 run <a href="https://github.com/zjgulai/mkt53/actions/runs/30271729225">30271729225</a> 已通过；本批新 head 必须在推送后重新验收 app/backend checks 与 annotations</td></tr>
+              <tr><td>Codex review</td><td id="codexReviewStatus"><span class="status verified">identified findings fixed</span> Batch 28–29 高优先级 findings 保持关闭；Batch 30 多轮 P2 已逐项修复，最终受控只读复审为 <code>No actionable findings.</code></td></tr>
             </tbody></table></div>
           </div>
           <div class="card">
@@ -1092,6 +1107,7 @@ npm run test:e2e</span>
               <li>DataManage 与 <code>vendor-charts</code> 临时例外均已删除；shared chart core 使用 required、无 exception 的 180 KiB 永久规则。</li>
               <li>当前新鲜 <code>npm audit</code> 为 0 vulnerabilities；Node ≥22.22、最低安全版本和禁止 <code>react-router-dom</code> 回流已由永久合同保护。</li>
               <li>Batch 29 已把 PR #32 转为 Ready，完成原 5 项增量修复及 CodeRabbit/Codex Review 的 5 项高优先级修复、exact-head CI 与 3/3 thread resolve；CodeRabbit recheck 仍 queued，merge、应用部署与生产验证继续需要各自独立决策或授权。</li>
+              <li>Batch 30 仅完成本地数据完整性收口、H2 dry-run canonical 更新与复审；推送后需确认 PR #32 精确新 head 的 GitHub checks，不能沿用 Batch 29 的 SHA 作为本批 CI 证据。</li>
             </ul>
           </div>
         </div>
@@ -1146,6 +1162,8 @@ npm run test:e2e</span>
             <a href="./evidence/p0-full-codex-review-closeout-20260727.json"><b>evidence/p0-full-codex-review-closeout-20260727.json</b><span>Batch 28 findings、本地门禁、Graphify、GitHub CI 与授权边界证据</span></a>
             <a href="./p0-pr-ready-handoff-20260727.md"><b>p0-pr-ready-handoff-20260727.md</b><span>Batch 29 最终复审、PR Ready、合并前 TODO、使用与回滚手册</span></a>
             <a href="./evidence/p0-pr-ready-handoff-20260727.json"><b>evidence/p0-pr-ready-handoff-20260727.json</b><span>Batch 29 findings、完整本地门禁、精确 SHA CI、Ready 与外部复审状态证据</span></a>
+            <a href="./minor-data-integrity-closeout-20260728.md"><b>minor-data-integrity-closeout-20260728.md</b><span>Batch 30 数据完整性设计、owner intake 使用、回滚与下一批 TODO</span></a>
+            <a href="./evidence/minor-data-integrity-closeout-20260728.json"><b>evidence/minor-data-integrity-closeout-20260728.json</b><span>Batch 30 本地门禁、Codex clean review、Graphify 与授权边界机器证据</span></a>
           </div>
           <div class="card">
             <h3>建议长期目录</h3>

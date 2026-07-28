@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { isValidIsoDateOrDateTime } from './lib/strict-iso-date.mjs';
 
@@ -213,7 +213,21 @@ function resolveMaybe(appRoot, inputPath) {
 function resolvePacketGatePath(appRoot, options) {
   if (options.packetGatePath) return resolve(appRoot, options.packetGatePath);
   if (options.validationDir) return resolve(appRoot, options.validationDir, 'manual_evidence_validation_packet_gate.csv');
-  return resolve(appRoot, 'tmp/audits/public-source-manual-evidence-validation-loop11-20260701/manual_evidence_validation_packet_gate.csv');
+
+  const auditRoot = resolve(appRoot, 'tmp/audits');
+  const latestPacketGate = existsSync(auditRoot)
+    ? readdirSync(auditRoot)
+        .filter((name) => name.startsWith('public-source-manual-evidence-validation-'))
+        .map((name) => resolve(auditRoot, name, 'manual_evidence_validation_packet_gate.csv'))
+        .filter((path) => existsSync(path) && statSync(path).isFile())
+        .map((path) => ({ path, mtimeMs: statSync(path).mtimeMs }))
+        .sort((left, right) => right.mtimeMs - left.mtimeMs || right.path.localeCompare(left.path))[0]?.path
+    : undefined;
+
+  if (!latestPacketGate) {
+    throw new Error('No manual evidence validation packet gate found. Pass --validation <dir> or --packet-gate <path>.');
+  }
+  return latestPacketGate;
 }
 
 function readReviewRecord(path) {

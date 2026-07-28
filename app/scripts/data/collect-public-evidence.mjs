@@ -170,6 +170,7 @@ async function captureSeed(browser, seed, options, generatedAt) {
     const finalUrl = page.url();
     const visibleText = normalizeText(await page.locator('body').innerText({ timeout: 3000 }).catch(() => ''));
     const matched = matchedTerms(`${title} ${visibleText}`, seed.expectedEvidenceTerms);
+    const missingEvidenceTerms = seed.expectedEvidenceTerms.filter((term) => !matched.includes(term));
     const textPath = `${options.textDir}/${slug}.txt`;
     let screenshotPath;
     let screenshotHash;
@@ -198,7 +199,7 @@ async function captureSeed(browser, seed, options, generatedAt) {
       visibleTextLength: visibleText.length,
       visibleTextHash: hashText(visibleText),
       matchedEvidenceTerms: matched,
-      missingEvidenceTerms: seed.expectedEvidenceTerms.filter((term) => !matched.includes(term)),
+      missingEvidenceTerms,
       nonVerbatimSummary: buildNonVerbatimSummary(seed, title, matched, visibleText.length),
       localEvidence: {
         textArchivePath: relativeToAppRoot(textPath),
@@ -214,7 +215,7 @@ async function captureSeed(browser, seed, options, generatedAt) {
         rawTextWrittenToPublicBundle: false,
       },
       warnings: [
-        ...(matched.length === 0 ? ['expected evidence terms were not matched in visible text'] : []),
+        ...(missingEvidenceTerms.length > 0 ? ['expected evidence terms were not matched in visible text'] : []),
         ...(errors.length > 0 ? ['browser console or page errors were observed'] : []),
       ],
       pageErrors: errors.slice(0, 5),
