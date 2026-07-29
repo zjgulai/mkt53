@@ -2814,8 +2814,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L98",
       "_origin": "ast",
-      "community": 248,
-      "community_name": "properties",
+      "community": 201,
+      "community_name": "enum",
       "norm_label": "applicability",
       "id": "app_contracts_regulation_sku_matrix_schema_properties_applicability"
     },
@@ -2825,8 +2825,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 248,
-      "community_name": "properties",
+      "community": 201,
+      "community_name": "enum",
       "norm_label": "enum",
       "id": "app_contracts_regulation_sku_matrix_schema_applicability_enum"
     },
@@ -2836,8 +2836,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 248,
-      "community_name": "properties",
+      "community": 201,
+      "community_name": "enum",
       "norm_label": "unknown",
       "id": "ref_unknown"
     },
@@ -2847,8 +2847,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 248,
-      "community_name": "properties",
+      "community": 201,
+      "community_name": "enum",
       "norm_label": "in-scope",
       "id": "ref_in_scope"
     },
@@ -2858,8 +2858,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 248,
-      "community_name": "properties",
+      "community": 201,
+      "community_name": "enum",
       "norm_label": "out-of-scope",
       "id": "ref_out_of_scope"
     },
@@ -2869,8 +2869,8 @@
       "source_file": "app/contracts/regulation-sku-matrix.schema.json",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 248,
-      "community_name": "properties",
+      "community": 201,
+      "community_name": "enum",
       "norm_label": "conditional",
       "id": "ref_conditional"
     },
@@ -7511,7 +7511,7 @@
       "source_file": "app/package.json",
       "source_location": "L132",
       "_origin": "ast",
-      "community": 201,
+      "community": 240,
       "community_name": "class-variance-authority",
       "norm_label": "class-variance-authority",
       "id": "app_package_dependencies_class_variance_authority"
@@ -7522,7 +7522,7 @@
       "source_file": "app/package.json",
       "source_location": "L132",
       "_origin": "ast",
-      "community": 201,
+      "community": 240,
       "community_name": "class-variance-authority",
       "norm_label": "class-variance-authority",
       "id": "class_variance_authority"
@@ -7555,8 +7555,8 @@
       "source_file": "app/package.json",
       "source_location": "L134",
       "_origin": "ast",
-      "community": 86,
-      "community_name": "dependencies",
+      "community": 205,
+      "community_name": "cmdk",
       "norm_label": "cmdk",
       "id": "app_package_dependencies_cmdk"
     },
@@ -7566,8 +7566,8 @@
       "source_file": "app/package.json",
       "source_location": "L134",
       "_origin": "ast",
-      "community": 86,
-      "community_name": "dependencies",
+      "community": 205,
+      "community_name": "cmdk",
       "norm_label": "cmdk",
       "id": "cmdk"
     },
@@ -7665,8 +7665,8 @@
       "source_file": "app/package.json",
       "source_location": "L139",
       "_origin": "ast",
-      "community": 333,
-      "community_name": "next-themes",
+      "community": 86,
+      "community_name": "dependencies",
       "norm_label": "next-themes",
       "id": "app_package_dependencies_next_themes"
     },
@@ -7676,8 +7676,8 @@
       "source_file": "app/package.json",
       "source_location": "L139",
       "_origin": "ast",
-      "community": 333,
-      "community_name": "next-themes",
+      "community": 86,
+      "community_name": "dependencies",
       "norm_label": "next-themes",
       "id": "next_themes"
     },
@@ -39031,8 +39031,8 @@
       "source_file": "backend/src/mkt53_backend/source_registry.py",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 160,
-      "community_name": "SourceRegistryService",
+      "community": 209,
+      "community_name": ".__init__",
       "norm_label": ".__init__()",
       "id": "backend_src_mkt53_backend_source_registry_registryerror_init"
     },
@@ -39141,8 +39141,8 @@
       "source_file": "backend/src/mkt53_backend/source_registry.py",
       "source_location": "L95",
       "_origin": "ast",
-      "community": 160,
-      "community_name": "SourceRegistryService",
+      "community": 209,
+      "community_name": ".__init__",
       "norm_label": ".__init__()",
       "id": "backend_src_mkt53_backend_source_registry_sourceregistryservice_init"
     },
@@ -39152,8 +39152,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 160,
-      "community_name": "SourceRegistryService",
+      "community": 209,
+      "community_name": ".__init__",
       "norm_label": "session",
       "id": "backend_src_mkt53_backend_source_registry_py_session"
     },
@@ -138465,5 +138465,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "0cbf2c458931845792d9ae42acc1d9635c8dea82"
+  "built_at_commit": "9f3fc0c36c920c1199db189b14df0d835b1f71d9"
 }

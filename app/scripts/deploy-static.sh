@@ -12,7 +12,7 @@ mkt53_require_ssh_key "${KEY_PATH}" "production deploy"
 
 cd "${APP_DIR}"
 
-npm run test
+npm run test:serial
 npm run lint
 npm audit
 npm run build

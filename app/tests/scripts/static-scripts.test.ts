@@ -159,9 +159,14 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
   it('keeps deploy-static executable and guarded by local quality gates', () => {
     const scriptPath = join(process.cwd(), 'scripts/deploy-static.sh');
     const script = readFileSync(scriptPath, 'utf8');
+    const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as { scripts: Record<string, string> };
 
     expect(() => accessSync(scriptPath, constants.X_OK)).not.toThrow();
-    expect(script).toContain('npm run test');
+    expect(script).toMatch(/^\s*npm run test:serial\s*$/m);
+    expect(script).not.toMatch(/^\s*npm run test(?:\s|$)/m);
+    expect(packageJson.scripts['test:serial']).toMatch(
+      /(?:^|\s)--maxWorkers=1(?:\s|$)/,
+    );
     expect(script).toContain('npm run lint');
     expect(script).toContain('npm audit');
     expect(script).toContain('npm run build');

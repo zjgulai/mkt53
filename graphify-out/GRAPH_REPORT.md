@@ -4,12 +4,12 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 4703 nodes · 7549 edges · 343 communities
+- 4703 nodes · 7549 edges · 345 communities
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 172 edges (avg confidence: 0.57)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0cbf2c45`
+- Built from commit: `9f3fc0c3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -213,13 +213,15 @@
 - BE-03 Source Registry 本地 API
 - sku
 - Q: 同意下一步，开始执行
-- class-variance-authority
+- enum
 - Q: 下一批的执行建议是？
 - P0-02 依赖安全刷新与兼容迁移方案
 - required
+- cmdk
 - ReportPreview.tsx
 - 0001_be02_baseline.py
 - properties
+- .__init__
 - Q: Which code paths connect the Batch 26 data governance, bundle, backend review/recovery, regulation intake, dependency and Graphify work?
 - Q: 同意下一批建议
 - Batch 26：本地原子提交、复审修复与交接
@@ -236,6 +238,7 @@
 - core-pages.spec.ts
 - lazy-pages.test.tsx
 - extraction-spec.md
+- class-variance-authority
 - @radix-ui/react-collapsible
 - Q: 已登录，可以继续
 - P0-03 DataManage Bundle 临时例外退出方案
@@ -323,7 +326,6 @@
 - required
 - usePeriodicManifest
 - required
-- next-themes
 - nullableNonEmptyString
 - embla-carousel-react
 - enum
@@ -367,7 +369,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (343 total, 0 thin omitted)
+## Communities (345 total, 0 thin omitted)
 
 ### Community 0 - "scripts"
 Cohesion: 0.02
@@ -715,7 +717,7 @@ Nodes (13): `1. 本轮目标`, `2.1 新鲜命令证据`, `2.2 页面与报告代
 
 ### Community 86 - "dependencies"
 Cohesion: 0.18
-Nodes (11): `dependencies`, `clsx`, `cmdk`, `input-otp`, `@radix-ui/react-aspect-ratio`, `recharts`, `clsx`, `cmdk` (+3 more)
+Nodes (11): `dependencies`, `clsx`, `input-otp`, `next-themes`, `@radix-ui/react-aspect-ratio`, `recharts`, `clsx`, `input-otp` (+3 more)
 
 ### Community 87 - "input-group.tsx"
 Cohesion: 0.21
@@ -1002,8 +1004,8 @@ Cohesion: 0.22
 Nodes (8): `Identity contract`, `Local verification`, `mkt53 backend · BE-07 local recovery drill`, `Production stop conditions`, `Review state contract`, `Snapshot metadata contract`, `Source registry contract`, `What exists`
 
 ### Community 160 - "SourceRegistryService"
-Cohesion: 0.19
-Nodes (14): `Source`, `SourceListResponse`, `SourceResponse`, `validate_source_fact_governance()`, `canonical_request_hash()`, `_declared_fact_governance_valid()`, `_declared_source_body()`, `Any` (+6 more)
+Cohesion: 0.22
+Nodes (13): `Source`, `SourceListResponse`, `SourceResponse`, `validate_source_fact_governance()`, `canonical_request_hash()`, `_declared_fact_governance_valid()`, `_declared_source_body()`, `Any` (+5 more)
 
 ### Community 161 - "build-regulation-review-handoff-gate.mjs"
 Cohesion: 0.17
@@ -1165,9 +1167,9 @@ Nodes (7): `sku`, `additionalProperties`, `required`, `type`, `productFamily`, `
 Cohesion: 0.40
 Nodes (4): `Answer`, `Outcome`, `Q: 同意下一步，开始执行`, `Source Nodes`
 
-### Community 201 - "class-variance-authority"
-Cohesion: 1.00
-Nodes (2): `class-variance-authority`, `class-variance-authority`
+### Community 201 - "enum"
+Cohesion: 0.33
+Nodes (6): `enum`, `applicability`, `conditional`, `in-scope`, `out-of-scope`, `unknown`
 
 ### Community 202 - "Q: 下一批的执行建议是？"
 Cohesion: 0.40
@@ -1181,6 +1183,10 @@ Nodes (12): `1. 结论`, `2. 基线问题与修复映射`, `3.1 Router 为什么
 Cohesion: 0.20
 Nodes (10): `additionalProperties`, `required`, `type`, `evidenceHandoff`, `handoffOwnerId`, `hashAlgorithm`, `requiredArtifacts`, `retentionDays` (+2 more)
 
+### Community 205 - "cmdk"
+Cohesion: 1.00
+Nodes (2): `cmdk`, `cmdk`
+
 ### Community 206 - "ReportPreview.tsx"
 Cohesion: 0.29
 Nodes (5): `defaultReport`, `reportDB`, `ReportPreviewModel`, `reportQuarter`, `reportYear`
@@ -1192,6 +1198,10 @@ Nodes (4): `downgrade()`, `Establish only Alembic's version marker for BE-02.`, 
 ### Community 208 - "properties"
 Cohesion: 0.17
 Nodes (12): `$ref`, `const`, `maximum`, `minimum`, `affectedSurfaces`, `auditEventRequired`, `propagationSlaHours`, `reasonRequired` (+4 more)
+
+### Community 209 - ".__init__"
+Cohesion: 0.67
+Nodes (1): `Session`
 
 ### Community 210 - "Q: Which code paths connect the Batch 26 data governance, bundle, backend review/recovery, regulation intake, dependency and Graphify work?"
 Cohesion: 0.40
@@ -1257,6 +1267,10 @@ Nodes (1): `routeComponentNames`
 Cohesion: 1.00
 Nodes (1): `graphify reference: extraction subagent prompt (compact)`
 
+### Community 240 - "class-variance-authority"
+Cohesion: 1.00
+Nodes (2): `class-variance-authority`, `class-variance-authority`
+
 ### Community 241 - "@radix-ui/react-collapsible"
 Cohesion: 1.00
 Nodes (2): `@radix-ui/react-collapsible`, `@radix-ui/react-collapsible`
@@ -1286,8 +1300,8 @@ Cohesion: 0.40
 Nodes (4): `Answer`, `Outcome`, `Q: 同意下一批建议`, `Source Nodes`
 
 ### Community 248 - "properties"
-Cohesion: 0.10
-Nodes (20): `enum`, `properties`, `applicability`, `rationale`, `reason`, `reviewedAt`, `reviewerId`, `scopeBasis` (+12 more)
+Cohesion: 0.14
+Nodes (14): `properties`, `rationale`, `reason`, `reviewedAt`, `reviewerId`, `scopeBasis`, `status`, `minLength` (+6 more)
 
 ### Community 249 - "Q: 同意下一批建议"
 Cohesion: 0.40
@@ -1605,10 +1619,6 @@ Nodes (11): `CollectionManifestPath`, `CollectionManifestStatus`, `fetchCollecti
 Cohesion: 0.20
 Nodes (10): `expiresAt`, `reviewerId`, `reviewerRole`, `reviewerAuthorization`, `additionalProperties`, `required`, `type`, `authorizationRef` (+2 more)
 
-### Community 333 - "next-themes"
-Cohesion: 1.00
-Nodes (2): `next-themes`, `next-themes`
-
 ### Community 334 - "nullableNonEmptyString"
 Cohesion: 0.22
 Nodes (9): `$defs`, `nullableNonEmptyString`, `type`, `null`, `string`, `minLength`, `type`, `independentFromRequestOwner` (+1 more)
@@ -1685,14 +1695,14 @@ Nodes (2): `@radix-ui/react-navigation-menu`, `@radix-ui/react-navigation-menu`
 - `smoke-prod.sh` (4× useful, score=3.690629843) _(code changed — re-verify)_
 - `ReviewEvent` (3× useful, score=2.78815464)
 - `validate-p0-05-nginx-candidate.sh` (3× useful, score=2.780704791)
-- `deploy-static.sh` (3× useful, score=2.763391595)
+- `deploy-static.sh` (3× useful, score=2.763391595) _(code changed — re-verify)_
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `cn()` connect `cn` to `menubar.tsx`, `sidebar.tsx`, `field.tsx`, `context-menu.tsx`, `dropdown-menu.tsx`, `react`, `carousel.tsx`, `Sidebar.tsx`, `empty.tsx`, `utils.ts`, `input-group.tsx`, `command.tsx`, `toggle-group.tsx`, `item.tsx`, `alert-dialog.tsx`, `drawer.tsx`?**
   _High betweenness centrality (0.041) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `dependencies` to `package.json`, `@radix-ui/react-select`, `@radix-ui/react-hover-card`, `lucide-react`, `@radix-ui/react-checkbox`, `@radix-ui/react-avatar`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `react`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `date-fns`, `tailwind-merge`, `vaul`, `zod`, `class-variance-authority`, `next-themes`, `embla-carousel-react`, `@radix-ui/react-context-menu`, `@radix-ui/react-accordion`, `react-hook-form`, `@radix-ui/react-alert-dialog`, `@hookform/resolvers`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-collapsible`?**
+- **Why does `dependencies` connect `dependencies` to `package.json`, `@radix-ui/react-select`, `@radix-ui/react-hover-card`, `lucide-react`, `@radix-ui/react-checkbox`, `@radix-ui/react-avatar`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `react`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-day-picker`, `react-dom`, `react-resizable-panels`, `react-router`, `sonner`, `date-fns`, `tailwind-merge`, `vaul`, `zod`, `cmdk`, `embla-carousel-react`, `@radix-ui/react-context-menu`, `@radix-ui/react-accordion`, `react-hook-form`, `@radix-ui/react-alert-dialog`, `@hookform/resolvers`, `@radix-ui/react-navigation-menu`, `class-variance-authority`, `@radix-ui/react-collapsible`?**
   _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Why does `react` connect `react` to `sidebar.tsx`, `field.tsx`, `carousel.tsx`, `dependencies`, `toggle-group.tsx`, `alert-dialog.tsx`?**
   _High betweenness centrality (0.025) - this node is a cross-community bridge._
