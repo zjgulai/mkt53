@@ -174,6 +174,15 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(script).toContain('rsync -az --delete');
   });
 
+  it('installs the pinned Playwright browser before the production write', () => {
+    const script = readFileSync(join(process.cwd(), 'scripts/deploy-static-and-verify.sh'), 'utf8');
+    const browserInstallIndex = script.indexOf('"${APP_DIR}/node_modules/.bin/playwright" install chromium');
+    const deployIndex = script.indexOf('npm run deploy:prod');
+
+    expect(browserInstallIndex).toBeGreaterThan(-1);
+    expect(deployIndex).toBeGreaterThan(browserInstallIndex);
+  });
+
   it('uses one explicit SSH key contract for deploy and auth-protected smoke checks', () => {
     const contractPath = join(process.cwd(), 'scripts/lib/ssh-key-contract.sh');
     const contract = readFileSync(contractPath, 'utf8');

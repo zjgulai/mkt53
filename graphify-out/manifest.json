@@ -425,12 +425,12 @@
     "semantic_hash": "2293ceff5c2e261e2e7600b06664135a"
   },
   "app/scripts/deploy-static-and-verify.sh": {
-    "mtime": 1781328018.0211177,
-    "ast_hash": "833c671b57009ee9734cf08d7b0a933d",
-    "semantic_hash": "833c671b57009ee9734cf08d7b0a933d"
+    "mtime": 1785312988.7231379,
+    "ast_hash": "1b1ea0a417e37dd534c5c029b3238f08",
+    "semantic_hash": ""
   },
   "app/scripts/deploy-static.sh": {
-    "mtime": 1785309085.161732,
+    "mtime": 1785312107.4135127,
     "ast_hash": "8df4889c675863126e57b5ad2b9b98b7",
     "semantic_hash": ""
   },
@@ -1185,8 +1185,8 @@
     "semantic_hash": "6a9b5a2f7faf3ce7d54c9e49193cac71"
   },
   "app/tests/scripts/static-scripts.test.ts": {
-    "mtime": 1785310327.0629985,
-    "ast_hash": "07f2d039b11a48f0156d1ed09cea9e62",
+    "mtime": 1785312988.7250094,
+    "ast_hash": "b21b57cd21ffbde5052afd214d68a518",
     "semantic_hash": ""
   },
   "app/tests/security/clientBundleGuard.test.ts": {
