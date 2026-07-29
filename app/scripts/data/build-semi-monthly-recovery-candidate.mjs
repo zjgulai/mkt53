@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { dirname, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { analyzeConsistency } from './lib/project-analysis.mjs';
@@ -40,6 +40,29 @@ function isWithin(base, target) {
   return target === base || target.startsWith(`${base}${sep}`);
 }
 
+function assertNoSymlinkComponents(base, target) {
+  mkdirSync(base, { recursive: true });
+  if (lstatSync(base).isSymbolicLink()) {
+    throw new Error('Recovery candidate output must not contain symbolic links');
+  }
+  const realBase = realpathSync(base);
+  const relativeTarget = relative(base, target);
+  let current = base;
+
+  for (const segment of relativeTarget.split(sep).filter(Boolean)) {
+    current = resolve(current, segment);
+    if (existsSync(current) && lstatSync(current).isSymbolicLink()) {
+      throw new Error('Recovery candidate output must not contain symbolic links');
+    }
+    if (existsSync(current)) {
+      const realCurrent = realpathSync(current);
+      if (!isWithin(realBase, realCurrent)) {
+        throw new Error(`Recovery candidate output must be a child of ${candidateBasePath}`);
+      }
+    }
+  }
+}
+
 function resolveCandidateRoot(appRoot, outputDir, period) {
   const base = resolve(appRoot, candidateBasePath);
   const target = resolve(appRoot, outputDir ?? `${candidateBasePath}/${period}`);
@@ -48,15 +71,35 @@ function resolveCandidateRoot(appRoot, outputDir, period) {
     throw new Error(`Recovery candidate output must be a child of ${candidateBasePath}`);
   }
 
+  assertNoSymlinkComponents(appRoot, base);
+  assertNoSymlinkComponents(base, target);
   return target;
 }
 
-function writeJson(path, data) {
+function assertCandidateWritePath(candidateRoot, path) {
+  if (!isWithin(candidateRoot, path)) {
+    throw new Error('Recovery candidate artifact escaped the candidate root');
+  }
+  assertNoSymlinkComponents(candidateRoot, dirname(path));
+  const status = lstatSync(path, { throwIfNoEntry: false });
+  if (status) {
+    if (status.isSymbolicLink()) {
+      throw new Error('Recovery candidate output must not contain symbolic links');
+    }
+    if (status.isFile() && status.nlink > 1) {
+      throw new Error('Recovery candidate output must not overwrite hard-linked files');
+    }
+  }
+}
+
+function writeJson(candidateRoot, path, data) {
+  assertCandidateWritePath(candidateRoot, path);
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, `${JSON.stringify(data, null, 2)}\n`);
 }
 
-function writeText(path, value) {
+function writeText(candidateRoot, path, value) {
+  assertCandidateWritePath(candidateRoot, path);
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, value.endsWith('\n') ? value : `${value}\n`);
 }
@@ -99,6 +142,7 @@ const optionalPublicEvidenceStringFields = new Set([
 ]);
 
 const optionalPublicEvidenceStringArrayFields = new Set([
+  'eligibilityBlockers',
   'matchedEvidenceTerms',
   'missingEvidenceTerms',
   'pageErrors',
@@ -106,6 +150,7 @@ const optionalPublicEvidenceStringArrayFields = new Set([
 ]);
 
 const optionalPublicEvidenceNumberFields = new Set(['httpStatus', 'visibleTextLength']);
+const optionalCustomsBooleanFields = new Set(['countersMatchRecords']);
 const optionalPublicEvidenceRecordFields = new Set([
   ...optionalPublicEvidenceStringFields,
   ...optionalPublicEvidenceStringArrayFields,
@@ -116,9 +161,10 @@ const modeDependentStringArrayFields = new Set(['missingMatchedTerms', 'missingP
 
 function isOptionalField(path, field) {
   return (
-    path.at(-1) === '[]' &&
-    (path.at(-2) === 'records' || path.at(-2) === 'evidenceRecords') &&
-    optionalPublicEvidenceRecordFields.has(field)
+    (path.at(-1) === '[]' &&
+      (path.at(-2) === 'records' || path.at(-2) === 'evidenceRecords') &&
+      optionalPublicEvidenceRecordFields.has(field)) ||
+    (path.at(-1) === 'details' && optionalCustomsBooleanFields.has(field))
   );
 }
 
@@ -163,6 +209,7 @@ function isValidOptionalFieldValue(field, value) {
     return Array.isArray(value) && value.every((item) => typeof item === 'string');
   }
   if (optionalPublicEvidenceNumberFields.has(field)) return typeof value === 'number' && Number.isFinite(value);
+  if (optionalCustomsBooleanFields.has(field)) return typeof value === 'boolean';
   if (field === 'localEvidence') return isValidLocalEvidence(value);
   return false;
 }
@@ -354,6 +401,7 @@ function buildChecks({ audit, manifest, publicEvidence, canonicalContractCompati
 export async function buildSemiMonthlyRecoveryCandidate(options = {}) {
   const appRoot = resolve(options.appRoot ?? process.cwd());
   const generatedAt = normalizeGeneratedAt(options.generatedAt);
+  let candidateRoot = options.outputDir ? resolveCandidateRoot(appRoot, options.outputDir, 'explicit-output') : undefined;
   const manifest = await collectSemiMonthlySources({
     appRoot,
     generatedAt,
@@ -370,7 +418,7 @@ export async function buildSemiMonthlyRecoveryCandidate(options = {}) {
     generatedAt,
   });
   const publicManifest = buildPublicManifest(manifest, publicEvidence, customsPublicAdapter);
-  const candidateRoot = resolveCandidateRoot(appRoot, options.outputDir, manifest.period);
+  candidateRoot ??= resolveCandidateRoot(appRoot, undefined, manifest.period);
   const cron = cronPreview(appRoot, options.cronAppDir ?? defaultCronAppDir);
   const candidateFiles = {
     'periodic-data/latest.json': publicManifest,
@@ -387,9 +435,9 @@ export async function buildSemiMonthlyRecoveryCandidate(options = {}) {
   };
 
   for (const [path, data] of Object.entries(candidateFiles)) {
-    writeJson(resolve(candidateRoot, path), data);
+    writeJson(candidateRoot, resolve(candidateRoot, path), data);
   }
-  writeText(resolve(candidateRoot, 'cron-preview.txt'), cron);
+  writeText(candidateRoot, resolve(candidateRoot, 'cron-preview.txt'), cron);
 
   const canonicalContractCompatibility = Object.keys(candidateFiles)
     .filter((path) => path.startsWith('periodic-data/') || path.startsWith('weekly-data/'))
@@ -442,7 +490,7 @@ export async function buildSemiMonthlyRecoveryCandidate(options = {}) {
     },
   };
 
-  writeJson(resolve(candidateRoot, 'recovery-preflight.json'), report);
+  writeJson(candidateRoot, resolve(candidateRoot, 'recovery-preflight.json'), report);
   return report;
 }
 

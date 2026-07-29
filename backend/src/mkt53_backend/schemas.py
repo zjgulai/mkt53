@@ -67,6 +67,14 @@ class ReviewDecision(StrEnum):
     WITHDRAWN = "withdrawn"
 
 
+FACT_ELIGIBLE_EVIDENCE_GRADES = frozenset(
+    {
+        EvidenceGrade.PUBLIC_OR_RUNTIME.value,
+        EvidenceGrade.PRODUCTION_READ_ONLY.value,
+    }
+)
+
+
 class ApiModel(BaseModel):
     model_config = ConfigDict(
         alias_generator=to_camel,
@@ -98,6 +106,22 @@ def _validate_http_url(value: str | None) -> str | None:
     return normalized
 
 
+def validate_source_fact_governance(
+    *,
+    verification_status: str,
+    evidence_grade: str,
+    can_display_as_fact: bool,
+    blocking_reason: str,
+) -> None:
+    if can_display_as_fact:
+        if verification_status != VerificationStatus.VERIFIED.value:
+            raise ValueError("canDisplayAsFact requires verificationStatus=verified")
+        if evidence_grade not in FACT_ELIGIBLE_EVIDENCE_GRADES:
+            raise ValueError("canDisplayAsFact requires L1 or L3 evidence")
+    elif not blocking_reason.strip():
+        raise ValueError("blockingReason is required when canDisplayAsFact=false")
+
+
 class SourceCreate(ApiModel):
     id: str = Field(pattern=r"^[a-z0-9][a-z0-9._-]{2,127}$")
     module: str = Field(min_length=1, max_length=128)
@@ -126,6 +150,16 @@ class SourceCreate(ApiModel):
     @classmethod
     def validate_source_url(cls, value: str | None) -> str | None:
         return _validate_http_url(value)
+
+    @model_validator(mode="after")
+    def validate_fact_governance(self) -> SourceCreate:
+        validate_source_fact_governance(
+            verification_status=self.verification_status,
+            evidence_grade=self.evidence_grade,
+            can_display_as_fact=self.can_display_as_fact,
+            blocking_reason=self.blocking_reason,
+        )
+        return self
 
 
 class SourceUpdate(ApiModel):

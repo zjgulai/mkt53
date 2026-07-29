@@ -90,12 +90,13 @@ def get_source(
     response: Response,
 ) -> SourceResponse:
     del principal
+    service = SourceRegistryService(session)
     try:
-        source = SourceRegistryService(session).get_source(source_id)
+        source = service.get_source(source_id)
     except RegistryError as exc:
         raise HTTPException(status_code=exc.status_code, detail=exc.detail) from exc
     response.headers["ETag"] = source_etag(source)
-    return SourceResponse.model_validate(source)
+    return service.source_response(source)
 
 
 @router.post("", response_model=SourceResponse, status_code=status.HTTP_201_CREATED)

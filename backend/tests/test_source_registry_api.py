@@ -3,6 +3,10 @@ from __future__ import annotations
 from copy import deepcopy
 
 from fastapi.testclient import TestClient
+from sqlalchemy import select
+from sqlalchemy.orm import Session, sessionmaker
+
+from mkt53_backend.models import IdempotencyRecord
 
 
 def source_payload(source_id: str = "ds-local-001") -> dict[str, object]:
@@ -255,3 +259,162 @@ def test_invalid_payloads_and_not_found_fail_closed(client: TestClient, trusted_
     )
     assert missing_audit.status_code == 404
     assert missing_audit.json() == {"detail": "source_not_found"}
+
+
+def test_fact_display_requires_valid_evidence_and_current_review_approval(
+    client: TestClient,
+    trusted_headers: dict[str, str],
+    session_factory: sessionmaker[Session],
+) -> None:
+    invalid = source_payload("ds-local-invalid-fact")
+    invalid.update(
+        {
+            "verificationStatus": "example",
+            "evidenceGrade": "L2-fixture-or-dry-run",
+            "canDisplayAsFact": True,
+            "blockingReason": "",
+        }
+    )
+    rejected = create_source(
+        client,
+        trusted_headers,
+        key="create-invalid-fact-0001",
+        payload=invalid,
+    )
+    assert rejected.status_code == 422
+
+    eligible = source_payload("ds-local-approved-fact")
+    eligible.update(
+        {
+            "verificationStatus": "verified",
+            "evidenceGrade": "L1-public-or-runtime",
+            "canDisplayAsFact": True,
+            "blockingReason": "",
+        }
+    )
+    created = create_source(
+        client,
+        trusted_headers,
+        key="create-approved-fact-0001",
+        payload=eligible,
+    )
+    assert created.status_code == 201
+    assert created.json()["canDisplayAsFact"] is False
+    assert "review-approval-required" in created.json()["blockingReason"]
+
+    audit = client.get(
+        "/api/v1/sources/ds-local-approved-fact/audit",
+        headers={**trusted_headers, "X-Portal-Roles": "analyst"},
+    )
+    assert audit.status_code == 200
+    assert audit.json()[0]["afterState"]["canDisplayAsFact"] is True
+    assert audit.json()[0]["afterState"]["blockingReason"] == ""
+
+    with session_factory() as session:
+        legacy_record = session.scalar(
+            select(IdempotencyRecord).where(
+                IdempotencyRecord.operation == "create:ds-local-approved-fact",
+                IdempotencyRecord.idempotency_key == "create-approved-fact-0001",
+            )
+        )
+        assert legacy_record is not None
+        legacy_body = dict(legacy_record.response_body)
+        legacy_body["canDisplayAsFact"] = True
+        legacy_body["blockingReason"] = ""
+        legacy_record.response_body = legacy_body
+        session.commit()
+
+    legacy_replay = create_source(
+        client,
+        trusted_headers,
+        key="create-approved-fact-0001",
+        payload=eligible,
+    )
+    assert legacy_replay.status_code == 201
+    assert legacy_replay.headers["idempotent-replayed"] == "true"
+    assert legacy_replay.json()["canDisplayAsFact"] is False
+    assert "review-approval-required" in legacy_replay.json()["blockingReason"]
+
+    listed = client.get("/api/v1/sources", headers={**trusted_headers, "X-Portal-Roles": "analyst"})
+    listed_item = next(item for item in listed.json()["items"] if item["id"] == "ds-local-approved-fact")
+    assert listed_item["canDisplayAsFact"] is False
+
+    review = client.get(
+        "/api/v1/reviews/source/ds-local-approved-fact",
+        headers={**trusted_headers, "X-Portal-Roles": "analyst"},
+    )
+    approved = client.post(
+        "/api/v1/reviews/source/ds-local-approved-fact/transitions",
+        headers={
+            **reviewer_headers(trusted_headers, "approve-source-fact-0001"),
+            "If-Match": review.headers["etag"],
+        },
+        json={
+            "targetState": "approved",
+            "reason": "Approve this public evidence source for fact display.",
+        },
+    )
+    assert approved.status_code == 200
+
+    visible = client.get(
+        "/api/v1/sources/ds-local-approved-fact",
+        headers={**trusted_headers, "X-Portal-Roles": "analyst"},
+    )
+    assert visible.status_code == 200
+    assert visible.json()["canDisplayAsFact"] is True
+    assert visible.json()["blockingReason"] == ""
+
+    updated = client.patch(
+        "/api/v1/sources/ds-local-approved-fact",
+        headers={
+            **reviewer_headers(trusted_headers, "update-approved-fact-0001"),
+            "If-Match": visible.headers["etag"],
+        },
+        json={"note": "Metadata changed; approval must be invalidated."},
+    )
+    assert updated.status_code == 200
+    assert updated.json()["canDisplayAsFact"] is False
+    assert "review-approval-required" in updated.json()["blockingReason"]
+
+    updated_audit = client.get(
+        "/api/v1/sources/ds-local-approved-fact/audit",
+        headers={**trusted_headers, "X-Portal-Roles": "analyst"},
+    )
+    assert [event["action"] for event in updated_audit.json()] == ["create", "update"]
+    assert updated_audit.json()[1]["beforeState"]["canDisplayAsFact"] is True
+    assert updated_audit.json()[1]["afterState"]["canDisplayAsFact"] is True
+
+    reopened = client.get(
+        "/api/v1/sources/ds-local-approved-fact",
+        headers={**trusted_headers, "X-Portal-Roles": "analyst"},
+    )
+    assert reopened.json()["canDisplayAsFact"] is False
+
+    reopened_review = client.get(
+        "/api/v1/reviews/source/ds-local-approved-fact",
+        headers={**trusted_headers, "X-Portal-Roles": "analyst"},
+    )
+    reapproved = client.post(
+        "/api/v1/reviews/source/ds-local-approved-fact/transitions",
+        headers={
+            **reviewer_headers(trusted_headers, "reapprove-source-fact-0001"),
+            "If-Match": reopened_review.headers["etag"],
+        },
+        json={
+            "targetState": "approved",
+            "reason": "Reapprove the updated public evidence source.",
+        },
+    )
+    assert reapproved.status_code == 200
+
+    stale_create_replay = create_source(
+        client,
+        trusted_headers,
+        key="create-approved-fact-0001",
+        payload=eligible,
+    )
+    assert stale_create_replay.status_code == 201
+    assert stale_create_replay.headers["idempotent-replayed"] == "true"
+    assert stale_create_replay.json()["version"] == 1
+    assert stale_create_replay.json()["canDisplayAsFact"] is False
+    assert "idempotent-response-version-stale" in stale_create_replay.json()["blockingReason"]

@@ -79,6 +79,17 @@ function hasMatchedTerms(record, requiredTerms) {
   return requiredTerms.every((term) => matched.includes(term));
 }
 
+function isConsistentValidation(value) {
+  if (!value || typeof value !== 'object' || typeof value.valid !== 'boolean') return false;
+  if (!Array.isArray(value.missingFields) || !value.missingFields.every((field) => typeof field === 'string')) return false;
+  if (typeof value.urlValid !== 'boolean' || typeof value.termsValid !== 'boolean' || typeof value.boundaryValid !== 'boolean') {
+    return false;
+  }
+  const derivedValid =
+    value.missingFields.length === 0 && value.urlValid === true && value.termsValid === true && value.boundaryValid === true;
+  return value.valid === derivedValid;
+}
+
 function isNonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0;
 }
@@ -94,12 +105,19 @@ function isAllowedEvidenceUrl(value, allowedHosts) {
   }
 }
 
+function hasSameAllowedOrigin(sourceUrl, finalUrl, allowedHosts) {
+  if (!isAllowedEvidenceUrl(sourceUrl, allowedHosts) || !isAllowedEvidenceUrl(finalUrl, allowedHosts)) return false;
+  return new URL(sourceUrl).origin === new URL(finalUrl).origin;
+}
+
 function missingProofFields(record, seed) {
   const missing = [];
   if (record?.sourceId !== sourceId) missing.push('sourceId');
   if (!isAllowedEvidenceUrl(record?.url, seed.allowedHosts)) missing.push('url');
+  if (!hasSameAllowedOrigin(record?.url, record?.finalUrl, seed.allowedHosts)) missing.push('finalUrl');
   if (!isNonEmptyString(record?.title)) missing.push('title');
   if (!SHA256_PATTERN.test(record?.visibleTextHash ?? '')) missing.push('visibleTextHash');
+  if (!isNonEmptyString(record?.nonVerbatimSummary)) missing.push('nonVerbatimSummary');
   if (!isNonEmptyString(record?.localEvidence?.textArchivePath)) missing.push('localEvidence.textArchivePath');
   return missing;
 }
@@ -108,7 +126,42 @@ function isNonNegativeInteger(value) {
   return Number.isSafeInteger(value) && value >= 0;
 }
 
-function sanitizeEvidenceRecord(record, seed) {
+function isEmptyStringArray(value) {
+  return Array.isArray(value) && value.length === 0;
+}
+
+function isPolicyGeneratedPageError(value) {
+  return typeof value === 'string' && value.includes('net::ERR_BLOCKED_BY_CLIENT');
+}
+
+function eligibilityFailures(record, seed, manifestMode) {
+  const failures = [];
+  const pageErrors = Array.isArray(record?.pageErrors) ? record.pageErrors : [];
+  const actionablePageErrors = pageErrors.filter((error) => !isPolicyGeneratedPageError(error));
+  const warnings = Array.isArray(record?.warnings) ? record.warnings : [];
+  const actionableWarnings = warnings.filter(
+    (warning) => warning !== 'browser console or page errors were observed' || actionablePageErrors.length > 0 || pageErrors.length === 0,
+  );
+  if (manifestMode !== 'live-browser-capture') failures.push('manifestMode');
+  if (record?.captureStatus !== 'captured') failures.push('captureStatus');
+  if (!isConsistentValidation(record?.validation) || record.validation.valid !== true) failures.push('validation');
+  if (record?.notFullPlatformDataset !== true) failures.push('notFullPlatformDataset');
+  if (record?.publicBundleAllowed !== true) failures.push('publicBundleAllowed');
+  if (record?.rawTextPublicBundleAllowed !== false) failures.push('rawTextPublicBundleAllowed');
+  if (record?.screenshotPublicBundleAllowed !== false) failures.push('screenshotPublicBundleAllowed');
+  if (!hasMatchedTerms(record, seed.requiredMatchedTerms)) failures.push('matchedEvidenceTerms');
+  if (!isEmptyStringArray(record?.missingEvidenceTerms)) failures.push('missingEvidenceTerms');
+  if (!isEmptyStringArray(actionableWarnings)) failures.push('warnings');
+  if (!isEmptyStringArray(actionablePageErrors)) failures.push('pageErrors');
+  if (record?.safety?.networkCalls !== 1) failures.push('safety.networkCalls');
+  if (record?.safety?.loginAttempted !== false) failures.push('safety.loginAttempted');
+  if (record?.safety?.bypassAttempted !== false) failures.push('safety.bypassAttempted');
+  if (record?.safety?.businessDataWrites !== 0) failures.push('safety.businessDataWrites');
+  if (record?.safety?.rawTextWrittenToPublicBundle !== false) failures.push('safety.rawTextWrittenToPublicBundle');
+  return failures;
+}
+
+function sanitizeEvidenceRecord(record, seed, manifestMode) {
   if (!record) {
     return {
       seedId: seed.seedId,
@@ -121,13 +174,15 @@ function sanitizeEvidenceRecord(record, seed) {
   }
 
   const proofFieldsMissing = missingProofFields(record, seed);
-  const ready = record.captureStatus === 'captured' && hasMatchedTerms(record, seed.requiredMatchedTerms) && proofFieldsMissing.length === 0;
+  const eligibilityBlockers = eligibilityFailures(record, seed, manifestMode);
+  const ready = proofFieldsMissing.length === 0 && eligibilityBlockers.length === 0;
 
   return {
     seedId: record.seedId,
     evidenceRole: seed.evidenceRole,
     sourceId: record.sourceId,
     url: record.url,
+    finalUrl: record.finalUrl,
     evidenceClass: record.evidenceClass,
     captureStatus: record.captureStatus,
     title: record.title,
@@ -139,7 +194,33 @@ function sanitizeEvidenceRecord(record, seed) {
     ready,
     missingProofFields: proofFieldsMissing,
     missingMatchedTerms: seed.requiredMatchedTerms.filter((term) => !(record.matchedEvidenceTerms ?? []).includes(term)),
+    eligibilityBlockers,
   };
+}
+
+function summarizeRecordSafety(records) {
+  const captureStatusCounts = {};
+  let networkCalls = 0;
+  let businessDataWrites = 0;
+  for (const record of records) {
+    if (!isNonNegativeInteger(record?.safety?.networkCalls) || !isNonNegativeInteger(record?.safety?.businessDataWrites)) {
+      return { valid: false, total: records.length, captureStatusCounts, networkCalls: null, businessDataWrites: null };
+    }
+    captureStatusCounts[record.captureStatus] = (captureStatusCounts[record.captureStatus] ?? 0) + 1;
+    networkCalls += record.safety.networkCalls;
+    businessDataWrites += record.safety.businessDataWrites;
+  }
+  return { valid: true, total: records.length, captureStatusCounts, networkCalls, businessDataWrites };
+}
+
+function hasExactCountMap(actual, expected) {
+  if (!actual || typeof actual !== 'object' || Array.isArray(actual)) return false;
+  const actualKeys = Object.keys(actual).sort();
+  const expectedKeys = Object.keys(expected).sort();
+  return (
+    actualKeys.length === expectedKeys.length &&
+    actualKeys.every((key, index) => key === expectedKeys[index] && isNonNegativeInteger(actual[key]) && actual[key] === expected[key])
+  );
 }
 
 function buildCheck(id, ready, details, blocker) {
@@ -161,18 +242,31 @@ export function buildCustomsPublicDataAdapter(options = {}) {
     : loadPublicEvidence(options.publicEvidencePath);
   const records = publicEvidenceRecords(evidenceInput.data);
   const recordsBySeedId = new Map(records.map((record) => [record.seedId, record]));
-  const evidenceRecords = requiredSeeds.map((seed) => sanitizeEvidenceRecord(recordsBySeedId.get(seed.seedId), seed));
+  const evidenceRecords = requiredSeeds.map((seed) =>
+    sanitizeEvidenceRecord(recordsBySeedId.get(seed.seedId), seed, evidenceInput.data?.mode),
+  );
   const tradeSourceRecord = evidenceRecords.find((record) => record.seedId === 'us-census-merchandise-imports-database');
   const classificationRecord = evidenceRecords.find((record) => record.seedId === 'cbp-electric-breast-pump-hts-ruling');
   const publicEvidenceReady = evidenceRecords.every((record) => record.ready);
   const sourceAvailabilityReady = tradeSourceRecord?.ready === true;
   const classificationReady = classificationRecord?.ready === true;
+  const derivedSafety = summarizeRecordSafety(records);
+  const rawTotal = evidenceInput.data?.summary?.total;
   const rawNetworkCalls = evidenceInput.data?.summary?.networkCalls;
   const rawBusinessDataWrites = evidenceInput.data?.summary?.businessDataWrites;
-  const safetyCountersValid = isNonNegativeInteger(rawNetworkCalls) && isNonNegativeInteger(rawBusinessDataWrites);
+  const rawCaptureStatusCounts = evidenceInput.data?.summary?.captureStatusCounts;
+  const safetyCountersValid =
+    isNonNegativeInteger(rawTotal) && isNonNegativeInteger(rawNetworkCalls) && isNonNegativeInteger(rawBusinessDataWrites);
+  const safetyCountersMatch =
+    derivedSafety.valid &&
+    safetyCountersValid &&
+    rawTotal === derivedSafety.total &&
+    rawNetworkCalls === derivedSafety.networkCalls &&
+    rawBusinessDataWrites === derivedSafety.businessDataWrites &&
+    hasExactCountMap(rawCaptureStatusCounts, derivedSafety.captureStatusCounts);
   const inputNetworkCalls = safetyCountersValid ? rawNetworkCalls : null;
   const inputBusinessDataWrites = safetyCountersValid ? rawBusinessDataWrites : null;
-  const safetyReady = safetyCountersValid && inputBusinessDataWrites === 0;
+  const safetyReady = safetyCountersMatch && inputBusinessDataWrites === 0;
   const checks = [
     buildCheck(
       'publicEvidenceBundle',
@@ -212,10 +306,15 @@ export function buildCustomsPublicDataAdapter(options = {}) {
         networkCalls: inputNetworkCalls,
         businessDataWrites: inputBusinessDataWrites,
         countersValid: safetyCountersValid,
+        countersMatchRecords: safetyCountersMatch,
         rawTextPublicBundleAllowed: false,
         shipmentFactsGenerated: false,
       },
-      safetyCountersValid ? { type: 'business-data-write-observed' } : { type: 'missing-or-invalid-safety-counters' },
+      !safetyCountersValid
+        ? { type: 'missing-or-invalid-safety-counters' }
+        : !safetyCountersMatch
+          ? { type: 'safety-counter-mismatch' }
+          : { type: 'business-data-write-observed' },
     ),
   ];
   const blockers = checks.flatMap((check) => check.blockers);

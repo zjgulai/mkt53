@@ -18,6 +18,50 @@ function createSourceGapTempDir(prefix: string) {
   return path;
 }
 
+function capturedCustomsEvidenceRecord(
+  seedId: string,
+  url: string,
+  title: string,
+  visibleTextHash: string,
+  matchedEvidenceTerms: string[],
+  textArchivePath: string,
+) {
+  return {
+    seedId,
+    sourceId: 'ds-006',
+    url,
+    finalUrl: url,
+    evidenceClass: 'official-public-evidence',
+    captureStatus: 'captured',
+    title,
+    visibleTextHash,
+    matchedEvidenceTerms,
+    missingEvidenceTerms: [],
+    nonVerbatimSummary: `${title} public evidence summary`,
+    notFullPlatformDataset: true,
+    publicBundleAllowed: true,
+    rawTextPublicBundleAllowed: false,
+    screenshotPublicBundleAllowed: false,
+    validation: {
+      valid: true,
+      missingFields: [],
+      urlValid: true,
+      termsValid: true,
+      boundaryValid: true,
+    },
+    safety: {
+      networkCalls: 1,
+      loginAttempted: false,
+      bypassAttempted: false,
+      businessDataWrites: 0,
+      rawTextWrittenToPublicBundle: false,
+    },
+    warnings: [],
+    pageErrors: [],
+    localEvidence: { textArchivePath },
+  };
+}
+
 afterEach(() => {
   for (const path of sourceGapTempDirs) rmSync(path, { recursive: true, force: true });
   sourceGapTempDirs.clear();
@@ -2268,6 +2312,80 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(manifest.records.every((record) => record.safety.businessDataWrites === 0)).toBe(true);
   });
 
+  it('rejects private, local, credentialed, and custom-port public evidence seed URLs before live capture', async () => {
+    const { buildPinnedHostResolverRule, validatePublicEvidenceUrl, validateSeed } = (await import(
+      '../../scripts/data/collect-public-evidence.mjs'
+    )) as {
+      buildPinnedHostResolverRule: (hostname: string, address: string) => string;
+      validatePublicEvidenceUrl: (value: string) => boolean;
+      validateSeed: (seed: Record<string, unknown>) => { valid: boolean; urlValid: boolean };
+    };
+    const seed = {
+      id: 'safe-public-seed',
+      sourceId: 'ds-006',
+      page: 'CustomsData',
+      metric: 'Official public source',
+      label: 'Official public source',
+      url: 'https://www.census.gov/foreign-trade/data/IMDB.html',
+      evidenceClass: 'official-trade-data-page',
+      collectionBoundary: 'Public visible page only without authentication or business writes.',
+      expectedEvidenceTerms: ['HTSUSA'],
+      notFullPlatformDataset: true,
+    };
+
+    expect(validateSeed(seed)).toMatchObject({ valid: true, urlValid: true });
+    for (const unsafeUrl of [
+      'https://127.0.0.1/admin',
+      'https://10.0.0.7/internal',
+      'https://169.254.169.254/latest/meta-data',
+      'https://192.0.0.8/special-purpose',
+      'https://192.0.2.1/documentation',
+      'https://[::1]/admin',
+      'https://[::a00:1]/admin',
+      'https://[64:ff9b::a00:1]/admin',
+      'https://[2002:a00:1::]/admin',
+      'https://[2001:2::1]/admin',
+      'https://[3000::1]/admin',
+      'https://[3ffe::1]/admin',
+      'https://[3fff::1]/admin',
+      'https://[4000::1]/admin',
+      'https://[8000::1]/admin',
+      'https://[fec0::1]/admin',
+      'https://[feff::1]/admin',
+      'https://localhost/admin',
+      'https://service.local/admin',
+      'https://example.com./admin',
+      'https://user:password@example.com/admin',
+      'https://example.com:8443/admin',
+      'http://example.com/public',
+    ]) {
+      expect(validatePublicEvidenceUrl(unsafeUrl)).toBe(false);
+      expect(validateSeed({ ...seed, url: unsafeUrl })).toMatchObject({ valid: false, urlValid: false });
+    }
+    expect(buildPinnedHostResolverRule('www.census.gov', '203.0.113.10')).toBe(
+      'MAP www.census.gov 203.0.113.10, EXCLUDE localhost',
+    );
+    expect(buildPinnedHostResolverRule('www.census.gov', '2001:4860:4860::8888')).toBe(
+      'MAP www.census.gov [2001:4860:4860::8888], EXCLUDE localhost',
+    );
+    expect(validatePublicEvidenceUrl('https://[2001:4860:4860::8888]/')).toBe(true);
+    expect(validatePublicEvidenceUrl('https://[2001:3::1]/')).toBe(true);
+    expect(validatePublicEvidenceUrl('https://[2001:4:112::1]/')).toBe(true);
+    expect(validatePublicEvidenceUrl('https://[2001:20::1]/')).toBe(true);
+    expect(validatePublicEvidenceUrl('https://[2001:30::1]/')).toBe(true);
+    expect(validatePublicEvidenceUrl('https://[2606:4700:4700::1111]/')).toBe(true);
+    expect(validatePublicEvidenceUrl('https://192.0.0.9/')).toBe(true);
+    expect(validatePublicEvidenceUrl('https://192.0.0.10/')).toBe(true);
+    expect(validatePublicEvidenceUrl('https://192.0.1.1/')).toBe(true);
+
+    const collectorSource = readFileSync(join(process.cwd(), 'scripts/data/collect-public-evidence.mjs'), 'utf8');
+    expect(collectorSource).toContain("serviceWorkers: 'block'");
+    expect(collectorSource).toContain('context.routeWebSocket');
+    expect(collectorSource).toContain('--host-resolver-rules=');
+    expect(collectorSource).toContain('--proxy-server=direct://');
+    expect(collectorSource).toContain('--proxy-bypass-list=*');
+  });
+
   it('adds semi-monthly period metadata without dropping weekly compatibility', async () => {
     const { semiMonthlyPeriod } = (await import('../../scripts/data/collect-weekly-sources.mjs')) as {
       semiMonthlyPeriod: (input: Date) => {
@@ -2484,40 +2602,31 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
         `${JSON.stringify(
           {
             schemaVersion: 1,
-            mode: 'fixture',
+            mode: 'live-browser-capture',
             generatedAt: '2026-07-02T00:00:00.000Z',
             summary: {
               total: 2,
+              captureStatusCounts: { captured: 2 },
               networkCalls: 2,
               businessDataWrites: 0,
             },
             records: [
-              {
-                seedId: 'us-census-merchandise-imports-database',
-                sourceId: 'ds-006',
-                url: 'https://www.census.gov/foreign-trade/data/IMDB.html',
-                evidenceClass: 'official-trade-data-page',
-                captureStatus: 'captured',
-                title: 'Merchandise Trade Imports',
-                visibleTextHash: 'a'.repeat(64),
-                matchedEvidenceTerms: ['Merchandise Trade Imports', 'HTSUSA'],
-                missingEvidenceTerms: [],
-                nonVerbatimSummary: 'fixture public source summary',
-                localEvidence: { textArchivePath: 'tmp/public-evidence/text/us-census.txt' },
-              },
-              {
-                seedId: 'cbp-electric-breast-pump-hts-ruling',
-                sourceId: 'ds-006',
-                url: 'https://rulings.cbp.gov/ruling/N021593',
-                evidenceClass: 'official-customs-ruling-page',
-                captureStatus: 'captured',
-                title: 'CROSS Ruling',
-                visibleTextHash: 'b'.repeat(64),
-                matchedEvidenceTerms: ['electric breast pump', '8413.81.0040'],
-                missingEvidenceTerms: [],
-                nonVerbatimSummary: 'fixture classification summary',
-                localEvidence: { textArchivePath: 'tmp/public-evidence/text/cbp.txt' },
-              },
+              capturedCustomsEvidenceRecord(
+                'us-census-merchandise-imports-database',
+                'https://www.census.gov/foreign-trade/data/IMDB.html',
+                'Merchandise Trade Imports',
+                'a'.repeat(64),
+                ['Merchandise Trade Imports', 'HTSUSA'],
+                'tmp/public-evidence/text/us-census.txt',
+              ),
+              capturedCustomsEvidenceRecord(
+                'cbp-electric-breast-pump-hts-ruling',
+                'https://rulings.cbp.gov/ruling/N021593',
+                'CROSS Ruling',
+                'b'.repeat(64),
+                ['electric breast pump', '8413.81.0040'],
+                'tmp/public-evidence/text/cbp.txt',
+              ),
             ],
           },
           null,
@@ -2559,8 +2668,29 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       expect(adapter.queryPlan.requiredOwnerInputs).toEqual(expect.arrayContaining(['confirm final HS/HTS code list for Momcozy product scope']));
       expect(adapter.forbiddenClaimScopes).toEqual(expect.arrayContaining(['shipment-level facts', 'Import Genius replacement']));
       expect(adapter.evidenceRecords.every((record) => record.ready)).toBe(true);
-      expect(adapter.evidenceRecords.map((record) => record.visibleTextHash)).toEqual(['a'.repeat(64), 'b'.repeat(64)]);
-    } finally {
+    expect(adapter.evidenceRecords.map((record) => record.visibleTextHash)).toEqual(['a'.repeat(64), 'b'.repeat(64)]);
+
+    const policyBlockedManifest = JSON.parse(readFileSync(evidencePath, 'utf8')) as {
+      records: Array<Record<string, unknown>>;
+    };
+    policyBlockedManifest.records = policyBlockedManifest.records.map((record) => ({
+      ...record,
+      warnings: ['browser console or page errors were observed'],
+      pageErrors: ['Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector'],
+    }));
+    writeFileSync(evidencePath, `${JSON.stringify(policyBlockedManifest, null, 2)}\n`);
+    const policyBlockedResources = JSON.parse(
+      execFileSync(
+        'node',
+        ['scripts/data/connectors/customs-public-data-adapter.mjs', '--public-evidence', evidencePath, '--json', '--no-write'],
+        {
+          cwd: process.cwd(),
+          encoding: 'utf8',
+        },
+      ),
+    ) as { status: string };
+    expect(policyBlockedResources.status).toBe('ready-for-public-query-planning');
+  } finally {
       rmSync(tempDir, { recursive: true, force: true });
     }
   });
@@ -2570,30 +2700,26 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       buildCustomsPublicDataAdapter: (options: Record<string, unknown>) => {
         status: string;
         checks: Array<{ id: string; status: string; blockers: Array<{ type: string }> }>;
-        evidenceRecords: Array<{ ready: boolean; missingProofFields: string[] }>;
+        evidenceRecords: Array<{ ready: boolean; missingProofFields: string[]; eligibilityBlockers: string[] }>;
       };
     };
     const validRecords = [
-      {
-        seedId: 'us-census-merchandise-imports-database',
-        sourceId: 'ds-006',
-        url: 'https://www.census.gov/foreign-trade/data/IMDB.html',
-        captureStatus: 'captured',
-        title: 'Merchandise Trade Imports',
-        visibleTextHash: 'a'.repeat(64),
-        matchedEvidenceTerms: ['Merchandise Trade Imports', 'HTSUSA'],
-        localEvidence: { textArchivePath: 'tmp/public-evidence/text/us-census.txt' },
-      },
-      {
-        seedId: 'cbp-electric-breast-pump-hts-ruling',
-        sourceId: 'ds-006',
-        url: 'https://rulings.cbp.gov/ruling/N021593',
-        captureStatus: 'captured',
-        title: 'CROSS Ruling',
-        visibleTextHash: 'b'.repeat(64),
-        matchedEvidenceTerms: ['electric breast pump', '8413.81.0040'],
-        localEvidence: { textArchivePath: 'tmp/public-evidence/text/cbp.txt' },
-      },
+      capturedCustomsEvidenceRecord(
+        'us-census-merchandise-imports-database',
+        'https://www.census.gov/foreign-trade/data/IMDB.html',
+        'Merchandise Trade Imports',
+        'a'.repeat(64),
+        ['Merchandise Trade Imports', 'HTSUSA'],
+        'tmp/public-evidence/text/us-census.txt',
+      ),
+      capturedCustomsEvidenceRecord(
+        'cbp-electric-breast-pump-hts-ruling',
+        'https://rulings.cbp.gov/ruling/N021593',
+        'CROSS Ruling',
+        'b'.repeat(64),
+        ['electric breast pump', '8413.81.0040'],
+        'tmp/public-evidence/text/cbp.txt',
+      ),
     ];
 
     const missingSafety = buildCustomsPublicDataAdapter({ publicEvidence: { records: validRecords } });
@@ -2615,6 +2741,56 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     });
     expect(incompleteProof.status).toBe('blocked');
     expect(incompleteProof.evidenceRecords.every((record) => !record.ready && record.missingProofFields.length > 0)).toBe(true);
+
+    const unsafeRecord = buildCustomsPublicDataAdapter({
+      publicEvidence: {
+        mode: 'live-browser-capture',
+        summary: {
+          total: 2,
+          captureStatusCounts: { captured: 2 },
+          networkCalls: 2,
+          businessDataWrites: 0,
+        },
+        records: validRecords.map((record, index) => (index === 0 ? { ...record, publicBundleAllowed: false } : record)),
+      },
+    });
+    expect(unsafeRecord.status).toBe('blocked');
+    expect(unsafeRecord.evidenceRecords[0]).toMatchObject({
+      ready: false,
+      eligibilityBlockers: expect.arrayContaining(['publicBundleAllowed']),
+    });
+
+    const mismatchedCounters = buildCustomsPublicDataAdapter({
+      publicEvidence: {
+        mode: 'live-browser-capture',
+        summary: {
+          total: 2,
+          captureStatusCounts: { captured: 2 },
+          networkCalls: 1,
+          businessDataWrites: 0,
+        },
+        records: validRecords,
+      },
+    });
+    expect(mismatchedCounters.checks.find((check) => check.id === 'safetyBoundary')).toMatchObject({
+      status: 'blocked',
+      blockers: [{ type: 'safety-counter-mismatch' }],
+    });
+
+    const fixtureMode = buildCustomsPublicDataAdapter({
+      publicEvidence: {
+        mode: 'fixture',
+        summary: {
+          total: 2,
+          captureStatusCounts: { captured: 2 },
+          networkCalls: 2,
+          businessDataWrites: 0,
+        },
+        records: validRecords,
+      },
+    });
+    expect(fixtureMode.status).toBe('blocked');
+    expect(fixtureMode.evidenceRecords.every((record) => !record.ready)).toBe(true);
 
     const skippedEvidence = buildCustomsPublicDataAdapter({
       publicEvidence: {

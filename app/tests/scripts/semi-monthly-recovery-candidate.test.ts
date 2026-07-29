@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -249,5 +249,64 @@ describe('P0-04 semi-monthly recovery candidate', () => {
         outputDir: 'public/periodic-data',
       }),
     ).rejects.toThrow('Recovery candidate output must be a child');
+  });
+
+  it('rejects candidate outputs that escape through a symbolic link', async () => {
+    const candidateParent = join(process.cwd(), 'tmp/data-collection/recovery-candidates');
+    const externalRoot = mkdtempSync(join(tmpdir(), 'mkt53-recovery-symlink-target-'));
+    const linkPath = join(candidateParent, `symlink-${Date.now()}`);
+    mkdirSync(candidateParent, { recursive: true });
+    symlinkSync(externalRoot, linkPath, 'dir');
+    cleanupPaths.push(linkPath, externalRoot);
+
+    await expect(
+      buildSemiMonthlyRecoveryCandidate({
+        appRoot: process.cwd(),
+        generatedAt: '2026-07-23T06:30:00.000Z',
+        outputDir: join(linkPath, 'escaped-candidate'),
+      }),
+    ).rejects.toThrow('must not contain symbolic links');
+    expect(existsSync(join(externalRoot, 'escaped-candidate'))).toBe(false);
+  });
+
+  it('rejects candidate outputs that would overwrite an external hard-linked file', async () => {
+    const candidateRoot = join(process.cwd(), 'tmp/data-collection/recovery-candidates', `hardlink-${Date.now()}`);
+    const periodicDir = join(candidateRoot, 'periodic-data');
+    const externalRoot = mkdtempSync(join(tmpdir(), 'mkt53-recovery-hardlink-target-'));
+    const externalFile = join(externalRoot, 'latest.json');
+    const linkedOutput = join(periodicDir, 'latest.json');
+    mkdirSync(periodicDir, { recursive: true });
+    writeFileSync(externalFile, 'external-content\n');
+    linkSync(externalFile, linkedOutput);
+    cleanupPaths.push(candidateRoot, externalRoot);
+
+    await expect(
+      buildSemiMonthlyRecoveryCandidate({
+        appRoot: process.cwd(),
+        generatedAt: '2026-07-23T06:30:00.000Z',
+        outputDir: candidateRoot,
+      }),
+    ).rejects.toThrow('must not overwrite hard-linked files');
+    expect(readFileSync(externalFile, 'utf8')).toBe('external-content\n');
+  });
+
+  it('rejects a dangling leaf symlink before it can create an external file', async () => {
+    const candidateRoot = join(process.cwd(), 'tmp/data-collection/recovery-candidates', `dangling-${Date.now()}`);
+    const periodicDir = join(candidateRoot, 'periodic-data');
+    const externalRoot = mkdtempSync(join(tmpdir(), 'mkt53-recovery-dangling-target-'));
+    const externalFile = join(externalRoot, 'not-created.json');
+    const linkedOutput = join(periodicDir, 'latest.json');
+    mkdirSync(periodicDir, { recursive: true });
+    symlinkSync(externalFile, linkedOutput, 'file');
+    cleanupPaths.push(candidateRoot, externalRoot);
+
+    await expect(
+      buildSemiMonthlyRecoveryCandidate({
+        appRoot: process.cwd(),
+        generatedAt: '2026-07-23T06:30:00.000Z',
+        outputDir: candidateRoot,
+      }),
+    ).rejects.toThrow('must not contain symbolic links');
+    expect(existsSync(externalFile)).toBe(false);
   });
 });
