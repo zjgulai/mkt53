@@ -1185,8 +1185,8 @@
     "semantic_hash": "6a9b5a2f7faf3ce7d54c9e49193cac71"
   },
   "app/tests/scripts/static-scripts.test.ts": {
-    "mtime": 1785309085.1646457,
-    "ast_hash": "deeb590341e2c300892f2faea93675d5",
+    "mtime": 1785310327.0629985,
+    "ast_hash": "07f2d039b11a48f0156d1ed09cea9e62",
     "semantic_hash": ""
   },
   "app/tests/security/clientBundleGuard.test.ts": {

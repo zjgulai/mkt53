@@ -162,9 +162,11 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as { scripts: Record<string, string> };
 
     expect(() => accessSync(scriptPath, constants.X_OK)).not.toThrow();
-    expect(script).toContain('npm run test:serial');
-    expect(script).not.toMatch(/^npm run test$/m);
-    expect(packageJson.scripts['test:serial']).toContain('--maxWorkers=1');
+    expect(script).toMatch(/^\s*npm run test:serial\s*$/m);
+    expect(script).not.toMatch(/^\s*npm run test(?:\s|$)/m);
+    expect(packageJson.scripts['test:serial']).toMatch(
+      /(?:^|\s)--maxWorkers=1(?:\s|$)/,
+    );
     expect(script).toContain('npm run lint');
     expect(script).toContain('npm audit');
     expect(script).toContain('npm run build');
