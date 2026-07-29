@@ -5,6 +5,9 @@ APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 cd "${APP_DIR}"
 
+echo "==> Ensuring the pinned Playwright browser is available"
+"${APP_DIR}/node_modules/.bin/playwright" install chromium
+
 echo "==> Deploying static bundle to production"
 npm run deploy:prod
 
