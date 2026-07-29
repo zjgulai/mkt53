@@ -14,6 +14,8 @@ const newsItems = [
     hot: true,
     verification: '已补证',
     sourceUrl: 'https://www.accessdata.fda.gov/cdrh_docs/pdf25/K253283.pdf',
+    sourceIds: ['ds-034'],
+    canDisplayAsFact: true,
   },
   {
     id: 2,
@@ -25,6 +27,8 @@ const newsItems = [
     hot: true,
     verification: '已补证',
     sourceUrl: 'https://www.mordorintelligence.com/industry-reports/wearable-breast-pumps-market',
+    sourceIds: ['ds-034'],
+    canDisplayAsFact: true,
   },
   {
     id: 3,
@@ -36,17 +40,21 @@ const newsItems = [
     hot: false,
     verification: '待复核',
     sourceUrl: 'https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfpmn/pmn.cfm',
+    sourceIds: ['ds-034'],
+    canDisplayAsFact: false,
   },
   {
     id: 4,
     title: '中国 GB 6675-2025 玩具安全新标准发布，2026 年 11 月计划生效',
-    source: 'SAC China',
-    date: '待复核',
+    source: 'TUV Rheinland',
+    date: '补证 2026-06-30',
     category: '法规',
     tag: '重要',
     hot: true,
-    verification: '待复核',
-    sourceUrl: 'https://www.sac.gov.cn/',
+    verification: '已补证',
+    sourceUrl: 'https://www.tuv.com/regulations-and-standards/en/china-three-gb-standards-on-children-s-product-will-become-effective.html',
+    sourceIds: ['ds-016'],
+    canDisplayAsFact: true,
   },
   {
     id: 5,
@@ -56,8 +64,10 @@ const newsItems = [
     category: '法规',
     tag: null,
     hot: false,
-    verification: '待复核',
+    verification: '已补证',
     sourceUrl: 'https://health.ec.europa.eu/medical-devices-sector/new-regulations_en',
+    sourceIds: ['ds-016', 'policy-eu-mdr-transition'],
+    canDisplayAsFact: true,
   },
   {
     id: 6,
@@ -69,6 +79,8 @@ const newsItems = [
     hot: false,
     verification: '已补证',
     sourceUrl: 'https://www.medela.com/en/about-medela/medela-news/pump-in-style-pro-named-best-new-product-in-the-us-for-2026',
+    sourceIds: ['ds-034'],
+    canDisplayAsFact: true,
   },
   {
     id: 7,
@@ -80,6 +92,8 @@ const newsItems = [
     hot: true,
     verification: '已补证',
     sourceUrl: 'https://www.cpsc.gov/Business--Manufacturing/Business-Education/Business-Guidance/Nursing-Pillows',
+    sourceIds: ['ds-034'],
+    canDisplayAsFact: true,
   },
   {
     id: 8,
@@ -91,17 +105,21 @@ const newsItems = [
     hot: false,
     verification: '待复核',
     sourceUrl: null,
+    sourceIds: ['ds-034'],
+    canDisplayAsFact: false,
   },
   {
     id: 9,
-    title: 'Willow Go / Willow 3.0 新品表述待官网新闻稿复核，暂不作为确定新品事实',
+    title: 'Willow 360 官网规格页已补证；Willow Go / Willow 3.0 新品表述仍不作为确定新品事实',
     source: 'Willow',
-    date: '待复核',
+    date: '补证 2026-06-30',
     category: '竞品',
     tag: null,
     hot: false,
-    verification: '待复核',
-    sourceUrl: 'https://onewillow.com/',
+    verification: '已补证',
+    sourceUrl: 'https://onewillow.com/products/willow-pump-360',
+    sourceIds: ['ds-036'],
+    canDisplayAsFact: true,
   },
   {
     id: 10,
@@ -113,8 +131,13 @@ const newsItems = [
     hot: false,
     verification: '待复核',
     sourceUrl: 'https://www.miit.gov.cn/',
+    sourceIds: ['ds-016'],
+    canDisplayAsFact: false,
   },
 ];
+
+const verifiedNewsCount = newsItems.filter((item) => item.canDisplayAsFact).length;
+const leadNewsCount = newsItems.length - verifiedNewsCount;
 
 const sidebarItems = [
   {
@@ -174,7 +197,7 @@ export default function IndustryNews() {
                   </div>
                   <div>
                     <h1 className="text-lg font-semibold text-[#1d1d1f]">母婴行业资讯</h1>
-                    <p className="text-xs text-[#86868b]">共 {newsItems.length} 条精选资讯</p>
+                    <p className="text-xs text-[#86868b]">共 {newsItems.length} 条资讯线索 · 已补证 {verifiedNewsCount} 条 · 待复核 {leadNewsCount} 条</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -187,9 +210,9 @@ export default function IndustryNews() {
             </div>
 
             <PageEvidenceNotice
-              sourceIds={['ds-034']}
+              sourceIds={['ds-034', 'ds-016', 'ds-036']}
               title="行业资讯条目复核口径"
-              description="资讯列表为手工汇编，仍需逐条补原文 URL、发布日期和复核状态；不能把整页列表视为已验证新闻流。"
+              description="资讯列表已拆分为事实条目和线索条目；只有标记已补证、具备 sourceUrl 和 sourceIds 的条目可展示为事实，待复核线索不能进入事实统计、报告或 CSV 导出。"
             />
 
             <div className="space-y-4">
@@ -205,14 +228,18 @@ export default function IndustryNews() {
                         <span className="px-2 py-0.5 rounded-md text-[10px] font-medium" style={{ backgroundColor: `${verificationColors[n.verification]}15`, color: verificationColors[n.verification] }}>{n.verification}</span>
                         {n.tag && <span className="px-2 py-0.5 rounded-md bg-[#ff3b30]/10 text-[10px] text-[#ff3b30] font-medium">{n.tag}</span>}
                         {n.hot && <span className="px-2 py-0.5 rounded-md bg-[#ff9500]/10 text-[10px] text-[#ff9500] font-medium flex items-center gap-0.5"><TrendingUp className="w-3 h-3" />热门</span>}
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${n.canDisplayAsFact ? 'bg-[#34c759]/10 text-[#2f7d32]' : 'bg-[#ff9500]/10 text-[#a85f00]'}`}>
+                          {n.canDisplayAsFact ? '事实条目' : '线索条目'}
+                        </span>
                       </div>
                       <h3 className="text-sm font-medium text-[#1d1d1f] group-hover:text-[#C25B6E] transition-colors duration-200 mb-1 line-clamp-2">{n.title}</h3>
                       <div className="flex items-center gap-4 text-[10px] text-[#86868b] flex-wrap">
                         <span>{n.source}</span>
                         <span className="flex items-center gap-0.5"><Clock className="w-3 h-3" />{n.date}</span>
+                        <span>source ids: {n.sourceIds.join(' / ')}</span>
                         {n.sourceUrl ? (
                           <a href={n.sourceUrl} target="_blank" rel="noreferrer" className="ml-auto inline-flex items-center gap-1 text-[#C25B6E] hover:underline">
-                            来源
+                            {n.canDisplayAsFact ? '来源' : '入口待复核'}
                             <ExternalLink className="w-3 h-3" />
                           </a>
                         ) : (

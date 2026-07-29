@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "taskId": "batch-30-minor-data-integrity-closeout",
+  "generatedAt": "2026-07-28T07:54:10Z",
+  "branch": "codex/mkt53-release-candidate-20260630",
+  "sourceHeadBeforeBatchCommit": "06bf98cb5b9bbafaafb61c84bfbdd3fb955d4350",
+  "status": "e971-exact-head-ci-green-coderabbit-safety-label-local-review-clean-pending-commit-push-exact-head-ci-external-recheck",
+  "implementationCommit": "e971d75c5bebf2b96436ae242d997d518657494e",
+  "scope": [
+    "owner-intake-question-contract",
+    "owner-chat-pack-and-merge",
+    "public-evidence-truthfulness",
+    "page-scoped-safety-counters",
+    "semi-monthly-recovery-contract",
+    "regulation-draft-file-permissions",
+    "local-h2-dry-run-canonical-refresh",
+    "recursive-candidate-schema-contract",
+    "runtime-public-evidence-manifest-validation",
+    "eligible-captured-record-display-gate",
+    "public-evidence-seed-provenance-correction",
+    "unsupported-trend-claim-gate",
+    "shared-public-evidence-view-hook",
+    "page-scope-safety-boundary-fail-closed",
+    "in-flight-only-manifest-request-deduplication",
+    "graph-report-markdown-safe-community-labels",
+    "safety-boundary-status-reason-completeness"
+  ],
+  "quality": {
+    "tests": {
+      "filesPassed": 25,
+      "testsPassed": 205,
+      "failed": 0
+    },
+    "lint": "passed",
+    "build": {
+      "status": "passed",
+      "modulesTransformed": 2386
+    },
+    "dataAudit": {
+      "pages": 43,
+      "tables": 107,
+      "sources": 53,
+      "issues": 0
+    },
+    "deepAudit": {
+      "routes": 46,
+      "claims": 884,
+      "highRiskClaims": 0,
+      "mediumRiskClaims": 0,
+      "unsupportedClaims": 0
+    },
+    "codexReview": {
+      "status": "completed-clean",
+      "initialFollowUp": "terminated-recursive-invocation-not-used-as-clean-evidence",
+      "runs": [
+        {
+          "sessionId": "019fa6b9-997c-7ef3-9cc4-4d32295d2ff1",
+          "actionableFindings": 5,
+          "p1": 1,
+          "p2": 3,
+          "p3": 1,
+          "locallyFixed": 5
+        },
+        {
+          "sessionId": "019fa6d5-5e27-7f92-ad4d-9f7ce9de6a9f",
+          "actionableFindings": 3,
+          "p1": 0,
+          "p2": 2,
+          "p3": 1,
+          "locallyFixed": 3
+        },
+        {
+          "sessionId": "019fa6f8-6843-7282-8cb5-869fb5296664",
+          "actionableFindings": 2,
+          "p1": 0,
+          "p2": 2,
+          "p3": 0,
+          "locallyFixed": 2
+        },
+        {
+          "sessionId": "019fa70a-4c60-7470-818e-8b055d6bf9e7",
+          "actionableFindings": 2,
+          "p1": 0,
+          "p2": 2,
+          "p3": 0,
+          "locallyFixed": 2
+        },
+        {
+          "sessionId": "019fa716-2a69-79c1-90af-b1e5aa92e7bf",
+          "actionableFindings": 2,
+          "p1": 1,
+          "p2": 1,
+          "p3": 0,
+          "locallyFixed": 2
+        },
+        {
+          "sessionId": "019fa724-6589-7101-bd85-1928e6a70837",
+          "actionableFindings": 2,
+          "p1": 0,
+          "p2": 2,
+          "p3": 0,
+          "locallyFixed": 2
+        },
+        {
+          "sessionId": "019fa730-f7e9-7910-919b-a1dcc651fc06",
+          "actionableFindings": 0,
+          "p1": 0,
+          "p2": 0,
+          "p3": 0,
+          "locallyFixed": 0,
+          "status": "completed-clean",
+          "exitCode": 0
+        },
+        {
+          "sessionId": "019fa757-aec6-75a3-858c-b0e0157068c7",
+          "actionableFindings": 1,
+          "p1": 0,
+          "p2": 1,
+          "p3": 0,
+          "locallyFixed": 1,
+          "finding": "process-lifetime-success-cache-prevented-no-store-revalidation"
+        },
+        {
+          "sessionId": "019fa764-ac58-7380-99f4-0c5e7fcc3bb7",
+          "actionableFindings": 0,
+          "p1": 0,
+          "p2": 0,
+          "p3": 0,
+          "locallyFixed": 0,
+          "status": "completed-clean",
+          "exitCode": 0
+        },
+        {
+          "sessionId": "019fa78a-44a6-7181-ba13-eb53d4e2544f",
+          "actionableFindings": 0,
+          "p1": 0,
+          "p2": 0,
+          "p3": 0,
+          "locallyFixed": 0,
+          "status": "completed-clean",
+          "exitCode": 0,
+          "scope": "graphify-generated-artifacts-after-md038-fix"
+        },
+        {
+          "sessionId": "019fa7af-1dfd-7793-ad05-84b4fa52c572",
+          "actionableFindings": 0,
+          "p1": 0,
+          "p2": 0,
+          "p3": 0,
+          "locallyFixed": 0,
+          "status": "completed-clean",
+          "exitCode": 0,
+          "scope": "safety-boundary-status-reason-completeness"
+        }
+      ],
+      "totals": {
+        "actionableFindings": 17,
+        "p1": 2,
+        "p2": 13,
+        "p3": 2,
+        "locallyFixed": 17
+      },
+      "finalResult": "The change preserves fail-closed safety behavior while reporting all triggered boundary reasons. All 205 app tests, lint, TypeScript compilation, and the production build pass.",
+      "finalReviewSessionId": "019fa7af-1dfd-7793-ad05-84b4fa52c572"
+    },
+    "codeRabbit": {
+      "reviewedHead": "e971d75c5bebf2b96436ae242d997d518657494e",
+      "runId": "d8869cb1-a4e7-4c73-b14b-6ab74d3996d5",
+      "reviewId": 4794952413,
+      "reviewState": "COMMENTED",
+      "statusContext": "SUCCESS-means-review-completed-not-approved",
+      "inlineActionableFindings": 1,
+      "outsideDiffMajorFindings": 0,
+      "acceptedAndLocallyFixed": 1,
+      "fixes": [
+        "safety-boundary-status-label-lists-login-bypass-write-and-raw-text-reasons"
+      ],
+      "previousReviews": [
+        {
+          "reviewedHead": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
+          "runId": "7a7909e3-566e-4df4-8009-53e69ace746c",
+          "reviewId": 4794237146,
+          "actionableFindings": 3,
+          "acceptedAndFixedIn": "3cacb94adc0c813b72e3cfa35514102196c7cdf5"
+        },
+        {
+          "reviewedHead": "3cacb94adc0c813b72e3cfa35514102196c7cdf5",
+          "runId": "82d9dd21-b45e-4aff-a526-11d755b6bb5c",
+          "reviewId": 4794647488,
+          "actionableFindings": 1,
+          "acceptedAndFixedIn": "e971d75c5bebf2b96436ae242d997d518657494e"
+        }
+      ],
+      "newHeadRecheck": "pending-push"
+    },
+    "graphify": {
+      "nodes": 4671,
+      "edges": 7457,
+      "communities": 346,
+      "zeroAstSourceFiles": 61,
+      "danglingEdges": 0,
+      "selfLoops": 0,
+      "modelTokens": 0,
+      "generatorHotfix": {
+        "scope": "local-user-tool-install",
+        "path": "/Users/pray/.local/share/uv/tools/graphifyy/lib/python3.14/site-packages/graphify/report.py",
+        "change": "thin-community-filter-uses-min-community-size-and-community-node-labels-use-trimmed-variable-length-markdown-code-span-delimiters",
+        "trackedInRepository": false,
+        "upgradeMayOverwrite": true
+      },
+      "graphReportMd037Issues": 0,
+      "graphReportMd038Issues": 0
+    },
+    "github": {
+      "pullRequest": 32,
+      "runId": 30338156933,
+      "verifiedHead": "e971d75c5bebf2b96436ae242d997d518657494e",
+      "app": {
+        "status": "success",
+        "jobId": 90207482285,
+        "duration": "4m39s",
+        "annotations": 0
+      },
+      "backend": {
+        "status": "success",
+        "jobId": 90207482251,
+        "duration": "1m1s",
+        "annotations": 0
+      }
+    }
+  },
+  "localCanonical": {
+    "period": "2026-07-H2",
+    "generationMode": "no-network",
+    "publicEvidenceMode": "dry-run",
+    "plannedRecords": 39,
+    "networkCalls": 0,
+    "businessDataWrites": 0,
+    "periodicWeeklyByteParity": true,
+    "publicSourceStatus": {
+      "fetchError": 0,
+      "sourceError": 0
+    },
+    "correctedSeeds": [
+      "category-fortune-bi-breast-pump-market",
+      "nursing-products-gmi-breast-pads-market",
+      "babycare-gmi-bottle-warmer-sterilizer-market"
+    ]
+  },
+  "boundaries": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "publicEvidenceLiveCapture": false,
+    "sourceRegistryWrites": false,
+    "pageFactWrites": false,
+    "factPromotion": false,
+    "productionWrites": false,
+    "productionDeploy": false,
+    "nginxChanges": false,
+    "cronChanges": false,
+    "mergePerformed": false
+  },
+  "nextGates": [
+    "commit-and-push-safety-boundary-status-label-follow-up",
+    "validate-follow-up-on-new-exact-head-ci",
+    "complete-external-coderabbit-recheck-on-new-head",
+    "human-review-and-explicit-merge-decision",
+    "observe-first-cron-run-after-2026-08-01T09:00:00+08:00"
+  ]
+}

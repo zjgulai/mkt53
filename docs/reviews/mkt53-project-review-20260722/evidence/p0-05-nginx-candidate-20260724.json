@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "taskId": "P0-05",
+  "batch": "Batch 08",
+  "generatedAt": "2026-07-24T08:52:41+08:00",
+  "status": "l2-candidate-ready-production-blocked-auth-and-real-session-input",
+  "evidenceLayers": [
+    "L3-production-readonly",
+    "L2-isolated-docker-fixture"
+  ],
+  "authorization": {
+    "authorizedBy": "user",
+    "authorizedAt": "2026-07-24",
+    "scope": [
+      "restore the local production E2E runner",
+      "perform P0-05 production-readonly inspection",
+      "build an isolated nginx candidate and rollback contract",
+      "validate unauthorized and synthetic-authorized behavior locally"
+    ],
+    "excluded": [
+      "production nginx writes",
+      "production container reload or restart",
+      "application bundle deployment",
+      "P0-04 data or cron changes",
+      "provider or restricted connector calls",
+      "git staging, commit, or push"
+    ]
+  },
+  "worktree": {
+    "branch": "codex/mkt53-release-candidate-20260630",
+    "head": "0d44c3329b759a7886a69e4333bf56917b60e948",
+    "dirtyBeforeCandidate": true,
+    "preCandidateStatusSha256": "519e05822cd6ace26d243006f2745d8e2c3e22149bf6a13863001fe128934c6b",
+    "currentStatusSha256": "f17f956403d6cbd7ccc4ab4dab4a2baca61afbc962a9d1b8c8629930cfcb3e19",
+    "currentStatusEntries": 33,
+    "diffCheck": "passed",
+    "handling": "candidate files were added without reverting, staging, committing, or pushing existing work"
+  },
+  "runnerRecovery": {
+    "playwrightVersion": "1.60.0",
+    "chromium": "Chrome for Testing 148.0.7778.96",
+    "playwrightBrowserRevision": 1223,
+    "localCacheWrite": true,
+    "repositoryWriteFromBrowserInstall": false,
+    "productionWrite": false
+  },
+  "dependencyAuditRemediation": {
+    "firstReleaseEvidence": "7/8-failed-dependency-audit",
+    "finding": "two moderate direct React Router advisories affected the installed 7.16.0",
+    "fixAvailable": true,
+    "packageRangeApplied": {
+      "react-router": "^7.18.1",
+      "react-router-dom": "^7.18.1"
+    },
+    "installedVersions": {
+      "react-router": "7.18.1",
+      "react-router-dom": "7.18.1"
+    },
+    "packageJsonSha256": "5159325c733fe26965fa9e0334f57de43622699584d526b599041b91cfff6fca",
+    "packageLockSha256": "cb59d0e39bce10380f5d1afed1bceac4ab52cad2a2babc5f9af131cafd224b07",
+    "finalAuditVulnerabilities": 0
+  },
+  "productionReadonly": {
+    "observedAt": "2026-07-24T08:37:12+08:00",
+    "host": "VM-0-16-ubuntu",
+    "http": {
+      "root": 200,
+      "deepPathMarketTrend": 200,
+      "periodicManifest": 200,
+      "redirectLocationPresent": false,
+      "cacheControl": "public, max-age=300, must-revalidate"
+    },
+    "manifest": {
+      "period": "2026-07-H2",
+      "generatedAt": "2026-07-23T07:03:59.663Z",
+      "nextScheduledAt": "2026-08-01T09:00:00+08:00",
+      "totalSources": 53,
+      "connectorRequired": 28,
+      "manualRequired": 9,
+      "publicEvidenceMode": "dry-run",
+      "businessDataWrites": 0
+    },
+    "nginx": {
+      "versionFromHttps": "1.29.8",
+      "configPath": "/opt/ai-video/deploy/lighthouse/nginx.conf",
+      "configSha256": "fa36f371db7e45f20311b2cb59701f8ffb24515fe4e1ffa6fbad936d4d793eff",
+      "configMode": "0644",
+      "configOwner": "root:root",
+      "mktServerBlockSha256": "4f78ab917e7c61508d374da5b318f4d49ce2de7da9f9142c76714b4eb9206342",
+      "mktServerBlockHasAuthRequest": false,
+      "mktServerBlockHasPortalAuthLocation": false,
+      "syntaxTest": "passed",
+      "container": {
+        "name": "ai_video_nginx",
+        "image": "nginx:alpine",
+        "imageId": "sha256:812d47f806db497c53f9b47e76bdab38bcf5d724c69d3986df5ee4336c210559",
+        "status": "running",
+        "mktMount": "/opt/mkt53/html:/var/www/mkt53:ro"
+      },
+      "composeSha256": "77ec0c4bcb7b505353e3ee2965ebaad823a4f6c018866f61cafa0dfc49c2c239",
+      "portalAuthContainer": "lute_portal_auth",
+      "portalAuthHealth": "healthy"
+    },
+    "productionE2e": {
+      "command": "npm run test:e2e:prod",
+      "passed": 2,
+      "failed": 6,
+      "total": 8,
+      "passedChecks": [
+        "desktop landing gateway",
+        "mobile landing gateway"
+      ],
+      "failedContracts": [
+        "desktop and mobile mkt root remain on the mkt host instead of portal login",
+        "desktop and mobile deep routes remain on the mkt host instead of portal login",
+        "desktop and mobile manifest requests return 200 instead of 302"
+      ]
+    }
+  },
+  "candidate": {
+    "path": "app/configs/nginx/mkt53-portal-gate.candidate.conf",
+    "sha256": "f33342abf04bf7f0a25e6549b7d8be5f0298a7e42bf455a09f84946457b9d696",
+    "expectedCurrentBlockSha256": "4f78ab917e7c61508d374da5b318f4d49ce2de7da9f9142c76714b4eb9206342",
+    "behavior": {
+      "authSubrequest": "/_portal_auth -> http://portal_auth/portal/auth",
+      "unauthorized": "302 to https://lute-tlz-dddd.top/login.html with server-visible next URL",
+      "authorized": "serve static mkt53 files",
+      "cacheControl": "private, no-store"
+    },
+    "validator": {
+      "path": "app/scripts/quality/validate-p0-05-nginx-candidate.sh",
+      "sha256": "5f34d8c0b267d33c2e37f20cb335e51f0fd0eabe5027e03c8078def6d65d6f5c",
+      "dockerImage": "nginx:1.29.8-alpine",
+      "dockerImageDigest": "sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de",
+      "temporaryContainersRemaining": 0,
+      "temporaryNetworksRemaining": 0
+    },
+    "firstValidationAttempt": {
+      "status": "failed-closed",
+      "nginxSyntax": "passed",
+      "cause": "macOS awk did not honor the response-header case parsing assumption",
+      "remediation": "parse header names with tolower($1)",
+      "productionWrites": false
+    },
+    "finalValidation": {
+      "status": "passed",
+      "evidenceLayer": "L2-isolated-docker-fixture",
+      "nginxSyntax": "passed",
+      "unauthorizedRoot": 302,
+      "unauthorizedDeepRoute": 302,
+      "unauthorizedManifest": 302,
+      "authorizedRootWithSyntheticCookie": 200,
+      "authorizedManifestWithSyntheticCookie": 200,
+      "internalAuthDirectAccess": 404,
+      "cachePolicy": "private-no-store",
+      "unitTests": "3/3"
+    }
+  },
+  "localReleaseEvidence": {
+    "generatedAt": "2026-07-24T00:52:24.675Z",
+    "sha256": "1b6d5bb3f626485a0aeb942ec46e8d5e7da0452f8241dcd2570ead07bd36fa8a",
+    "checks": "8/8",
+    "unitTests": "11 files / 117 tests",
+    "lint": "passed",
+    "dependencyAuditVulnerabilities": 0,
+    "buildModules": 2323,
+    "bundleBudget": "60 assets / 58 within target / 2 temporary exceptions / 0 failures",
+    "dataConsistency": "43 pages / 107 tables / 53 sources / 0 issues",
+    "dataDeepAudit": "888 claims / 0 high-risk / 0 unsupported",
+    "localE2e": "138/138"
+  },
+  "rollbackContract": {
+    "precondition": "fail closed unless the remote mkt server block SHA-256 still equals the pinned expected hash",
+    "backup": "copy the full nginx.conf to a timestamped root-owned backup before replacement",
+    "validationBeforeActivation": "test the complete candidate with nginx -t",
+    "activation": "replace only the mkt server block and reload or recreate only ai_video_nginx",
+    "rollbackTrigger": "any nginx syntax, container health, portal redirect, authorized-session, manifest, or 8/8 E2E failure",
+    "rollback": "restore the full backed-up nginx.conf, run nginx -t, and reload or recreate only ai_video_nginx"
+  },
+  "remaining": [
+    {
+      "task": "real portal-session positive acceptance",
+      "status": "blocked-input",
+      "requiredInput": "authorized disposable test session or equivalent approved acceptance path"
+    },
+    {
+      "task": "P0-05 production activation",
+      "status": "blocked-auth",
+      "requiredAuthorization": "separate nginx production-write authorization"
+    },
+    {
+      "task": "P0-04 first cron observation",
+      "status": "pending-time-window",
+      "earliestAt": "2026-08-01T09:00:00+08:00"
+    }
+  ],
+  "boundaries": {
+    "productionReads": true,
+    "productionWrites": false,
+    "nginxWrites": false,
+    "nginxReloadOrRestart": false,
+    "applicationDeployment": false,
+    "providerCalls": false,
+    "restrictedConnectorCalls": false,
+    "businessDataWrites": false,
+    "gitStage": false,
+    "gitCommit": false,
+    "gitPush": false
+  }
+}

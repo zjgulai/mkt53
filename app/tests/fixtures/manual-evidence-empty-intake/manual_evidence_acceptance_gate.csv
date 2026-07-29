@@ -1,0 +1,4 @@
+task_id,source_id,status,l3_evidence_ready,source_replacement_required,scope_mismatch_rejected,artifact_sha256_present,reviewer_present,publication_or_report_year_present,fact_promotion_allowed,production_write_authorized,provider_call_authorized,next_gate
+public-source-review:ds-002,ds-002,pending_manual_review,false,,,false,false,false,false,false,false,owner submits completed questionnaire and evidence artifact hash
+public-source-review:ds-044,ds-044,pending_manual_review,false,,,false,false,false,false,false,false,owner submits completed questionnaire and evidence artifact hash
+public-source-review:ds-045,ds-045,pending_manual_review,false,,,false,false,false,false,false,false,owner submits completed questionnaire and evidence artifact hash

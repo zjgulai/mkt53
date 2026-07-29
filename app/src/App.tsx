@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import Navbar from '@/components/Navbar';
 import { useScrollTop } from '@/hooks/useScrollTop';
 import NotFoundPage from '@/pages/NotFoundPage';
@@ -76,13 +76,13 @@ function App() {
             <Route path="/competition/new" element={<NewCompetition />} />
             <Route path="/competition/region" element={<RegionCompetition />} />
             <Route path="/competition/products" element={<ProductManage />} />
-            <Route path="/users" element={<UsersPage />} />
+            <Route path="/users" element={<UsersPage key="users-social" />} />
             <Route path="/users/overseas" element={<OverseasSentiment />} />
             <Route path="/users/consumer" element={<ConsumerInterviews />} />
             <Route path="/users/channel" element={<ChannelInterviews />} />
             <Route path="/users/store" element={<StoreInterviews />} />
-            <Route path="/users/regional" element={<UsersPage />} />
-            <Route path="/users/global" element={<UsersPage />} />
+            <Route path="/users/regional" element={<UsersPage key="users-regional" />} />
+            <Route path="/users/global" element={<UsersPage key="users-global" />} />
             <Route path="/users/aesthetics" element={<Aesthetics />} />
             <Route path="/industry" element={<IndustryPage />} />
             <Route path="/industry/regulation" element={<RegulationDetail />} />

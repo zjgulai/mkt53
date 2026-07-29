@@ -1,5 +1,5 @@
 {
-  "total": 23,
+  "total": 28,
   "groupCount": 10,
   "generatedRule": "connector-required来源只产出接入队列，不产出真实业务数据。",
   "groups": [
@@ -122,12 +122,21 @@
       "connectorId": "internal-erp",
       "label": "Momcozy ERP / Supply Chain",
       "priority": "P1",
-      "sourceCount": 1,
+      "sourceCount": 7,
       "sourceIds": [
-        "ds-035"
+        "ds-035",
+        "ds-041",
+        "ds-047",
+        "ds-048",
+        "ds-049",
+        "ds-050",
+        "ds-051"
       ],
       "pages": [
-        "SupplyChain"
+        "SupplyChain",
+        "ChannelInterviews",
+        "MarketPage",
+        "DataManage"
       ],
       "requiredAccess": [
         "ERP 只读导出或库存快照",
@@ -193,18 +202,16 @@
       "connectorId": "internal-knowledge-reporting",
       "label": "Internal Knowledge / Reporting Assets",
       "priority": "P2",
-      "sourceCount": 4,
+      "sourceCount": 3,
       "sourceIds": [
         "ds-020",
         "ds-022",
-        "ds-024",
-        "ds-041"
+        "ds-024"
       ],
       "pages": [
         "SelfInsight",
         "KnowledgeBase",
-        "ReportsPage",
-        "ChannelInterviews"
+        "ReportsPage"
       ],
       "requiredAccess": [
         "内部资产目录或报告库只读导出",
@@ -335,7 +342,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "补采集任务记录"
+      "nextAction": "保留公开品牌入口证据包；提交p0-amazon-connector-owner-01证据包并通过owner intake验证后再复核竞品价格、排名、份额、销量和SKU结论"
     },
     {
       "id": "ds-009",
@@ -359,14 +366,14 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "补采集时间戳"
+      "nextAction": "提交p0-amazon-connector-owner-01证据包并通过owner intake验证"
     },
     {
       "id": "ds-010",
       "page": "RegionCompetition",
       "metric": "区域份额",
       "sourceName": "Amazon Brand Analytics",
-      "sourceUrl": "https://vendorcentral.amazon.com",
+      "sourceUrl": "https://sellercentral.amazon.com/help/hub/reference/external/GH2Z5B4HMF5ZXCG2",
       "verificationStatus": "needs-review",
       "connectorId": "amazon-commerce",
       "connectorLabel": "Amazon Marketplace / Brand Analytics",
@@ -384,7 +391,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "建议叠加NPD/IRI线下数据"
+      "nextAction": "保留公开区域来源入口证据包；提交p0-amazon-connector-owner-01证据包并补国家/marketplace映射、Amazon BA快照和零售面板分母后再复核区域份额与排名"
     },
     {
       "id": "ds-019",
@@ -408,14 +415,14 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "补数据快照"
+      "nextAction": "提交p0-amazon-connector-owner-01证据包；继续把ERP proxy和平台结论分开展示"
     },
     {
       "id": "ds-037",
       "page": "BabyCare",
       "metric": "婴儿护理品类规模",
       "sourceName": "行业报告 / Amazon品类采集",
-      "verificationStatus": "example",
+      "verificationStatus": "needs-review",
       "connectorId": "amazon-commerce",
       "connectorLabel": "Amazon Marketplace / Brand Analytics",
       "priority": "P0",
@@ -432,7 +439,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "补品类报告来源、采集窗口和测算公式"
+      "nextAction": "保留公开报告入口证据包；提交p0-amazon-connector-owner-01证据包并补类目/品牌映射后再复核婴儿护理外部趋势和品牌结论"
     },
     {
       "id": "ds-038",
@@ -456,7 +463,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "补测算说明、BSR快照和外部报告来源"
+      "nextAction": "保留公开报告入口证据包；提交p0-amazon-connector-owner-01证据包并补品类测算表后再复核外部品类结论"
     },
     {
       "id": "ds-039",
@@ -480,7 +487,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "接入Amazon类目采集并保存SKU/品牌映射"
+      "nextAction": "保留公开报告入口证据包；提交p0-amazon-connector-owner-01证据包并补类目/品牌映射后再复核哺乳用品外部趋势和品牌结论"
     },
     {
       "id": "ds-023",
@@ -502,7 +509,7 @@
       ],
       "stopCondition": "dry-run 输出 allowedUrlPatterns、robotsStatus、rateLimit 和 sourceIds。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "需标注robots.txt合规性"
+      "nextAction": "提交p0-voc-nlp-connector-owner-04证据包并完成合规采样复核"
     },
     {
       "id": "ds-012",
@@ -548,6 +555,144 @@
       "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
       "nextAction": "接入ERP导出、供应商主数据和库存快照"
+    },
+    {
+      "id": "ds-041",
+      "page": "ChannelInterviews",
+      "metric": "渠道合作伙伴访谈",
+      "sourceName": "渠道访谈 / 内部销售口径",
+      "verificationStatus": "needs-review",
+      "connectorId": "internal-erp",
+      "connectorLabel": "Momcozy ERP / Supply Chain",
+      "priority": "P1",
+      "requiredAccess": [
+        "ERP 只读导出或库存快照",
+        "供应商主数据映射",
+        "脱敏和权限审批记录"
+      ],
+      "outputContract": [
+        "inventory_snapshot",
+        "supplier_master_snapshot",
+        "supply_cost_snapshot"
+      ],
+      "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "nextAction": "提交p0-connector-owner-private-snapshot-02证据包并补渠道访谈/销售快照证据"
+    },
+    {
+      "id": "ds-047",
+      "page": "MarketPage",
+      "metric": "ERP电商销售统计快照",
+      "sourceName": "ERP 销售统计导出",
+      "verificationStatus": "verified",
+      "connectorId": "internal-erp",
+      "connectorLabel": "Momcozy ERP / Supply Chain",
+      "priority": "P1",
+      "requiredAccess": [
+        "ERP 只读导出或库存快照",
+        "供应商主数据映射",
+        "脱敏和权限审批记录"
+      ],
+      "outputContract": [
+        "inventory_snapshot",
+        "supplier_master_snapshot",
+        "supply_cost_snapshot"
+      ],
+      "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "nextAction": "OK：仅按private/internal proxy展示；保持非GMV/非份额/非TAM标签"
+    },
+    {
+      "id": "ds-048",
+      "page": "MarketPage",
+      "metric": "ERP售后销量统计快照",
+      "sourceName": "ERP 售后销量统计导出",
+      "verificationStatus": "verified",
+      "connectorId": "internal-erp",
+      "connectorLabel": "Momcozy ERP / Supply Chain",
+      "priority": "P1",
+      "requiredAccess": [
+        "ERP 只读导出或库存快照",
+        "供应商主数据映射",
+        "脱敏和权限审批记录"
+      ],
+      "outputContract": [
+        "inventory_snapshot",
+        "supplier_master_snapshot",
+        "supply_cost_snapshot"
+      ],
+      "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "nextAction": "OK：仅按private/internal proxy展示；保持非售后率/非GMV/非份额标签"
+    },
+    {
+      "id": "ds-049",
+      "page": "MarketPage",
+      "metric": "ERP零售与渠道销量UI分页采集",
+      "sourceName": "ERP 零售与渠道销量统计",
+      "verificationStatus": "verified",
+      "connectorId": "internal-erp",
+      "connectorLabel": "Momcozy ERP / Supply Chain",
+      "priority": "P1",
+      "requiredAccess": [
+        "ERP 只读导出或库存快照",
+        "供应商主数据映射",
+        "脱敏和权限审批记录"
+      ],
+      "outputContract": [
+        "inventory_snapshot",
+        "supplier_master_snapshot",
+        "supply_cost_snapshot"
+      ],
+      "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "nextAction": "OK：只展示可见列内部代理和来源状态；不外推渠道份额或市场份额"
+    },
+    {
+      "id": "ds-050",
+      "page": "DataManage",
+      "metric": "ERP全渠道销售增长表现",
+      "sourceName": "ERP > 销售 > 全渠道销售增长表现",
+      "verificationStatus": "verified",
+      "connectorId": "internal-erp",
+      "connectorLabel": "Momcozy ERP / Supply Chain",
+      "priority": "P1",
+      "requiredAccess": [
+        "ERP 只读导出或库存快照",
+        "供应商主数据映射",
+        "脱敏和权限审批记录"
+      ],
+      "outputContract": [
+        "inventory_snapshot",
+        "supplier_master_snapshot",
+        "supply_cost_snapshot"
+      ],
+      "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "nextAction": "OK：沉淀到ERP内部经营数据治理；不写成区域份额、竞品份额或TAM/SAM/SOM"
+    },
+    {
+      "id": "ds-051",
+      "page": "DataManage",
+      "metric": "ERP全渠道目标达成",
+      "sourceName": "ERP > 销售 > 全渠道目标达成",
+      "verificationStatus": "verified",
+      "connectorId": "internal-erp",
+      "connectorLabel": "Momcozy ERP / Supply Chain",
+      "priority": "P1",
+      "requiredAccess": [
+        "ERP 只读导出或库存快照",
+        "供应商主数据映射",
+        "脱敏和权限审批记录"
+      ],
+      "outputContract": [
+        "inventory_snapshot",
+        "supplier_master_snapshot",
+        "supply_cost_snapshot"
+      ],
+      "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
+      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
+      "nextAction": "OK：仅作为内部目标达成proxy；不作为公开市场规模或份额分母"
     },
     {
       "id": "ds-020",
@@ -619,33 +764,10 @@
       "nextAction": "OK"
     },
     {
-      "id": "ds-041",
-      "page": "ChannelInterviews",
-      "metric": "渠道合作伙伴访谈",
-      "sourceName": "渠道访谈 / 内部销售口径",
-      "verificationStatus": "needs-review",
-      "connectorId": "internal-knowledge-reporting",
-      "connectorLabel": "Internal Knowledge / Reporting Assets",
-      "priority": "P2",
-      "requiredAccess": [
-        "内部资产目录或报告库只读导出",
-        "owner、版本号和更新时间字段",
-        "脱敏规则和审批记录"
-      ],
-      "outputContract": [
-        "knowledge_asset_snapshot",
-        "report_metadata_snapshot",
-        "qualitative_source_manifest"
-      ],
-      "stopCondition": "dry-run 输出 assetCount、ownerCoverage、versionCoverage 和 sourceIds。",
-      "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "补访谈样本、脱敏记录和销售数据版本"
-    },
-    {
       "id": "ds-021",
       "page": "CommentData",
       "metric": "评论情感分析",
-      "sourceName": "Amazon API / NLP模型",
+      "sourceName": "评论数据集 / NLP模型",
       "verificationStatus": "needs-review",
       "connectorId": "review-nlp",
       "connectorLabel": "Review / VOC NLP Pipeline",
@@ -663,7 +785,7 @@
       ],
       "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "补充模型准确率指标"
+      "nextAction": "提交p0-voc-nlp-connector-owner-04证据包并补NLP评估记录"
     },
     {
       "id": "ds-030",
@@ -711,7 +833,7 @@
       ],
       "stopCondition": "dry-run 输出样本窗口、模型版本、人工复核比例和 sourceIds，未授权时保持 blocked。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "补充评论来源、关键词词典和NLP运行记录"
+      "nextAction": "提交p0-voc-nlp-connector-owner-04证据包并补模型/人工复核记录"
     },
     {
       "id": "ds-033",
@@ -758,14 +880,14 @@
       ],
       "stopCondition": "dry-run 输出 querySet、countrySet、window、sampleCount 和去重策略。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "补采集配置"
+      "nextAction": "提交p0-social-connector-owner-03证据包并通过owner intake验证"
     },
     {
       "id": "ds-006",
       "page": "CustomsData",
       "metric": "HS编码进出口",
-      "sourceName": "海关总署/Import Genius",
-      "sourceUrl": "https://www.importgenius.com",
+      "sourceName": "U.S. Census / CBP public evidence + Import Genius gate",
+      "sourceUrl": "https://www.census.gov/foreign-trade/data/IMDB.html",
       "verificationStatus": "example",
       "connectorId": "trade-import",
       "connectorLabel": "Import Genius / Customs Trade Data",
@@ -781,7 +903,7 @@
       ],
       "stopCondition": "dry-run 输出 hsCodes、countrySet、window、sampleCount 和授权状态。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "需接入Import Genius API或数仓"
+      "nextAction": "先按public customs adapter做公开查询规划；真实贸易事实展示仍需Import Genius或授权海关数据快照并通过release review。"
     },
     {
       "id": "ds-031",

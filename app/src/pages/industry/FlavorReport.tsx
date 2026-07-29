@@ -61,6 +61,7 @@ export default function FlavorReport() {
         'CSV 和报告导出在证据补齐前只输出治理字段。',
       ]}
       internalFactSummary={
+        /* audit-source: ds-033 */
         <AiReviewGovernancePanel
           title="VOC趋势报告 Batch 5 claim/eval/review gate"
           focus="voc"

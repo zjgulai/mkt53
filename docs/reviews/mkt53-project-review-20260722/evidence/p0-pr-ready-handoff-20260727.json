@@ -1,0 +1,305 @@
+{
+  "schemaVersion": "mkt53.p0-pr-ready-handoff.v2",
+  "generatedAt": "2026-07-28T07:54:10Z",
+  "status": "pr-ready-e971-ci-green-coderabbit-safety-label-local-clean-pending-push-ci-external-recheck-not-merged-not-deployed",
+  "repository": "zjgulai/mkt53",
+  "branch": "codex/mkt53-release-candidate-20260630",
+  "pullRequest": {
+    "number": 32,
+    "url": "https://github.com/zjgulai/mkt53/pull/32",
+    "state": "OPEN",
+    "draft": false,
+    "base": "main",
+    "head": "codex/mkt53-release-candidate-20260630",
+    "headShaAtReady": "91fe39359dcd1119cebd8d342e0d5ae055770c56",
+    "localCandidateHead": "5360ea6830df6aa30f86125f5c762729f6fa5f8b",
+    "verifiedRemoteHead": "e971d75c5bebf2b96436ae242d997d518657494e",
+    "mergeStateStatusAtDocumentation": "UNSTABLE",
+    "readyAction": "completed"
+  },
+  "review": {
+    "batch28FullBranchBaseline": "completed-with-6-findings-all-closed",
+    "batch29InitialFullBranchAttempt": {
+      "status": "inconclusive-environment-termination",
+      "exitCode": 137,
+      "claim": "not-used-as-clean-or-failed-review-evidence"
+    },
+    "incrementalFindings": {
+      "total": 5,
+      "p1": 2,
+      "p2": 3,
+      "allClosed": true
+    },
+    "codeRabbitHighPriorityFindings": {
+      "criticalInline": 3,
+      "majorOutsideDiff": 1,
+      "allFixedIn": "f880ea5d7f379c6422f95a87bc1f9daa212bbef9",
+      "threadsResolvedAtDocumentation": true
+    },
+    "codexReviewFollowUpFinding": {
+      "priority": "P2",
+      "finding": "latest customs summary overrode the corrected adapter networkCalls value",
+      "fixed": true
+    },
+    "finalTargetedReview": {
+      "reviewedCommit": "f880ea5d7f379c6422f95a87bc1f9daa212bbef9",
+      "mode": "controlled-ephemeral-read-only-no-recursive-review",
+      "result": "No actionable findings.",
+      "actionableFindings": 0,
+      "directRecursiveAttempt": "terminated-and-not-used-as-clean-evidence"
+    }
+  },
+  "implementationCommits": [
+    "15356021c2fe88a9dc7182dc17b917960b594b56",
+    "2b9dbeddfdfa96a98bdacd5db2af550054e5218c",
+    "257c1aae2ffbd27c6a5ed8004643ae5059dba134",
+    "9ccf86a352669ab8cf75db3b582706ddf0b91ce8",
+    "99cfc3da515fe469148eaa8bdeedb2fb12cbc506",
+    "91fe39359dcd1119cebd8d342e0d5ae055770c56",
+    "f880ea5d7f379c6422f95a87bc1f9daa212bbef9",
+    "5360ea6830df6aa30f86125f5c762729f6fa5f8b"
+  ],
+  "fixes": [
+    "invalidate stale pending-review ETags when the linked source changes",
+    "fail closed for user facts backed by non-displayable sources",
+    "reject impossible dates in three manual intake paths",
+    "preserve user subsection navigation behind page evidence gates",
+    "make gated subsection navigation visible on mobile and tablet",
+    "remove user-controlled interpolation from Graphify shell and Python examples",
+    "synchronize customs evidence, adapter, latest and safety counters",
+    "apply the configured database connection timeout to request sessions",
+    "remove the dead literal table-count drift check",
+    "cover the latest-summary customs override path with regression tests"
+  ],
+  "localVerification": {
+    "fullVitest": { "files": 24, "testsPassed": 190 },
+    "eslint": "passed",
+    "build": { "status": "passed", "modulesTransformed": 2384 },
+    "bundle": { "jsAssets": 78, "status": "passed" },
+    "dataAudit": { "pages": 43, "tables": 107, "sources": 53, "issues": 0 },
+    "deepAudit": { "routes": 46, "claims": 888, "highRisk": 0, "providerCalls": false, "productionWrites": false },
+    "e2e": { "browser": "chromium", "testsPassed": 154, "desktopAndMobile": true },
+    "backend": { "testsPassed": 66, "coveragePercent": 92.74, "isolatedRecovery": "passed", "productionDatabaseWrites": false },
+    "customsArtifactConsistency": {
+      "networkCalls": 39,
+      "businessDataWrites": 0,
+      "periodicWeeklyAdaptersByteIdentical": true,
+      "periodicWeeklyLatestByteIdentical": true,
+      "evidenceAdapterLatestSafetyBoundarySynchronized": true
+    }
+  },
+  "graphify": {
+    "graphCommit": "5360ea6830df6aa30f86125f5c762729f6fa5f8b",
+    "reportBuiltFromCommit": "f880ea5d7f379c6422f95a87bc1f9daa212bbef9",
+    "nodes": 4600,
+    "edges": 7312,
+    "communities": 346,
+    "zeroAstSourceFiles": 60
+  },
+  "githubActionsReadyBaseline": {
+    "workflow": "quality-gate",
+    "runId": 30266769844,
+    "url": "https://github.com/zjgulai/mkt53/actions/runs/30266769844",
+    "event": "pull_request",
+    "headSha": "91fe39359dcd1119cebd8d342e0d5ae055770c56",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": {
+      "app": { "jobId": 89979217520, "conclusion": "success", "duration": "4m31s", "annotations": 0 },
+      "backend": { "jobId": 89979217543, "conclusion": "success", "duration": "55s", "annotations": 0 }
+    }
+  },
+  "githubActionsExactHead": {
+    "workflow": "quality-gate",
+    "runId": 30271729225,
+    "url": "https://github.com/zjgulai/mkt53/actions/runs/30271729225",
+    "headSha": "7ae8a1993b175f66503f65878f003b03f1a43044",
+    "statusAtDocumentation": "completed",
+    "conclusion": "success",
+    "jobs": {
+      "app": { "jobId": 89995673023, "conclusion": "success", "duration": "4m20s", "annotations": 0 },
+      "backend": { "jobId": 89995672992, "conclusion": "success", "duration": "1m1s", "annotations": 0 }
+    }
+  },
+  "githubActionsBatch30FollowUpExactHead": {
+    "workflow": "quality-gate",
+    "runId": 30332364362,
+    "url": "https://github.com/zjgulai/mkt53/actions/runs/30332364362",
+    "headSha": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
+    "statusAtDocumentation": "completed",
+    "conclusion": "success",
+    "jobs": {
+      "app": { "jobId": 90190054477, "conclusion": "success", "duration": "4m33s", "annotations": 0 },
+      "backend": { "jobId": 90190054526, "conclusion": "success", "duration": "58s", "annotations": 0 }
+    }
+  },
+  "githubActionsSharedHookExactHead": {
+    "workflow": "quality-gate",
+    "runId": 30335660462,
+    "url": "https://github.com/zjgulai/mkt53/actions/runs/30335660462",
+    "headSha": "3cacb94adc0c813b72e3cfa35514102196c7cdf5",
+    "statusAtDocumentation": "completed",
+    "conclusion": "success",
+    "jobs": {
+      "app": { "jobId": 90199862188, "conclusion": "success", "duration": "4m23s", "annotations": 0 },
+      "backend": { "jobId": 90199862142, "conclusion": "success", "duration": "55s", "annotations": 0 }
+    }
+  },
+  "githubActionsGraphifyMarkdownExactHead": {
+    "workflow": "quality-gate",
+    "runId": 30338156933,
+    "url": "https://github.com/zjgulai/mkt53/actions/runs/30338156933",
+    "headSha": "e971d75c5bebf2b96436ae242d997d518657494e",
+    "statusAtDocumentation": "completed",
+    "conclusion": "success",
+    "jobs": {
+      "app": { "jobId": 90207482285, "conclusion": "success", "duration": "4m39s", "annotations": 0 },
+      "backend": { "jobId": 90207482251, "conclusion": "success", "duration": "1m1s", "annotations": 0 }
+    }
+  },
+  "codeRabbit": {
+    "runId": "33f0f684-07a1-4a6d-9df3-3f49eeb7852b",
+    "selectedFiles": 294,
+    "headSha": "91fe39359dcd1119cebd8d342e0d5ae055770c56",
+    "reviewId": 4787421573,
+    "recheckHeadSha": "7ae8a1993b175f66503f65878f003b03f1a43044",
+    "stateAtGeneration": "review-queued",
+    "criticalInlineFindings": 3,
+    "criticalThreadCommentIds": [3657508946, 3657508955, 3657508961],
+    "majorOutsideDiffFindings": 1,
+    "minorSuggestionsDeferredToSeparateBatch": 33,
+    "actionableThreadsAtGeneration": 0,
+    "resolvedCriticalThreads": 3,
+    "terminalConclusionClaimed": false,
+    "batch30FollowUp": {
+      "reviewedHead": "c2fe523b05bac1084b15bc91c1a99e043b087539",
+      "runId": "26df0c06-5f2a-4306-88da-d2e33dc194c2",
+      "reviewState": "COMMENTED",
+      "statusContext": "SUCCESS-means-review-completed-not-approved",
+      "actionableFindings": 5,
+      "locallyFixed": 5,
+      "codexControlledFollowUp": {
+        "sessionIds": [
+          "019fa6b9-997c-7ef3-9cc4-4d32295d2ff1",
+          "019fa6d5-5e27-7f92-ad4d-9f7ce9de6a9f",
+          "019fa6f8-6843-7282-8cb5-869fb5296664",
+          "019fa70a-4c60-7470-818e-8b055d6bf9e7",
+          "019fa716-2a69-79c1-90af-b1e5aa92e7bf",
+          "019fa724-6589-7101-bd85-1928e6a70837",
+          "019fa730-f7e9-7910-919b-a1dcc651fc06"
+        ],
+        "actionableFindings": 16,
+        "p1": 2,
+        "p2": 12,
+        "p3": 2,
+        "locallyFixed": 16,
+        "recheck": "completed-clean",
+        "finalReviewSessionId": "019fa730-f7e9-7910-919b-a1dcc651fc06",
+        "finalReviewActionableFindings": 0,
+        "finalResult": "No actionable regressions were found."
+      },
+      "newHeadRecheck": "completed-with-follow-up-findings-on-2365bfc",
+      "mergeAllowed": false
+    },
+    "sharedHookFollowUp": {
+      "reviewedHead": "2365bfc965550c1b236ca4b32c1df197a9d2e592",
+      "runId": "7a7909e3-566e-4df4-8009-53e69ace746c",
+      "reviewId": 4794237146,
+      "reviewState": "COMMENTED",
+      "inlineActionableFindings": 2,
+      "outsideDiffMajorFindings": 1,
+      "acceptedAndLocallyFixed": 3,
+      "acceptedAndFixedIn": "3cacb94adc0c813b72e3cfa35514102196c7cdf5",
+      "codexReviewFinding": {
+        "sessionId": "019fa757-aec6-75a3-858c-b0e0157068c7",
+        "priority": "P2",
+        "finding": "process-lifetime-success-cache-prevented-no-store-revalidation",
+        "locallyFixed": true
+      },
+      "finalCodexReview": {
+        "sessionId": "019fa764-ac58-7380-99f4-0c5e7fcc3bb7",
+        "exitCode": 0,
+        "actionableFindings": 0,
+        "result": "No actionable defects were found."
+      },
+      "localVerification": {
+        "focusedTestsPassed": 99,
+        "fullTestFiles": 25,
+        "fullTestsPassed": 204,
+        "eslint": "passed",
+        "build": { "status": "passed", "modulesTransformed": 2386 },
+        "graphify": { "nodes": 4672, "edges": 7458, "communities": 339, "md037Issues": 0 }
+      },
+      "newHeadRecheck": "completed-with-md038-follow-up-on-3cacb94",
+      "mergeAllowed": false
+    },
+    "graphifyMarkdownFollowUp": {
+      "reviewedHead": "3cacb94adc0c813b72e3cfa35514102196c7cdf5",
+      "runId": "82d9dd21-b45e-4aff-a526-11d755b6bb5c",
+      "reviewId": 4794647488,
+      "reviewState": "COMMENTED",
+      "inlineActionableFindings": 1,
+      "finding": "generated-markdown-used-invalid-code-spans-for-node-labels-containing-backticks",
+      "acceptedAndLocallyFixed": 1,
+      "markdownlint": { "md037Issues": 0, "md038Issues": 0 },
+      "finalCodexReview": {
+        "sessionId": "019fa78a-44a6-7181-ba13-eb53d4e2544f",
+        "exitCode": 0,
+        "actionableFindings": 0,
+        "result": "Graphify-generated artifacts are internally consistent, parse successfully, and reference the current HEAD."
+      },
+      "graphify": { "nodes": 4671, "edges": 7457, "communities": 346, "danglingEdges": 0, "selfLoops": 0 },
+      "newHeadRecheck": "completed-with-safety-label-follow-up-on-e971d75",
+      "mergeAllowed": false
+    },
+    "safetyBoundaryStatusFollowUp": {
+      "reviewedHead": "e971d75c5bebf2b96436ae242d997d518657494e",
+      "runId": "d8869cb1-a4e7-4c73-b14b-6ab74d3996d5",
+      "reviewId": 4794952413,
+      "reviewState": "COMMENTED",
+      "inlineActionableFindings": 1,
+      "finding": "blocked-status-label-hidden-login-bypass-and-raw-text-reasons-when-writes-were-zero",
+      "acceptedAndLocallyFixed": 1,
+      "finalCodexReview": {
+        "sessionId": "019fa7af-1dfd-7793-ad05-84b4fa52c572",
+        "exitCode": 0,
+        "actionableFindings": 0,
+        "result": "Fail-closed safety is preserved and every triggered boundary reason is reported."
+      },
+      "localVerification": {
+        "focusedTestsPassed": 6,
+        "fullTestFiles": 25,
+        "fullTestsPassed": 205,
+        "eslint": "passed",
+        "typescript": "passed",
+        "build": { "status": "passed", "modulesTransformed": 2386 }
+      },
+      "newHeadRecheck": "pending-push",
+      "mergeAllowed": false
+    }
+  },
+  "authorization": {
+    "localImplementation": true,
+    "commit": true,
+    "push": true,
+    "pullRequestReady": true,
+    "merge": false,
+    "deployment": false,
+    "productionWrite": false,
+    "productionDatabaseRead": false,
+    "productionDatabaseWrite": false,
+    "nginxWrite": false,
+    "cronInstall": false,
+    "providerCalls": 0,
+    "connectorCalls": 0
+  },
+  "remainingGates": [
+    "push the safety-boundary status-label follow-up and validate the new exact head with app/backend CI",
+    "CodeRabbit recheck terminal status for the safety-label follow-up head",
+    "separate verification and prioritization batch for 33 CodeRabbit minor suggestions",
+    "human review and explicit merge decision for pull request 32",
+    "independent deployment authorization",
+    "first cron observation after 2026-08-01T09:00:00+08:00",
+    "DATA-REG six real input groups and independent legal authorization"
+  ]
+}

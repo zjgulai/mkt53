@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { aiAssistantSidebarItems } from './constants';
 import { Globe } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
@@ -42,6 +42,7 @@ export default function WebReview() {
               description="网页评测和竞品网站采集需补 robots.txt、平台条款、采样 URL、采集时间和脱敏策略。当前评分与洞察为页面样例，不作为真实站点审计结果。"
               cadence="合规待复核"
             />
+            {/* audit-source: ds-023 */}
             <AiReportGovernancePanel
               title="网页评测 Batch 4 blocked 合规采样 readiness"
               focus="dataset"

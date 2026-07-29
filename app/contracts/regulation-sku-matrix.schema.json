@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mkt.lute-tlz-dddd.top/contracts/regulation-sku-matrix.schema.json",
+  "title": "mkt53 regulation to SKU decision matrix",
+  "description": "Contract shape only. Passing this schema does not establish a regulatory fact, SKU applicability, compliance status, or legal opinion.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "evidenceClass", "generatedAt", "records", "disclosure"],
+  "properties": {
+    "contractVersion": { "const": "mkt53.regulation-sku-matrix.v1" },
+    "evidenceClass": {
+      "enum": ["synthetic-contract-fixture", "official-source-snapshot"]
+    },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "records": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/record" }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "notLegalAdvice",
+        "officialSnapshots",
+        "reviewedSkuDecisions",
+        "publishableComplianceFacts"
+      ],
+      "properties": {
+        "notLegalAdvice": { "const": true },
+        "officialSnapshots": { "type": "integer", "minimum": 0 },
+        "reviewedSkuDecisions": { "type": "integer", "minimum": 0 },
+        "publishableComplianceFacts": { "type": "integer", "minimum": 0 }
+      }
+    }
+  },
+  "$defs": {
+    "nullableNonEmptyString": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source", "sku", "decision", "evidence", "publication"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sourceRegistryId",
+            "jurisdiction",
+            "authority",
+            "title",
+            "officialUrl",
+            "retrievedAt",
+            "contentSha256",
+            "effectiveFrom",
+            "effectiveTo",
+            "claimScope"
+          ],
+          "properties": {
+            "sourceRegistryId": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "jurisdiction": { "type": "string", "minLength": 1 },
+            "authority": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "title": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "officialUrl": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "retrievedAt": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "contentSha256": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "effectiveFrom": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "effectiveTo": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "claimScope": { "type": "string", "minLength": 1 }
+          }
+        },
+        "sku": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["skuId", "productFamily", "targetMarket"],
+          "properties": {
+            "skuId": { "type": "string", "minLength": 1 },
+            "productFamily": { "type": "string", "minLength": 1 },
+            "targetMarket": { "type": "string", "minLength": 1 }
+          }
+        },
+        "decision": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "applicability",
+            "status",
+            "scopeBasis",
+            "rationale",
+            "reviewerId",
+            "reviewedAt",
+            "reason"
+          ],
+          "properties": {
+            "applicability": {
+              "enum": ["unknown", "in-scope", "out-of-scope", "conditional"]
+            },
+            "status": {
+              "enum": ["draft", "legal-review-required", "approved", "rejected", "withdrawn"]
+            },
+            "scopeBasis": { "type": "string", "minLength": 1 },
+            "rationale": { "type": "string", "minLength": 1 },
+            "reviewerId": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "reviewedAt": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "reason": { "$ref": "#/$defs/nullableNonEmptyString" }
+          }
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["snapshotId", "reviewDecisionId", "sourceEvidencePath"],
+          "properties": {
+            "snapshotId": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "reviewDecisionId": { "$ref": "#/$defs/nullableNonEmptyString" },
+            "sourceEvidencePath": { "$ref": "#/$defs/nullableNonEmptyString" }
+          }
+        },
+        "publication": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["canDisplayAsComplianceFact", "notLegalAdvice", "blockedReasons"],
+          "properties": {
+            "canDisplayAsComplianceFact": { "type": "boolean" },
+            "notLegalAdvice": { "const": true },
+            "blockedReasons": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

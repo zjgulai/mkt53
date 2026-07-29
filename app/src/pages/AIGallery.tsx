@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Image, Sparkles, Download, ZoomIn, X, Wand2, Clock, Tag, CheckCircle, Copy, Check } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import AiReportGovernancePanel from '@/components/AiReportGovernancePanel';

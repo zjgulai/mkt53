@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "mkt53.p0-03-datamanage-bundle-exception-retirement-evidence.v1",
+  "generatedAt": "2026-07-24T09:58:57Z",
+  "status": "datamanage-bundle-exception-retired-local-l1",
+  "evidenceGrade": "L1-local-validated",
+  "task": "P0-03 DataManage temporary bundle exception retirement",
+  "baseline": {
+    "routeSourceLines": 2487,
+    "dataManageChunkBytes": 239136,
+    "dataManageChunkKiB": 233.53,
+    "temporaryMaxBytes": 262144,
+    "exceptionExpiresOn": "2026-08-15"
+  },
+  "result": {
+    "routeSourceLines": 641,
+    "dataManageChunkBytes": 36656,
+    "dataManageChunkKiB": 35.8,
+    "reductionBytes": 202480,
+    "reductionPercent": 84.67,
+    "defaultLimitBytes": 122880,
+    "headroomBytes": 86224,
+    "headroomPercent": 70.17,
+    "dataManageExceptionPresent": false,
+    "moduleOrder": ["mkt", "comp", "user", "ind", "self", "erp", "ai"],
+    "catalogTables": 107,
+    "governanceRecords": 107
+  },
+  "chunks": [
+    {"name": "DataManage", "bytes": 36656, "kib": 35.8, "budgetStatus": "pass-default-120-kib"},
+    {"name": "data-manage-catalog-core", "bytes": 56701, "kib": 55.37, "budgetStatus": "pass-default-120-kib"},
+    {"name": "data-manage-catalog-erp", "bytes": 91393, "kib": 89.25, "budgetStatus": "pass-default-120-kib"},
+    {"name": "data-manage-governance", "bytes": 39185, "kib": 38.27, "budgetStatus": "pass-default-120-kib"},
+    {"name": "OperationsManual", "bytes": 26878, "kib": 26.25, "budgetStatus": "pass-default-120-kib", "loading": "lazy-on-manual-tab"}
+  ],
+  "remainingException": {
+    "id": "vendor-charts-temporary-exception",
+    "bytes": 361668,
+    "kib": 353.19,
+    "targetBytes": 307200,
+    "maxBytes": 389120,
+    "expiresOn": "2026-08-15",
+    "closedByThisBatch": false
+  },
+  "auditCoverage": {
+    "projectAnalysisReadsSplitCatalog": true,
+    "projectAnalysisReadsSplitGovernance": true,
+    "deepAuditScansFeatureDirectory": true,
+    "deepAuditMapsFeatureClaimsToDataManage": true,
+    "initialRegression": {
+      "unsupportedClaims": 19,
+      "cause": "cross-file source-id constants were not statically resolved after extraction",
+      "resolved": true
+    }
+  },
+  "qualityGate": {
+    "targeted": {"filesPassed": 3, "testsPassed": 91, "testsFailed": 0},
+    "full": {"filesPassed": 22, "testsPassed": 174, "testsFailed": 0, "durationSeconds": 54.89},
+    "lint": "passed",
+    "npmAuditVulnerabilities": 0,
+    "build": {"status": "passed", "modules": 2333, "javascriptAssets": 64},
+    "bundleBudget": {"status": "passed", "passedAssets": 63, "temporaryExceptions": 1, "failures": 0},
+    "dataConsistency": {"pages": 43, "tables": 107, "sources": 53, "governanceRecords": 107, "issues": 0},
+    "deepDataAudit": {"claims": 888, "highRiskClaims": 0, "mediumRiskClaims": 0, "unsupportedClaims": 0, "sourceGaps": 26, "providerCalls": false, "productionWrites": false}
+  },
+  "browserAcceptance": {
+    "officialPlaywrightAttempt": {
+      "reachedApplication": false,
+      "reason": "bundled Chromium executable missing from local ms-playwright cache",
+      "classifiedAs": "tooling-environment-limit-not-application-failure"
+    },
+    "systemChrome": {
+      "desktop": {"viewport": "1440x900", "passed": true, "horizontalOverflowPx": 0, "consoleErrors": 0},
+      "mobile": {"viewport": "390x844", "passed": true, "horizontalOverflowPx": 0, "consoleErrors": 0},
+      "initialManualChunkRequested": false,
+      "manualChunkRequestedAfterTabClick": true,
+      "manualHeadingVisibleAfterClick": true
+    }
+  },
+  "implementationSha256": {
+    "app/src/pages/DataManage.tsx": "bc793009c1dcbc796c3b2860ef6f96f400ea694acf336ab1064a2a46d85a8da2",
+    "app/src/features/data-manage/model.ts": "6c5d638c73ab7c49a9efd6f2b77da39971f183669f903b0a44188c58cd586034",
+    "app/src/features/data-manage/catalog.ts": "4cf6668c1636bd0993ed59259555eed67d39f6af45fc3af5a728f020b19becd2",
+    "app/src/features/data-manage/catalog-core.tsx": "dd820fb9d363588da71e1654122ffd2d94c4b2d8af39000e3e507ed279134e30",
+    "app/src/features/data-manage/catalog-erp.tsx": "a4f5b707c84455e55571aefc5652c0d302f9dad0ef9f5c1ac1df93a6b4c3795f",
+    "app/src/features/data-manage/governance.ts": "78ed24b31f985076c945eee9d81d247e9d5ea6d4431fd110388956f0449786bf",
+    "app/src/components/OperationsManual.tsx": "d227dcce6edd14835669c536fc5c4d2feb1240a1a28551e54c513546f2479388",
+    "app/vite.config.ts": "ed1522122af225d2391e0369b503d299cc6e864f143e1b046b466fef06fc63c5",
+    "app/scripts/quality/bundle-budgets.json": "00c2cf1a555c1aaec8b34cb80b6242917c484594f1911344df8a747b87ec12ad",
+    "app/scripts/data/lib/project-analysis.mjs": "06f3e7dc13a6c795f1b89d3a8236d2fc83b60a7feb2d32a6def18afeac6293dd",
+    "app/scripts/data/audit-deep.mjs": "d2393e02bd98aa5ce72b85bd332b798b9974afff411cc6235c87adeda1b4332d",
+    "app/src/data/source-registry.ts": "1d413e5ea6cf5215625e86482becebc96a2dde1986de1082a2fece1b0b74c70b",
+    "app/tests/pages/data-manage-split.test.ts": "893edef04961d230a8311f01e8582a934d1ef12e471a95a52e7dac1071216acf",
+    "app/tests/scripts/release-quality-gates.test.ts": "a9b5d984198007376c0ed276c4517d36f0903532142dbc57f3ab7b71d1600188"
+  },
+  "graphify": {
+    "status": "updated-and-clustered",
+    "nodes": 4421,
+    "edges": 7077,
+    "communities": 351,
+    "duplicateNodeIds": 0,
+    "missingEndpoints": 0,
+    "danglingEndpoints": 0,
+    "selfLoops": 0,
+    "exactDuplicateEdges": 0,
+    "sameEndpointExtraEdges": 0,
+    "zeroAstSourceFiles": 51,
+    "savedQuery": "graphify-out/memory/query_20260724_095951_how_was_the_datamanage_temporary_bundle_exception.md"
+  },
+  "scope": {
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "connectorCalls": 0,
+    "businessDataWrites": 0,
+    "canonicalPublicWrites": 0,
+    "productionReads": 0,
+    "productionWrites": 0,
+    "deployment": false,
+    "gitStageCommitPush": false
+  },
+  "limitations": [
+    "Only the DataManage exception was retired; vendor-charts still has a dated temporary exception.",
+    "The project Playwright browser binary was unavailable, so desktop and mobile acceptance used the installed system Chrome.",
+    "No production bundle, public data, connector, provider, database, or deployment state was changed."
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "schemaVersion": "mkt53.p0-local-atomic-commits.v1",
+  "generatedAt": "2026-07-27T08:55:25Z",
+  "status": "local-committed-not-pushed-not-deployed",
+  "branch": "codex/mkt53-release-candidate-20260630",
+  "remoteBaseline": "0d44c3329b759a7886a69e4333bf56917b60e948",
+  "preDocsHead": "19b3ab0fd2cd87e0448b6e9ef1ebe02a0d674679",
+  "commits": [
+    {
+      "order": 1,
+      "sha": "4a0e44eb714000dbceeb63eddbc931235bf72059",
+      "subject": "perf(data): split DataManage and enforce bundle budgets"
+    },
+    {
+      "order": 2,
+      "sha": "e08f270618ab3eb0d06d04b7c02ab36285bd0da0",
+      "subject": "feat(data): make source governance contracts explicit"
+    },
+    {
+      "order": 3,
+      "sha": "cac288431ae54562eacbac64c214f9110e74784b",
+      "subject": "feat(backend): add governed registry review and recovery APIs"
+    },
+    {
+      "order": 4,
+      "sha": "aa23dc70017e688f178c02576cb76c9c88596e20",
+      "subject": "feat(regulation): add fail-closed intake and review handoff"
+    },
+    {
+      "order": 5,
+      "sha": "09dee22312b573584202bee85fb263e29ff789f4",
+      "subject": "feat(ops): add release recovery and portal gate evidence"
+    },
+    {
+      "order": 6,
+      "sha": "beb8ddb1e9eff8cca40ae208915e10f12c1e3352",
+      "subject": "fix(deps): close frontend dependency advisories"
+    },
+    {
+      "order": 7,
+      "sha": "e9a4b0ae10e418ef754960a06106f271f0a4be42",
+      "subject": "chore(graphify): add project knowledge graph tooling"
+    },
+    {
+      "order": 8,
+      "sha": "d3fb8c4bb5af0ad4359950a1b18e2e42cf873c4b",
+      "subject": "fix(governance): fail closed on incomplete evidence"
+    },
+    {
+      "order": 9,
+      "sha": "19b3ab0fd2cd87e0448b6e9ef1ebe02a0d674679",
+      "subject": "chore(graphify): record governance fix graph"
+    },
+    {
+      "order": 10,
+      "sha": null,
+      "commitReference": "containing commit",
+      "subject": "docs(review): publish Batch 01-26 atomic handoff"
+    }
+  ],
+  "review": {
+    "initialBaseReview": {
+      "scope": "origin/main..working-tree",
+      "completed": false,
+      "termination": "stopped-after-actionable-reproductions-because-scope-expanded-to-26-commits",
+      "reproducedFindingGroups": 5,
+      "fixedBy": "d3fb8c4bb5af0ad4359950a1b18e2e42cf873c4b"
+    },
+    "targetedFixReview": {
+      "command": "codex review --commit d3fb8c4",
+      "completed": false,
+      "result": "interrupted-external-usage-limit",
+      "cleanClaimAllowed": false
+    }
+  },
+  "frontendReleaseEvidence": {
+    "path": "app/tmp/release-evidence/latest.json",
+    "tracked": false,
+    "summary": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "localCandidateReady": true
+    },
+    "facts": {
+      "testFilesPassed": 23,
+      "unitTestsPassed": 182,
+      "e2eTestsPassed": 150,
+      "vulnerabilities": 0,
+      "modulesTransformed": 2383,
+      "bundleAssets": 77,
+      "bundleAssetsWithinTarget": 77,
+      "temporaryBundleExceptions": 0,
+      "pages": 43,
+      "tables": 107,
+      "sources": 53,
+      "dataIssues": 0,
+      "claims": 888,
+      "highRiskClaims": 0,
+      "unsupportedClaims": 0
+    }
+  },
+  "backendQuality": {
+    "testsPassed": 64,
+    "coveragePercent": 92.73,
+    "recoveryReport": "tmp/backend-recovery/be07/be07-20260727t083121z-84596/report.json",
+    "recoveryReportTracked": false,
+    "rpoSeconds": 1.246062,
+    "rtoSeconds": 4.695664,
+    "containersRemaining": 0,
+    "networksRemaining": 0,
+    "volumesRemaining": 0,
+    "productionDatabaseRead": false,
+    "productionDatabaseWrite": false,
+    "providerOrConnectorCalls": 0
+  },
+  "graphify": {
+    "builtFromCodeCommit": "d3fb8c4b",
+    "committedBy": "19b3ab0fd2cd87e0448b6e9ef1ebe02a0d674679",
+    "nodes": 4546,
+    "edges": 7204,
+    "communities": 346,
+    "missingEndpointEdges": 0,
+    "danglingEndpointEdges": 0,
+    "selfLoopEdges": 0,
+    "exactDuplicateEdges": 0,
+    "collapsedEdges": 0,
+    "modelTokens": 0
+  },
+  "authorization": {
+    "localPatchStage": true,
+    "localCommit": true,
+    "push": false,
+    "pullRequest": false,
+    "deployment": false,
+    "productionWrite": false,
+    "productionDatabaseWrite": false,
+    "nginxWrite": false,
+    "cronInstall": false,
+    "providerCalls": 0,
+    "connectorCalls": 0
+  },
+  "remainingGates": [
+    "independent push authorization",
+    "GitHub-hosted app and backend CI",
+    "targeted Codex review retry after usage reset",
+    "independent deployment authorization",
+    "first cron observation after 2026-08-01T09:00:00+08:00",
+    "DATA-REG six real input groups and independent legal authorization"
+  ]
+}

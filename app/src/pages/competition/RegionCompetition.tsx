@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Award, Database, FileBarChart, Globe, LayoutGrid, Map as MapIcon, MapPin, ShieldAlert, Target } from 'lucide-react';
+import { Award, Database, ExternalLink, FileBarChart, Globe, LayoutGrid, Map as MapIcon, MapPin, ShieldAlert, Target } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
 import { erpChannelGrowthSnapshot, erpChannelTargetAttainment, erpDerivedBatch3Artifact } from '@/data/market-insight-data';
+import { usePublicEvidence } from '@/hooks/usePublicEvidence';
 
 interface CountryEvidence {
   name: string;
@@ -115,6 +116,14 @@ function formatNumber(value: number) {
 
 export default function RegionCompetition() {
   const [activeRegion, setActiveRegion] = useState('北美');
+  const {
+    manifest: publicEvidenceManifest,
+    status: publicEvidenceStatus,
+    evidence: regionPublicEvidence,
+    eligibleEvidence: eligibleRegionPublicEvidence,
+    safety: { businessDataWrites: regionEvidenceBusinessDataWrites, networkCalls: regionEvidenceNetworkCalls },
+    statusLabel: regionEvidenceStatusLabel,
+  } = usePublicEvidence('ds-010', 'RegionCompetition');
   const region = regionData.find(r => r.region === activeRegion) || regionData[0];
 
   return (
@@ -136,6 +145,84 @@ export default function RegionCompetition() {
             </div>
 
             <PageEvidenceNotice
+              sourceIds={['ds-010']}
+              title="区域竞争外部份额门禁"
+              description="已补 Amazon 官方公开文档和 Mordor 区域报告入口作为 source availability；Amazon BA 授权快照、国家/marketplace 口径、外部渠道分母仍未接入，不能展示区域份额、国家排名或竞品份额。"
+            />
+
+            <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
+              <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
+                <div>
+                  {/* audit-source: ds-010 */}
+                  <h2 className="text-sm font-semibold text-[#1d1d1f]">区域公开来源入口证据包 · ds-010</h2>
+                  <p className="mt-1 text-[10px] leading-relaxed text-[#86868b]">
+                    mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={regionEvidenceNetworkCalls} · businessDataWrites={regionEvidenceBusinessDataWrites}
+                  </p>
+                </div>
+                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleRegionPublicEvidence.length > 0 ? 'bg-[#5B8C5A]/10 text-[#5B8C5A]' : 'bg-[#C44545]/10 text-[#C44545]'}`}>
+                  {regionEvidenceStatusLabel}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">公开来源入口</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{eligibleRegionPublicEvidence.length}/{regionPublicEvidence.length || '-'}</p>
+                </div>
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">覆盖口径</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">Marketplace/Endpoint/BA/Regional report</p>
+                </div>
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">写入边界</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">businessDataWrites={regionEvidenceBusinessDataWrites}</p>
+                </div>
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">份额/排名</p>
+                  <p className="mt-1 text-xs font-semibold text-[#ff9500]">regional share/rank blocked</p>
+                </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
+                {eligibleRegionPublicEvidence.map((record) => (
+                  <a
+                    key={record.seedId}
+                    href={record.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3 hover:border-[#C25B6E]/40 transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate text-xs font-semibold text-[#1d1d1f]">{record.label ?? record.title ?? record.seedId}</p>
+                        <p className="mt-1 text-[10px] text-[#86868b]">{record.evidenceClass} · {record.captureStatus}</p>
+                      </div>
+                      <ExternalLink className="h-3.5 w-3.5 flex-shrink-0 text-[#C25B6E]" />
+                    </div>
+                    <p className="mt-2 line-clamp-2 text-[10px] leading-relaxed text-[#5f5f66]">{record.nonVerbatimSummary ?? record.collectionBoundary}</p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {(record.matchedEvidenceTerms ?? []).slice(0, 3).map((term) => (
+                        <span key={term} className="rounded-md bg-white px-2 py-0.5 text-[9px] font-medium text-[#2f7d32]">{term}</span>
+                      ))}
+                      {record.notFullPlatformDataset && (
+                        <span className="rounded-md bg-[#ff9500]/10 px-2 py-0.5 text-[9px] font-medium text-[#a85f00]">notFullPlatformDataset</span>
+                      )}
+                    </div>
+                  </a>
+                ))}
+                {eligibleRegionPublicEvidence.length === 0 ? (
+                  <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                    <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回通过来源、页面、校验与安全边界的 ds-010 captured 样本。</p>
+                  </div>
+                ) : null}
+              </div>
+
+              <p className="mt-4 text-[10px] leading-relaxed text-[#86868b]">
+                边界：公开文档和报告入口只证明区域数据源可访问、可复核；Amazon BA 授权快照、国家/marketplace 映射、外部渠道分母、国家排名、竞品份额、销量、GMV、SKU 和价格仍保持阻断。
+              </p>
+            </div>
+
+            <PageEvidenceNotice
               sourceIds={['ds-050', 'ds-051']}
               title="区域竞争份额边界"
               description="ERP ds-050/ds-051 已经Batch19放行，可提供 Momcozy 自身YTD private/internal proxy numerator；当前仍缺国家、平台、渠道明细和外部份额分母，不能计算区域份额或排名。"
@@ -144,6 +231,7 @@ export default function RegionCompetition() {
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
               <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
                 <div>
+                  {/* audit-source: ds-050 ds-051 */}
                   <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP区域份额 numerator · Batch19已放行</h2>
                   <p className="text-[10px] text-[#86868b] mt-1">
                     {erpDerivedBatch3Artifact.batchId}；source ids: {erpChannelGrowthSnapshot.sourceIds.join(' / ')} / {erpChannelTargetAttainment.sourceIds.join(' / ')}；private/internal L3；canDisplayAsFact=true；仅限内部proxy。

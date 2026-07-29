@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
-import { Search, LayoutGrid, Target, FileBarChart, Map as MapIcon, Database, ChevronDown, X, Download } from 'lucide-react';
+import { Search, LayoutGrid, Target, FileBarChart, Map as MapIcon, Database, ChevronDown, X, Download, ExternalLink } from 'lucide-react';
 // Target imported via lucide-react
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
 import Sidebar from '@/components/Sidebar';
+import { usePublicEvidence } from '@/hooks/usePublicEvidence';
 
 interface Product {
   id: number;
@@ -97,6 +98,14 @@ function Dropdown({ label, value, options, onChange }: { label: string; value: s
 
 export default function CompetitionPage() {
   const [compareList, setCompareList] = useState<number[]>([]);
+  const {
+    manifest: publicEvidenceManifest,
+    status: publicEvidenceStatus,
+    evidence: competitionEvidence,
+    eligibleEvidence: eligibleCompetitionEvidence,
+    safety: { businessDataWrites: evidenceBusinessDataWrites, networkCalls: evidenceNetworkCalls },
+    statusLabel: evidenceStatusLabel,
+  } = usePublicEvidence('ds-007', 'CompetitionPage');
 
   // Filter states
   const [ownership, setOwnership] = useState('全部');
@@ -151,7 +160,6 @@ export default function CompetitionPage() {
   };
 
   const hasActiveFilters = ownership !== '全部' || category !== '全部' || brandInput || modelInput || activeLetter || activeHotBrand;
-
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
@@ -195,8 +203,79 @@ export default function CompetitionPage() {
             <PageEvidenceNotice
               sourceIds={['ds-007']}
               title="竞品库采集状态"
-              description="竞品概览仍需补 Amazon 授权采集任务、时间戳和平台合规记录；当前卡片和对比仅作为半月复核线索。"
+              description="竞品概览已补公开品牌官网入口样本；Amazon 授权采集任务、时间戳、SKU/ASIN 映射和平台合规记录仍待接入，当前卡片和对比仅作为半月复核线索。"
             />
+
+            <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
+              <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
+                <div>
+                  <h2 className="text-sm font-semibold text-[#1d1d1f]">竞品公开品牌入口证据包 · ds-007</h2>
+                  <p className="mt-1 text-[10px] leading-relaxed text-[#86868b]">
+                    mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={evidenceNetworkCalls} · businessDataWrites={evidenceBusinessDataWrites}
+                  </p>
+                </div>
+                <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleCompetitionEvidence.length > 0 ? 'bg-[#5B8C5A]/10 text-[#5B8C5A]' : 'bg-[#C44545]/10 text-[#C44545]'}`}>
+                  {evidenceStatusLabel}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">公开品牌入口</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{eligibleCompetitionEvidence.length}/{competitionEvidence.length || '-'}</p>
+                </div>
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">覆盖品牌</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">Medela/Spectra/Philips/eufy</p>
+                </div>
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">写入边界</p>
+                  <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">businessDataWrites={evidenceBusinessDataWrites}</p>
+                </div>
+                <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                  <p className="text-[10px] text-[#86868b]">平台指标</p>
+                  <p className="mt-1 text-xs font-semibold text-[#ff9500]">price/rating/share/rank blocked</p>
+                </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
+                {eligibleCompetitionEvidence.map((record) => (
+                  <a
+                    key={record.seedId}
+                    href={record.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3 hover:border-[#C25B6E]/40 transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate text-xs font-semibold text-[#1d1d1f]">{record.label ?? record.title ?? record.seedId}</p>
+                        <p className="mt-1 text-[10px] text-[#86868b]">{record.evidenceClass} · {record.captureStatus}</p>
+                      </div>
+                      <ExternalLink className="h-3.5 w-3.5 flex-shrink-0 text-[#C25B6E]" />
+                    </div>
+                    <p className="mt-2 line-clamp-2 text-[10px] leading-relaxed text-[#5f5f66]">{record.nonVerbatimSummary ?? record.collectionBoundary}</p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {(record.matchedEvidenceTerms ?? []).slice(0, 3).map((term) => (
+                        <span key={term} className="rounded-md bg-white px-2 py-0.5 text-[9px] font-medium text-[#2f7d32]">{term}</span>
+                      ))}
+                      {record.notFullPlatformDataset && (
+                        <span className="rounded-md bg-[#ff9500]/10 px-2 py-0.5 text-[9px] font-medium text-[#a85f00]">notFullPlatformDataset</span>
+                      )}
+                    </div>
+                  </a>
+                ))}
+                {eligibleCompetitionEvidence.length === 0 ? (
+                  <div className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+                    <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回通过来源、页面、校验与安全边界的 ds-007 captured 样本。</p>
+                  </div>
+                ) : null}
+              </div>
+
+              <p className="mt-4 text-[10px] leading-relaxed text-[#86868b]">
+                边界：这些公开官网页面只证明竞品品牌/产品入口可复核；Amazon 授权快照、SKU/ASIN 映射、价格、评分、评论数、排名、品牌份额、销量和 GMV 仍保持阻断。
+              </p>
+            </div>
 
             {/* Filters */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">

@@ -1,0 +1,229 @@
+{
+  "schemaVersion": "mkt53.p0-backend-ci-quality-gate.v1",
+  "taskId": "P0-BACKEND-CI",
+  "batch": "Batch 25",
+  "generatedAt": "2026-07-27T07:14:17Z",
+  "status": "local-ci-equivalent-passed-github-run-pending",
+  "candidate": {
+    "branch": "codex/mkt53-release-candidate-20260630",
+    "head": "0d44c3329b759a7886a69e4333bf56917b60e948",
+    "originHead": "0d44c3329b759a7886a69e4333bf56917b60e948",
+    "dirty": true,
+    "trackedModifiedFiles": 47,
+    "untrackedCandidateFiles": 167,
+    "stagedEntries": 0
+  },
+  "workflow": {
+    "path": ".github/workflows/quality-gate.yml",
+    "trigger": [
+      "push:main",
+      "pull_request:main"
+    ],
+    "permissions": {
+      "contents": "read"
+    },
+    "jobs": [
+      "app",
+      "backend"
+    ],
+    "backend": {
+      "runsOn": "ubuntu-latest",
+      "timeoutMinutes": 30,
+      "workingDirectory": "backend",
+      "pythonVersion": "3.12.13",
+      "uvVersion": "0.11.11",
+      "setupUvAction": "astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9",
+      "setupUvReleaseComment": "v9.0.0",
+      "dependencyCommand": "uv sync --frozen",
+      "qualityCommand": "./scripts/quality-be07.sh",
+      "environmentConfigured": false,
+      "productionSecretsConfigured": false,
+      "directExternalMutationCommands": 0
+    },
+    "artifact": {
+      "name": "mkt53-backend-be07-evidence",
+      "alwaysAttemptUpload": true,
+      "paths": [
+        "tmp/backend-recovery/be07/**/report.json",
+        "tmp/backend-recovery/be07/**/cleanup.json"
+      ],
+      "ifNoFilesFound": "warn",
+      "retentionDays": 14
+    },
+    "githubHostedRunObserved": false,
+    "githubHostedRunStatus": "pending-future-push-or-pull-request"
+  },
+  "verification": {
+    "focused": {
+      "commands": [
+        "uv run ruff format --check tests/test_ci_workflow_contract.py",
+        "uv run ruff check tests/test_ci_workflow_contract.py",
+        "uv run pytest tests/test_ci_workflow_contract.py -q"
+      ],
+      "workflowContractTestsPassed": 2,
+      "workflowContractTestsFailed": 0,
+      "exitCode": 0
+    },
+    "complete": {
+      "command": "./scripts/quality-be07.sh",
+      "lockCheck": "passed",
+      "formatCheck": "passed",
+      "lintCheck": "passed",
+      "testsPassed": 64,
+      "testsFailed": 0,
+      "coveragePercent": 92.73,
+      "coverageThresholdPercent": 90,
+      "composeConfig": "passed",
+      "recoveryComposeConfig": "passed",
+      "hostPortsPublished": false,
+      "exitCode": 0,
+      "warnings": [
+        "Starlette TestClient warns that the current httpx integration is deprecated; this remains non-blocking migration debt."
+      ]
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  },
+  "recovery": {
+    "reportPath": "tmp/backend-recovery/be07/be07-20260727t070837z-59590/report.json",
+    "reportSha256": "1526868207bfe6cf85f65a1162aad3d4fa931e5b86db80d2ebfc5cac48ad284d",
+    "cleanupPath": "tmp/backend-recovery/be07/be07-20260727t070837z-59590/cleanup.json",
+    "cleanupSha256": "13441aaed151a0bd9defbcda98664994f883c38649638212026dddbc9217ce7f",
+    "status": "passed",
+    "evidenceGrade": "L2-fixture-or-dry-run",
+    "baselineFingerprintMatched": true,
+    "withdrawalExactReplay": true,
+    "fingerprintStableAfterRejectedMutations": true,
+    "appendOnlyRejectedMutations": {
+      "auditUpdate": true,
+      "auditDelete": true,
+      "reviewUpdate": true,
+      "reviewDelete": true,
+      "snapshotUpdate": true,
+      "snapshotDelete": true
+    },
+    "rpo": {
+      "measuredSeconds": 2.021181,
+      "targetSeconds": 86400,
+      "passed": true
+    },
+    "rto": {
+      "measuredSeconds": 7.714822,
+      "targetSeconds": 14400,
+      "passed": true
+    },
+    "cleanup": {
+      "containersRemaining": 0,
+      "networksRemaining": 0,
+      "volumesRemaining": 0,
+      "passed": true
+    },
+    "scope": {
+      "allComposeNetworksInternal": true,
+      "localDockerSocketOnly": true,
+      "productionDatabaseRead": false,
+      "productionDatabaseWrite": false,
+      "productionConfigWrite": false,
+      "productionTaskInstall": false,
+      "providerOrConnectorCalls": 0,
+      "deployment": false
+    }
+  },
+  "graphify": {
+    "queryResultSaved": true,
+    "incrementalUpdate": "passed",
+    "clusterAllNonFileCommunities": "passed",
+    "nodes": 4535,
+    "edges": 7185,
+    "communities": 344,
+    "zeroAstSourceFiles": 55,
+    "integrity": {
+      "missingEndpointEdges": 0,
+      "danglingEndpointEdges": 0,
+      "selfLoopEdges": 0,
+      "exactDuplicateEdges": 0,
+      "sameEndpointCollapsedEdges": 0,
+      "defects": 0
+    },
+    "reportBuiltCommit": "0d44c332",
+    "mustRegenerateAfterCodeCommits": true
+  },
+  "documentationValidation": {
+    "htmlPath": "docs/reviews/mkt53-project-review-20260722/index.html",
+    "bytes": 111532,
+    "chapters": 14,
+    "ids": 21,
+    "uniqueIds": 21,
+    "duplicateIds": 0,
+    "hrefs": 79,
+    "missingLocalFilesOrAnchors": 0,
+    "desktop": {
+      "viewport": "1440x900",
+      "batch25Visible": true,
+      "horizontalOverflow": false,
+      "consoleErrors": 0,
+      "consoleWarnings": 0
+    },
+    "mobile": {
+      "viewport": "390x844",
+      "batch25Visible": true,
+      "graphStatsVisible": true,
+      "horizontalOverflow": false,
+      "consoleErrors": 0,
+      "consoleWarnings": 0
+    },
+    "evidenceLink": {
+      "status": 200,
+      "contentType": "application/json",
+      "schemaVisible": true,
+      "testsPassedVisible": 64,
+      "graphifyDefectsVisible": 0
+    },
+    "temporaryServer": {
+      "bind": "127.0.0.1:8765",
+      "stopped": true,
+      "externalPublish": false
+    }
+  },
+  "gitHandoff": {
+    "backendCiBlockerClosedInWorktree": true,
+    "readyForAtomicStageAndCommit": false,
+    "remainingBlockers": [
+      {
+        "id": "GRAPHIFY-HEAD",
+        "closed": false,
+        "requirement": "After code commits 1-6, regenerate canonical Graphify artifacts so report HEAD matches the new commit."
+      },
+      {
+        "id": "GIT-AUTH",
+        "closed": false,
+        "requirement": "Obtain separate authorization for patch-stage and local commits."
+      }
+    ],
+    "pushAuthorization": false,
+    "deployAuthorization": false
+  },
+  "boundaries": {
+    "gitStage": false,
+    "gitCommit": false,
+    "gitPush": false,
+    "deployment": false,
+    "productionWrites": false,
+    "productionDatabaseRead": false,
+    "productionDatabaseWrite": false,
+    "nginxWrites": false,
+    "cronWrites": false,
+    "providerCalls": false,
+    "restrictedConnectorCalls": false
+  },
+  "references": {
+    "designAndManual": "docs/architecture/p0-backend-ci-quality-gate-20260727.md",
+    "workflowRunbook": "docs/workflows/workflow-quality-gate-stable.md",
+    "roadmap": "docs/product/product-roadmap-execution-20260723.md",
+    "setupUvOfficial": "https://github.com/astral-sh/setup-uv",
+    "uvGitHubActionsOfficial": "https://github.com/astral-sh/uv/blob/main/docs/guides/integration/github.md",
+    "githubHostedRunnersOfficial": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners"
+  }
+}

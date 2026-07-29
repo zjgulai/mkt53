@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Database, ExternalLink, AlertTriangle, CheckCircle, Info, Shield, TrendingUp, BarChart3, Globe, Users, Target } from 'lucide-react';
-import { getVerificationStatusMeta, sourceRegistry, type SourceRegistryItem } from '@/data/source-registry';
+import { DataSourceRegistryStatus } from '@/components/DataSourceRegistryStatus';
+import { getVerificationStatusMeta, type SourceRegistryItem } from '@/data/source-registry';
+import { useDataSourceRegistry } from '@/hooks/useDataSourceRegistry';
 import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -13,8 +15,6 @@ type DataSource = SourceRegistryItem;
 type DataSourceTabId = 'sources' | 'divergence' | 'models';
 type FactDisplayFilter = 'all' | 'displayable' | 'gated' | 'private';
 
-const dataSources: DataSource[] = [...sourceRegistry];
-
 // R46: 数据可信度趋势分析 (todo: 未来实现图表)
 /* const reliabilityTrend = [
   { period: '2025 Q1', a: 6, b: 8, c: 4, d: 2 },
@@ -26,19 +26,19 @@ const dataSources: DataSource[] = [...sourceRegistry];
 
 // 数据质量差异对比（关键发现）
 const divergenceData = [
-  { institution: 'Coherent Market Insights', value2025: '—', value2026: '$11.6亿', forecast: '$16.1亿(2033)', cagr: '4.8%', scope: '仅电动吸奶器设备', reliability: 'B' },
-  { institution: 'Grand View Research Research', value2025: '$16.4亿', value2026: '$17.6亿', forecast: '$29.2亿(2033)', cagr: '7.55%', scope: '手动+电动+配件', reliability: 'A' },
-  { institution: 'Precedence Research', value2025: '$35.1亿', value2026: '$38.1亿', forecast: '$79.5亿(2035)', cagr: '8.52%', scope: '全品类+周边产品', reliability: 'A', adopted: true },
-  { institution: 'Mordor Intelligence', value2025: '$36.2亿', value2026: '—', forecast: '$54.8亿(2030)', cagr: '8.7%', scope: '喂养护完整生态', reliability: 'A' },
+  { institution: 'Coherent Market Insights', value2025: '待补证', value2026: '待补证', forecast: '待补证', cagr: '待补证', scope: '候选来源，需条目级证据绑定', reliability: 'B', evidenceStatus: '候选' },
+  { institution: 'Grand View Research', value2025: '上层TAM另页展示', value2026: '上层TAM另页展示', forecast: '上层TAM另页展示', cagr: '上层TAM另页展示', scope: '婴童用品上层TAM，不与吸奶器品类TAM直接混排', reliability: 'A', evidenceStatus: 'ds-044', sourceIds: ['ds-044'] },
+  { institution: 'Precedence Research', value2025: '$35.1亿', value2026: '$38.1亿', forecast: '$79.5亿(2035)', cagr: '8.52%', scope: '全球吸奶器品类TAM', reliability: 'A', adopted: true, evidenceStatus: 'ds-001', sourceIds: ['ds-001'] },
+  { institution: 'Mordor Intelligence', value2025: '$36.2亿', value2026: '$39.3亿', forecast: '$59.1亿(2031)', cagr: '8.49%', scope: '全球吸奶器品类TAM与五力模型输入，不作为机构五力评分', reliability: 'A', evidenceStatus: 'ds-004/ds-005', sourceIds: ['ds-004', 'ds-005'] },
 ];
 
 // 测算模型说明
 const calcModels = [
-  { name: '市场层级/TAM边界', icon: BarChart3, desc: '份额分母与可服务市场边界', method: '全球婴童用品=上层TAM；全球吸奶器=品类TAM；穿戴式吸奶器=细分TAM。SAM需叠加地域/渠道/SKU/合规可服务范围，SOM需Momcozy可获份额假设。', source: '公开报告交叉验证 + 内部服务范围待补' },
-  { name: '波特五力', icon: Target, desc: '行业竞争强度定量评分', method: '5维度1-5分评分：供应商(3) + 买方(4) + 新进入者(3) + 替代品(2) + 竞争(4)', source: 'Mordor Intelligence框架' },
-  { name: '海关HS编码', icon: Globe, desc: '国际贸易商品分类', method: 'HS 9018.11(breast pumps) / 9018.90(medical instruments) / 美国HTS 9018.90.7500', source: 'WCO / USITC 2025' },
-  { name: 'BCG矩阵', icon: TrendingUp, desc: '产品组合增长-份额分析', method: '市场增长率×相对市场份额 → 明星/现金牛/问题/瘦狗四象限', source: 'Boston Consulting Group经典模型' },
-  { name: 'RFM分层', icon: Users, desc: '用户价值分层模型', method: 'R(最近购买)×F(频次)×M(金额) → 7层用户分群', source: 'Momcozy CRM系统' },
+  { name: '市场层级/TAM边界', icon: BarChart3, desc: '份额分母与可服务市场边界', method: '全球婴童用品=上层TAM；全球吸奶器=品类TAM；穿戴式吸奶器=细分TAM。SAM需叠加地域/渠道/SKU/合规可服务范围，SOM需Momcozy可获份额假设。', source: '公开报告交叉验证 + 内部服务范围待补', sourceIds: ['ds-001', 'ds-044', 'ds-045'] },
+  { name: '波特五力', icon: Target, desc: '行业竞争强度框架', method: '五力维度框架；Mordor、Precedence、Fortune公开报告只支撑模型输入，评分必须标为Momcozy内部解释性模型。', source: '公开报告交叉验证 + 内部模型', sourceIds: ['ds-004'] },
+  { name: 'PEST官方来源矩阵', icon: Globe, desc: '政策、监管和公共健康语境', method: 'FDA吸奶器监管、DOL Pump at Work、CDC breastfeeding data、WHO infant feeding 分别支撑监管、劳动政策、公共健康和全球建议语境。', source: 'FDA / DOL / CDC / WHO', sourceIds: ['ds-003'] },
+  { name: '品类拆分/TAM口径', icon: TrendingUp, desc: '吸奶器品类TAM与segment-TAM', method: 'Mordor、Precedence、Fortune交叉验证公开报告口径；本批只支撑TAM/segment-TAM，SAM需叠加地域、渠道、SKU和合规可服务范围。', source: '公开报告交叉验证', sourceIds: ['ds-005'] },
+  { name: 'RFM分层', icon: Users, desc: '用户价值分层模型', method: 'R(最近购买)×F(频次)×M(金额) → 分层用户分群；需CRM连接器或授权快照后展示真实分层。', source: 'Momcozy CRM系统待接入', sourceIds: ['ds-012'] },
 ];
 
 // 可信度颜色
@@ -64,36 +64,27 @@ function getDisplaySourceType(source: DataSource) {
 }
 
 function getPrivacyLevel(source: DataSource) {
-  if (source.privacyLevel) return source.privacyLevel;
-  if (source.sourceType.includes('内部') || /ERP|CRM|内部/i.test(`${source.sourceName} ${source.note}`)) return 'private/internal';
-  return 'public';
+  return source.privacyLevel;
 }
 
 function getEvidenceGrade(source: DataSource) {
-  if (source.evidenceGrade) return source.evidenceGrade;
-  if (source.verificationStatus === 'example') return 'LO-S-synthetic';
-  if (source.verificationStatus === 'verified' && (source.sourceType === '代码资产' || source.sourceUrl)) return 'L1-public-or-runtime';
-  if (source.verificationStatus === 'verified') return 'L2-fixture-or-dry-run';
-  return 'L0-unverified';
+  return source.evidenceGrade;
 }
 
 function getCanDisplayAsFact(source: DataSource) {
-  if (typeof source.canDisplayAsFact === 'boolean') return source.canDisplayAsFact;
-  return source.verificationStatus === 'verified' && getEvidenceGrade(source) === 'L1-public-or-runtime' && getPrivacyLevel(source) === 'public';
+  return source.canDisplayAsFact;
 }
 
 function getBlockingReason(source: DataSource) {
-  if (source.blockingReason) return source.blockingReason;
-  if (getCanDisplayAsFact(source)) return '';
-  if (source.verificationStatus === 'example') return 'example-data-must-not-display-as-fact';
-  if (getPrivacyLevel(source) === 'private/internal') return 'authorized-connector-or-private-snapshot-required';
-  return source.gap || 'source-evidence-required';
+  return source.blockingReason;
 }
 
 export default function DataSourcePage() {
   const [activeTab, setActiveTab] = useState<DataSourceTabId>('sources');
   const [filterModule, setFilterModule] = useState('全部');
   const [factFilter, setFactFilter] = useState<FactDisplayFilter>('all');
+  const sourceRegistryState = useDataSourceRegistry();
+  const dataSources: DataSource[] = sourceRegistryState.sources;
   const {
     manifest: collectionManifest,
     path: collectionManifestPath,
@@ -158,6 +149,21 @@ export default function DataSourcePage() {
       : collectionStatus === 'loading'
         ? '正在读取半月采集状态'
         : '未生成 public/periodic-data/latest.json';
+  const sourceCountSummary = sourceRegistryState.status === 'ready'
+    ? `${stats.total}条数据溯源 · ${stats.a}A级 · ${stats.needsReview}条待复核`
+    : sourceRegistryState.status === 'empty'
+      ? '0条数据溯源 · API 空结果'
+      : '来源数据未加载 · 统计保持未知';
+  const sourceTotalMetric = sourceRegistryState.status === 'ready'
+    ? sourceRegistryState.runtime.mode === 'api'
+      ? stats.total
+      : collectionTotals.total ?? stats.total
+    : '-';
+  const verifiedSourceMetric = sourceRegistryState.status === 'ready'
+    ? sourceRegistryState.runtime.mode === 'api'
+      ? stats.verified
+      : collectionTotals.ok ?? stats.verified
+    : '-';
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -170,10 +176,12 @@ export default function DataSourcePage() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-[#1d1d1f]">数据来源管理</h1>
-              <p className="text-xs text-[#86868b]">{stats.total}条数据溯源 · {stats.a}A级 · {stats.needsReview}条待复核 · 半月周期 {collectionStatus === 'ready' ? collectionPeriod : '读取中'}</p>
+              <p className="text-xs text-[#86868b]">{sourceCountSummary} · 半月周期 {collectionStatus === 'ready' ? collectionPeriod : '读取中'}</p>
             </div>
           </div>
         </div>
+
+        <DataSourceRegistryStatus {...sourceRegistryState} />
 
         {/* 半月数据状态 */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-[#EDE6DF] mb-6">
@@ -187,8 +195,8 @@ export default function DataSourcePage() {
               {collectionStatus === 'ready' ? <p className="text-[10px] text-[#B5AFA8]">{nextScheduleText}</p> : null}
             </div>
             {[
-              { label: '来源总数', value: collectionTotals.total ?? stats.total, color: '#1d1d1f' },
-              { label: '公开/本地可验证', value: collectionTotals.ok ?? stats.verified, color: '#34c759' },
+              { label: '来源总数', value: sourceTotalMetric, color: '#1d1d1f' },
+              { label: '公开/本地可验证', value: verifiedSourceMetric, color: '#34c759' },
               { label: '连接器待接入', value: connectorRequiredTotal, color: '#ff9500' },
               { label: '人工补录', value: collectionTotals['manual-required'] ?? 0, color: '#5856d6' },
               { label: '请求异常', value: requestErrorTotal, color: '#ff3b30' },
@@ -229,6 +237,7 @@ export default function DataSourcePage() {
           </div>
         </div>
 
+        {sourceRegistryState.status === 'ready' && <>
         {/* R19: 内外部数据分布 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {[
@@ -298,6 +307,7 @@ export default function DataSourcePage() {
             </div>
           ))}
         </div>
+        </>}
 
         {/* Tabs */}
         <div className="flex items-center gap-2 mb-6">
@@ -314,7 +324,7 @@ export default function DataSourcePage() {
         </div>
 
         {/* Tab 1: 数据溯源 */}
-        {activeTab === 'sources' && (
+        {activeTab === 'sources' && sourceRegistryState.status === 'ready' && (
           <>
             {/* 缺口警示 */}
             {stats.critical > 0 && (
@@ -432,13 +442,13 @@ export default function DataSourcePage() {
             <div className="bg-[#ff9500]/5 border border-[#ff9500]/15 rounded-2xl p-4 flex items-start gap-4">
               <Info className="w-5 h-5 text-[#ff9500] flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-[#ff9500]">关键发现：同一市场估算差异高达3倍</p>
-                <p className="text-xs text-[#86868b] mt-1">2026年全球吸奶器市场，4家机构估算从$11.6亿到$38.1亿不等。差异源于各机构对"吸奶器市场"的定义范围不同——从仅电动设备到喂养护完整生态。</p>
+                <p className="text-sm font-medium text-[#ff9500]">关键发现：机构口径需先分层再对比</p>
+                <p className="text-xs text-[#86868b] mt-1">当前页面只把已绑定 source registry 的 Precedence 品类TAM作为采用口径；其他机构先作为候选来源或上层TAM线索，补齐条目级证据后再进入精确对比。</p>
               </div>
             </div>
 
             <div className="bg-white rounded-2xl p-5 shadow-sm border border-[#EDE6DF]">
-              <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">4家机构市场规模估算对比</h3>
+              <h3 className="text-sm font-semibold text-[#1d1d1f] mb-5">机构市场口径治理对比</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
@@ -458,7 +468,7 @@ export default function DataSourcePage() {
                         <td className="py-2.5 px-3 text-xs font-medium text-[#C25B6E]">{d.cagr}</td>
                         <td className="py-2.5 px-3 text-xs text-[#86868b]">{d.scope}</td>
                         <td className="py-2.5 px-3"><span className="px-1.5 py-0.5 rounded text-[10px] bg-[#34c759]/10 text-[#34c759]">{d.reliability}</span></td>
-                        <td className="py-2.5 px-3">{d.adopted ? <span className="px-2 py-0.5 rounded-full text-[10px] bg-[#C25B6E] text-white font-medium">已采用</span> : <span className="text-[10px] text-[#B5AFA8]">参考</span>}</td>
+                        <td className="py-2.5 px-3">{d.adopted ? <span className="px-2 py-0.5 rounded-full text-[10px] bg-[#C25B6E] text-white font-medium">已采用</span> : <span className="text-[10px] text-[#B5AFA8]">{d.evidenceStatus}</span>}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -470,9 +480,9 @@ export default function DataSourcePage() {
               <h3 className="text-sm font-semibold text-[#1d1d1f] mb-3">Momcozy采用 Precedence Research 口径说明</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                  { title: '范围匹配度最高', desc: 'Precedence的"全品类+周边"定义最贴近Momcozy实际业务（吸奶器+哺乳文胸+配件+清洁电器）', color: '#34c759' },
-                  { title: '时效性最强', desc: '2026年4月最新发布，覆盖2021-2035年完整周期，含COVID后市场反弹数据', color: '#5856d6' },
-                  { title: 'CAGR一致性', desc: '8.52% CAGR与穿戴式细分市场17%+增速、电商渠道12%+增速趋势一致', color: '#C25B6E' },
+                  { title: '口径边界清晰', desc: 'Precedence当前只用于全球吸奶器品类TAM；SAM仍需地域、渠道、SKU和合规可服务范围证据。', color: '#34c759', sourceIds: ['ds-001'] },
+                  { title: '时效性已登记', desc: '2026年4月发布周期和2021-2035年预测窗口已登记在source registry，页面按品类TAM展示。', color: '#5856d6', sourceIds: ['ds-001'] },
+                  { title: '增长率分层展示', desc: '吸奶器品类CAGR 8.52%来自ds-001；穿戴式细分CAGR 15.08%来自ds-045，二者不合并为SAM。', color: '#C25B6E', sourceIds: ['ds-001', 'ds-045'] },
                 ].map((r, i) => (
                   <div key={i} className="p-3 rounded-xl bg-[#FBF8F5] border-l-3" style={{ borderLeft: `3px solid ${r.color}` }}>
                     <p className="text-xs font-medium" style={{ color: r.color }}>{r.title}</p>
@@ -511,36 +521,36 @@ export default function DataSourcePage() {
             {/* 海关数据专题 */}
             <div className="bg-white rounded-2xl p-5 shadow-sm border border-[#EDE6DF]">
               <h3 className="text-sm font-semibold text-[#1d1d1f] mb-3 flex items-center gap-2">
-                <Globe className="w-4 h-4 text-[#C25B6E]" /> 海关HS编码体系（2025-2026最新）
+                <Globe className="w-4 h-4 text-[#C25B6E]" /> 海关HS编码体系（查询入口）
               </h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead><tr className="border-b border-[#EDE6DF]">
-                    {['国家/地区', 'HS编码', '描述', '最惠国关税', '301关税', '备注'].map((h, i) => (
+                    {['国家/地区', 'HS编码', '描述', '税率状态', '附加税状态', '备注'].map((h, i) => (
                       <th key={i} className="py-2 px-3 text-[10px] text-[#86868b] font-medium whitespace-nowrap">{h}</th>
                     ))}
                   </tr></thead>
                   <tbody>
                     {[
-                      { country: '美国', code: '9018.90.7500', desc: 'Medical instruments', mfn: '2.7%', s301: '+25%', note: 'Section 301豁免至2026' },
-                      { country: '中国', code: '9018.90.1000', desc: '医疗器械', mfn: '4%', s301: '—', note: 'Medical device rules' },
-                      { country: '欧盟', code: '9018 90 84', desc: 'Instruments & appliances', mfn: '0%', s301: '—', note: '原产地规则下常为0%' },
-                      { country: 'WCO通用', code: '9018.11', desc: 'Breast pumps', mfn: '—', s301: '—', note: '6位通用码' },
-                      { country: 'WCO通用', code: '9018.90', desc: 'Other medical instruments', mfn: '—', s301: '—', note: '6位通用码' },
+                      { country: '美国', code: '9018.90.7500', desc: 'Medical instruments', mfn: '待USITC当期页复核', s301: '需逐批次核验', note: '不展示固定税率' },
+                      { country: '中国', code: '9018.90.1000', desc: '医疗器械', mfn: '待海关税则复核', s301: '不适用', note: '以报关凭证为准' },
+                      { country: '欧盟', code: '9018 90 84', desc: 'Instruments & appliances', mfn: '待TARIC当期页复核', s301: '不适用', note: '需结合原产地规则' },
+                      { country: 'WCO通用', code: '9018.11', desc: 'Breast pumps', mfn: '分类码线索', s301: '不适用', note: '6位通用码' },
+                      { country: 'WCO通用', code: '9018.90', desc: 'Other medical instruments', mfn: '分类码线索', s301: '不适用', note: '6位通用码' },
                     ].map((row, i) => (
                       <tr key={i} className="border-b border-[#EDE6DF]/50 table-row-hover">
                         <td className="py-2 px-3 text-xs font-medium text-[#1d1d1f] truncate">{row.country}</td>
                         <td className="py-2 px-3"><code className="text-[10px] bg-[#FBF8F5] px-1.5 py-0.5 rounded text-[#af52de]">{row.code}</code></td>
                         <td className="py-2 px-3 text-xs text-[#86868b]">{row.desc}</td>
                         <td className="py-2 px-3 text-xs text-[#34c759]">{row.mfn}</td>
-                        <td className="py-2 px-3 text-xs text-[#ff3b30]">{row.s301}</td>
+                        <td className="py-2 px-3 text-xs text-[#ff9500]">{row.s301}</td>
                         <td className="py-2 px-3 text-[10px] text-[#86868b]">{row.note}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <p className="text-[10px] text-[#B5AFA8] mt-2">数据来源：USITC HTS 2025 / WCO HS Nomenclature 2022 (valid through 2026) / FreightAmigo 2026-03</p>
+              <p className="text-[10px] text-[#B5AFA8] mt-2">数据来源：WCO/USITC/TARIC等官方入口待条目级复核；当前仅展示编码线索，不作为最终税率。</p>
             </div>
           </div>
         )}

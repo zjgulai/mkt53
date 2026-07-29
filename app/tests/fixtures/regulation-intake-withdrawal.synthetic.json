@@ -1,0 +1,10 @@
+{
+  "contractVersion": "mkt53.regulation-intake-withdrawal-fixture.v1",
+  "inputClass": "synthetic-withdrawal-fixture",
+  "requestId": "fixture-request-001",
+  "eventId": "fixture-withdrawal-event-001",
+  "withdrawnAt": "2026-07-24T01:00:00.000Z",
+  "reason": "Synthetic rehearsal of downstream withdrawal blocking.",
+  "affectedSurfaces": ["dashboard", "csv-export", "report-export"],
+  "auditEventRecorded": true
+}

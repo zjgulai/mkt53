@@ -1,0 +1,71 @@
+{
+  "schema_version": "mkt53.local-implementation-evidence.v1",
+  "task_id": "BE-03",
+  "generated_at": "2026-07-24T02:49:34Z",
+  "status": "local-validated-not-deployed",
+  "evidence_layer": "L1-local-validation",
+  "scope": {
+    "production_reads": false,
+    "production_writes": false,
+    "production_deploy": false,
+    "provider_calls": false,
+    "connector_calls": false,
+    "business_data_writes": false,
+    "frontend_canonical_switch": false,
+    "static_registry_seeded": false
+  },
+  "contract": {
+    "alembic_revision": "0002_be03_source_registry",
+    "tables": ["sources", "audit_events", "idempotency_records"],
+    "permissions": ["source:read", "source:write"],
+    "write_guards": ["If-Match", "SQLAlchemy version_id_col", "Idempotency-Key"],
+    "audit_actions": ["create", "update", "withdraw"]
+  },
+  "quality_gate": {
+    "command": "backend/scripts/quality-be03.sh",
+    "tests_passed": 43,
+    "branch_coverage_percent": 93.74,
+    "ruff_format": "passed",
+    "ruff_lint": "passed",
+    "lock_check": "passed",
+    "compose_config": "passed",
+    "published_ports": 0
+  },
+  "isolated_postgresql_smoke": {
+    "compose_project": "mkt53_be03_local_20260724",
+    "migration": "current",
+    "versions": [1, 2, 3],
+    "stale_write_status": 412,
+    "idempotent_replay": true,
+    "audit_actions": ["create", "update", "withdraw"],
+    "audit_mutation_rejected": true,
+    "cleanup": {
+      "matching_containers": 0,
+      "matching_networks": 0,
+      "matching_volumes": 0
+    }
+  },
+  "graphify": {
+    "nodes": 3395,
+    "edges": 5419,
+    "communities": 261,
+    "missing_endpoint_edges": 0,
+    "dangling_endpoint_edges": 0,
+    "self_loop_edges": 0,
+    "exact_duplicate_edges": 0,
+    "collapsed_edges": 0,
+    "zero_ast_source_files": 36
+  },
+  "artifact_sha256": {
+    "backend/src/mkt53_backend/models.py": "42d08907591f8cf958a5c7ce2a7c30bd42ddb0706998c8c9669714790d129377",
+    "backend/src/mkt53_backend/schemas.py": "5aac70f1a81c9cc51e9689699b2c0382c81f99d8bf0d4b757aaf686a26825400",
+    "backend/src/mkt53_backend/source_registry.py": "78bd6e57febb333a9a4aa13df4e35324edce314c2553e5525ed6842035ce38e7",
+    "backend/src/mkt53_backend/source_api.py": "7a7b2d121030ed0017e772f81fe6a21098f51ed8748403ab01314638465813d2",
+    "backend/migrations/versions/0002_be03_source_registry.py": "24f0b980004b241c01103c4094bdba4ab20b4f76d63810a6d15d44f7ee96e758",
+    "backend/compose.yaml": "3ecab97459027cad01d0ac9368800c5d9fdad45b00ae3ac647f4034915a1ca42",
+    "backend/uv.lock": "cd16b62c4dbaa0944b449bd4698e107eaa8bd7995f482ec5daf257d6fe60824a",
+    "backend/requirements.lock": "f626a130826069fb2c0746317c61e6f962dc88236be7aba45a3888bb075f8b6c"
+  },
+  "local_image_id": "sha256:46ee0e8adfafc39216ecc974c1aca4a262859a927fb5f2b48ed67691b2c1fd89",
+  "known_warning": "Starlette TestClient reports an httpx migration deprecation warning."
+}

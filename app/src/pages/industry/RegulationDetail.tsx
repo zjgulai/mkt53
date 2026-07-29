@@ -1,5 +1,7 @@
 import { Gavel } from 'lucide-react';
 import EvidenceGatePage from '@/components/EvidenceGatePage';
+import RegulationIntakeReadinessPanel from '@/components/RegulationIntakeReadinessPanel';
+import RegulationSkuContractPanel from '@/components/RegulationSkuContractPanel';
 
 function getIndustrySidebarItems() {
   return [
@@ -43,6 +45,14 @@ export default function RegulationDetail() {
       sourceIds={['ds-016', 'policy-cpsc-efiling', 'policy-eu-mdr-transition']}
       evidenceTitle="法规条目逐项复核中"
       evidenceDescription="CPSC CPC/eFiling、EU MDR 过渡安排和部分区域法规需要官方条文、SKU 适用范围与法务复核记录逐项绑定；未完成前不展示合规进度、负责人结论或 CSV 清单。"
+      statusLabel="DATA-REG 合同与 intake 模板就绪，真实输入仍为 0"
+      cadence="contract v1 · intake 0/6 · 0 publishable decisions"
+      internalFactSummary={(
+        <div className="space-y-5">
+          <RegulationSkuContractPanel />
+          <RegulationIntakeReadinessPanel />
+        </div>
+      )}
       tabs={['官方来源', 'SKU适用性', '法务复核', '导出治理']}
       blockedItems={[
         '部分法规条目的官方链接、实施范围和产品适用性仍需逐项确认。',

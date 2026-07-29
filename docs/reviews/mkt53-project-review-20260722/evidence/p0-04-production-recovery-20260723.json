@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 1,
+  "taskId": "P0-04",
+  "runId": "20260723T152641+0800",
+  "generatedAt": "2026-07-23T16:10:57+08:00",
+  "status": "production-recovered-first-scheduled-observation-pending",
+  "evidenceLayer": "L4-authorized-production-write",
+  "authorization": {
+    "authorizedBy": "user",
+    "authorizedAt": "2026-07-23",
+    "scope": [
+      "P0-04 automation candidate sync and validation",
+      "P0-04 periodic and weekly static data backup and publish",
+      "P0-04 semi-monthly cron installation",
+      "P0-04 production freshness and log verification"
+    ],
+    "excluded": [
+      "P0-05 nginx or portal-login contract changes",
+      "provider calls",
+      "restricted connector calls",
+      "business fact promotion",
+      "git commit or push"
+    ]
+  },
+  "before": {
+    "productionManifest": {
+      "period": "2026-07-H1",
+      "generatedAt": "2026-07-06T03:40:50.013Z",
+      "nextScheduledAt": "2026-07-16T09:00:00+08:00",
+      "periodicLatestSha256": "a584e5c3f810d4546a651602040bf119ef900aeaccfdf620a91d1e3a2fe2e0d1",
+      "weeklyLatestSha256": "a584e5c3f810d4546a651602040bf119ef900aeaccfdf620a91d1e3a2fe2e0d1"
+    },
+    "automationManifest": {
+      "period": "2026-06-H1",
+      "generatedAt": "2026-06-12T02:23:17.911Z",
+      "nextScheduledAt": "2026-06-16T09:00:00+08:00"
+    },
+    "cron": {
+      "service": "active",
+      "mkt53JobPresent": false
+    },
+    "host": {
+      "timezone": "Asia/Shanghai",
+      "ntpSynchronized": true,
+      "availableDisk": "101G"
+    }
+  },
+  "backup": {
+    "root": "/opt/mkt53/backups/p0-04/20260723T152641+0800",
+    "permissions": {
+      "directories": "0700",
+      "files": "0600"
+    },
+    "artifacts": [
+      {
+        "path": "automation-app-source.tar.gz",
+        "sha256": "772bfd262926631360ffb2e44918f9e62d54607afbdff3c0fcda894f89599233"
+      },
+      {
+        "path": "crontab.before",
+        "sha256": "3575d2b26138764f6d30805c784af7a04d758c7cfb1e4df5508120747913ee75"
+      },
+      {
+        "path": "html-data-sha256.before",
+        "sha256": "ac75e4bb06f6234a1bc464842b92111a15c6c285012675309b6d2235329c8de3"
+      }
+    ],
+    "integrityVerified": true,
+    "rollback": {
+      "html": "restore html-periodic-data and html-weekly-data from backup root",
+      "cron": "crontab /opt/mkt53/backups/p0-04/20260723T152641+0800/crontab.before",
+      "automation": "restore automation-app-source.tar.gz and run npm ci"
+    }
+  },
+  "candidate": {
+    "period": "2026-07-H2",
+    "windowStart": "2026-07-16",
+    "windowEnd": "2026-07-31",
+    "nextScheduledAt": "2026-08-01T09:00:00+08:00",
+    "stagingRoot": "/opt/mkt53/staging/p0-04/20260723T152641+0800/candidate",
+    "localPreflightSha256": "079fa454cdef538cff1c0e097648bb46ded8d748077856a6f0b8aca37c96952c",
+    "remotePreflightSha256": "079fa454cdef538cff1c0e097648bb46ded8d748077856a6f0b8aca37c96952c",
+    "artifactHashesVerified": 12,
+    "preflightChecksPassed": 6,
+    "preflightChecksTotal": 6,
+    "publicEvidence": {
+      "mode": "dry-run",
+      "sampleCount": 39,
+      "networkCalls": 0,
+      "businessDataWrites": 0
+    },
+    "restrictedSources": {
+      "connectorRequired": 28,
+      "manualRequired": 9,
+      "restrictedConnectorCalls": 0
+    }
+  },
+  "automation": {
+    "root": "/opt/mkt53/automation/app",
+    "sync": {
+      "mode": "rsync-delete-with-exclusions",
+      "deletedFiles": 0,
+      "excluded": [
+        "node_modules",
+        "dist",
+        "tmp",
+        "test-results",
+        "playwright-report",
+        "configs/private",
+        ".env",
+        "*.pem"
+      ],
+      "privateDraftsUploaded": false
+    },
+    "dependencyInstall": {
+      "command": "npm ci",
+      "packages": 465,
+      "vulnerabilities": 0,
+      "packageLockSha256": "565df345fd0354ad360e4f43c26c9f8462189aa3b0e540df8a1d8890652be8d4"
+    },
+    "portabilityFinding": {
+      "firstStagingAttempt": "failed-closed-before-publish",
+      "passedTests": 109,
+      "failedTests": 5,
+      "cause": "five tests depended on ignored app/tmp/audits fixtures",
+      "productionHtmlWritten": false,
+      "cronWritten": false,
+      "remediation": "moved a public, empty manual-evidence intake fixture into tests/fixtures and generated blocked validation output during tests",
+      "remediatedTestFileSha256": "2160df8ae19fcdf07a372f12240159d8de50e9c1302d1a1c501d3b6354e16528"
+    },
+    "stagingValidation": {
+      "runId": "20260723T152641+0800-automation-preflight-2",
+      "target": "/opt/mkt53/staging/p0-04/20260723T152641+0800/html-smoke",
+      "period": "2026-07-H2",
+      "tests": "114/114",
+      "lint": "passed",
+      "npmAuditVulnerabilities": 0,
+      "buildModules": 2323,
+      "bundleBudget": "passed-58-target-2-temporary-exceptions-0-failures",
+      "dataAuditIssues": 0,
+      "runReportGate": "pass",
+      "runReportSha256": "99609be56cc7c40526b70d87d6a63afe347dac941f834dbc210cc524da9e6a00"
+    }
+  },
+  "productionPublish": {
+    "targetRoots": [
+      "/opt/mkt53/html/periodic-data",
+      "/opt/mkt53/html/weekly-data",
+      "/opt/mkt53/automation/app/public/periodic-data",
+      "/opt/mkt53/automation/app/public/weekly-data"
+    ],
+    "strategy": "atomic-per-file-install-and-move-with-latest-json-last",
+    "rollbackOnCommandFailure": true,
+    "publishedFiles": 10,
+    "period": "2026-07-H2",
+    "generatedAt": "2026-07-23T07:03:59.663Z",
+    "latestSha256": "4007f58ccc9954bdd2f58feb21bba48c3f2289684b05b417e9474db7927d0dff",
+    "httpsArtifactHashesVerified": "10/10",
+    "periodicWeeklyParity": true,
+    "htmlIndexUnchanged": {
+      "mtime": "2026-07-06T11:46:23.712497938+08:00",
+      "sizeBytes": 829
+    },
+    "htmlDataSha256AfterSha256": "589def1f94512fed0a2e99dcc84f0502299d0a7ecacc1b8306eb501b26c59e78"
+  },
+  "cron": {
+    "service": "active",
+    "enabled": true,
+    "installed": true,
+    "schedule": "0 9 1,16 * *",
+    "command": "cd \"/opt/mkt53/automation/app\" && npm run data:publish:semi-monthly:local >> \"/opt/mkt53/automation/app/tmp/data-collection/semi-monthly-refresh.log\" 2>&1",
+    "jobCount": 1,
+    "unrelatedJobsPreserved": true,
+    "crontabAfterSha256": "9b613bc1c32adb9101105daad670ef9f3eed8ebd25e33a6558b56ac306686166",
+    "nextScheduledAt": "2026-08-01T09:00:00+08:00",
+    "scheduledLogStatus": "not-created-before-first-scheduled-run",
+    "firstScheduledObservationPending": true
+  },
+  "verification": {
+    "localReleaseEvidence": {
+      "sha256": "e16789ebe48945ab80a7fff5158ea153757b87ee92cab0633c6af3e9cf1d4fc3",
+      "checks": "8/8",
+      "tests": "114/114",
+      "localE2e": "138/138"
+    },
+    "smokeProd": "passed",
+    "nginxConfigTest": "passed",
+    "nginxRestarted": false,
+    "productionUrl": {
+      "url": "https://mkt.lute-tlz-dddd.top",
+      "status": 200
+    },
+    "productionE2e": {
+      "passed": 2,
+      "failed": 6,
+      "total": 8,
+      "classification": "P0-05 portal-login-and-manifest-protection-contract",
+      "observed": [
+        "mkt root and deep routes remain on mkt.lute-tlz-dddd.top instead of redirecting to lute-tlz-dddd.top/login.html",
+        "manifest endpoint returns 200 instead of the expected 302"
+      ],
+      "changedInThisRun": false
+    }
+  },
+  "boundaries": {
+    "productionDataWrites": true,
+    "automationSourceWrites": true,
+    "automationDependencyWrites": true,
+    "cronWrites": true,
+    "applicationBundleProductionWrites": false,
+    "nginxWrites": false,
+    "nginxRestart": false,
+    "providerCalls": false,
+    "restrictedConnectorCalls": false,
+    "businessDataWrites": false,
+    "factPromotion": false,
+    "gitCommit": false,
+    "gitPush": false
+  },
+  "remaining": [
+    {
+      "task": "P0-04 first scheduled cron observation",
+      "status": "pending-time-window",
+      "earliestAt": "2026-08-01T09:00:00+08:00",
+      "requiredEvidence": [
+        "semi-monthly-refresh.log created by cron",
+        "run report gate pass",
+        "production period advances to 2026-08-H1",
+        "periodic and weekly hashes remain equal"
+      ]
+    },
+    {
+      "task": "P0-05 portal and manifest protection",
+      "status": "blocked-auth",
+      "requiredAuthorization": "separate nginx production-write authorization"
+    }
+  ]
+}

@@ -66,6 +66,7 @@ export const aiReviewPublishGateRows = [
   { gateId: 'flavor_report_publish_gate', surface: 'FlavorReport', blockedClaims: 'trend forecast; report conclusion; exportable recommendation', allowedDisplay: 'claim matrix queue and review state', sourceIds: ['ds-033', 'ds-032'] },
 ];
 
+// audit-source: ds-021 ds-023 ds-030 ds-031 ds-032 ds-033
 export const aiReviewBatch5DisplayPolicy = [
   'Batch 5 只生成评论/VOC/YouTube/Web 的样本级治理队列，不包含原始评论正文、平台个人数据、客户标识或模型输出。',
   'sample manifest、eval queue、human review queue 和 publish gate 均为 private/internal L2 gate，canDisplayAsFact=false。',

@@ -41,24 +41,42 @@ export default function IPAnalysis() {
       icon={Shield}
       accent="#C25B6E"
       sourceIds={['ds-017']}
-      evidenceTitle="IP数据待复核口径"
-      evidenceDescription="专利清单、授权状态、审查状态和侵权风险标签需要 WIPO、USPTO、CNIPA、EPO 或诉讼数据库快照；当前不展示专利数量、申请日期、覆盖国家或风险预警。"
+      evidenceTitle="专利数据库公开入口已补证"
+      evidenceDescription="本页已绑定 WIPO PATENTSCOPE、USPTO Patent Public Search、EPO Espacenet 和 CNIPA 专利资源入口；当前只展示检索来源和证据边界，不展示专利数量、授权状态、覆盖国家或风险预警。"
       tabs={['专利快照', '权利状态', '诉讼检索', '风险复核']}
       blockedItems={[
-        '专利数据库快照和检索式未保存。',
-        '权利状态、审查状态和地域覆盖缺少可复现查询证据。',
+        '本批未执行 query-specific 专利族检索，也未保存检索式结果集。',
+        '权利状态、审查状态和地域覆盖仍缺少可复现查询证据。',
         '侵权风险标签需要法律意见或外部数据库交叉验证。',
       ]}
       collectionPlan={[
-        '通过 WIPO、USPTO、CNIPA、EPO 等公开数据库采集专利快照。',
+        '通过 WIPO、USPTO、CNIPA、EPO 等公开数据库保存检索式和结果快照。',
         '保存检索式、URL、标题、时间、hash、摘要和截图证据。',
         '把专利事实、法律风险和内部应对措施分开复核。',
       ]}
       displayPolicy={[
-        '公开专利事实需有数据库记录后才展示。',
+        '公开数据库入口可以展示为 L1 来源事实。',
+        '专利数量、权利状态和申请人维度必须等待检索结果快照。',
         '侵权风险只能在法律复核后展示为风险等级。',
-        '导出必须包含检索式和证据路径，不从静态页面数组生成。',
       ]}
+      statusLabel="公开检索入口已补证，专利结论仍门禁"
+      cadence="公开证据批次：tmp/audits/public-source-fill-batch2-industry-20260630/ds017_evidence.json"
+      internalFactSummary={
+        <div className="space-y-3">
+          <div>
+            <h2 className="text-sm font-semibold text-[#1d1d1f]">本批可展示事实范围</h2>
+            <p className="mt-1 text-xs leading-relaxed text-[#86868b]">
+              ds-017 仅支撑专利数据库入口存在性和可复核来源，不支撑任何 Momcozy 或竞品的专利数、侵权风险、FTO 或诉讼结论。
+            </p>
+          </div>
+          <div className="grid gap-2 text-[11px] text-[#1d1d1f] sm:grid-cols-2">
+            <span className="rounded-lg bg-[#FBF8F5] px-3 py-2">WIPO：PATENTSCOPE</span>
+            <span className="rounded-lg bg-[#FBF8F5] px-3 py-2">USPTO：Patent Public Search</span>
+            <span className="rounded-lg bg-[#FBF8F5] px-3 py-2">EPO：Espacenet</span>
+            <span className="rounded-lg bg-[#FBF8F5] px-3 py-2">CNIPA：Patent resources</span>
+          </div>
+        </div>
+      }
       sidebarItems={getIndustrySidebarItems()}
     />
   );

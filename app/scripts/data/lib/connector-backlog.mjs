@@ -41,7 +41,7 @@ const connectorDefinitions = [
     connectorId: 'trade-import',
     label: 'Import Genius / Customs Trade Data',
     priority: 'P1',
-    match: /import genius|海关|hs编码|进出口/i,
+    match: /import genius|海关|hs编码|进出口|\bhts(?:usa)?\b/i,
     requiredAccess: ['Import Genius 授权或海关数据导出', 'HS code 清单', '国家、港口和时间窗口'],
     outputContract: ['customs_shipment_snapshot', 'hs_code_market_snapshot'],
     stopCondition: 'dry-run 输出 hsCodes、countrySet、window、sampleCount 和授权状态。',
@@ -97,6 +97,7 @@ function connectorDefinitionFor(source) {
   const text = `${source.id} ${source.page} ${source.metric} ${source.sourceName} ${source.sourceType} ${source.note} ${source.action}`.toLowerCase();
 
   const exactOrder = [
+    ['trade-import', /import genius|海关|hs编码|进出口|\bhts(?:usa)?\b/i],
     ['youtube-data', /youtube/i],
     ['crawler-compliance', /爬虫|网页评论/i],
     ['review-nlp', /评论|review|voc|nlp|情感分析/i],

@@ -1,0 +1,221 @@
+{
+  "schemaVersion": "mkt53.p0-02-dependency-security-refresh-evidence.v1",
+  "generatedAt": "2026-07-27T03:24:13Z",
+  "status": "p0-02-dependency-security-refresh-local-l1-complete",
+  "evidenceGrade": "L1-local-validated",
+  "task": "P0-02 dependency security refresh",
+  "localReleaseCandidateReady": true,
+  "productionVerified": false,
+  "baseline": {
+    "audit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 14,
+      "critical": 0,
+      "total": 14
+    },
+    "installedVersions": {
+      "react": "19.2.3",
+      "react-dom": "19.2.3",
+      "react-router": "7.18.1",
+      "react-router-dom": "7.18.1",
+      "eslint": "9.39.2",
+      "@eslint/js": "9.39.2",
+      "typescript-eslint": "8.52.0",
+      "postcss": "8.5.15"
+    },
+    "advisoryGroups": [
+      "react-router-data-route-xss",
+      "postcss-line-return-parsing",
+      "eslint-typescript-eslint-minimatch-brace-expansion"
+    ]
+  },
+  "result": {
+    "audit": {
+      "status": "passed",
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "installedVersions": {
+      "react": "19.2.8",
+      "react-dom": "19.2.8",
+      "react-router": "8.3.0",
+      "react-router-dom": null,
+      "eslint": "10.8.0",
+      "@eslint/js": "10.0.1",
+      "typescript-eslint": "8.65.0",
+      "eslint-plugin-react-hooks": "7.1.1",
+      "eslint-plugin-react-refresh": "0.5.3",
+      "postcss": "8.5.23"
+    },
+    "dependencyTreeComplete": true,
+    "routerImportFilesMigrated": 20,
+    "retiredRouterImportsRemaining": 0,
+    "securityContractTests": 3
+  },
+  "design": {
+    "routerMigration": {
+      "packageRemoved": "react-router-dom",
+      "replacementPackage": "react-router",
+      "routerProviderDomEntrypointRequired": false,
+      "nodeRuntime": "22.22.0",
+      "reactRuntimeFloorSatisfied": true,
+      "viteRuntimeFloorSatisfied": true
+    },
+    "lintMigration": {
+      "flatConfigPreserved": true,
+      "rulesDisabledToPass": [],
+      "codeFixes": [
+        "useIsMobile lazy initial state",
+        "Carousel render-time initial API snapshot",
+        "Carousel reInit listener cleanup"
+      ]
+    },
+    "permanentContract": {
+      "minimumVersionChecks": true,
+      "retiredPackageCheck": true,
+      "retiredImportScan": true
+    }
+  },
+  "qualityGate": {
+    "targeted": {
+      "filesPassed": 1,
+      "testsPassed": 3,
+      "testsFailed": 0
+    },
+    "unitTests": {
+      "command": "npm run test:serial",
+      "filesPassed": 23,
+      "testsPassed": 179,
+      "testsFailed": 0,
+      "maxWorkers": 1,
+      "durationSeconds": 200.8
+    },
+    "exploratoryParallelRun": {
+      "gate": false,
+      "status": "resource-contention-timeouts",
+      "assertionRegressionsObserved": 0,
+      "followUp": "Affected tests were checked independently or by the passing serial full suite."
+    },
+    "lint": {
+      "status": "passed",
+      "eslintVersion": "10.8.0"
+    },
+    "build": {
+      "status": "passed",
+      "modules": 2383,
+      "javascriptAssets": 77
+    },
+    "bundleBudget": {
+      "status": "passed",
+      "passedAssets": 77,
+      "temporaryExceptions": 0,
+      "failures": 0,
+      "vendorReactBytes": 221738,
+      "vendorChartCoreBytes": 153109
+    },
+    "dataConsistency": {
+      "pages": 43,
+      "tables": 107,
+      "sources": 53,
+      "governanceRecords": 107,
+      "issues": 0
+    },
+    "deepDataAudit": {
+      "routes": 46,
+      "pages": 43,
+      "tables": 107,
+      "sources": 53,
+      "claims": 888,
+      "highRiskClaims": 0,
+      "sourceGaps": 26,
+      "providerCalls": false,
+      "productionWrites": false
+    }
+  },
+  "browserAcceptance": {
+    "runner": "Playwright 1.60.0 with installed system Chrome",
+    "browserChannel": "chrome",
+    "baseUrl": "http://127.0.0.1:41731",
+    "projects": [
+      {
+        "name": "chromium-desktop",
+        "viewport": "1440x900",
+        "testsPassed": 75
+      },
+      {
+        "name": "chromium-mobile",
+        "viewport": "390x844",
+        "testsPassed": 75
+      }
+    ],
+    "testsPassed": 150,
+    "testsFailed": 0,
+    "durationMinutes": 9.8,
+    "commandExitCode": 0,
+    "completedWorkerTeardown": {
+      "automatic": false,
+      "exactCompletedWorkerTerminated": true,
+      "finalReporterSummaryGenerated": true
+    }
+  },
+  "implementationSha256": {
+    "app/package.json": "3157906c2d9a32e664174f8eb42e54a4e30648175689577d5bc8025fbd91ba6a",
+    "app/package-lock.json": "c1fd52b74010ffc5a2364b32535ebbf4c817628bc0f49da6756e7a67392f1506",
+    "app/playwright.config.ts": "6ac7840cdb7dbe20341ffecb7ebceba647bd3796111326c80c8d8721453110a5",
+    "app/tests/scripts/dependency-security-contract.test.ts": "e9ce3ba37c6382957c8bfb643faf26604bbbc5822418a5e754c12f2190061f1c",
+    "app/src/components/ui/carousel.tsx": "3eeef1820a67757a1ba5a4fbca67f1395f4aa8aeff919ccae5de803f68af826d",
+    "app/src/hooks/use-mobile.ts": "d3410cdd1904171fe7bdc3907661d4cd857ed46a7cb776623c3bff6a4a338427",
+    "app/src/App.tsx": "b78aac5213c018d83c604a493cb7c1afba099bb8d47c971511d8286414b044bc",
+    "app/src/main.tsx": "6b9c8e53e4b2de538234a039729c65a3ff5eea0ac73dbc263bdacc3026e16cfd",
+    "docs/architecture/p0-02-dependency-security-refresh-20260727.md": "0c5972eac3c7e7e59754b070fe97b855f57aba0f00acd481eecfc83108f6a6fe",
+    "docs/product/product-roadmap-execution-20260723.md": "238df59216809bae8daa86074d5f5be94e96c2274dd04370239fc4e0f80c7723",
+    "docs/reviews/mkt53-project-review-20260722/index.html": "fb9f10601a6e9139a0731744bd9390388d97f10f23bae028146572f5cf9062a2"
+  },
+  "graphify": {
+    "status": "updated-and-clustered",
+    "nodes": 4488,
+    "edges": 7137,
+    "communities": 341,
+    "duplicateNodeIds": 0,
+    "missingEndpoints": 0,
+    "danglingEndpoints": 0,
+    "selfLoops": 0,
+    "exactDuplicateEdges": 0,
+    "sameEndpointExtraEdges": 0,
+    "zeroAstSourceFiles": 54,
+    "savedQuery": "graphify-out/memory/query_20260727_032112_dependency_audit_router_react_eslint_typescript_po.md",
+    "reflectedMemories": 25,
+    "usefulMemories": 25
+  },
+  "officialReferences": [
+    "https://reactrouter.com/upgrading/v7",
+    "https://reactrouter.com/home/changelog",
+    "https://github.com/advisories/GHSA-qwww-vcr4-c8h2/dependabot",
+    "https://eslint.org/docs/latest/use/migrate-to-10.0.0"
+  ],
+  "scope": {
+    "npmRegistryInstallAndSecurityAudit": true,
+    "officialDocumentationRead": true,
+    "businessNetworkCollection": false,
+    "providerCalls": 0,
+    "connectorCalls": 0,
+    "businessDataWrites": 0,
+    "canonicalPublicWrites": 0,
+    "productionReads": 0,
+    "productionWrites": 0,
+    "deployment": false,
+    "gitStageCommitPush": false
+  },
+  "limitations": [
+    "This is L1 local validation. No production application or dependency set was deployed or verified.",
+    "The default parallel Vitest exploration encountered resource-contention timeouts while other projects were active; the official serial full suite passed 179 of 179.",
+    "The system Chrome E2E runner required terminating one exact completed worker after all 150 tests had reported; Playwright then returned exit code 0.",
+    "Graphify reported 54 JSON/config source files with zero AST nodes; they remain visible as a graph extraction limitation."
+  ]
+}

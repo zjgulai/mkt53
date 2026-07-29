@@ -18,35 +18,55 @@ export default defineConfig(() => {
       },
     },
     build: {
-      chunkSizeWarningLimit: 1000,
+      chunkSizeWarningLimit: 380,
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (!id.includes('node_modules')) return undefined;
+            const normalizedId = id.replaceAll('\\', '/');
+
+            if (normalizedId.includes('/src/features/data-manage/catalog-core.tsx')) {
+              return 'data-manage-catalog-core';
+            }
+
+            if (normalizedId.includes('/src/features/data-manage/catalog-erp.tsx')) {
+              return 'data-manage-catalog-erp';
+            }
+
+            if (normalizedId.includes('/src/features/data-manage/governance.ts')) {
+              return 'data-manage-governance';
+            }
+
+            if (!normalizedId.includes('/node_modules/')) return undefined;
 
             if (
-              id.includes('/react/') ||
-              id.includes('/react-dom/') ||
-              id.includes('/react-router') ||
-              id.includes('/scheduler/')
+              normalizedId.includes('/react/') ||
+              normalizedId.includes('/react-dom/') ||
+              normalizedId.includes('/react-router') ||
+              normalizedId.includes('/scheduler/')
             ) {
               return 'vendor-react';
             }
 
             if (
-              id.includes('/recharts/') ||
-              id.includes('/d3-') ||
-              id.includes('/lodash/')
+              normalizedId.includes('/recharts/') ||
+              normalizedId.includes('/d3-') ||
+              normalizedId.includes('/lodash/')
             ) {
-              return 'vendor-charts';
+              // Keep the shared Cartesian runtime stable, while allowing Vite to
+              // split chart families into the lazy routes that actually use them.
+              if (normalizedId.endsWith('/recharts/es6/chart/CartesianChart.js')) {
+                return 'vendor-chart-core';
+              }
+
+              return undefined;
             }
 
             if (
-              id.includes('/@radix-ui/') ||
-              id.includes('/lucide-react/') ||
-              id.includes('/cmdk/') ||
-              id.includes('/vaul/') ||
-              id.includes('/sonner/')
+              normalizedId.includes('/@radix-ui/') ||
+              normalizedId.includes('/lucide-react/') ||
+              normalizedId.includes('/cmdk/') ||
+              normalizedId.includes('/vaul/') ||
+              normalizedId.includes('/sonner/')
             ) {
               return 'vendor-ui';
             }

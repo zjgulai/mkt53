@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "mkt53.data-reg-contract-evidence.v1",
+  "generatedAt": "2026-07-24T07:02:21Z",
+  "status": "contract-ready-local-l2",
+  "evidenceGrade": "L2-fixture-or-dry-run",
+  "task": "DATA-REG contract-only discovery",
+  "contract": {
+    "version": "mkt53.regulation-sku-matrix.v1",
+    "schemaPath": "app/contracts/regulation-sku-matrix.schema.json",
+    "fixturePath": "app/tests/fixtures/regulation-sku-matrix.synthetic.json",
+    "validatorPath": "app/scripts/data/validate-regulation-sku-contract.mjs",
+    "evidenceClass": "synthetic-contract-fixture",
+    "fixtureRecords": 1,
+    "officialSnapshots": 0,
+    "reviewedSkuDecisions": 0,
+    "publishableComplianceFacts": 0,
+    "notLegalAdvice": true
+  },
+  "failClosedRules": {
+    "syntheticApplicability": "unknown",
+    "syntheticDecisionStatus": "legal-review-required",
+    "syntheticOfficialEvidenceMustBeNull": true,
+    "syntheticFactPromotionRejected": true,
+    "officialSourceAllowlistRequired": true,
+    "officialHttpsHashSnapshotRequired": true,
+    "decisiveReviewFieldsRequired": true,
+    "withdrawnPublicationRejected": true,
+    "disclosureCountsRecomputed": true
+  },
+  "scope": {
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "connectorCalls": 0,
+    "businessDataWrites": 0,
+    "canonicalPublicWrites": 0,
+    "productionReads": 0,
+    "productionWrites": 0,
+    "productionConfigWrites": 0,
+    "deployment": false,
+    "regulatoryFactsCollected": 0,
+    "realSkusEvaluated": 0,
+    "legalConclusionsGenerated": 0,
+    "gitStageCommitPush": false
+  },
+  "qualityGate": {
+    "targeted": {
+      "command": "cd app && npm run test -- --run tests/scripts/regulation-sku-contract.test.ts tests/components/RegulationSkuContractPanel.test.tsx tests/pages/RegulationDetail.test.tsx",
+      "filesPassed": 3,
+      "testsPassed": 9,
+      "testsFailed": 0
+    },
+    "full": {
+      "command": "cd app && npm run test:serial",
+      "filesPassed": 17,
+      "testsPassed": 141,
+      "testsFailed": 0,
+      "note": "A prior parallel multi-gate run timed out the existing semi-monthly recovery test at 5 seconds; the serial full rerun passed without changing timeout configuration."
+    },
+    "lint": "passed",
+    "npmAuditVulnerabilities": 0,
+    "build": "passed",
+    "bundleBudget": {
+      "status": "passed",
+      "javascriptAssets": 60,
+      "existingTemporaryExceptions": [
+        "DataManage route",
+        "vendor-charts"
+      ]
+    },
+    "dataConsistency": {
+      "pages": 43,
+      "tables": 107,
+      "sources": 53,
+      "issues": 0
+    },
+    "deepDataAudit": {
+      "claims": 888,
+      "highRiskClaims": 0,
+      "mediumRiskClaims": 0,
+      "unsupportedClaims": 0,
+      "sourceGaps": 26
+    }
+  },
+  "implementationSha256": {
+    "app/contracts/regulation-sku-matrix.schema.json": "e999e131ec03ea69c17f3d6058316a9253ff04251c04c3ceaf258dcb3e163ee2",
+    "app/tests/fixtures/regulation-sku-matrix.synthetic.json": "b2d782a3b1e73fd9be45278cf963ee5067e4a1034deb64ab1706995ac4c56e13",
+    "app/scripts/data/validate-regulation-sku-contract.mjs": "ab0bf2ed17c23311cc1ecc478c5f22ff8069dc768fe3ebeeb0ad8fcc720bf047",
+    "app/src/components/RegulationSkuContractPanel.tsx": "76bd16139034173764b3fff52fe23d08471a87d0ac95a272ce5e68012c5fd690",
+    "app/src/pages/industry/RegulationDetail.tsx": "ca2949d53c0fc45181a9cd9444d4affcee81d986c1cf21d5c7cc7ce088216613",
+    "app/tests/scripts/regulation-sku-contract.test.ts": "9cbc73f3918299181e151182430c214a14a71afc1d7446b410d9d22e3fcdabef",
+    "app/tests/components/RegulationSkuContractPanel.test.tsx": "38f4455467c7fdd588dc1cc2fd77ae98c34f1b00fe4769860337d7437fbb7ec9",
+    "app/tests/pages/RegulationDetail.test.tsx": "00ce7cf998f9020b54f056c09320bb79ea5fa153096068e931cdfe2488105ce2"
+  },
+  "graphify": {
+    "nodes": 3927,
+    "edges": 6451,
+    "communities": 314,
+    "duplicateNodeIds": 0,
+    "missingEndpoints": 0,
+    "selfLoops": 0,
+    "exactDuplicateEdges": 0,
+    "sameEndpointExtraEdges": 0,
+    "zeroAstSourceFiles": 42
+  },
+  "limitations": [
+    "The fixture is synthetic and carries no official source, real SKU, reviewer, snapshot, or review decision.",
+    "No regulatory text was collected or verified, and no legal or compliance conclusion was generated.",
+    "The contract is not a production data pipeline or authorization to publish regulatory facts."
+  ]
+}

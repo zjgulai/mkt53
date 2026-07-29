@@ -12,6 +12,7 @@ export const marketSizingFunnel = [
     opportunity: 3,
     opportunityText: '大盘稳健增长，但口径覆盖婴童用品全品类，只能作为上层市场背景，不作为吸奶器品牌份额分母。',
     focus: '婴童用品总盘',
+    sourceIds: ['ds-044'],
   },
   {
     label: '品类TAM',
@@ -23,6 +24,7 @@ export const marketSizingFunnel = [
     opportunity: 4,
     opportunityText: '吸奶器品类 CAGR 8.52%，可作为品牌份额主分母；若要称为SAM，需叠加地域、渠道、SKU和合规可服务范围。',
     focus: '吸奶器主赛道',
+    sourceIds: ['ds-001'],
   },
   {
     label: '细分TAM',
@@ -34,22 +36,23 @@ export const marketSizingFunnel = [
     opportunity: 5,
     opportunityText: '穿戴式口径 CAGR 15.08%，可作为细分市场份额分母；不是SOM，SOM需Momcozy可获份额假设。',
     focus: '穿戴式核心',
+    sourceIds: ['ds-045'],
   },
 ];
 
 export const marketSizeTrendData = [
-  { year: '2025', upperTam: 355.9, categoryTam: 3.51, wearableTam: 0.203, type: '历史' },
-  { year: '2026E', upperTam: 375.8, categoryTam: 3.81, wearableTam: 0.233, type: '预测' },
-  { year: '2027E', upperTam: 399.85, categoryTam: 4.13, wearableTam: 0.268, type: '预测' },
-  { year: '2028E', upperTam: 425.44, categoryTam: 4.49, wearableTam: 0.309, type: '预测' },
-  { year: '2029E', upperTam: 452.67, categoryTam: 4.87, wearableTam: 0.355, type: '预测' },
-  { year: '2030E', upperTam: 481.64, categoryTam: 5.28, wearableTam: 0.409, type: '预测' },
+  { year: '2025', upperTam: 355.9, categoryTam: 3.51, wearableTam: 0.203, type: '历史', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
+  { year: '2026E', upperTam: 375.8, categoryTam: 3.81, wearableTam: 0.233, type: '预测', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
+  { year: '2027E', upperTam: 399.85, categoryTam: 4.13, wearableTam: 0.268, type: '预测', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
+  { year: '2028E', upperTam: 425.44, categoryTam: 4.49, wearableTam: 0.309, type: '预测', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
+  { year: '2029E', upperTam: 452.67, categoryTam: 4.87, wearableTam: 0.355, type: '预测', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
+  { year: '2030E', upperTam: 481.64, categoryTam: 5.28, wearableTam: 0.409, type: '预测', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
 ];
 
 export const marketCagrLines = [
-  { label: '上层TAM CAGR 6.4%', color: '#C25B6E' },
-  { label: '品类TAM CAGR 8.52%', color: '#ff9500' },
-  { label: '细分TAM CAGR 15.08%', color: '#34c759' },
+  { label: '上层TAM CAGR 6.4%', color: '#C25B6E', sourceIds: ['ds-044'] },
+  { label: '品类TAM CAGR 8.52%', color: '#ff9500', sourceIds: ['ds-001'] },
+  { label: '细分TAM CAGR 15.08%', color: '#34c759', sourceIds: ['ds-045'] },
 ];
 
 export const marketDenominatorBoundary = [
@@ -58,7 +61,7 @@ export const marketDenominatorBoundary = [
     scope: '全球婴童用品总盘',
     chartKey: 'upperTam',
     denominatorUse: '只能作为母婴大盘背景，不作为吸奶器品牌份额分母。',
-    sourceIds: ['ds-001'],
+    sourceIds: ['ds-044'],
     canDisplayAsFact: true,
   },
   {
@@ -66,7 +69,7 @@ export const marketDenominatorBoundary = [
     scope: '全球吸奶器市场',
     chartKey: 'categoryTam',
     denominatorUse: '可作为吸奶器品牌份额主分母；命名为TAM，不再写作SAM。',
-    sourceIds: ['ds-044'],
+    sourceIds: ['ds-001'],
     canDisplayAsFact: true,
   },
   {
@@ -96,19 +99,19 @@ export const marketDenominatorBoundary = [
 ];
 
 export const marketMonthlyTrendData = [
-  { month: '2025-06', interestIndex: 88, pageviews: 3699, note: '完整月' },
-  { month: '2025-07', interestIndex: 90, pageviews: 3755, note: '完整月' },
-  { month: '2025-08', interestIndex: 98, pageviews: 4107, note: '完整月' },
-  { month: '2025-09', interestIndex: 84, pageviews: 3502, note: '完整月' },
-  { month: '2025-10', interestIndex: 87, pageviews: 3668, note: '完整月' },
-  { month: '2025-11', interestIndex: 89, pageviews: 3716, note: '完整月' },
-  { month: '2025-12', interestIndex: 93, pageviews: 3907, note: '完整月' },
-  { month: '2026-01', interestIndex: 88, pageviews: 3676, note: '完整月' },
-  { month: '2026-02', interestIndex: 78, pageviews: 3284, note: '完整月' },
-  { month: '2026-03', interestIndex: 83, pageviews: 3463, note: '完整月' },
-  { month: '2026-04', interestIndex: 86, pageviews: 3609, note: '完整月' },
-  { month: '2026-05', interestIndex: 100, pageviews: 4194, note: '完整月峰值' },
-  { month: '2026-06', interestIndex: 64, pageviews: 2672, note: '截至2026-06-24，非完整月' },
+  { month: '2025-06', interestIndex: 88, pageviews: 3699, note: '完整月', sourceIds: ['ds-046'] },
+  { month: '2025-07', interestIndex: 90, pageviews: 3755, note: '完整月', sourceIds: ['ds-046'] },
+  { month: '2025-08', interestIndex: 98, pageviews: 4107, note: '完整月', sourceIds: ['ds-046'] },
+  { month: '2025-09', interestIndex: 84, pageviews: 3502, note: '完整月', sourceIds: ['ds-046'] },
+  { month: '2025-10', interestIndex: 87, pageviews: 3668, note: '完整月', sourceIds: ['ds-046'] },
+  { month: '2025-11', interestIndex: 89, pageviews: 3716, note: '完整月', sourceIds: ['ds-046'] },
+  { month: '2025-12', interestIndex: 93, pageviews: 3907, note: '完整月', sourceIds: ['ds-046'] },
+  { month: '2026-01', interestIndex: 88, pageviews: 3676, note: '完整月', sourceIds: ['ds-046'] },
+  { month: '2026-02', interestIndex: 78, pageviews: 3284, note: '完整月', sourceIds: ['ds-046'] },
+  { month: '2026-03', interestIndex: 83, pageviews: 3463, note: '完整月', sourceIds: ['ds-046'] },
+  { month: '2026-04', interestIndex: 86, pageviews: 3609, note: '完整月', sourceIds: ['ds-046'] },
+  { month: '2026-05', interestIndex: 100, pageviews: 4194, note: '完整月峰值', sourceIds: ['ds-046'] },
+  { month: '2026-06', interestIndex: 64, pageviews: 2672, note: '截至2026-06-24，非完整月', sourceIds: ['ds-046'] },
 ];
 
 export const erpInternalMonthlyTrendData = [
@@ -120,6 +123,8 @@ export const erpInternalMonthlyTrendData = [
     totalProxy: 1572045,
     pumpKeywordProxy: 304330,
     note: 'Batch19已放行 · L3内部代理 · 可见月度销量列',
+    sourceIds: ['ds-047', 'ds-048', 'ds-049'],
+    canDisplayAsFact: true,
   },
   {
     month: '2026-02',
@@ -129,6 +134,8 @@ export const erpInternalMonthlyTrendData = [
     totalProxy: 1596172,
     pumpKeywordProxy: 307700,
     note: 'Batch19已放行 · L3内部代理 · 可见月度销量列',
+    sourceIds: ['ds-047', 'ds-048', 'ds-049'],
+    canDisplayAsFact: true,
   },
   {
     month: '2026-03',
@@ -138,6 +145,8 @@ export const erpInternalMonthlyTrendData = [
     totalProxy: 1858377,
     pumpKeywordProxy: 298032,
     note: 'Batch19已放行 · L3内部代理 · 可见月度销量列',
+    sourceIds: ['ds-047', 'ds-048', 'ds-049'],
+    canDisplayAsFact: true,
   },
   {
     month: '2026-04',
@@ -147,6 +156,8 @@ export const erpInternalMonthlyTrendData = [
     totalProxy: 1707031,
     pumpKeywordProxy: 305078,
     note: 'Batch19已放行 · L3内部代理 · 可见月度销量列',
+    sourceIds: ['ds-047', 'ds-048', 'ds-049'],
+    canDisplayAsFact: true,
   },
   {
     month: '2026-05',
@@ -156,6 +167,8 @@ export const erpInternalMonthlyTrendData = [
     totalProxy: 1916655,
     pumpKeywordProxy: 321579,
     note: 'Batch19已放行 · L3内部代理 · 可见月度销量列',
+    sourceIds: ['ds-047', 'ds-048', 'ds-049'],
+    canDisplayAsFact: true,
   },
   {
     month: '2026-06',
@@ -165,15 +178,32 @@ export const erpInternalMonthlyTrendData = [
     totalProxy: 1444480,
     pumpKeywordProxy: 211131,
     note: 'Batch19已放行 · 截至2026-06-24 · 非完整月',
+    sourceIds: ['ds-047', 'ds-048', 'ds-049'],
+    canDisplayAsFact: true,
   },
 ];
 
 export const erpInternalTrendNotes = [
-  '来源为 ERP 电商销售统计导出、ERP 售后销量统计导出、ERP 零售与渠道 UI 分页采集；证据等级为 L3 只读/导出快照。',
-  'Batch19 manual release review 已放行页面展示和 CSV 导出；当前仅限 private/internal proxy 口径。',
-  '该序列是 internal count-style proxy，不是 GMV、销售额、市场份额、TAM、SAM 或 SOM。',
-  '零售与渠道小计和可见月度列合计存在差异，当前月度代理只使用 2026.01-2026.06 可见销量列。',
-  '吸奶器子集为已放行的产品名关键词代理；仍不得升级为外部市场销量、份额或公开分母。',
+  {
+    text: '来源为 ERP 电商销售统计导出、ERP 售后销量统计导出、ERP 零售与渠道 UI 分页采集；证据等级为 L3 只读/导出快照。',
+    sourceIds: ['ds-047', 'ds-048', 'ds-049'],
+  },
+  {
+    text: 'Batch19 manual release review 已放行页面展示和 CSV 导出；当前仅限 private/internal proxy 口径。',
+    sourceIds: ['ds-047', 'ds-048', 'ds-049'],
+  },
+  {
+    text: '该序列是 internal count-style proxy，不是 GMV、销售额、市场份额、TAM、SAM 或 SOM。',
+    sourceIds: ['ds-047', 'ds-048', 'ds-049'],
+  },
+  {
+    text: '零售与渠道小计和可见月度列合计存在差异，当前月度代理只使用 2026.01-2026.06 可见销量列。',
+    sourceIds: ['ds-049'],
+  },
+  {
+    text: '吸奶器子集为已放行的产品名关键词代理；仍不得升级为外部市场销量、份额或公开分母。',
+    sourceIds: ['ds-047', 'ds-048', 'ds-049'],
+  },
 ];
 
 export const erpDerivedBatch2Artifact = {
@@ -358,6 +388,7 @@ export const erpInventoryReadinessSummary = [
   { fieldName: 'inventory_policy_version', label: '库存口径版本', status: 'blocked_missing_inventory_export', sourceIds: ['ds-035'], evidenceGrade: 'L0-unverified', canDisplayAsFact: false },
 ];
 
+// audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
 export const erpBatch3DisplayPolicy = [
   'ERP Batch 3 全渠道增长和目标达成已被 Batch19 放行为 private/internal proxy；不含平台、国家、渠道或月度明细，不得写成外部市场份额。',
   '渠道/客户/目的仓/运营维表只保留 hash 和聚合代理量；原始客户名、仓库名、运营人、SKU 和产品名不进入前端或公开构建。',
@@ -415,6 +446,7 @@ export const erpSubtotalReconciliationSummary = [
   { sourceId: 'ds-049', affectedTable: 'erp_category_mapping', deltaUnits: 8416, status: 'blocked_hidden_columns_or_week_boundary' },
 ];
 
+// audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
 export const erpBatch7DisplayPolicy = [
   'Batch 7 只把字段名、单位候选、小计差异、品类复核和展示审批拆成治理队列；不包含原始SKU、产品名、客户名、运营人、仓库名或任何新业务值。',
   'Batch7本身不批准展示；当前放行来自后续真实owner记录、Batch9 validator和Batch19 manual release review。',
@@ -487,6 +519,7 @@ export const erpOwnerApprovalLaneSummary = [
   },
 ];
 
+// audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
 export const erpBatch8ApprovalPolicy = [
   'Batch 8 只生成 owner approval packets、display approval record template 和 approval backlog；真实审批记录由后续Batch12/11/9链路接收和校验。',
   'Batch8本身不升级事实展示；当前展示/导出放行来自Batch19 manual release review。',
@@ -543,16 +576,19 @@ export const erpOwnerApprovalIntakeValidationSummary = [
     artifact: 'erp_owner_approval_release_gate.csv',
     rows: 9,
     status: 'ready_for_manual_release_review',
+    sourceIds: ['ds-027', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'],
     meaning: '9个受控表/页面release gate已满足owner记录校验；仍需Batch19人工release review。',
   },
   {
     artifact: 'erp_owner_approval_promotion_manifest.csv',
     rows: 9,
     status: 'promotion_candidates_ready',
+    sourceIds: ['ds-027', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'],
     meaning: '9张ERP内部代理表进入人工release review候选；Batch9本身仍不自动放行展示。',
   },
 ];
 
+// audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
 export const erpBatch9IntakePolicy = [
   'Batch 9 是审批记录 intake validator，不产生或伪造审批；当前23条真实owner记录已通过校验。',
   'Batch9只把9张ERP内部代理表送入manual release review候选；展示/导出放行由Batch19记录承担。',
@@ -619,6 +655,7 @@ export const erpOwnerApprovalTemplateBatch10Summary = [
   },
 ];
 
+// audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
 export const erpBatch10TemplatePolicy = [
   'Batch 10 只把 Batch8 backlog 和 Batch9 contract 转成 owner 可填写模板；它不是审批结果，也不应用任何记录。',
   '模板默认 blankDecisionRows=23、submittedOwnerRecords=0、readyToValidateRows=0；真实记录回填后仍需通过 Batch9 validator。',
@@ -842,6 +879,7 @@ export const erpOwnerSubmissionPackBatch13Summary = [
   },
 ];
 
+// audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
 export const erpBatch13SubmissionPackPolicy = [
   'Batch 13 只生成owner submission templates、checklist和handoff guide；模板保存在导出目录，不写入Batch12真实提交目录。',
   '当前readyForBatch12Rows=0、submittedApprovalRecords=0、approvalRecordsApplied=0；没有审批被应用或伪造。',
@@ -918,6 +956,7 @@ export const erpOwnerSubmissionDropboxBatch14Summary = [
   },
 ];
 
+// audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
 export const erpBatch14DropboxWatchlistPolicy = [
   'Batch 14 是owner submission dropbox/watchlist，只读监控真实CSV是否到达；它不创建Batch12 input目录。',
   '当前submissionCsvFiles=0、readyForBatch12Rows=0、batch11QueueRows=0；ERP事实仍不能展示或导出。',
@@ -965,6 +1004,7 @@ export const erpOwnerSubmissionAcceptanceBatch15Summary = [
     artifact: 'erp_owner_submission_acceptance_rulebook.csv',
     rows: 6,
     status: 'acceptance-rules-defined',
+    sourceIds: ['ds-027', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'],
     meaning: '定义CSV到达、23条approval item覆盖、必填字段、URI scheme、禁用值和manual release review规则。',
   },
   {
@@ -993,6 +1033,7 @@ export const erpOwnerSubmissionAcceptanceBatch15Summary = [
   },
 ];
 
+// audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
 export const erpBatch15AcceptanceGatePolicy = [
   'Batch 15 是owner submission acceptance gate，只定义真实CSV到达后的验收规则和逐项缺口；它不应用审批。',
   '当前acceptedOwnerRecords=0、submissionCsvFiles=0、readyForBatch12Rows=0；ERP事实仍不能展示或导出。',
@@ -1054,6 +1095,7 @@ export const erpOwnerSubmissionSyntheticBatch16Summary = [
     artifact: 'erp_owner_submission_synthetic_gate_plan.csv',
     rows: 4,
     status: 'dry_run_only',
+    sourceIds: ['ds-027', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'],
     meaning: '记录Batch12、Batch11、Batch9和manual release review的synthetic演练顺序。',
   },
   {
@@ -1064,6 +1106,7 @@ export const erpOwnerSubmissionSyntheticBatch16Summary = [
   },
 ];
 
+// audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
 export const erpBatch16SyntheticFixturePolicy = [
   'Batch 16 是synthetic owner submission fixture，只能作为L2 fixture演练，不能替代真实owner approval。',
   '虚拟CSV写入Batch12 synthetic专用目录，不写真实Batch12 input目录；所有记录can_display_as_fact=false。',
@@ -1115,6 +1158,7 @@ export const erpOwnerSubmissionSyntheticPipelineBatch17Summary = [
     artifact: 'erp_owner_submission_synthetic_pipeline_run_matrix.csv',
     rows: 5,
     status: 'fixture_pipeline_rehearsed',
+    sourceIds: ['ds-027', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'],
     meaning: '串联synthetic fixture、Batch12 intake、Batch11 preflight、Batch9 validator和manual release review五步。',
   },
   {
@@ -1131,6 +1175,7 @@ export const erpOwnerSubmissionSyntheticPipelineBatch17Summary = [
   },
 ];
 
+// audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
 export const erpBatch17SyntheticPipelinePolicy = [
   'Batch 17 是synthetic pipeline rehearsal，只证明Batch12/11/9脚本能在fixture模式下贯通。',
   'Batch17会强制子批次输出L2-fixture-or-dry-run；不能把ready rows写成真实审批、真实份额或真实导出依据。',
@@ -1195,6 +1240,7 @@ export const erpOwnerSubmissionRealOwnerChecklistBatch18Summary = [
     artifact: 'erp_owner_real_submission_swap_runbook.csv',
     rows: 7,
     status: 'swap_runbook_ready',
+    sourceIds: ['ds-027', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'],
     meaning: '定义从真实owner CSV放入Batch12目录到manual release review的七步执行顺序。',
   },
   {
@@ -1205,6 +1251,7 @@ export const erpOwnerSubmissionRealOwnerChecklistBatch18Summary = [
   },
 ];
 
+// audit-source: ds-027 ds-047 ds-048 ds-049 ds-050 ds-051
 export const erpBatch18RealOwnerChecklistPolicy = [
   'Batch 18 是真实owner CSV到达前的回填核验包；它不创建真实审批记录，也不写入真实Batch12 input目录。',
   'Batch18只把Batch10模板、Batch15验收规则和Batch17演练结果转成owner回填清单与runbook。',
@@ -1264,6 +1311,7 @@ export const erpManualReleaseReviewBatch19Summary = [
     artifact: 'erp_manual_release_review_decision_matrix.csv',
     rows: 9,
     status: 'approved-ready-for-site-data-swap',
+    sourceIds: ['ds-027', 'ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'],
     meaning: 'market_trend_monthly、3张月度ERP事实表、品类/SKU维表和3张渠道快照均可作为内部代理展示/导出。',
   },
   {
@@ -1306,6 +1354,7 @@ export const marketRegionalShareData = [
     color: '#5856d6',
     status: '公开报告已复核',
     key: 'Fortune BI 2025；Grand View Research 口径交叉检查为 53.61%',
+    sourceIds: ['ds-002', 'ds-044'],
   },
   {
     region: '非北美合计',
@@ -1314,21 +1363,22 @@ export const marketRegionalShareData = [
     color: '#C25B6E',
     status: '派生值',
     key: '由 Fortune BI 全球盘扣除北美；欧洲/亚太/拉美/MEA 需完整报告或授权数据拆分。',
+    sourceIds: ['ds-002'],
   },
 ];
 
 export const marketTopStats = [
-  { label: '全球吸奶器市场', value: '$3.81B', change: '2026E · CAGR 8.52%', up: true, icon: 'DollarSign', color: '#C25B6E' },
-  { label: '北美公开份额', value: '45.05%', change: 'Fortune BI 2025', up: true, icon: 'Globe', color: '#5856d6' },
-  { label: '穿戴式吸奶器', value: '$233M', change: '2026E · CAGR 15.08%', up: true, icon: 'Package', color: '#ff9500' },
-  { label: '公开月度峰值', value: '100', change: 'Wikimedia 2026-05', up: true, icon: 'TrendingUp', color: '#34c759' },
+  { label: '全球吸奶器市场', value: '$3.81B', change: '2026E · CAGR 8.52%', up: true, icon: 'DollarSign', color: '#C25B6E', sourceIds: ['ds-001'] },
+  { label: '北美公开份额', value: '45.05%', change: 'Fortune BI 2025', up: true, icon: 'Globe', color: '#5856d6', sourceIds: ['ds-002'] },
+  { label: '穿戴式吸奶器', value: '$233M', change: '2026E · CAGR 15.08%', up: true, icon: 'Package', color: '#ff9500', sourceIds: ['ds-045'] },
+  { label: '公开月度峰值', value: '100', change: 'Wikimedia 2026-05', up: true, icon: 'TrendingUp', color: '#34c759', sourceIds: ['ds-046'] },
 ];
 
 export const marketQuickInsights = [
-  { label: '全球吸奶器市场', value: '$3.81B', change: '+8.52% CAGR', trend: 'up', meaning: 'Precedence Research 2026E · 品类TAM口径' },
-  { label: '北美市场份额', value: '45.05%', change: '2025年', trend: 'up', meaning: 'Fortune BI 2025 · 最大公开区域市场' },
-  { label: '穿戴式市场', value: '$233M', change: '+15.08% CAGR', trend: 'up', meaning: 'Fortune BI 2026E · 细分TAM口径' },
-  { label: '公开月度趋势', value: '100', change: '2026-05峰值', trend: 'up', meaning: 'Wikimedia Pageviews · 非GMV/销量代理指标' },
+  { label: '全球吸奶器市场', value: '$3.81B', change: '+8.52% CAGR', trend: 'up', meaning: 'Precedence Research 2026E · 品类TAM口径', sourceIds: ['ds-001'] },
+  { label: '北美市场份额', value: '45.05%', change: '2025年', trend: 'up', meaning: 'Fortune BI 2025 · 最大公开区域市场', sourceIds: ['ds-002'] },
+  { label: '穿戴式市场', value: '$233M', change: '+15.08% CAGR', trend: 'up', meaning: 'Fortune BI 2026E · 细分TAM口径', sourceIds: ['ds-045'] },
+  { label: '公开月度趋势', value: '100', change: '2026-05峰值', trend: 'up', meaning: 'Wikimedia Pageviews · 非GMV/销量代理指标', sourceIds: ['ds-046'] },
 ];
 
 export const brandShareAccessItems = [

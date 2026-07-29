@@ -24,6 +24,18 @@ configs/private/
 app/private/
 app/configs/private/
 
+# BE-02–07 backend local state and real secrets
+backend/.venv/
+backend/.pytest_cache/
+backend/.ruff_cache/
+backend/.coverage
+backend/htmlcov/
+backend/**/__pycache__/
+backend/**/*.py[cod]
+backend/.env
+backend/.env.*
+backend/secrets/
+
 # IDE
 .vscode/*
 !.vscode/extensions.json
@@ -45,6 +57,30 @@ docs/architecture/**/renders/*.png
 .codegraph/
 .kiro/
 drafts/analysis/git-atomic-commit-plan-draft-*.md
+
+# Graphify 本机状态（图谱与 HTML 报告保留，解释器/缓存不入库）
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+graphify-out/.graphify_learning.json
+graphify-out/.graphify_analysis.json
+graphify-out/.graphify_ast.json
+graphify-out/.graphify_cached.json
+graphify-out/.graphify_chunk_*.json
+graphify-out/.graphify_detect.json
+graphify-out/.graphify_extract.json
+graphify-out/.graphify_incremental.json
+graphify-out/.graphify_old.json
+graphify-out/.graphify_semantic*.json
+graphify-out/.graphify_semantic_marker
+graphify-out/.graphify_transcripts.json
+graphify-out/.graphify_uncached.txt
+graphify-out/.needs_update
+graphify-out/.vocab.txt
+graphify-out/cost.json
+graphify-out/cache/
+graphify-out/memory/
+graphify-out/reflections/
+graphify-out/20??-??-??/
 
 # SSH 密钥（部署用，不进仓库）
 *.pem

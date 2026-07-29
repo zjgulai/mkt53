@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "taskId": "BE-01",
+  "batch": "Batch 10",
+  "generatedAt": "2026-07-24T09:51:41+08:00",
+  "status": "accepted-local-architecture-decision",
+  "evidenceLayer": "L0-accepted-design",
+  "authorization": {
+    "trigger": "同意下一批建议",
+    "scope": [
+      "local architecture decision",
+      "standalone architecture visualization",
+      "roadmap and review status synchronization",
+      "local document and graph validation"
+    ],
+    "excluded": [
+      "backend implementation or runtime start",
+      "production compose, nginx, network, database, or secret changes",
+      "provider or restricted connector calls",
+      "business data writes or fact promotion",
+      "git staging, commit, push, or pull request"
+    ]
+  },
+  "verifiedInputs": [
+    {
+      "path": "docs/architecture/architecture-data-and-ai-proxy-stable.md",
+      "facts": [
+        "current system is static React/Vite behind nginx",
+        "target runtime is Python 3.12 and FastAPI",
+        "target database is PostgreSQL",
+        "nginx /api reverse proxy is the intended API ingress"
+      ]
+    },
+    {
+      "path": "docs/product/product-roadmap-execution-20260723.md",
+      "facts": [
+        "Phase 1 is limited to identity, registry, snapshot, review, and audit",
+        "BE-01 requires runtime, database, backup, secrets, SLO, cost, reversibility, and environment separation",
+        "P0-04 first scheduled observation remains pending until 2026-08-01T09:00:00+08:00"
+      ]
+    },
+    {
+      "path": "docs/reviews/mkt53-project-review-20260722/evidence/p0-05-production-activation-20260724.json",
+      "facts": [
+        "portal session gate currently proves 204 for valid and 401 for invalid session",
+        "shared ai_video_nginx is the production ingress",
+        "P0-05 activation did not change compose or mounts"
+      ]
+    },
+    {
+      "path": "app/src/data/source-registry.ts",
+      "facts": [
+        "current source registry remains a frontend TypeScript contract",
+        "database migration is deferred to BE-03"
+      ]
+    }
+  ],
+  "decision": {
+    "topology": "existing static frontend plus independent mkt53_backend Docker Compose project on the current host",
+    "apiIngress": "same-origin /api/v1/ through shared nginx over dedicated mkt53_edge network",
+    "apiRuntime": "Python 3.12 + FastAPI + SQLAlchemy 2 + Pydantic 2",
+    "database": "PostgreSQL on internal-only mkt53_data network with no host or public port",
+    "schemaMigration": "explicit Alembic one-shot task; never automatic on API startup",
+    "identityPrecondition": "portal subject and role must be verifiable; nginx strips client identity headers and injects trusted values",
+    "frontendMigration": "static -> shadow -> api; static remains canonical until BE-06",
+    "backup": "daily logical backup, encrypted off-host copy, quarterly isolated restore drill",
+    "initialRpoHours": 24,
+    "initialRtoHours": 4,
+    "availabilitySloPercent": 99.5,
+    "readP95Milliseconds": 500,
+    "writeP95Milliseconds": 1000,
+    "incrementalMonthlyBudgetGuardCny": 100,
+    "budgetMeaning": "internal decision threshold, not a cloud vendor quote",
+    "exitOrder": [
+      "move PostgreSQL to a managed or independent database",
+      "move API to independent compute while preserving the same-origin API contract"
+    ]
+  },
+  "outputs": [
+    {
+      "path": "docs/architecture/adr-be-01-backend-deployment-shape-20260724.md",
+      "sha256": "e8ae7140d272a5d8a5d597f9869cf776aefd87926ba7b4712005e5a25362bc42"
+    },
+    {
+      "path": "docs/architecture/mkt53-backend-deployment-shape-be-01-20260724.html",
+      "sha256": "d668468188cdb2426072aa60d65dfd75d8d444c74ab0f10d03ac2801a87e0747"
+    }
+  ],
+  "acceptanceContract": {
+    "runtimeDefined": true,
+    "databaseDefined": true,
+    "backupAndRestoreDefined": true,
+    "secretIsolationDefined": true,
+    "sloDefined": true,
+    "costGuardDefined": true,
+    "rollbackDefined": true,
+    "developmentProductionIsolationDefined": true,
+    "exitConditionsDefined": true,
+    "reversibleChoiceDefined": true,
+    "implementationStarted": false,
+    "productionAuthorizationGranted": false,
+    "productionDeploymentPerformed": false
+  },
+  "nextGate": {
+    "taskId": "BE-02",
+    "scope": "local FastAPI and Compose skeleton, internal health, fail-closed configuration, portal identity and RBAC fixtures",
+    "productionWritesAllowed": false,
+    "portalIdentityContractRequiredBeforeWriteApi": true
+  },
+  "validation": {
+    "jsonParse": "passed",
+    "htmlParse": "passed",
+    "architectureHtmlScripts": 0,
+    "architectureInlineSvg": 1,
+    "relativeLinksMissing": 0,
+    "adrRequiredDecisionDomains": "10/10",
+    "dataAudit": {
+      "pages": 43,
+      "tables": 107,
+      "sourceRegistry": 53,
+      "issues": 0
+    },
+    "visualRender": {
+      "viewportWidth": 1440,
+      "horizontalOverflowPx": 0,
+      "pageErrors": 0,
+      "offHostBackupTargetVisible": true
+    },
+    "graphify": {
+      "nodes": 3132,
+      "edges": 4799,
+      "communities": 253,
+      "duplicateNodeIds": 0,
+      "missingEndpointEdges": 0,
+      "selfLoops": 0,
+      "zeroAstNodeSourceFiles": 34,
+      "zeroAstNodeBoundary": "JSON and configuration visibility limitation; these files were not claimed as represented nodes"
+    }
+  },
+  "boundaries": {
+    "filesystemWrites": "local documentation and graph outputs only",
+    "backendCodeCreated": false,
+    "containersStarted": false,
+    "databaseCreated": false,
+    "secretsCreatedOrRead": false,
+    "productionReads": false,
+    "productionWrites": false,
+    "providerCalls": false,
+    "restrictedConnectorCalls": false,
+    "businessDataWrites": false,
+    "factPromotion": false,
+    "gitStage": false,
+    "gitCommit": false,
+    "gitPush": false
+  }
+}

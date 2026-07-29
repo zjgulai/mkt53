@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "mkt53.p0-full-codex-review-closeout.v1",
+  "generatedAt": "2026-07-27T11:28:05Z",
+  "status": "draft-pr-ci-green-review-findings-closed-not-merged-not-deployed",
+  "repository": "zjgulai/mkt53",
+  "branch": "codex/mkt53-release-candidate-20260630",
+  "pullRequest": {
+    "number": 32,
+    "url": "https://github.com/zjgulai/mkt53/pull/32",
+    "state": "OPEN",
+    "draft": true,
+    "base": "main",
+    "head": "codex/mkt53-release-candidate-20260630"
+  },
+  "codexReview": {
+    "mode": "branch",
+    "base": "origin/main",
+    "reviewedHead": "868d4ed58c29eb686316ffe707da95de58c0f912",
+    "wrapper": "/Users/pray/.codex/skills/codex-review/scripts/codex-review",
+    "output": "/tmp/mkt53-codex-review-868d4ed.log",
+    "exitCode": 0,
+    "findings": {
+      "total": 6,
+      "p1": 2,
+      "p2": 4,
+      "allClosed": true
+    },
+    "evidenceDecision": "structured findings override the contradictory wrapper clean footer"
+  },
+  "implementation": {
+    "commit": "212f7dcd857678016975e6cc1d1d6a897dbb395c",
+    "subject": "fix(governance): close review evidence trust gaps",
+    "fixes": [
+      "require exact task_id and source_id review scope",
+      "reject missing or invalid public-evidence safety counters",
+      "validate customs source scope and proof fields",
+      "do not promote stale canonical evidence in skip mode",
+      "reject impossible manual-review dates and timezone-less datetimes",
+      "reject impossible regulation intake dates and timezone-less datetimes"
+    ],
+    "sharedDateHelper": "app/scripts/data/lib/strict-iso-date.mjs"
+  },
+  "localVerification": {
+    "focusedVitest": {
+      "files": 3,
+      "testsPassed": 98
+    },
+    "fullVitest": {
+      "files": 23,
+      "testsPassed": 186
+    },
+    "eslint": "passed",
+    "build": {
+      "status": "passed",
+      "modulesTransformed": 2383
+    },
+    "bundle": {
+      "assets": 77,
+      "passed": 77,
+      "temporaryExceptions": 0,
+      "failed": 0
+    },
+    "dataAudit": {
+      "pages": 43,
+      "tables": 107,
+      "sources": 53
+    },
+    "deepAudit": {
+      "claims": 888,
+      "highRisk": 0,
+      "unsupported": 0,
+      "sourceGaps": 26
+    },
+    "e2e": {
+      "browser": "chromium",
+      "testsPassed": 150,
+      "initialEnvironmentFailure": "Playwright Chromium v1223 was not installed locally",
+      "resolution": "npx playwright install chromium",
+      "repositoryWrites": false,
+      "productionWrites": false
+    }
+  },
+  "graphify": {
+    "commit": "690fb9f0f1bfa7a269752c33fe6824a6fd65c507",
+    "subject": "chore(graphify): record review trust hardening",
+    "reportBuiltFromCommit": "212f7dcd",
+    "nodes": 4574,
+    "edges": 7249,
+    "communities": 335,
+    "inferredEdges": 188,
+    "zeroAstSourceFiles": 58,
+    "modelTokens": 0
+  },
+  "githubActions": {
+    "workflow": "quality-gate",
+    "runId": 30261698324,
+    "url": "https://github.com/zjgulai/mkt53/actions/runs/30261698324",
+    "event": "pull_request",
+    "headSha": "690fb9f0f1bfa7a269752c33fe6824a6fd65c507",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-07-27T11:22:42Z",
+    "completedAt": "2026-07-27T11:27:15Z",
+    "jobs": {
+      "app": {
+        "jobId": 89962850732,
+        "conclusion": "success",
+        "duration": "4m29s",
+        "annotations": 0
+      },
+      "backend": {
+        "jobId": 89962850661,
+        "conclusion": "success",
+        "duration": "1m03s",
+        "annotations": 0
+      }
+    }
+  },
+  "authorization": {
+    "localImplementation": true,
+    "commit": true,
+    "push": true,
+    "pullRequest": true,
+    "merge": false,
+    "deployment": false,
+    "productionWrite": false,
+    "productionDatabaseRead": false,
+    "productionDatabaseWrite": false,
+    "nginxWrite": false,
+    "cronInstall": false,
+    "providerCalls": 0,
+    "connectorCalls": 0
+  },
+  "remainingGates": [
+    "human review and explicit merge decision for draft pull request 32",
+    "independent deployment authorization",
+    "first cron observation after 2026-08-01T09:00:00+08:00",
+    "DATA-REG six real input groups and independent legal authorization"
+  ]
+}

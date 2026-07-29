@@ -1,0 +1,105 @@
+{
+  "schema_version": "mkt53.local-implementation-evidence.v1",
+  "task_id": "BE-06",
+  "generated_at": "2026-07-24T04:14:00Z",
+  "status": "local-validated-not-deployed",
+  "evidence_layer": "L1-local-validation",
+  "scope": {
+    "production_reads": false,
+    "production_writes": false,
+    "production_deploy": false,
+    "production_api_activation": false,
+    "provider_calls": false,
+    "connector_calls": false,
+    "business_data_writes": false,
+    "static_registry_seeded": false,
+    "frontend_production_canonical_switch": false
+  },
+  "runtime_contract": {
+    "local_default": "static",
+    "local_opt_in": "VITE_MKT53_DATA_SOURCE_MODE=api",
+    "production_forced": "static",
+    "endpoint": "/api/v1/sources",
+    "credentials": "same-origin",
+    "browser_proxy_token_header": false,
+    "browser_portal_identity_headers": false,
+    "static_fallback_in_api_mode": false
+  },
+  "adapter_contract": {
+    "page_size": 200,
+    "maximum_total": 10000,
+    "active_only": true,
+    "duplicate_id_rejected": true,
+    "pagination_drift_rejected": true,
+    "invalid_response_rejected": true,
+    "states": ["loading", "ready", "empty", "offline", "error"]
+  },
+  "quality_gate": {
+    "vitest_files": 14,
+    "vitest_tests_passed": 132,
+    "be06_targeted_tests_passed": 15,
+    "eslint": "passed",
+    "typescript_vite_build": "passed",
+    "npm_audit_vulnerabilities": 0,
+    "bundle_budget": "passed",
+    "data_audit": {
+      "pages": 43,
+      "tables": 107,
+      "source_registry": 53,
+      "issues": 0
+    }
+  },
+  "browser_validation": {
+    "local_api_mode": {
+      "success": true,
+      "empty": true,
+      "http_error": true,
+      "offline": true,
+      "failure_states_show_static_53": false
+    },
+    "production_api_misconfiguration": {
+      "requested_mode": "api",
+      "actual_mode": "static",
+      "source_count": 53,
+      "api_requests": 0
+    },
+    "data_source_e2e": {
+      "browser": "installed Chrome",
+      "desktop": 2,
+      "mobile": 2,
+      "passed": 4,
+      "console_errors": 0,
+      "horizontal_overflow": false
+    },
+    "full_e2e": {
+      "reported_as_passed": false,
+      "bundled_chromium_missing": true,
+      "chrome_rerun_stopped_after": 26,
+      "failures_before_stop": 0,
+      "reason": "local full-page screenshot suite progressed too slowly while waiting for networkidle"
+    }
+  },
+  "artifact_sha256": {
+    "app/src/data/source-registry-adapter.ts": "7e8bd49733026047b596467fa445782f20dcfce9f86713814ee5cfc25068f269",
+    "app/src/hooks/useDataSourceRegistry.ts": "a0d38d98395d09b7e3a5ea1240e29b705a40e5cc89af78e968b90951eb9d4e57",
+    "app/src/components/DataSourceRegistryStatus.tsx": "1614ab233a1b642dff1e23bd754c58626cafc13c45a37358e2aa617491ab9844",
+    "app/src/pages/DataSourcePage.tsx": "d6cb234d64aba44fa6576e0cdf5cf82d0eba58b9b1b0b43b6cddd38c8c6cd858",
+    "app/tests/data/source-registry-adapter.test.tsx": "5d4ff83dcad8384735859c20df55fa30dbfbc17bc5128d2fbc916bcbf1f716d7",
+    "app/tests/components/DataSourceRegistryStatus.test.tsx": "993d0ff927ce4c39b989b9a46b1cf480e85b75cf4331bd744a52d8f684cdcce1",
+    "app/tests/pages/DataSourcePage.test.tsx": "d186cb88a22ed39f17b73cbf3c52670d2c5507ee5efe9c5ff27873e376c427a3",
+    "app/tests/e2e/core-pages.spec.ts": "26be9c2862ce0a4e27fcfec8f34cb6ab4645feb1636c99530c982d06f2a95a3f",
+    "app/index.html": "4c38ad4b2c3c8a6bb1d56b1b729c14438d91bd8131b99af3f1019bccc1b026df"
+  },
+  "graphify": {
+    "update": "passed-code-only-no-llm",
+    "cluster_only": "passed",
+    "nodes": 3645,
+    "edges": 6072,
+    "communities": 277,
+    "missing_or_dangling_endpoints": 0,
+    "self_loops": 0,
+    "exact_duplicate_or_collapsed_edges": 0,
+    "zero_ast_source_files": 40,
+    "semantic_document_extraction": false
+  }
+}

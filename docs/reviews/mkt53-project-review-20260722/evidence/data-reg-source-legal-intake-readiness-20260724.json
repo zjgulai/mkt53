@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "mkt53.data-reg-intake-readiness-evidence.v1",
+  "generatedAt": "2026-07-24T07:16:03Z",
+  "status": "readiness-template-ready-local-l2",
+  "evidenceGrade": "L2-fixture-or-dry-run",
+  "task": "DATA-REG source-and-legal intake readiness packet",
+  "contract": {
+    "version": "mkt53.regulation-source-legal-intake.v1",
+    "schemaPath": "app/contracts/regulation-source-legal-intake.schema.json",
+    "templatePath": "app/scripts/data/templates/regulation-source-legal-intake-template.json",
+    "validatorPath": "app/scripts/data/validate-regulation-source-legal-intake.mjs",
+    "humanPacketPath": "docs/templates/data-reg-source-legal-intake-readiness-packet.md",
+    "inputClass": "empty-readiness-template",
+    "status": "blocked-required-input",
+    "readyGroups": 0,
+    "totalGroups": 6,
+    "missingFields": 32,
+    "contractValid": true
+  },
+  "groups": [
+    "official-source-scope",
+    "sku-owner",
+    "legal-review-workflow",
+    "evidence-handoff",
+    "withdrawal-governance",
+    "submission-confirmations"
+  ],
+  "failClosedRules": {
+    "ownerInputPrivatePathRequired": true,
+    "sourceAllowlistRequired": true,
+    "syntheticReservedIdentityRequired": true,
+    "syntheticMarkersRejectedFromOwnerInput": true,
+    "secretShapedKeysRejected": true,
+    "fixedReviewStatesRequired": true,
+    "fixedEvidenceChecklistRequired": true,
+    "withdrawalPropagationRequired": true,
+    "disclosureBoundariesRequired": true,
+    "localPacketCannotSelfAuthorize": true
+  },
+  "decision": {
+    "readyForIndependentAuthorizationReview": false,
+    "authorizedToCollect": false,
+    "authorizedToEvaluateRealSkus": false,
+    "authorizedToPublish": false,
+    "authorizedToWriteProduction": false
+  },
+  "scope": {
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "connectorCalls": 0,
+    "businessDataWrites": 0,
+    "canonicalPublicWrites": 0,
+    "productionReads": 0,
+    "productionWrites": 0,
+    "productionConfigWrites": 0,
+    "deployment": false,
+    "regulatoryFactsCollected": 0,
+    "realSkusEvaluated": 0,
+    "legalConclusionsGenerated": 0,
+    "secretsAccepted": false,
+    "gitStageCommitPush": false
+  },
+  "qualityGate": {
+    "targeted": {
+      "filesPassed": 5,
+      "testsPassed": 17,
+      "testsFailed": 0
+    },
+    "full": {
+      "command": "cd app && npm run test:serial",
+      "filesPassed": 19,
+      "testsPassed": 149,
+      "testsFailed": 0
+    },
+    "lint": "passed",
+    "npmAuditVulnerabilities": 0,
+    "build": "passed",
+    "bundleBudget": {
+      "status": "passed",
+      "javascriptAssets": 60,
+      "existingTemporaryExceptions": ["DataManage route", "vendor-charts"]
+    },
+    "dataConsistency": {
+      "pages": 43,
+      "tables": 107,
+      "sources": 53,
+      "issues": 0
+    },
+    "deepDataAudit": {
+      "scannedFiles": 71,
+      "claims": 888,
+      "highRiskClaims": 0,
+      "mediumRiskClaims": 0,
+      "unsupportedClaims": 0,
+      "sourceGaps": 26
+    }
+  },
+  "implementationSha256": {
+    "app/contracts/regulation-source-legal-intake.schema.json": "e1759320d6288d5f3996f9202a37d16a868599b1ef7e8fead2d6413a3fd64181",
+    "app/scripts/data/templates/regulation-source-legal-intake-template.json": "e72adeedd3c8d4fd6e9940b4e8bb52cd0f3a3b2b9b0f2e45a5862d3de57426c7",
+    "app/scripts/data/validate-regulation-source-legal-intake.mjs": "29357c01358cbdce557927af4cd9fb88100cbf02ffa6374a3bbf985b48d99258",
+    "app/src/components/RegulationIntakeReadinessPanel.tsx": "8eaa2edf02b0152d134148ad773e7cff635fe615dc32d70715e22b65131fef0c",
+    "app/src/pages/industry/RegulationDetail.tsx": "0054d894363b5f9061f0595ba065e459748be3370e88daf10f47ff537a5e8a84",
+    "app/tests/scripts/regulation-source-legal-intake.test.ts": "dea723961d05d12d0a73a40ba15c702d346e90f588f319261fcf868ef42313d3",
+    "app/tests/components/RegulationIntakeReadinessPanel.test.tsx": "f72f1866bfec6e9a54472489d9edf8774ee28bdd66ccfddc531f98496ba20e69"
+  },
+  "graphify": {
+    "nodes": 4222,
+    "edges": 6793,
+    "communities": 331,
+    "duplicateNodeIds": 0,
+    "missingEndpoints": 0,
+    "selfLoops": 0,
+    "exactDuplicateEdges": 0,
+    "sameEndpointExtraEdges": 0,
+    "zeroAstSourceFiles": 45
+  },
+  "limitations": [
+    "The default packet is intentionally empty and blocked; no real owner, reviewer, source scope, SKU, or authorization was supplied.",
+    "A complete packet can only become ready for independent authorization review and cannot authorize collection or publication by itself.",
+    "No regulatory content, official snapshot, legal decision, or production data was collected or written."
+  ]
+}

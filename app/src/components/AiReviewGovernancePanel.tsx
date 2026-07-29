@@ -43,6 +43,7 @@ const focusSurfaces: Record<AiReviewFocus, string[]> = {
 };
 
 export default function AiReviewGovernancePanel({
+  // audit-source: ds-021 ds-023 ds-030 ds-031 ds-032 ds-033
   title = 'AI评论/VOC Batch 5 样本治理门禁',
   focus = 'all',
   compact = false,

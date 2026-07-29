@@ -1,5 +1,6 @@
-import { FileBarChart } from 'lucide-react';
+import { ExternalLink, FileBarChart } from 'lucide-react';
 import MarketDataGate from '@/components/MarketDataGate';
+import { usePublicEvidence } from '@/hooks/usePublicEvidence';
 import {
   erpBatch2DisplayPolicy,
   erpBatch7DisplayPolicy,
@@ -22,16 +23,26 @@ function priorityLabel(priority?: string) {
 }
 
 export default function CategoryAnalysis() {
+  const {
+    manifest: publicEvidenceManifest,
+    status: publicEvidenceStatus,
+    evidence: categoryEvidence,
+    eligibleEvidence: eligibleCategoryEvidence,
+    safety: { businessDataWrites: categoryEvidenceBusinessDataWrites, networkCalls: categoryEvidenceNetworkCalls },
+    statusLabel: categoryEvidenceStatusLabel,
+  } = usePublicEvidence('ds-038', 'CategoryAnalysis');
+
   return (
     <MarketDataGate
       title="品类分析"
       subtitle="品类规模 · 增速 · 毛利口径 · 竞争强度"
       icon={FileBarChart}
       accent="#C25B6E"
-      sourceIds={['ds-038', 'ds-047', 'ds-048', 'ds-049']}
+      sourceIds={['ds-038']}
       evidenceTitle="品类分析待补测算依据"
-      evidenceDescription="品类规模、增长、利润率、竞争强度和 Momcozy 排名仍需要补齐权重公式、BSR 快照、行业报告来源和字段口径；ERP三源已被Batch19放行为内部 SKU、渠道和售后趋势代理，可展示内部代理值，但不能替代外部规模、份额或排名。"
+      evidenceDescription="已补公开行业报告入口证据包，用于证明品类分析可追溯来源存在；品类规模、增长、利润率、竞争强度和 Momcozy 排名仍需要补齐权重公式、BSR 快照、SKU映射和字段口径，外部规模、份额或排名仍不得用内部代理替代。"
       gateStatus={{
+        sourceIds: ['ds-047', 'ds-048', 'ds-049'],
         label: 'ERP内部代理已放行，外部品类结论待复核',
         tone: 'approved',
         description: '已放行的ERP品类/SKU代理可展示并导出CSV；品类规模、毛利、竞争强度、品牌份额和排名仍需公开报告、平台快照或授权连接器补证后再展示。',
@@ -43,18 +54,86 @@ export default function CategoryAnalysis() {
         'ds-038 仍为 needs-review；ERP内部代理不能外推为外部品类规模或份额。',
       ]}
       collectionPlan={[
-        '补齐品类定义、TAM/SAM/SOM 口径和权重公式。',
-        '用公开行业报告、平台快照和内部 SKU 映射交叉验证。',
+        '保留公开行业报告入口证据包，先锁定可追溯报告来源，不把报告页改写为品牌份额或排名事实。',
+        '补齐品类定义、TAM/SAM/SOM 口径、权重公式和 SKU 映射表。',
+        '用公开行业报告、授权平台快照和内部 SKU 映射交叉验证。',
         'ds-047/ds-048/ds-049 已拆入 erp_sales_monthly_fact、erp_after_sales_monthly_fact、erp_retail_channel_monthly_fact，按Batch19内部代理口径供页面读取。',
         '把每个品类的规模、增长、利润和排名拆成独立 claim 复核。',
       ]}
       displayPolicy={[
         'ERP内部代理可展示为 proxy，不替代外部规模、份额或排名。',
+        '公开报告入口只展示为 source availability，不直接展示报告数值、品牌份额、排名、价格或销量。',
         '公开代理指标必须标注 proxy，不进入真实 KPI 或经营结论。',
         'CSV 导出必须使用同一份已复核品类测算表。',
       ]}
       internalFactSummary={
         <div>
+          <div className="mb-4 rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3">
+            <div className="flex items-start justify-between gap-3 flex-wrap">
+              <div>
+                <h2 className="text-sm font-semibold text-[#1d1d1f]">品类公开报告证据包 · ds-038</h2>
+                <p className="mt-1 text-[10px] leading-relaxed text-[#86868b]">
+                  mode={publicEvidenceManifest?.mode ?? publicEvidenceStatus} · generatedAt={publicEvidenceManifest?.generatedAt ?? '-'} · networkCalls={categoryEvidenceNetworkCalls} · businessDataWrites={categoryEvidenceBusinessDataWrites}
+                </p>
+              </div>
+              <span className={`inline-flex rounded-lg px-3 py-1.5 text-[10px] font-medium ${eligibleCategoryEvidence.length > 0 ? 'bg-[#5B8C5A]/10 text-[#5B8C5A]' : 'bg-[#C44545]/10 text-[#C44545]'}`}>
+                {categoryEvidenceStatusLabel}
+              </span>
+            </div>
+
+            <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-4">
+              <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
+                <p className="text-[10px] text-[#86868b]">公开报告入口</p>
+                <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">{eligibleCategoryEvidence.length}/{categoryEvidence.length || '-'}</p>
+              </div>
+              <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
+                <p className="text-[10px] text-[#86868b]">证据类型</p>
+                <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">market-report-public-page</p>
+              </div>
+              <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
+                <p className="text-[10px] text-[#86868b]">写入边界</p>
+                <p className="mt-1 text-xs font-semibold text-[#1d1d1f]">businessDataWrites={categoryEvidenceBusinessDataWrites}</p>
+              </div>
+              <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
+                <p className="text-[10px] text-[#86868b]">仍阻断指标</p>
+                <p className="mt-1 text-xs font-semibold text-[#ff9500]">BSR/rank/share/margin blocked</p>
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
+              {eligibleCategoryEvidence.map((record) => (
+                <div key={record.seedId} className="rounded-xl border border-[#EDE6DF] bg-white p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-[11px] font-semibold text-[#1d1d1f]">{record.title || record.label}</p>
+                      <p className="mt-1 text-[10px] text-[#86868b]">{record.evidenceClass} · {record.captureStatus}</p>
+                    </div>
+                    <a href={record.url} target="_blank" rel="noreferrer" className="inline-flex flex-shrink-0 items-center gap-1 rounded-lg border border-[#EDE6DF] px-2 py-1 text-[10px] font-medium text-[#5856d6] hover:text-[#C25B6E]">
+                      source <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+                  <p className="mt-2 text-[10px] leading-relaxed text-[#86868b]">{record.nonVerbatimSummary || record.collectionBoundary}</p>
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {(record.matchedEvidenceTerms ?? []).map((term) => (
+                      <span key={term} className="rounded-full bg-[#34c759]/10 px-2 py-0.5 text-[9px] font-medium text-[#2f7d32]">{term}</span>
+                    ))}
+                    {record.notFullPlatformDataset ? (
+                      <span className="rounded-full bg-[#ff9500]/10 px-2 py-0.5 text-[9px] font-medium text-[#a85f00]">notFullPlatformDataset</span>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+              {eligibleCategoryEvidence.length === 0 ? (
+                <div className="rounded-xl border border-[#EDE6DF] bg-white p-3">
+                  <p className="text-[10px] leading-relaxed text-[#86868b]">等待 public evidence manifest 返回通过来源、页面、校验与安全边界的 ds-038 captured 样本。</p>
+                </div>
+              ) : null}
+            </div>
+
+            <p className="mt-3 border-t border-[#EDE6DF] pt-3 text-[10px] leading-relaxed text-[#a85f00]">
+              边界：公开报告入口只证明报告来源可追溯；Amazon BSR、类目排名、品牌份额、销量、价格、毛利和 SKU 级生命周期结论仍必须等待授权连接器或人工测算表复核。
+            </p>
+          </div>
           <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
             <div>
               <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP品类映射治理包 · Batch19内部代理已放行</h2>

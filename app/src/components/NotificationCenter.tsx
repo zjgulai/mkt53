@@ -2,7 +2,7 @@
 // 通知中心 — 实时消息/提醒/待办
 // ═══════════════════════════════════════════════════════════════
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import {
   Bell, X, FileText,
   Shield, Cpu, Target, TrendingUp, ChevronRight, Trash2, CheckCheck

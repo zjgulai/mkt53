@@ -1,0 +1,10 @@
+services:
+  postgres:
+    restart: "no"
+
+  api:
+    restart: "no"
+
+networks:
+  edge:
+    internal: true

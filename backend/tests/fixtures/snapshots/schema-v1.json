@@ -1,0 +1,1 @@
+{"fields":[{"name":"source_id","type":"string"},{"name":"period","type":"date"},{"name":"value","type":"integer"}],"version":"1.0.0"}

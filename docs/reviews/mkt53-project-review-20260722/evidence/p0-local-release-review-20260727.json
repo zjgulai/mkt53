@@ -1,0 +1,280 @@
+{
+  "schemaVersion": "mkt53.p0-local-release-review.v1",
+  "taskId": "P0-LOCAL-RELEASE-REVIEW",
+  "batch": "Batch 24",
+  "generatedAt": "2026-07-27T04:47:24Z",
+  "status": "local-review-complete-git-handoff-blocked",
+  "candidate": {
+    "branch": "codex/mkt53-release-candidate-20260630",
+    "head": "0d44c3329b759a7886a69e4333bf56917b60e948",
+    "originHead": "0d44c3329b759a7886a69e4333bf56917b60e948",
+    "dirty": true,
+    "stagedEntries": 0
+  },
+  "inventory": {
+    "reviewBaseline": {
+      "trackedModified": 46,
+      "untrackedCandidateFiles": 161,
+      "candidateFilesTotal": 207,
+      "trackedInsertions": 807,
+      "trackedDeletions": 2561
+    },
+    "afterBatch24Artifacts": {
+      "trackedModified": 46,
+      "untrackedCandidateFiles": 164,
+      "stagedEntries": 0
+    },
+    "ownership": {
+      "taskStartWorktreeClean": true,
+      "unknownPreexistingUserChangesFound": false,
+      "scope": "Graphify, full-project review, and Batch 01-23 continuous execution chain"
+    },
+    "excluded": [
+      "*.pem",
+      "private/",
+      "configs/private/",
+      "backend/secrets/",
+      "node_modules/",
+      "dist/",
+      "tmp/",
+      ".venv/",
+      "coverage and caches",
+      "Graphify transient cache, memory, reflections, dated snapshots, and interpreter"
+    ]
+  },
+  "boundaries": {
+    "gitStage": false,
+    "gitCommit": false,
+    "gitPush": false,
+    "deployment": false,
+    "productionWrites": false,
+    "productionDatabaseRead": false,
+    "productionDatabaseWrite": false,
+    "nginxWrites": false,
+    "cronWrites": false,
+    "providerCalls": false,
+    "restrictedConnectorCalls": false
+  },
+  "reviews": {
+    "codexReview": {
+      "scope": "uncommitted worktree",
+      "result": "clean",
+      "acceptedActionableFindings": 0,
+      "terminalLine": "codex-review clean: no accepted/actionable findings reported"
+    },
+    "manual": {
+      "codeCorrectnessBlockers": 0,
+      "securityBlockers": 0,
+      "releaseArchitectureReviewed": true,
+      "mixedHunkFilesRequirePatchStaging": true
+    }
+  },
+  "security": {
+    "highConfidenceSecretScan": "passed",
+    "privateKeyMatches": 0,
+    "awsKeyMatches": 0,
+    "githubTokenMatches": 0,
+    "openaiKeyMatches": 0,
+    "slackTokenMatches": 0,
+    "knownFalsePositive": "sk-coverage-gate-draft-20260701 filename in Graphify output",
+    "fixtureSecrets": {
+      "path": "backend/tests/fixtures/secrets",
+      "productionDefaultsRejected": true,
+      "classification": "fixture-only"
+    }
+  },
+  "frontend": {
+    "releaseEvidence": {
+      "path": "app/tmp/release-evidence/latest.json",
+      "generatedAt": "2026-07-27T04:46:13.370Z",
+      "sha256": "e7adff411201eaf2128dc30a0b5bba746703ff33012e92cef571485a15d1861f",
+      "evidenceLayer": "L1-local",
+      "summary": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "localCandidateReady": true
+      },
+      "facts": {
+        "unitTestFilesPassed": 23,
+        "unitTestsPassed": 179,
+        "vulnerabilities": 0,
+        "modulesTransformed": 2383,
+        "bundleAssets": 77,
+        "bundleWithinTarget": 77,
+        "bundleTemporaryExceptions": 0,
+        "bundleFailures": 0,
+        "dataPages": 43,
+        "dataTables": 107,
+        "dataSources": 53,
+        "dataIssues": 0,
+        "deepAuditClaims": 888,
+        "deepAuditUnsupportedClaims": 0,
+        "e2eTestsPassed": 150
+      },
+      "durationsMs": {
+        "unitTests": 107980,
+        "lint": 94497,
+        "dependencyAudit": 8156,
+        "build": 171664,
+        "bundleBudget": 1268,
+        "dataConsistencyAudit": 5100,
+        "dataDeepAudit": 8880,
+        "localE2e": 1403478
+      },
+      "production": {
+        "status": "not-verified",
+        "writes": false
+      }
+    },
+    "independentE2e": {
+      "command": "MKT53_E2E_BROWSER_CHANNEL=chrome MKT53_E2E_PORT=3177 MKT53_E2E_REUSE_EXISTING=0 MKT53_E2E_WORKERS=1 MKT53_E2E_TIMEOUT_MS=90000 npm run test:e2e -- --reporter=line",
+      "testsPassed": 150,
+      "testsFailed": 0,
+      "exitCode": 0,
+      "duration": "6.3m"
+    },
+    "diagnosticAttempt": {
+      "acceptedAsSuccessEvidence": false,
+      "summary": "7 passed, 1 failed after a Playwright worker was terminated during exit-hang diagnosis",
+      "resolution": "A new independent E2E and a fully uninterrupted aggregate run both passed."
+    }
+  },
+  "backend": {
+    "qualityCommand": "./scripts/quality-be07.sh",
+    "testsPassed": 62,
+    "coveragePercent": 92.73,
+    "warnings": 1,
+    "recovery": {
+      "reportPath": "tmp/backend-recovery/be07/be07-20260727t035616z-47626/report.json",
+      "status": "passed",
+      "evidenceGrade": "L2-fixture-or-dry-run",
+      "baselineFingerprintMatched": true,
+      "withdrawalExactReplay": true,
+      "appendOnlyRejectedMutations": {
+        "auditUpdate": true,
+        "auditDelete": true,
+        "reviewUpdate": true,
+        "reviewDelete": true,
+        "snapshotUpdate": true,
+        "snapshotDelete": true
+      },
+      "rpo": {
+        "measuredSeconds": 4.838633,
+        "targetSeconds": 86400,
+        "passed": true
+      },
+      "rto": {
+        "measuredSeconds": 12.869051,
+        "targetSeconds": 14400,
+        "passed": true
+      },
+      "cleanup": {
+        "containersRemaining": 0,
+        "networksRemaining": 0,
+        "volumesRemaining": 0,
+        "passed": true
+      },
+      "productionDatabaseRead": false,
+      "productionDatabaseWrite": false,
+      "providerOrConnectorCalls": 0
+    }
+  },
+  "graphify": {
+    "nodes": 4488,
+    "edges": 7137,
+    "communities": 341,
+    "zeroAstSourceFiles": 54,
+    "integrityDefects": 0,
+    "reportBuiltCommit": "0d44c3329b759a7886a69e4333bf56917b60e948",
+    "mustRegenerateAfterCodeCommits": true
+  },
+  "documentationValidation": {
+    "htmlPath": "docs/reviews/mkt53-project-review-20260722/index.html",
+    "bytes": 108146,
+    "chapters": 14,
+    "uniqueIds": 21,
+    "duplicateIds": 0,
+    "hrefs": 72,
+    "missingLocalFilesOrAnchors": 0,
+    "desktop": {
+      "viewport": "1440x900",
+      "horizontalOverflow": false,
+      "consoleErrors": 0,
+      "consoleWarnings": 0,
+      "batch24Visible": true
+    },
+    "mobile": {
+      "viewport": "390x844",
+      "horizontalOverflow": false,
+      "consoleErrors": 0,
+      "consoleWarnings": 0,
+      "batch24Visible": true
+    },
+    "evidenceLink": {
+      "status": 200,
+      "contentType": "application/json",
+      "schemaVisible": true,
+      "eightPassedVisible": true
+    },
+    "temporaryServer": {
+      "bind": "127.0.0.1",
+      "stopped": true,
+      "externalPublish": false
+    }
+  },
+  "atomicCommitPlan": [
+    "perf(data): split DataManage and enforce bundle budgets",
+    "feat(data): make source governance contracts explicit",
+    "feat(backend): add governed registry review and recovery APIs",
+    "feat(regulation): add fail-closed intake and review handoff",
+    "feat(ops): add release recovery and portal gate evidence",
+    "fix(deps): close frontend dependency advisories",
+    "chore(graphify): add project knowledge graph tooling",
+    "docs(review): publish Batch 01-24 closeout and handoff"
+  ],
+  "gitHandoff": {
+    "qualityGatesPassed": true,
+    "ready": false,
+    "blockers": [
+      {
+        "id": "BACKEND-CI",
+        "closed": false,
+        "requirement": "Add a BE-03-07 backend job to .github/workflows/quality-gate.yml."
+      },
+      {
+        "id": "GRAPHIFY-HEAD",
+        "closed": false,
+        "requirement": "After code commits 1-6, regenerate canonical Graphify artifacts so report HEAD matches the new commit."
+      },
+      {
+        "id": "GIT-AUTH",
+        "closed": false,
+        "requirement": "Obtain separate authorization for patch-stage and local commits."
+      }
+    ],
+    "pushAuthorization": false,
+    "deployAuthorization": false
+  },
+  "nonBlockingDebt": [
+    {
+      "id": "SOURCE-EVIDENCE-DS015-DS018",
+      "detail": "manual-required L1 entries retain reviewed display semantics but need a durable sourceUrl or evidenceArtifactPath"
+    },
+    {
+      "id": "BACKEND-TESTCLIENT-WARNING",
+      "detail": "one Starlette/httpx TestClient migration warning"
+    },
+    {
+      "id": "QA-RUNTIME-DETERMINISM",
+      "detail": "aggregate E2E took 1403478ms while the independent line-reporter run completed in 6.3m"
+    }
+  ],
+  "artifacts": {
+    "review": "docs/reviews/mkt53-project-review-20260722/p0-local-release-review-20260727.md",
+    "roadmap": "docs/product/product-roadmap-execution-20260723.md",
+    "html": "docs/reviews/mkt53-project-review-20260722/index.html",
+    "localDraft": "drafts/analysis/git-atomic-commit-plan-draft-20260727.md"
+  }
+}

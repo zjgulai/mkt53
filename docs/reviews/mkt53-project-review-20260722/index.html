@@ -1,0 +1,1242 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:,">
+  <title>mkt53 全项目复盘与迭代手册 · 2026-07-22</title>
+  <style>
+    :root {
+      --ink: #2d1f1f;
+      --muted: #756767;
+      --paper: #f7f0eb;
+      --paper-2: #efe4dc;
+      --card: rgba(255,255,255,.91);
+      --rose: #8b354a;
+      --rose-2: #c25b6e;
+      --rose-dark: #642638;
+      --green: #3f7650;
+      --amber: #a96317;
+      --red: #b53636;
+      --blue: #315c88;
+      --violet: #674c8d;
+      --line: #dfcec3;
+      --shadow: 0 22px 70px rgba(80,44,48,.11);
+      --radius: 22px;
+      --serif: "Iowan Old Style", "Songti SC", "STSong", Georgia, serif;
+      --sans: "Avenir Next", "PingFang SC", "Hiragino Sans GB", sans-serif;
+      --mono: "SFMono-Regular", "Cascadia Mono", Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 82% 4%, rgba(194,91,110,.13), transparent 28rem),
+        linear-gradient(90deg, rgba(139,53,74,.025) 1px, transparent 1px),
+        linear-gradient(rgba(139,53,74,.025) 1px, transparent 1px),
+        var(--paper);
+      background-size: auto, 32px 32px, 32px 32px, auto;
+      font-family: var(--sans);
+      line-height: 1.72;
+    }
+    a { color: var(--rose); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--rose-dark); }
+    code {
+      font-family: var(--mono);
+      font-size: .9em;
+      background: #f0e4de;
+      border: 1px solid #e3d0c6;
+      border-radius: 6px;
+      padding: .12rem .38rem;
+      overflow-wrap: anywhere;
+    }
+    button, input { font: inherit; }
+    .reading-progress {
+      position: fixed; inset: 0 auto auto 0; z-index: 90;
+      height: 4px; width: 0; background: linear-gradient(90deg, var(--rose), #e28b83);
+      box-shadow: 0 0 16px rgba(139,53,74,.45);
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      max-width: 1680px;
+      margin: 0 auto;
+    }
+    .rail {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px 22px;
+      border-right: 1px solid rgba(139,53,74,.14);
+      background: rgba(247,240,235,.88);
+      backdrop-filter: blur(18px);
+      overflow: auto;
+      z-index: 20;
+    }
+    .rail-brand {
+      display: flex; gap: 12px; align-items: center; margin-bottom: 24px;
+    }
+    .brand-mark {
+      width: 42px; height: 42px; display: grid; place-items: center;
+      color: white; background: var(--rose); border-radius: 13px 13px 13px 4px;
+      font-family: var(--serif); font-size: 23px; box-shadow: 0 10px 26px rgba(139,53,74,.25);
+    }
+    .rail-brand strong { display: block; font-family: var(--serif); font-size: 18px; }
+    .rail-brand small { color: var(--muted); letter-spacing: .08em; }
+    .rail nav { display: grid; gap: 3px; }
+    .rail nav a {
+      display: grid; grid-template-columns: 27px 1fr; gap: 7px; align-items: baseline;
+      padding: 7px 9px; color: var(--muted); text-decoration: none;
+      border-radius: 9px; font-size: 13px;
+    }
+    .rail nav a span { color: #a98b8b; font-family: var(--mono); font-size: 10px; }
+    .rail nav a:hover, .rail nav a.active { color: var(--rose); background: rgba(139,53,74,.075); }
+    .rail-foot {
+      margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line);
+      font-size: 11px; color: var(--muted);
+    }
+    main { min-width: 0; padding: 0 56px 100px; }
+    .hero {
+      position: relative;
+      min-height: 680px;
+      margin: 0 -56px 70px;
+      padding: 92px 72px 64px;
+      overflow: hidden;
+      color: #fff8f2;
+      background:
+        radial-gradient(circle at 86% 20%, rgba(255,210,197,.25), transparent 24rem),
+        linear-gradient(135deg, #43202b 0%, #743044 48%, #9f495d 100%);
+    }
+    .hero::after {
+      content: ""; position: absolute; inset: auto -8% -36% 42%; height: 68%;
+      border: 1px solid rgba(255,255,255,.24); border-radius: 50%;
+      transform: rotate(-9deg);
+    }
+    .eyebrow {
+      display: inline-flex; gap: 10px; align-items: center;
+      font-size: 12px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase;
+      color: #f5c7c4;
+    }
+    .eyebrow::before { content: ""; width: 34px; height: 1px; background: currentColor; }
+    h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.15; }
+    h1 { max-width: 940px; margin: 28px 0 20px; font-size: clamp(48px, 7vw, 94px); letter-spacing: -.055em; }
+    .hero-lede { max-width: 760px; font-size: 18px; color: rgba(255,248,242,.82); }
+    .hero-meta {
+      display: flex; flex-wrap: wrap; gap: 14px 28px; margin-top: 50px;
+      font-family: var(--mono); font-size: 12px; color: rgba(255,248,242,.72);
+    }
+    .hero-stamp {
+      position: absolute; right: 7%; bottom: 62px; width: 150px; height: 150px;
+      display: grid; place-items: center; border: 1px solid rgba(255,255,255,.4);
+      border-radius: 50%; transform: rotate(-9deg); text-align: center;
+      font-family: var(--serif); font-size: 18px; line-height: 1.25;
+    }
+    .chapter { scroll-margin-top: 24px; margin: 0 auto 84px; max-width: 1220px; }
+    .chapter-head { display: grid; grid-template-columns: 84px minmax(0,1fr); gap: 22px; align-items: start; margin-bottom: 32px; }
+    .chapter-no {
+      font-family: var(--mono); font-size: 12px; letter-spacing: .16em; color: var(--rose);
+      padding-top: 12px; border-top: 2px solid var(--rose);
+    }
+    h2 { margin: 0; font-size: clamp(34px, 4.5vw, 62px); letter-spacing: -.035em; }
+    h3 { margin: 0 0 12px; font-size: 27px; }
+    h4 { margin: 0 0 8px; font-size: 20px; }
+    .section-intro { max-width: 880px; color: var(--muted); font-size: 16px; }
+    .grid { display: grid; gap: 18px; }
+    .grid > *, .module-summary > * { min-width: 0; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card {
+      background: var(--card); border: 1px solid rgba(139,53,74,.13);
+      border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow);
+    }
+    .card.flat { box-shadow: none; }
+    .metric {
+      min-height: 152px; position: relative; overflow: hidden;
+    }
+    .metric::after {
+      content: ""; position: absolute; right: -24px; bottom: -38px; width: 100px; height: 100px;
+      border-radius: 50%; border: 20px solid rgba(139,53,74,.05);
+    }
+    .metric b { display: block; font-family: var(--serif); font-size: 40px; color: var(--rose); line-height: 1; }
+    .metric span { display: block; margin-top: 12px; font-size: 13px; color: var(--muted); }
+    .metric small { font-size: 11px; color: #9e8888; }
+    .truth-banner {
+      display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start;
+      margin-bottom: 24px; padding: 20px 22px;
+      color: #fff; background: var(--ink); border-radius: 18px;
+    }
+    .truth-banner b { font-family: var(--serif); font-size: 18px; }
+    .truth-dot { width: 12px; height: 12px; margin-top: 7px; border-radius: 50%; background: #f6bd60; box-shadow: 0 0 0 7px rgba(246,189,96,.14); }
+    .tag, .status {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap;
+    }
+    .verified { color: var(--green); background: #e7f2e9; }
+    .review { color: var(--amber); background: #fff0d8; }
+    .example { color: var(--red); background: #fae3e1; }
+    .mixed { color: var(--violet); background: #eee7f6; }
+    .engineering { color: var(--blue); background: #e4edf6; }
+    .confidence { color: var(--rose); background: #f3e3e5; }
+    .legend-list { display: grid; gap: 12px; }
+    .legend-row { display: grid; grid-template-columns: 138px 1fr; gap: 15px; align-items: start; padding: 12px 0; border-bottom: 1px solid #eadbd2; }
+    .legend-row:last-child { border: 0; }
+    .flow {
+      display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 12px; align-items: stretch;
+      margin: 24px 0;
+    }
+    .flow-step { position: relative; padding: 18px; border-radius: 16px; background: white; border: 1px solid var(--line); }
+    .flow-step:not(:last-child)::after {
+      content: "→"; position: absolute; right: -19px; top: 50%; z-index: 2;
+      color: var(--rose); font-weight: 800; transform: translateY(-50%);
+    }
+    .flow-step b { display: block; color: var(--rose); font-family: var(--serif); }
+    .flow-step small { color: var(--muted); }
+    .finding { border-left: 4px solid var(--rose); }
+    .finding > .status { max-width: 100%; white-space: normal; }
+    .finding.good { border-left-color: var(--green); }
+    .finding.warn { border-left-color: var(--amber); }
+    .finding.risk { border-left-color: var(--red); }
+    .finding p { color: var(--muted); margin-bottom: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      position: sticky; top: 0; z-index: 1; padding: 11px 12px; text-align: left;
+      color: #fff; background: var(--ink); font-size: 11px; letter-spacing: .04em;
+    }
+    th:first-child { border-radius: 10px 0 0 0; }
+    th:last-child { border-radius: 0 10px 0 0; }
+    td { padding: 13px 12px; vertical-align: top; border-bottom: 1px solid #e8d9d0; }
+    tbody tr:hover { background: rgba(139,53,74,.035); }
+    .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 13px; background: rgba(255,255,255,.74); }
+    .route { font-family: var(--mono); font-size: 11px; color: var(--rose-dark); white-space: nowrap; }
+    .module-card { margin: 16px 0; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.78); overflow: hidden; }
+    .module-card summary {
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      padding: 20px 22px; cursor: pointer; list-style: none; font-family: var(--serif); font-size: 23px;
+    }
+    .module-card summary::-webkit-details-marker { display: none; }
+    .module-card summary::after { content: "+"; font-family: var(--sans); color: var(--rose); }
+    .module-card[open] summary::after { content: "−"; }
+    .module-card .module-body { padding: 0 18px 20px; }
+    .module-summary { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; margin-bottom: 14px; }
+    .module-summary > div { padding: 14px 16px; border-radius: 13px; background: #f6eee9; }
+    .module-summary p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+    .filterbar {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 20px;
+      padding: 12px; border-radius: 15px; background: rgba(255,255,255,.72); border: 1px solid var(--line);
+    }
+    .filterbar input {
+      min-width: 260px; flex: 1; border: 1px solid var(--line); border-radius: 10px;
+      padding: 10px 12px; color: var(--ink); background: #fff;
+    }
+    .filterbar button {
+      border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px;
+      color: var(--muted); background: #fff; cursor: pointer;
+    }
+    .filterbar button.active { color: #fff; border-color: var(--rose); background: var(--rose); }
+    .principle {
+      counter-increment: principle;
+      position: relative; padding-top: 54px;
+    }
+    .principle::before {
+      content: "0" counter(principle); position: absolute; top: 18px; left: 24px;
+      font-family: var(--mono); font-size: 11px; color: var(--rose);
+    }
+    .principles { counter-reset: principle; }
+    .timeline { position: relative; padding-left: 27px; }
+    .timeline::before { content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 1px; background: var(--line); }
+    .timeline-item { position: relative; margin-bottom: 24px; padding: 0 0 0 17px; }
+    .timeline-item::before { content: ""; position: absolute; left: -25px; top: 7px; width: 9px; height: 9px; border-radius: 50%; background: var(--rose); box-shadow: 0 0 0 5px var(--paper); }
+    .timeline-item p { margin: 5px 0 0; color: var(--muted); }
+    .checklist { padding-left: 0; list-style: none; }
+    .checklist li { position: relative; padding: 7px 0 7px 27px; border-bottom: 1px dashed #e4d3ca; }
+    .checklist li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 800; }
+    .checklist li.gap::before { content: "→"; color: var(--amber); }
+    .callout { padding: 18px 20px; border: 1px solid #d8c1b5; border-radius: 16px; background: #fff9f3; }
+    .callout strong { color: var(--rose-dark); }
+    .command { display: block; overflow: auto; padding: 16px; color: #fcefe8; background: #2f2224; border-radius: 12px; font: 12px/1.7 var(--mono); white-space: pre; }
+    .artifact-list a {
+      display: flex; justify-content: space-between; gap: 18px; padding: 12px 0;
+      border-bottom: 1px solid #eadbd2; text-decoration: none;
+    }
+    .artifact-list a > * { min-width: 0; overflow-wrap: anywhere; }
+    .artifact-list span { color: var(--muted); font-size: 12px; }
+    footer {
+      max-width: 1220px; margin: 80px auto 0; padding: 42px 0;
+      border-top: 1px solid var(--line); color: var(--muted); font-size: 12px;
+    }
+    .only-print { display: none; }
+    @media (max-width: 1120px) {
+      .layout { grid-template-columns: 1fr; }
+      .rail { position: relative; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+      .rail nav { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      main { padding: 0 28px 80px; }
+      .hero { margin-inline: -28px; padding-inline: 38px; }
+      .hero-stamp { display: none; }
+      .grid-4 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 760px) {
+      .rail { padding: 18px; }
+      .rail nav { grid-template-columns: repeat(2, minmax(0,1fr)); max-height: 205px; overflow: auto; }
+      main { padding-inline: 17px; }
+      .hero { margin: 0 -17px 52px; padding: 58px 24px 46px; min-height: auto; }
+      h1 { font-size: 50px; }
+      .chapter-head { grid-template-columns: 1fr; gap: 8px; }
+      .chapter-no { width: 70px; }
+      .grid-2, .grid-3, .grid-4, .module-summary { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      .flow-step:not(:last-child)::after { content: "↓"; right: 50%; top: auto; bottom: -23px; transform: translateX(50%); }
+      .metric { min-height: 125px; }
+      .filterbar input { min-width: 100%; }
+    }
+    @media print {
+      body { background: white; font-size: 10pt; }
+      .reading-progress, .rail, .filterbar { display: none !important; }
+      .layout { display: block; }
+      main { padding: 0; }
+      .hero { margin: 0 0 30px; min-height: 0; padding: 38px; print-color-adjust: exact; }
+      .hero h1 { font-size: 44pt; }
+      .chapter { margin-bottom: 40px; break-inside: auto; }
+      .card, .module-card { box-shadow: none; break-inside: avoid; }
+      .module-card:not([open]) .module-body { display: block; }
+      table { font-size: 8pt; }
+      th { position: static; print-color-adjust: exact; }
+      a { color: inherit; text-decoration: none; }
+      .only-print { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="readingProgress"></div>
+  <div class="layout">
+    <aside class="rail" aria-label="文档目录">
+      <div class="rail-brand">
+        <div class="brand-mark">M</div>
+        <div><strong>mkt53 dossier</strong><small>PROJECT REVIEW · 2026</small></div>
+      </div>
+      <nav id="toc">
+        <a href="#summary"><span>01</span>执行摘要</a>
+        <a href="#evidence"><span>02</span>证据与边界</a>
+        <a href="#graphify"><span>03</span>Graphify 分析</a>
+        <a href="#positioning"><span>04</span>产品定位</a>
+        <a href="#logic"><span>05</span>完整设计逻辑</a>
+        <a href="#architecture"><span>06</span>系统架构</a>
+        <a href="#retrospective"><span>07</span>项目复盘</a>
+        <a href="#modules"><span>08</span>逐模块迭代</a>
+        <a href="#manual"><span>09</span>使用手册</a>
+        <a href="#design-system"><span>10</span>体验与设计系统</a>
+        <a href="#roadmap"><span>11</span>90 天路线图</a>
+        <a href="#acceptance"><span>12</span>指标与验收</a>
+        <a href="#engineering"><span>13</span>工程与发布</a>
+        <a href="#artifacts"><span>14</span>目录与产物</a>
+      </nav>
+      <div class="rail-foot">
+        <strong>结论把握：高</strong><br>
+        基于源码、AST 图谱、manifest、自动化审计与本地运行证据。生产状态另列，不用本地结果替代。
+      </div>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <div class="eyebrow">Momcozy Market Intelligence</div>
+        <h1>从“数据看板”走向“可复核的决策工作台”</h1>
+        <p class="hero-lede">mkt53 全项目复盘、产品设计逻辑、操作手册与逐模块迭代方案。本文以证据等级为骨架，把当前真实能力、演示边界、工程债务和 90 天演进路径放在同一份可执行文档中。</p>
+        <div class="hero-meta">
+          <span>REVIEW DATE · 2026-07-22</span>
+          <span>UPDATED · 2026-07-28 · BATCH 30</span>
+          <span>BRANCH · codex/mkt53-release-candidate-20260630</span>
+          <span>BASELINE · 0d44c332</span>
+          <span>FORMAT · SELF-CONTAINED HTML</span>
+        </div>
+        <div class="hero-stamp">EVIDENCE<br>BEFORE<br>DECISION</div>
+      </header>
+
+      <section class="chapter" id="summary">
+        <div class="chapter-head">
+          <div class="chapter-no">01 / SUMMARY</div>
+          <div><h2>执行摘要</h2><p class="section-intro">项目已经越过“纯静态演示稿”阶段，具备品牌化、全路由、来源登记、证据门禁、半月 manifest、自动审计和发布验证；但它仍是静态证据工作台，不是实时经营数仓，也不是已经接通外部供应商的生产 AI 平台。</p></div>
+        </div>
+        <div class="truth-banner">
+          <div class="truth-dot"></div>
+          <div><b>一句话判断</b><br>当前最佳定位是“证据治理驱动的市场洞察前台”。下一阶段不应继续堆静态页面，而应围绕快照、权限、复核状态机、连接器和决策闭环补齐产品后端。</div>
+        </div>
+        <div class="grid grid-4">
+          <div class="card metric"><b>45</b><span>业务访问路径</span><small>46 条 Route 含 1 条 wildcard</small></div>
+          <div class="card metric"><b>53</b><span>source registry 来源</span><small>29 verified · 14 needs-review · 10 example</small></div>
+          <div class="card metric"><b>884</b><span>深度审计声明</span><small>0 high / medium risk · 0 unsupported</small></div>
+          <div class="card metric"><b>26</b><span>仍需补证的来源缺口</span><small>不能被“审计通过”误写成数据已齐全</small></div>
+        </div>
+        <div class="grid grid-3" style="margin-top:18px">
+          <article class="card finding good"><span class="status verified">已形成能力</span><h3>可信边界可见</h3><p><code>PageEvidenceNotice</code>、<code>EvidenceGatePage</code>、source registry 与全路由 E2E 已把示例、待复核、公开来源和内部 proxy 的边界写进 UI 与测试。</p></article>
+          <article class="card finding warn"><span class="status review">主要瓶颈</span><h3>真实数据未闭环</h3><p>本地 manifest 仍有 28 条 connector-required、9 条 manual-required；Amazon、CRM、VOC、YouTube、贸易和 ERP 自动刷新都不能被公开网页样本替代。</p></article>
+          <article class="card finding warn"><span class="status review">Batch 30 follow-up · e971 CI green / safety status local clean</span><h3>Minor 数据完整性门禁进入安全文案精确 head 复核</h3><p>六页已统一使用共享 evidence Hook，页面作用域任一安全违规会清空 eligible 展示；阻断文案现完整列出 login、bypass、writes 与 raw-text 原因。<code>e971d75</code> 的 GitHub app/backend CI 已通过；CodeRabbit 后续给出的 1 项文案完整性 finding 已本地修复，205 tests 与最新 Codex review 通过。安全文案新 head CI 与外部 recheck 尚未完成，未 merge 或部署。</p></article>
+        </div>
+        <div class="callout" style="margin-top:18px"><strong>生产恢复：</strong>2026-07-24 在完整 root-only 备份和完整配置 <code>nginx -t</code> 通过后，仅激活 mkt server block 并 reload nginx。未授权 root、deep route 与 manifest 均 302 到 apex login，真实会话首页与数据管理页可访问，生产 E2E 8/8；旧 2/8 结果保留为修复前基线。</div>
+        <div class="callout" style="margin-top:12px"><strong>BE-01 / BE-02：</strong>Phase 1 采用同机独立 Compose、同源 <code>/api/v1/</code>、PostgreSQL 双网络隔离的可逆形态；BE-02 已建立并隔离验证本地 identity/RBAC 骨架。该结果是 L1 local validation，静态前端仍 canonical，后端未部署生产。</div>
+      </section>
+
+      <section class="chapter" id="evidence">
+        <div class="chapter-head">
+          <div class="chapter-no">02 / EVIDENCE</div>
+          <div><h2>证据层级与阅读规则</h2><p class="section-intro">本文把“代码存在”“本地可运行”“公开页面已抓取”“内部只读快照”“真实生产写入”视为不同层级。任何通过、完成或上线表述都只在对应证据层内有效。</p></div>
+        </div>
+        <div class="grid grid-2">
+          <div class="card flat">
+            <h3>数据状态</h3>
+            <div class="legend-list">
+              <div class="legend-row"><span class="status verified">verified</span><div>可在明确的 <code>claimScope</code> 内展示；不代表该来源支持页面上的所有推论。</div></div>
+              <div class="legend-row"><span class="status review">needs-review</span><div>来源或入口存在，但缺授权快照、采样窗口、字段字典、映射或人工复核。</div></div>
+              <div class="legend-row"><span class="status example">example</span><div>演示、模拟或方向性数据，只能展示功能边界，不能进入经营结论或事实导出。</div></div>
+              <div class="legend-row"><span class="status mixed">L3 internal proxy</span><div>已批准的内部只读代理，仅用于限定字段和窗口；不外推为外部市场份额、GMV 或 TAM。</div></div>
+            </div>
+          </div>
+          <div class="card flat">
+            <h3>本次证据</h3>
+            <ul class="checklist">
+              <li>Graphify 首次 code-only AST 覆盖 249 个代码文件；Batch 30 已增量同步 owner intake、chat merge、public evidence、恢复候选与法规草稿权限关系，全程 0 模型 token。</li>
+              <li>当前 canonical 图谱：4,671 nodes / 7,457 edges / 346 communities；61 个 JSON/config 等源文件仍是 zero-AST 可见性限制。</li>
+              <li>数据一致性审计：43 pages / 107 tables / 53 sources / 0 issues。</li>
+              <li>深度审计：884 claims / 0 high / 0 medium / 0 unsupported；P0-04 仅执行授权的数据/automation/cron 写入，<code>providerCalls=false</code>。</li>
+              <li>Batch 30 follow-up 本地 build、lint、25 files / 205 tests 与两级数据审计均为新鲜候选证据；最新 Codex review session <code>019fa7af-1dfd-7793-ad05-84b4fa52c572</code> 确认 fail-closed 保持且全部安全违规原因可见，为 0 actionable finding。</li>
+              <li class="gap">生产 H2、cron 与 P0-05 均来自现场写入、真实会话与回归验证，不由 README 历史记录或本地通过推断。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="graphify">
+        <div class="chapter-head">
+          <div class="chapter-no">03 / GRAPHIFY</div>
+          <div><h2>代码知识图谱分析</h2><p class="section-intro">Graphify 被安装为项目级 Codex skill，并生成可查询的 AST 图谱。它有效揭示跨文件中心节点，但任何 INFERRED 边仍需回到源码验证。</p></div>
+        </div>
+        <div class="grid grid-4">
+          <div class="card metric"><b>4,671</b><span>节点</span><small>代码、符号、依赖与查询记忆</small></div>
+          <div class="card metric"><b>7,457</b><span>边</span><small>imports / calls / contains 等</small></div>
+          <div class="card metric"><b>339</b><span>社区</span><small>min community size 0</small></div>
+          <div class="card metric"><b>60.5×</b><span>平均查询 token 降幅</span><small>121,500 words → scoped traversal</small></div>
+        </div>
+        <div class="grid grid-2" style="margin-top:18px">
+          <div class="card">
+            <h3>真正重要的中心节点</h3>
+            <ul class="checklist">
+              <li><code>PageEvidenceNotice()</code> degree 27：跨产品页面的证据呈现枢纽。</li>
+              <li><code>scripts</code> degree 86：数据治理自动化能力强，也说明操作脚本复杂度已经形成独立子系统。</li>
+              <li><code>source-registry.ts</code>：页面口径、状态、来源和 action 的事实索引。</li>
+              <li><code>cn()</code> degree 273：技术层 shadcn class 工具，不应误读成业务核心。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>图谱的局限</h3>
+            <p>Batch 29 查询继续核对 review/source optimistic locking、FactDisplayGate、Sidebar、数据库 session timeout 与 customs adapter/summary 的跨文件关系；60 个 JSON/config 等源文件仍是 zero-AST 可见性限制。</p>
+            <div class="callout"><strong>使用原则：</strong>图谱负责缩小搜索范围；事实声明由 EXTRACTED source location、相邻源码、测试与运行结果共同确认。</div>
+          </div>
+        </div>
+        <p><a href="../../../graphify-out/graph.html">打开交互式 Graphify 图谱</a> · <a href="../../../graphify-out/GRAPH_REPORT.md">查看 Graph Report</a> · <a href="https://github.com/Graphify-Labs/graphify">Graphify 官方仓库</a></p>
+      </section>
+
+      <section class="chapter" id="positioning">
+        <div class="chapter-head">
+          <div class="chapter-no">04 / POSITION</div>
+          <div><h2>产品定位与服务对象</h2><p class="section-intro">mkt53 的核心价值不是展示更多数字，而是让市场、竞争、用户、行业、自身经营和 AI 输出使用同一套来源与复核语言。</p></div>
+        </div>
+        <div class="grid grid-3">
+          <div class="card"><h3>产品负责人 / 管理层</h3><p>需要一眼识别“已证实结论、待补证风险和下一行动”，而不是在每个页面重新判断数据可信度。</p><span class="tag confidence">JTBD · 决策编排</span></div>
+          <div class="card"><h3>研究与情报团队</h3><p>需要从来源、采样窗口、口径、国家/渠道范围回溯到具体图表，并把缺口转成 owner 队列。</p><span class="tag confidence">JTBD · 证据复核</span></div>
+          <div class="card"><h3>数据 / 合规 / AI 团队</h3><p>需要可执行的连接器合同、快照版本、权限、审计和人工确认，而不是由前端静态数组代表生产状态。</p><span class="tag confidence">JTBD · 安全交付</span></div>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <h3>北极星工作流</h3>
+          <div class="flow">
+            <div class="flow-step"><b>Observe</b><small>发现变化与问题</small></div>
+            <div class="flow-step"><b>Trace</b><small>追溯来源、窗口、口径</small></div>
+            <div class="flow-step"><b>Review</b><small>人审 / 法务 / owner 确认</small></div>
+            <div class="flow-step"><b>Decide</b><small>形成可执行决策</small></div>
+            <div class="flow-step"><b>Learn</b><small>结果回流到证据与模型</small></div>
+          </div>
+          <p class="section-intro">当前项目已经覆盖 Observe + Trace 的大部分前台，以及 Review 的任务清单；Decide 和 Learn 仍缺身份、状态机、结果指标和后端写入。</p>
+        </div>
+      </section>
+
+      <section class="chapter" id="logic">
+        <div class="chapter-head">
+          <div class="chapter-no">05 / LOGIC</div>
+          <div><h2>完整产品设计逻辑</h2><p class="section-intro">设计逻辑从“页面功能”升级为“事实如何进入决策”的端到端约束。每一个新增指标都必须走完来源、快照、复核、展示、导出与反馈六个环节。</p></div>
+        </div>
+        <div class="grid grid-3 principles">
+          <div class="card principle"><h3>证据先于视觉</h3><p>卡片和图表只有在 source id、claim scope、freshness、status 可见后才具备决策含义。</p></div>
+          <div class="card principle"><h3>分母先于排名</h3><p>市场规模、品牌份额、渠道份额、Amazon 份额必须分开；任何排名先定义地域、渠道、类目和窗口。</p></div>
+          <div class="card principle"><h3>静态与实时分层</h3><p>公开报告、内部只读快照、连接器实时数据、模型推断使用不同 badge、刷新与导出策略。</p></div>
+          <div class="card principle"><h3>人审是正式状态</h3><p>法务、数据 owner 和业务复核不是备注，而是带身份、时间、决策和撤回能力的状态转换。</p></div>
+          <div class="card principle"><h3>AI 输出可追溯</h3><p>prompt、model、dataset snapshot、cost、human review、asset license 都必须绑定 request id。</p></div>
+          <div class="card principle"><h3>反馈闭环可量化</h3><p>洞察只有被引用、转成任务、影响决策并得到结果回填，才产生真实业务价值。</p></div>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <h3>新增指标的六步合同</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>阶段</th><th>必须字段</th><th>失败时行为</th><th>验收</th></tr></thead>
+              <tbody>
+                <tr><td>1. Source</td><td>source id、owner、access、合法用途</td><td>保持 connector/manual required</td><td>来源登记完整</td></tr>
+                <tr><td>2. Snapshot</td><td>window、schema、row count、hash、版本</td><td>不得进入业务事实区</td><td>可重复生成且 checksum 稳定</td></tr>
+                <tr><td>3. Quality</td><td>完整性、一致性、新鲜度、异常说明</td><td>fail closed</td><td>质量规则与阈值有版本</td></tr>
+                <tr><td>4. Review</td><td>reviewer、decision、note、timestamp</td><td>保持 needs-review</td><td>状态变化可审计、可撤回</td></tr>
+                <tr><td>5. Presentation</td><td>claim scope、status、freshness、source link</td><td>展示 gate 或空态</td><td>页面与 CSV 同口径</td></tr>
+                <tr><td>6. Outcome</td><td>引用、任务、决策、结果指标</td><td>不声称 ROI</td><td>洞察到结果可追踪</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="architecture">
+        <div class="chapter-head">
+          <div class="chapter-no">06 / ARCH</div>
+          <div><h2>当前架构与目标架构</h2><p class="section-intro">当前系统的优势是静态、可回退、发布简单；限制是没有身份、业务状态写入、共享查询层和实时数据面。目标架构应保持静态前端，同时增加最小后端而非一次性重写。</p></div>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <span class="status engineering">当前</span>
+            <h3>静态证据前台</h3>
+            <ul class="checklist">
+              <li>React 19 + TypeScript + Vite 8 + HashRouter。</li>
+              <li>页面数据主要来自 TypeScript 静态数组与 <code>public/periodic-data</code> JSON。</li>
+              <li>半月脚本构建 manifest、connector backlog 与 source task queue。</li>
+              <li>nginx 托管静态文件；宿主 landing 与 mkt53 分离发布。</li>
+              <li class="gap">无登录身份、RBAC、数据库状态机、报告任务、AI provider proxy。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <span class="status mixed">目标</span>
+            <h3>可复核决策平台</h3>
+            <ul class="checklist">
+              <li>静态前端继续负责高性能展示。</li>
+              <li>Backend API 负责身份、权限、review、snapshot、report job 与 AI proxy。</li>
+              <li>PostgreSQL 保存 registry、快照元数据、review log 与 action lineage。</li>
+              <li>Object Storage 保存原始导入、报告和 AI 资产。</li>
+              <li>连接器按 source contract 进入 staging，不直接改前端源码。</li>
+              <li>BE-01 已决定同机独立 Compose + edge/data 双网络；共享 nginx 只承担同源 API 入口。</li>
+            </ul>
+            <p><a href="../../architecture/adr-be-01-backend-deployment-shape-20260724.md">阅读 BE-01 ADR</a> · <a href="../../architecture/mkt53-backend-deployment-shape-be-01-20260724.html">打开独立架构图</a></p>
+          </div>
+        </div>
+        <div class="flow">
+          <div class="flow-step"><b>Sources</b><small>Public / ERP / CRM / Platforms</small></div>
+          <div class="flow-step"><b>Ingestion</b><small>Connector + manual intake</small></div>
+          <div class="flow-step"><b>Governance</b><small>Snapshot + registry + review</small></div>
+          <div class="flow-step"><b>API</b><small>RBAC + query + jobs</small></div>
+          <div class="flow-step"><b>Workbench</b><small>Insight + action + feedback</small></div>
+        </div>
+      </section>
+
+      <section class="chapter" id="retrospective">
+        <div class="chapter-head">
+          <div class="chapter-no">07 / RETRO</div>
+          <div><h2>完整项目复盘</h2><p class="section-intro">项目的关键进步不是页面数量，而是从品牌迁移逐步长出了工程门禁与证据治理；当前停滞点同样清晰：前端与脚本继续膨胀，但后端产品能力没有同步形成。</p></div>
+        </div>
+        <div class="grid grid-3">
+          <article class="card finding good"><h3>做对了什么</h3><ul class="checklist"><li>统一 Momcozy 品牌与“五看”信息架构。</li><li>41 个 lazy route component，降低首屏一次性加载。</li><li>页面证据 gate、source registry 与 deep audit 相互约束。</li><li>全路由桌面/移动 E2E 检查证据文案、溢出和 console error。</li><li>静态发布、smoke 和 production E2E 有明确边界。</li></ul></article>
+          <article class="card finding warn"><h3>为什么开始变慢</h3><ul class="checklist"><li><code>DataManage.tsx</code> 已从 2,487 行降至 641 行，但 <code>SelfInsight</code> 1,103 行、<code>UsersPage</code> 987 行仍偏大。</li><li>静态目录已拆分，后续仍需把治理元数据迁到可版本化 API。</li><li>数据脚本已形成 80+ 命令，owner 流程以批次脚本累积。</li><li>“verified”与“可展示事实”仍存在字段缺省的历史兼容层。</li><li>通知、搜索、语言和用户头像多为前端静态状态。</li></ul></article>
+          <article class="card finding risk"><h3>根因</h3><ul class="checklist"><li>以页面交付替代领域模型和后端状态机。</li><li>连接器授权与业务 owner 证据长期缺位。</li><li>缺少产品使用遥测，无法验证“效率、ROI、决策影响”。</li><li>静态看板被迫承担 catalog、governance、workflow 三种职责。</li><li>依赖安全曾从 0 回归到 14 high，说明版本下限和旧导入也必须成为永久合同。</li></ul></article>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <h3>应停止 / 应继续 / 应开始</h3>
+          <div class="grid grid-3">
+            <div><h4>Stop</h4><p>停止新增无法追溯的数字、静态“实时通知”、批次编号式 UI、没有快照 id 的报告和 AI 效率宣传。</p></div>
+            <div><h4>Continue</h4><p>继续 evidence gate、source registry、deep audit、HashRouter 生产约束、local/prod 验证分层和 fail-closed connector readiness。</p></div>
+            <div><h4>Start</h4><p>开始后端最小闭环、RBAC、snapshot/review 状态机、模块级 owner SLA、使用遥测和依赖安全响应。</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="modules">
+        <div class="chapter-head">
+          <div class="chapter-no">08 / MODULES</div>
+          <div><h2>每一个产品模块的迭代方向</h2><p class="section-intro">下表覆盖 45 个业务路径。状态描述的是当前可相信的最强证据，不等同于页面是否“能打开”。优先级以证据缺口、决策风险和基础设施复用价值排序。</p></div>
+        </div>
+        <div class="filterbar" aria-label="模块过滤">
+          <input id="moduleSearch" type="search" placeholder="搜索路径、模块、当前状态或下一动作…">
+          <button class="active" data-filter="all">全部</button>
+          <button data-filter="verified">verified</button>
+          <button data-filter="review">needs-review</button>
+          <button data-filter="example">example</button>
+          <button data-filter="mixed">mixed</button>
+        </div>
+
+        <details class="module-card" open>
+          <summary>首页与战略总览 <span class="status mixed">混合证据</span></summary>
+          <div class="module-body">
+            <div class="module-summary"><div><b>设计职责</b><p>把市场坐标、风险、补证状态与下一行动压缩成管理层入口。</p></div><div><b>验收焦点</b><p>首页 KPI 100% 绑定 source id、window、claim scope；过期 manifest 显著告警。</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>路径</th><th>当前事实</th><th>后续优化</th><th>优先级</th></tr></thead><tbody>
+              <tr data-status="mixed"><td class="route">/</td><td>聚合 verified 市场指标与 gate 状态；不是实时经营驾驶舱。</td><td>增加 freshness score、owner backlog、角色化视图和“结论→任务”入口；隐藏无证据 KPI。</td><td>P0</td></tr>
+            </tbody></table></div>
+          </div>
+        </details>
+
+        <details class="module-card" open>
+          <summary>看市场 <span class="status mixed">7 paths</span></summary>
+          <div class="module-body">
+            <div class="module-summary"><div><b>设计职责</b><p>建立 TAM → segment → region → category 的分母体系，并把公开报告与内部 proxy 隔离。</p></div><div><b>验收焦点</b><p>任何份额、排名和趋势都能回答“哪个市场、哪个渠道、什么窗口、什么来源”。</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>路径</th><th>状态</th><th>当前事实与边界</th><th>下一迭代 / 验收</th></tr></thead><tbody>
+              <tr data-status="verified"><td class="route">/market</td><td><span class="status verified">verified + L3</span></td><td>公开 TAM/区域份额与 ERP count-style proxy 已分层；品牌份额仍待授权。</td><td>P0：统一 metric contract；TAM、brand share、channel proxy 分表展示。</td></tr>
+              <tr data-status="verified"><td class="route">/market/trend</td><td><span class="status verified">verified model</span></td><td>PEST 有公开官方源；波特五力是内部模型。</td><td>P1：模型版本、输入、权重、情景对比与人工签核可见。</td></tr>
+              <tr data-status="verified"><td class="route">/market/mtl</td><td><span class="status verified">verified scope</span></td><td>品类 TAM / segment TAM 可展示，SAM/SOM 未闭环。</td><td>P1：补地域、渠道、可服务范围和可获份额假设；输出可复算。</td></tr>
+              <tr data-status="review"><td class="route">/market/dtl</td><td><span class="status review">needs-review</span></td><td>公开报告只证明来源可用，不能证明 Amazon 品牌份额。</td><td>P0：Amazon 类目、ASIN、品牌映射、窗口与 hash 完整后解锁。</td></tr>
+              <tr data-status="review"><td class="route">/market/consumables</td><td><span class="status review">needs-review</span></td><td>细分品类报告入口存在，交易与排名无授权快照。</td><td>P0：定义 baby care ontology，连接报告、平台与内部 SKU。</td></tr>
+              <tr data-status="example"><td class="route">/market/customs</td><td><span class="status example">example</span></td><td>公开 Census/CBP 入口与 HTS 语境，不含 shipment/进口商事实。</td><td>P0：授权贸易快照 + HS/国家/港口/窗口 contract；保留 release review。</td></tr>
+              <tr data-status="review"><td class="route">/market/category</td><td><span class="status review">needs-review</span></td><td>生命周期和 BSR 仍缺权重公式、SKU 快照与采集时间。</td><td>P0：可复算 category scorecard；公式、输入和异常全部可追溯。</td></tr>
+            </tbody></table></div>
+          </div>
+        </details>
+
+        <details class="module-card" open>
+          <summary>看竞争 <span class="status review">4 paths</span></summary>
+          <div class="module-body">
+            <div class="module-summary"><div><b>设计职责</b><p>从产品线索库升级为“事件—证据—威胁—应对”的竞品工作流。</p></div><div><b>验收焦点</b><p>价格、评分、排名、份额不得从公开入口外推；新品事实与平台表现分开。</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>路径</th><th>状态</th><th>当前事实</th><th>下一迭代 / 验收</th></tr></thead><tbody>
+              <tr data-status="review"><td class="route">/competition</td><td><span class="status review">needs-review</span></td><td>竞品目录可浏览，Amazon 指标待授权。</td><td>P0：建立 SKU entity、source snapshot 与变更事件；核心 SKU 映射覆盖 ≥90%。</td></tr>
+              <tr data-status="verified"><td class="route">/competition/new</td><td><span class="status verified">verified clues</span></td><td>官方产品页/新闻支持新品线索；销量、BSR 不支持。</td><td>P1：事件时间线、来源差异、威胁假设与人工确认。</td></tr>
+              <tr data-status="review"><td class="route">/competition/region</td><td><span class="status review">needs-review</span></td><td>Amazon-channel 区域 proxy 与全渠道份额分母未闭环。</td><td>P0：国家 × marketplace × channel contract；禁止跨分母排序。</td></tr>
+              <tr data-status="review"><td class="route">/competition/products</td><td><span class="status review">needs-review</span></td><td>产品参数/价格目录缺真实采集窗口和字段字典。</td><td>P0：产品版本、价格历史、变体关系、证据截图/hash 与差异告警。</td></tr>
+            </tbody></table></div>
+          </div>
+        </details>
+
+        <details class="module-card" open>
+          <summary>看用户 <span class="status mixed">8 paths</span></summary>
+          <div class="module-body">
+            <div class="module-summary"><div><b>设计职责</b><p>把公共调研、CRM 分层、VOC、社媒和访谈拆成不同证据对象，再在主题层汇合。</p></div><div><b>验收焦点</b><p>样本量、地区、窗口、授权、去重、词典和人工一致率必须随结论显示。</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>路径</th><th>状态</th><th>当前事实</th><th>下一迭代 / 验收</th></tr></thead><tbody>
+              <tr data-status="mixed"><td class="route">/users</td><td><span class="status mixed">verified + example</span></td><td>中国/海外公开调研可用；RFM 仍是示例。</td><td>P0：CRM 脱敏快照、RFM 公式、cohort window；公开 persona 与私域 customer 分离。</td></tr>
+              <tr data-status="review"><td class="route">/users/overseas</td><td><span class="status review">needs-review</span></td><td>社交声量缺 API 授权、query set、地区/语言和去重。</td><td>P0：social listening connector + sample coverage + sentiment QA。</td></tr>
+              <tr data-status="review"><td class="route">/users/consumer</td><td><span class="status review">manual</span></td><td>缺访谈样本、授权、窗口和证据 hash。</td><td>P0：访谈研究库、consent、编码框架、引用片段和 saturation 指标。</td></tr>
+              <tr data-status="review"><td class="route">/users/channel</td><td><span class="status review">needs-review</span></td><td>ERP proxy 不能替代渠道访谈和渠道健康度。</td><td>P0：访谈与销售快照双轨；渠道结论必须标注证据类型。</td></tr>
+              <tr data-status="review"><td class="route">/users/store</td><td><span class="status review">manual</span></td><td>门店指标与访谈记录尚未绑定。</td><td>P1：store entity、现场记录、门店 snapshot、问题—行动—复访闭环。</td></tr>
+              <tr data-status="mixed"><td class="route">/users/regional</td><td><span class="status mixed">shared page</span></td><td>复用 UsersPage regional state，证据仍与主页面同源。</td><td>P1：按地区显示样本覆盖与不可比较提示；避免静态 persona 百分比。</td></tr>
+              <tr data-status="mixed"><td class="route">/users/global</td><td><span class="status mixed">shared page</span></td><td>全球视图不能把美国/中国调研外推为全球客户事实。</td><td>P1：region coverage matrix + “unknown” 明示；无样本地区不填充。</td></tr>
+              <tr data-status="example"><td class="route">/users/aesthetics</td><td><span class="status example">example</span></td><td>美学偏好缺实验、地区和样本证据。</td><td>P1：成对偏好实验、资产版本、受试者分层与显著性；AI 图与官方图分组。</td></tr>
+            </tbody></table></div>
+          </div>
+        </details>
+
+        <details class="module-card" open>
+          <summary>看行业 <span class="status mixed">12 paths</span></summary>
+          <div class="module-body">
+            <div class="module-summary"><div><b>设计职责</b><p>管理法规、政策、科技、资讯、供应链、专利和展会的“线索→适用性→行动”链路。</p></div><div><b>验收焦点</b><p>官方入口不等于 SKU 法律结论；新闻事实、内部解读和预测必须分层。</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>路径</th><th>状态</th><th>当前事实</th><th>下一迭代 / 验收</th></tr></thead><tbody>
+              <tr data-status="verified"><td class="route">/industry</td><td><span class="status verified">verified context</span></td><td>行业概况与证据 handoff 可用。</td><td>P1：事件总线 + owner watchlist + 影响范围，不再以静态 tab 为主。</td></tr>
+              <tr data-status="verified"><td class="route">/industry/regulation</td><td><span class="status verified">official entry</span></td><td>CPSC/eFiling 官方资源可用，不支持 SKU 合规状态。</td><td>P0：SKU × jurisdiction × requirement × certificate 适用矩阵，法务签核。</td></tr>
+              <tr data-status="verified"><td class="route">/industry/policy-insight</td><td><span class="status verified">official timeline</span></td><td>EU MDR/IVDR 时间线可用，不支持产品分类。</td><td>P0：法规版本 diff、适用性决策、证书到期与责任人提醒。</td></tr>
+              <tr data-status="review"><td class="route">/industry/flavor-map</td><td><span class="status review">needs-review</span></td><td>VOC 功能热度缺样本、词典、地区映射和模型记录。</td><td>P0：VOC snapshot + taxonomy + model card + human agreement。</td></tr>
+              <tr data-status="example"><td class="route">/industry/flavor-report</td><td><span class="status example">example</span></td><td>趋势报告未绑定 snapshot id。</td><td>P0：报告模板必须冻结输入快照、模型版本和复核人。</td></tr>
+              <tr data-status="verified"><td class="route">/industry/news</td><td><span class="status verified">row-level</span></td><td>已补证资讯和线索分开。</td><td>P1：去重、主题聚类、影响假设、引用级 evidence URL。</td></tr>
+              <tr data-status="verified"><td class="route">/industry/tech</td><td><span class="status verified">spec context</span></td><td>品牌官网支持公开规格语境，不支持性能排名。</td><td>P1：规格 ontology、测试证据、claim comparison 与实验结果分层。</td></tr>
+              <tr data-status="verified"><td class="route">/industry/reports</td><td><span class="status verified">alias</span></td><td>当前复用 IndustryNews。</td><td>P2：若无独立报告语义，合并导航；若保留，建立 report collection contract。</td></tr>
+              <tr data-status="example"><td class="route">/industry/supply</td><td><span class="status example">example</span></td><td>供应商、库存、成本趋势为模拟经营数据。</td><td>P0：ERP snapshot、供应商主数据、仓库范围、成本模型与权限。</td></tr>
+              <tr data-status="verified"><td class="route">/industry/ip</td><td><span class="status verified">public DB entry</span></td><td>公开专利数据库入口可用，不是法律风险意见。</td><td>P1：query、family、legal status、claim chart 与律师复核记录。</td></tr>
+              <tr data-status="verified"><td class="route">/industry/exhibition</td><td><span class="status verified">public schedule</span></td><td>展会线索可用，竞品名单与投入回报需另证。</td><td>P1：官方日程、参展商清单、任务、现场情报和会后 action。</td></tr>
+              <tr data-status="verified"><td class="route">/industry/macro</td><td><span class="status verified">alias</span></td><td>当前复用 RegulationDetail，语义不一致。</td><td>P1：拆出真正 macro 指标或删除别名；路由名与页面职责一致。</td></tr>
+            </tbody></table></div>
+          </div>
+        </details>
+
+        <details class="module-card" open>
+          <summary>看自己 <span class="status mixed">经营视图</span></summary>
+          <div class="module-body">
+            <div class="module-summary"><div><b>设计职责</b><p>产品、价格、渠道、推广 4P 的内部经营回顾。</p></div><div><b>验收焦点</b><p>所有经营指标来自授权 ERP/广告/财务快照；BCG 为模型，不是事实。</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>路径</th><th>状态</th><th>当前事实</th><th>下一迭代 / 验收</th></tr></thead><tbody>
+              <tr data-status="mixed"><td class="route">/self</td><td><span class="status mixed">needs-review + example</span></td><td>营销 4P 待 Amazon/内部授权；BCG 是主观模型。</td><td>P0：经营 snapshot、metric dictionary、利润/库存/广告口径；BCG 输入和决策结果可回放。</td></tr>
+            </tbody></table></div>
+          </div>
+        </details>
+
+        <details class="module-card" open>
+          <summary>AI 助手 <span class="status example">7 paths</span></summary>
+          <div class="module-body">
+            <div class="module-summary"><div><b>设计职责</b><p>让 AI 对受控数据快照做评论、检索、设计和报告辅助，而不是在浏览器直接调用供应商。</p></div><div><b>验收焦点</b><p>request id、dataset snapshot、model、prompt hash、cost、review、output lineage 全部存在。</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>路径</th><th>状态</th><th>当前事实</th><th>下一迭代 / 验收</th></tr></thead><tbody>
+              <tr data-status="verified"><td class="route">/ai-assistant</td><td><span class="status verified">config only</span></td><td>静态入口/readiness UI 已验证，不代表真实调用。</td><td>P0：任务型首页，显示可用数据域、模型策略、预算与审计状态。</td></tr>
+              <tr data-status="example"><td class="route">/ai-assistant/review-analysis</td><td><span class="status example">example</span></td><td>统计、关键词与洞察为演示数据。</td><td>P0：授权 corpus、evaluation set、model card、human agreement；不达阈值不出结论。</td></tr>
+              <tr data-status="example"><td class="route">/ai-assistant/youtube</td><td><span class="status example">example</span></td><td>未绑定 YouTube API、视频清单、配额与窗口。</td><td>P1：query/video/channel manifest、quota cost、comment sample 和去重。</td></tr>
+              <tr data-status="example"><td class="route">/ai-assistant/design</td><td><span class="status example">example</span></td><td>本地 demo；真实生成必须服务端代理。</td><td>P0：AI image proxy、asset license、brand/commercial review、cost ledger。</td></tr>
+              <tr data-status="mixed"><td class="route">/ai-assistant/knowledge</td><td><span class="status mixed">internal fixture</span></td><td>内部维护入口已登记，但非可审计生产 RAG。</td><td>P0：document version、chunk/source、permission filter、citation accuracy 与撤回。</td></tr>
+              <tr data-status="review"><td class="route">/ai-assistant/comment-data</td><td><span class="status review">needs-review</span></td><td>缺评论快照、模型评估和人工一致率。</td><td>P0：comment dataset governance、PII、dedupe、language coverage、review queue。</td></tr>
+              <tr data-status="review"><td class="route">/ai-assistant/web-review</td><td><span class="status review">needs-review</span></td><td>缺 robots/条款、白名单、窗口和脱敏。</td><td>P0：compliance allowlist、rate limit、evidence hash；违规目标 fail closed。</td></tr>
+            </tbody></table></div>
+          </div>
+        </details>
+
+        <details class="module-card" open>
+          <summary>AI 画廊、报告与数据治理 <span class="status mixed">5 paths</span></summary>
+          <div class="module-body">
+            <div class="module-summary"><div><b>设计职责</b><p>管理 AI 资产、报告快照、数据目录、来源状态和运营手册。</p></div><div><b>验收焦点</b><p>元数据 verified 不等于内容 verified；目录、资产与业务事实分别治理。</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>路径</th><th>状态</th><th>当前事实</th><th>下一迭代 / 验收</th></tr></thead><tbody>
+              <tr data-status="example"><td class="route">/ai-gallery</td><td><span class="status example">example assets</span></td><td>本地素材目录，不是已审计生成历史。</td><td>P1：asset id、request id、model、prompt hash、license、review、usage。</td></tr>
+              <tr data-status="mixed"><td class="route">/reports</td><td><span class="status mixed">metadata verified</span></td><td>报告目录元数据可用，正文与结论需单独复核。</td><td>P0：template × snapshot × source × reviewer；只允许 verified claims 导出。</td></tr>
+              <tr data-status="mixed"><td class="route">/report/:id</td><td><span class="status mixed">content gated</span></td><td>预览页有来源边界，不代表所有报告已生成或批准。</td><td>P0：immutable report version、citation map、approval、revocation、download audit。</td></tr>
+              <tr data-status="verified"><td class="route">/data</td><td><span class="status verified">split catalog</span></td><td>107 表目录与治理配置可审计；route shell 已降至 641 行，目录、ERP、治理和手册独立装载。</td><td>P1：由版本化 API 读取 schema catalog / quality / lineage，保留 static fail-safe。</td></tr>
+              <tr data-status="verified"><td class="route">/data-source</td><td><span class="status verified">registry UI</span></td><td>展示 53 来源与任务队列；19 条历史记录依赖默认字段补齐。</td><td>P0：后端状态机、owner SLA、review history、freshness alert、批量 intake。</td></tr>
+            </tbody></table></div>
+          </div>
+        </details>
+      </section>
+
+      <section class="chapter" id="manual">
+        <div class="chapter-head">
+          <div class="chapter-no">09 / MANUAL</div>
+          <div><h2>完整使用手册</h2><p class="section-intro">先判断“这是什么证据”，再读取数值；先通过页面中的来源和口径，再进入报告或行动。生产使用 HashRouter，业务路径必须加 <code>/#</code>。</p></div>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>业务用户快速开始</h3>
+            <ol>
+              <li>从首页进入；优先查看更新时间、状态 badge 和来源边界。</li>
+              <li>进入“五看”模块，用侧边栏定位专题。</li>
+              <li>点击来源 / 数据源入口，确认 source id、窗口和可展示范围。</li>
+              <li>遇到 needs-review 或 example，只把内容当作补证任务或功能示例。</li>
+              <li>导出前确认页面允许导出，且报告只引用已复核条目。</li>
+            </ol>
+            <div class="callout"><strong>路由提醒：</strong>生产数据页是 <code>https://mkt.lute-tlz-dddd.top/#/data</code>，裸 <code>/data</code> 不是业务验证入口。</div>
+          </div>
+          <div class="card">
+            <h3>建议运营节奏</h3>
+            <div class="timeline">
+              <div class="timeline-item"><b>Daily · 10 min</b><p>首页风险、过期来源、P0 任务；静态通知不能当作真实实时告警。</p></div>
+              <div class="timeline-item"><b>Weekly · 45 min</b><p>新品、行业事件、用户线索；确认来源、owner 和行动状态。</p></div>
+              <div class="timeline-item"><b>Semi-monthly</b><p>1 日/16 日复核 manifest、capture、connector backlog、manual evidence 和审计。</p></div>
+              <div class="timeline-item"><b>Monthly</b><p>对已引用洞察做结果回填，评估决策影响，不用页面访问量代替业务价值。</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-3" style="margin-top:18px">
+          <div class="card"><h3>搜索</h3><p><code>Cmd/Ctrl + K</code> 打开。当前只索引 16 条前端静态条目；“最近/热门搜索”不是用户行为日志。</p></div>
+          <div class="card"><h3>通知</h3><p>当前通知为组件内静态初始化数据，已读和清空只在页面内存生效；不得视为实时监控。</p></div>
+          <div class="card"><h3>语言 / 用户</h3><p>导航中的 EN、用户头像目前没有真实语言切换或身份系统；后续接入 RBAC 前只作为视觉占位。</p></div>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <h3>本地开发与诊断</h3>
+          <span class="command">cd app
+npm ci
+npm run dev
+npm run test:serial
+npm run lint
+npm run build
+npm run data:audit
+npm run data:audit:deep:summary
+npm run test:e2e</span>
+          <ul class="checklist">
+            <li>Vitest 在本机资源争用时使用 <code>test:serial</code>；不要把启动慢直接判为业务回归。</li>
+            <li>页面布局、路由或证据文案变化必须跑本地 E2E。</li>
+            <li>宿主 landing 或生产入口变化才跑 <code>test:e2e:prod</code>。</li>
+            <li>部署命令包含真实 rsync 副作用；未经明确发布授权不得运行。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="chapter" id="design-system">
+        <div class="chapter-head">
+          <div class="chapter-no">10 / EXPERIENCE</div>
+          <div><h2>体验与设计系统补全</h2><p class="section-intro">现有品牌色和 shadcn 组件已形成视觉基础，下一步要把“证据状态、交互真实性、响应式、可访问性”提升为设计系统的一部分。</p></div>
+        </div>
+        <div class="grid grid-3">
+          <div class="card"><h3>信息层级</h3><p>一级：结论；二级：范围与更新时间；三级：来源与方法；四级：缺口与下一动作。不得让 badge 只存在页底。</p></div>
+          <div class="card"><h3>状态语言</h3><p>verified 使用绿色但同时显示 scope；needs-review 使用琥珀并提供 owner/action；example 使用红色且默认不展示业务数值。</p></div>
+          <div class="card"><h3>交互真实性</h3><p>未接后端的搜索、通知、账号、语言和生成能力必须标注“本地/演示”，避免视觉拟真制造功能已上线错觉。</p></div>
+          <div class="card"><h3>响应式</h3><p>桌面采用概览 + 详情；移动端优先结论、状态、时间与 action，表格转卡片，不仅做横向压缩。</p></div>
+          <div class="card"><h3>可访问性</h3><p>Dialog 增加语义、focus trap、label；颜色之外使用文本/图标；图表提供 data table 与文字摘要；按钮有明确 accessible name。</p></div>
+          <div class="card"><h3>性能</h3><p>DataManage 拆分与按 tab 加载已完成；下一项拆分 charts vendor，并继续用 route budget 阻断回归。</p></div>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <h3>建议前端预算</h3>
+          <div class="table-wrap"><table><thead><tr><th>项目</th><th>当前证据</th><th>目标</th><th>行动</th></tr></thead><tbody>
+            <tr><td>DataManage chunk</td><td>36.65 KB / gzip 8.63 KB；门禁实测 35.80 KiB</td><td>单 route 主 chunk &lt; 120 KiB</td><td><span class="status verified">已达标</span> 较 233.53 KiB 基线减少 84.67%；256 KiB 临时例外已删除</td></tr>
+            <tr><td>Charts shared core</td><td>153.11 KB；门禁实测 149.52 KiB</td><td>永久 &lt; 180 KiB</td><td><span class="status verified">已达标</span> route-aware 图表族拆分；最后一个临时例外已删除</td></tr>
+            <tr><td>React vendor</td><td>221.74 KB / gzip 71.04 KB</td><td>永久预算内保持稳定</td><td>Router 8 与 React 19.2.8 完整 E2E 已通过；避免重复 UI runtime</td></tr>
+            <tr><td>Top page LOC</td><td>DataManage 641 / SelfInsight 1103 / UsersPage 987</td><td>业务容器 &lt; 500 LOC</td><td>继续抽离领域模型、view model 与纯展示组件</td></tr>
+          </tbody></table></div>
+        </div>
+      </section>
+
+      <section class="chapter" id="roadmap">
+        <div class="chapter-head">
+          <div class="chapter-no">11 / ROADMAP</div>
+          <div><h2>90 天迭代路线图</h2><p class="section-intro">先解决新鲜度、安全门禁和高风险数据域，再建设后端最小闭环。路线图以可以验收的能力为单位，不以“新增多少页面”为目标。</p></div>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">2026-07-23 · 已进入执行</span>
+          <h3>统一执行基线与首批结果</h3>
+          <p>完整方案已拆成 Phase 0–3、23 个可验收工作项，并区分本地可执行、业务 owner 输入和生产授权。详细的任务合同、责任、依赖、风险和每周节奏见 <a href="../../product/product-roadmap-execution-20260723.md">《90 天迭代路线图执行方案》</a>。</p>
+          <div class="table-wrap"><table><thead><tr><th>ID</th><th>任务</th><th>执行结果</th><th>证据层</th></tr></thead><tbody>
+            <tr><td>P0-01</td><td>Source governance 显式合同</td><td><span class="status verified">完成</span> 53/53 显式声明 7 个治理字段；31 条不完整记录归零；数据源页停止运行时推断</td><td>L1 本地验证</td></tr>
+            <tr><td>P0-02</td><td>依赖高危修复</td><td><span class="status verified">完成</span> 14 high → 0 vulnerabilities；Router 8、React 19.2.8、ESLint 10、PostCSS 8.5.23；179 unit + 150 E2E</td><td>L1 本地验证</td></tr>
+            <tr><td>P0-03</td><td>Route bundle budget</td><td><span class="status verified">全部例外已退出</span> 77 assets：77 达标、0 例外、0 失败；DataManage 35.73 KiB，chart core 149.52 KiB</td><td>L1 本地验证</td></tr>
+            <tr><td>P0-04</td><td>Manifest / cron 新鲜度</td><td><span class="status verified">生产已恢复</span> 2026-07-H2 已发布且 10/10 HTTPS hashes verified；cron 唯一安装；首次调度观察待 8/1 09:00</td><td>L4 authorized production write</td></tr>
+            <tr><td>P0-05</td><td>nginx 门户与 manifest 保护</td><td><span class="status verified">生产已恢复</span> 全配置备份；mkt-only activation；真实会话正向通过；未授权 302；生产 E2E 8/8</td><td>L4 authorized production write + real-session verified</td></tr>
+            <tr><td>P0-06</td><td>候选证据汇总</td><td><span class="status verified">完成</span> 单命令 8/8 checks；JSON 证据含命令状态、hash、安全计数与生产边界</td><td>L1 本地验证</td></tr>
+            <tr><td>OPS-KEY</td><td>生产 SSH key 路径合同</td><td><span class="status verified">完成</span> deploy/smoke 共用解析器；默认 DDDD.pem，可用 MKT53_SSH_KEY_PATH 覆盖</td><td>L1 本地验证</td></tr>
+            <tr><td>BE-01</td><td>后端部署形态 ADR</td><td><span class="status verified">决策完成</span> 同机独立 Compose、同源 API、PostgreSQL 双网络隔离；备份/SLO/成本/退出条件已固定</td><td>L0 accepted design</td></tr>
+            <tr><td>BE-02</td><td>身份与 RBAC 本地骨架</td><td><span class="status verified">本地完成</span> FastAPI + PostgreSQL/Alembic；36 tests；95.81% coverage；401/403/200 矩阵；零 host port；file-only secrets</td><td>L1 local validation</td></tr>
+            <tr><td>BE-03–07</td><td>Registry / snapshot / review / adapter / recovery</td><td><span class="status verified">本地完成 + GitHub CI 通过</span> 版本化 source、不可变 snapshot、review 状态机、前端只读 adapter、隔离恢复与独立 backend CI 均有机器证据；64 tests / 92.73% coverage；生产激活仍待独立决策</td><td>L1–L2 local + GitHub-hosted validation</td></tr>
+            <tr><td>DATA-REG</td><td>法规 SKU 合同、gated projection 与 review handoff</td><td><span class="status review">L2 合成门禁</span> 合同、0/6 intake、6/6 synthetic projection、pending handoff、幂等、撤回及 approve/reject 阻断已验证；真实 snapshot / review decision / publishable fact 仍为 0</td><td>L2 fixture / dry-run</td></tr>
+          </tbody></table></div>
+          <p><b>Batch 01–30 验收：</b>P0-04/P0-05 已完成各自授权范围内的生产恢复；BE-01–07 已形成可逆后端设计、本地治理 API、前端 adapter、隔离恢复证据与独立 backend CI；DATA-REG 已推进到合同、intake readiness、纯合成投影和 draft-to-review handoff 门禁；两个 bundle 临时例外和 14 个 high advisories 均已退出。Batch 28 完成完整分支 review，Batch 29 关闭 PR 高优先级 findings 并转为 Ready；Batch 30 已关闭 owner intake/chat merge、公开证据、恢复候选与敏感草稿的 Minor 数据完整性风险。Graphify follow-up head <code>e971d75</code> 的 GitHub app/backend CI 已通过且 annotations 均为 0；该 head 的 CodeRabbit 安全边界文案 finding 已本地关闭，最终 session <code>019fa7af-1dfd-7793-ad05-84b4fa52c572</code> clean。当前安全文案工作树的新精确 head CI 与外部 recheck 仍待完成，merge 与 deploy 仍是独立后续门，首次 cron 观察仍待 8 月 1 日，后端和 DATA-REG 均未生产激活。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status example">P0-04 · audit complete / acceptance failed</span>
+          <h3>四层 freshness 只读核对</h3>
+          <div class="table-wrap"><table><thead><tr><th>层</th><th>实测状态</th><th>证据与边界</th></tr></thead><tbody>
+            <tr><td>Local</td><td><span class="status example">stale</span> 2026-07-H1</td><td>窗口 7/1–7/15；下次计划 7/16 已过期；当前应为 H2</td></tr>
+            <tr><td>Production</td><td><span class="status example">stale</span> 2026-07-H1</td><td>6 个 JSON 均为 200 且与本地 SHA 完全一致；latest SHA <code>a584…e0d1</code></td></tr>
+            <tr><td>Cron</td><td><span class="status example">missing</span></td><td>cron daemon active，但 user/root/system cron、timer 和 7 月 journal 均无 mkt53 job</td></tr>
+            <tr><td>Upstream</td><td><span class="status review">unknown-gated</span></td><td>28 connector-readiness、9 manual-evidence、4 public-source-review；任务清单不等于新鲜快照</td></tr>
+          </tbody></table></div>
+          <p><b>定位：</b>服务器 automation 副本仍为 2026-06-H1，最后 run artifact 停在 6 月 11 日；历史 weekly log 在当时的 React Router 2 high audit 处停止。线上 H1 文件于 7 月 6 日单独写入，但没有半月任务继续驱动 H2。</p>
+          <p><b>边界：</b>生产静态 smoke 通过；门户/manifest 合同仍为 2/8。未运行 refresh、未安装 cron、未 rsync、未修改 nginx。<a href="./evidence/p0-04-production-readonly-20260723.json">打开机器可读证据</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status review">P0-04 · L2 recovery candidate ready</span>
+          <h3>2026-07-H2 隔离恢复候选</h3>
+          <div class="table-wrap"><table><thead><tr><th>检查</th><th>结果</th><th>边界</th></tr></thead><tbody>
+            <tr><td>周期</td><td><span class="status verified">通过</span> 2026-07-H2；7/16–7/31；下次 8/1 09:00 +08:00</td><td>只生成本地候选</td></tr>
+            <tr><td>一致性</td><td><span class="status verified">通过</span> 43 pages / 107 tables / 53 sources / 0 issues</td><td>periodic/weekly 逐字节一致</td></tr>
+            <tr><td>公开证据</td><td><span class="status verified">通过</span> dry-run 39 planned</td><td>networkCalls=0；businessDataWrites=0</td></tr>
+            <tr><td>受限来源</td><td><span class="status review">保持 gated</span> 28 connector-required；9 manual-required</td><td>未调用真实连接器</td></tr>
+            <tr><td>Cron</td><td><span class="status verified">只读预览</span> 0 9 1,16 * *</td><td>--print 零目录写入；cronInstalled=false</td></tr>
+            <tr><td>发布</td><td><span class="status example">Blocked-auth</span></td><td>canonicalPublicWrites=false；productionWrites=false</td></tr>
+          </tbody></table></div>
+          <p>候选位于 <a href="../../../app/tmp/data-collection/recovery-candidates/2026-07-H2/recovery-preflight.json"><code>app/tmp/data-collection/recovery-candidates/2026-07-H2/recovery-preflight.json</code></a>，包含 12 个候选 artifact 的 SHA-256。该 L2 证据不能替代生产备份、发布、cron 安装与运行观察。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">P0-04 · L4 production recovered</span>
+          <h3>2026-07-H2 授权生产恢复</h3>
+          <div class="table-wrap"><table><thead><tr><th>检查</th><th>结果</th><th>边界</th></tr></thead><tbody>
+            <tr><td>回滚</td><td><span class="status verified">已准备</span> HTML 数据、crontab、automation source</td><td><code>/opt/mkt53/backups/p0-04/20260723T152641+0800/</code></td></tr>
+            <tr><td>Automation gate</td><td><span class="status verified">通过</span> 114/114；lint；audit 0；build 2,323；bundle/run-report pass</td><td>首次 portability 失败在生产写入前 fail closed</td></tr>
+            <tr><td>生产发布</td><td><span class="status verified">通过</span> H2；periodic/weekly 10/10 HTTPS hashes</td><td>逐文件原子切换；<code>latest.json</code> 最后；应用 index 未改</td></tr>
+            <tr><td>Cron</td><td><span class="status verified">已安装</span> 0 9 1,16 * *</td><td>唯一 mkt53 job；其他 job 保留；service active/enabled</td></tr>
+            <tr><td>生产验证</td><td><span class="status verified">部分通过</span> nginx -t / smoke pass</td><td>P0-05 E2E 仍为 2/8；本批未改 nginx</td></tr>
+            <tr><td>首次调度</td><td><span class="status review">待时间窗</span> 2026-08-01 09:00 +08:00</td><td>届时核对日志、run-report、2026-08-H1 与双路径哈希</td></tr>
+          </tbody></table></div>
+          <p>本批没有调用 provider 或受限连接器，没有提升业务事实，也没有执行 git commit/push。<a href="./evidence/p0-04-production-recovery-20260723.json">打开机器可读恢复证据</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">P0-05 · L4 production activated</span>
+          <h3>门户门禁候选与授权生产激活</h3>
+          <div class="table-wrap"><table><thead><tr><th>检查</th><th>结果</th><th>边界</th></tr></thead><tbody>
+            <tr><td>生产只读基线</td><td><span class="status example">2/8</span> landing 2 项通过；mkt 门禁 6 项失败</td><td>root、deep path、manifest 均为 HTTP 200</td></tr>
+            <tr><td>配置冻结</td><td><span class="status verified">完成</span> mkt block <code>4f78ab…06342</code></td><td>候选激活必须先比对 hash</td></tr>
+            <tr><td>候选语义</td><td><span class="status verified">通过</span> auth_request + 401→302 + private/no-store</td><td>复用 apex portal auth 合同</td></tr>
+            <tr><td>隔离验证</td><td><span class="status verified">通过</span> nginx 1.29.8 双容器</td><td>未授权 302；合成授权 200；内部 auth 404</td></tr>
+            <tr><td>测试</td><td><span class="status verified">通过</span> 候选单测 3/3</td><td>临时容器/网络残留 0</td></tr>
+            <tr><td>生产激活</td><td><span class="status verified">通过</span> full config <code>f466cf…cf2e</code>；mkt block <code>6c02b5…5544</code></td><td>完整备份；只 reload nginx；未 restart/recreate</td></tr>
+            <tr><td>生产验收</td><td><span class="status verified">8/8</span> 未授权 302；真实会话 root/data page；auth-gated smoke</td><td>H2 可见；0 browser error；0 水平溢出</td></tr>
+          </tbody></table></div>
+          <p>候选位于 <a href="../../../app/configs/nginx/mkt53-portal-gate.candidate.conf"><code>app/configs/nginx/mkt53-portal-gate.candidate.conf</code></a>。生产保留 root-only 完整备份，激活仅修改 mkt block 并 reload nginx，没有部署应用 bundle。<a href="./evidence/p0-05-production-activation-20260724.json">打开机器可读生产激活证据</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">BE-01 · L0 accepted design</span>
+          <h3>可逆后端部署形态</h3>
+          <div class="table-wrap"><table><thead><tr><th>决策域</th><th>选择</th><th>停止条件</th></tr></thead><tbody>
+            <tr><td>Runtime</td><td>Python 3.12 + FastAPI + SQLAlchemy 2 + Pydantic 2；BE-02 已固定依赖与镜像 digest</td><td>只在本地隔离运行，未部署生产</td></tr>
+            <tr><td>Topology</td><td>同机独立 <code>mkt53_backend</code> Compose；共享 nginx 只通过 <code>mkt53_edge</code> 接 API</td><td>API/DB 禁止 host/public port</td></tr>
+            <tr><td>Database</td><td>PostgreSQL；<code>mkt53_data</code> internal network；Alembic 显式迁移</td><td>禁止 API 启动时自动迁移</td></tr>
+            <tr><td>Identity</td><td>portal subject/role 可信头 + API RBAC；nginx 清除客户端同名头</td><td>只有 204/401 而无主体时不得开放写 API</td></tr>
+            <tr><td>Recovery</td><td>每日逻辑备份、加密离机副本、季度恢复演练；RPO 24h / RTO 4h</td><td>备份未恢复验证不得计为可恢复</td></tr>
+            <tr><td>Exit</td><td>命中容量/SLO/合规阈值先迁 PostgreSQL，再迁 API</td><td>同源 <code>/api/v1/</code> 合同保持不变</td></tr>
+          </tbody></table></div>
+          <p>初始增量成本护栏为 ≤¥100/月（内部决策阈值，不是云报价）；BE-06 前前端使用 <code>static → shadow → api</code>，static 保持 canonical。<a href="../../architecture/adr-be-01-backend-deployment-shape-20260724.md">阅读 ADR</a> · <a href="../../architecture/mkt53-backend-deployment-shape-be-01-20260724.html">打开架构图</a> · <a href="./evidence/be-01-backend-deployment-shape-adr-20260724.json">机器证据</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">BE-02 · L1 local validated</span>
+          <h3>身份、RBAC 与独立 Compose 骨架</h3>
+          <div class="table-wrap"><table><thead><tr><th>验证域</th><th>结果</th><th>边界</th></tr></thead><tbody>
+            <tr><td>Quality</td><td><span class="status verified">通过</span> 36 tests；95.81% branch coverage；lock/format/lint</td><td>1 条 TestClient 迁移 warning 已记录</td></tr>
+            <tr><td>Identity</td><td>trusted proxy token + subject + roles；missing/wrong 401</td><td>production portal subject/role 尚未验证</td></tr>
+            <tr><td>RBAC</td><td>viewer write 403；reviewer write-probe 200</td><td><code>side_effects=false</code>，没有业务写入</td></tr>
+            <tr><td>Database</td><td>PostgreSQL 17；Alembic <code>0001_be02_baseline</code> head</td><td>baseline 无领域表；sources 属于 BE-03</td></tr>
+            <tr><td>Isolation</td><td>API edge+data；DB data-only；host bindings 0；file secrets</td><td>未连接共享 nginx 或生产网络</td></tr>
+            <tr><td>Cleanup</td><td>本批 containers/networks/test volumes 均为 0</td><td>其他 Docker 项目未受影响</td></tr>
+          </tbody></table></div>
+          <p><a href="../../architecture/be-02-identity-rbac-local-skeleton-20260724.md">阅读实现合同</a> · <a href="./evidence/be-02-identity-rbac-local-skeleton-20260724.json">打开机器证据</a>。生产静态前端仍是 canonical；本批没有生产写入、真实凭据、connector/provider 或 git 发布操作。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status review">BE-03–07 + DATA-REG · local governance chain</span>
+          <h3>从来源治理 API 到法规草稿的本地闭环</h3>
+          <div class="table-wrap"><table><thead><tr><th>能力</th><th>已验证</th><th>未越过的边界</th></tr></thead><tbody>
+            <tr><td>Source registry</td><td>版本化合同、ETag/If-Match、幂等、撤回与 append-only audit</td><td>没有生产 seed 或真实 identity</td></tr>
+            <tr><td>Snapshot / review</td><td>不可变 metadata、重复导入幂等、合法 review transition、非法跳转拒绝</td><td>没有真实 artifact importer 或法务决定</td></tr>
+            <tr><td>前端 adapter</td><td>同源只读 API、loading/error/empty/offline、fail-closed schema</td><td>生产仍以 static canonical</td></tr>
+            <tr><td>Recovery</td><td>隔离 PostgreSQL logical archive、恢复、精确重放、append-only trigger</td><td>没有读取或写入生产数据库</td></tr>
+            <tr><td>DATA-REG intake</td><td>空模板 0/6；synthetic 6/6 仅 shape-valid</td><td>完整 packet 也不能自我授权</td></tr>
+            <tr><td>DATA-REG projection</td><td>1 条 deterministic draft；lineage valid；重复输出 SHA 一致；撤回后 0 records</td><td>0 official snapshot / 0 reviewed decision / 0 publishable fact</td></tr>
+            <tr><td>DATA-REG handoff</td><td>1 个本地 pending candidate；approve/reject 均阻断；撤回后 0 candidate</td><td>不是 backend subject；0 review event / 0 legal decision / 0 backend write</td></tr>
+          </tbody></table></div>
+          <p>活动投影状态为 <code>synthetic-draft-ready-not-authorized</code>，内容固定为 <code>unknown + legal-review-required</code>；handoff 只创建本地 pending identity，<code>backendSubjectCreated=false</code>、<code>reviewEventId=null</code>。缺少官方字节核验与独立 reviewer authorization 时，完整合成 shape 也不能 approve/reject。<a href="../../architecture/data-reg-synthetic-draft-review-handoff-gate-20260724.md">阅读 Batch 20 实现与使用手册</a> · <a href="./evidence/data-reg-synthetic-draft-review-handoff-gate-20260724.json">打开 Batch 20 机器证据</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">Batch 21 · P0-03 local L1</span>
+          <h3>DataManage bundle 临时例外已退出</h3>
+          <div class="table-wrap"><table><thead><tr><th>验收项</th><th>结果</th><th>边界</th></tr></thead><tbody>
+            <tr><td>Route shell</td><td>2,487 → 641 行；主 chunk 233.53 → 35.80 KiB，减少 84.67%</td><td>业务模块顺序与 107 表不变</td></tr>
+            <tr><td>静态职责</td><td>core catalog / ERP catalog / governance / manual 分块；最大业务块 89.25 KiB</td><td>全部由普通 120 KiB 规则检查</td></tr>
+            <tr><td>审计</td><td>feature 目录纳入 deep audit；888 claims / 0 unsupported</td><td>26 source gaps 仍需真实业务证据</td></tr>
+            <tr><td>质量</td><td>174/174 tests；lint；0 vulnerabilities；64 assets / 63 pass / 1 exception</td><td>剩余例外仅 vendor-charts 353.19 KiB</td></tr>
+            <tr><td>浏览器</td><td>桌面/移动无溢出、0 console error；手册 chunk 点击后才请求</td><td>系统 Chrome 验收；项目 Chromium 缓存缺失已单独披露</td></tr>
+          </tbody></table></div>
+          <p><a href="../../architecture/p0-03-datamanage-bundle-exception-retirement-20260724.md">阅读 Batch 21 设计与使用手册</a> · <a href="./evidence/p0-03-datamanage-bundle-exception-retirement-20260724.json">打开 Batch 21 机器证据</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">Batch 22 · P0-03 local L1</span>
+          <h3>最后一个 bundle 临时例外已退出</h3>
+          <div class="table-wrap"><table><thead><tr><th>验收项</th><th>结果</th><th>边界</th></tr></thead><tbody>
+            <tr><td>拆分策略</td><td>只固定共享 <code>CartesianChart.js</code> 为 <code>vendor-chart-core</code>；其余图表族按 lazy route 自动拆分</td><td>没有通过提高临时上限过关</td></tr>
+            <tr><td>共享核心</td><td>353.19 → 149.52 KiB，减少 57.67%；永久硬上限 180 KiB</td><td>required rule；无 exception</td></tr>
+            <tr><td>图表族</td><td>YAxis 99.29、Radar 24.12、Bar 16.15、Pie 12.78、Scatter 10.19、Line 9.48 KiB</td><td>全部受普通 120 KiB 规则检查</td></tr>
+            <tr><td>质量</td><td>176/176 tests；lint；2,333 modules；77 assets / 77 pass / 0 exception</td><td><span class="status example">npm audit 14 high</span>，release candidate blocked</td></tr>
+            <tr><td>浏览器</td><td>6 routes × desktop/mobile = 12/12；图表可见；0 overflow；0 console/page error</td><td>系统 Chrome 验收；未部署应用 bundle</td></tr>
+          </tbody></table></div>
+          <p><a href="../../architecture/p0-03-vendor-charts-bundle-exception-retirement-20260727.md">阅读 Batch 22 设计与使用手册</a> · <a href="./evidence/p0-03-vendor-charts-bundle-exception-retirement-20260727.json">打开 Batch 22 机器证据</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">Batch 23 · P0-02 local L1</span>
+          <h3>14 个 high advisories 已清零</h3>
+          <div class="table-wrap"><table><thead><tr><th>验收项</th><th>结果</th><th>边界</th></tr></thead><tbody>
+            <tr><td>Router runtime</td><td>React/ReactDOM 19.2.8；React Router 8.3.0；Node floor ≥22.22.0</td><td><code>react-router-dom</code> 已删除；20 个文件迁移</td></tr>
+            <tr><td>Lint / CSS toolchain</td><td>ESLint 10.8.0；TypeScript-ESLint 8.65.0；PostCSS 8.5.23</td><td>React Hooks/Refresh plugins 同步兼容升级</td></tr>
+            <tr><td>代码质量</td><td>修正 mobile lazy state、Carousel effect state 与 <code>reInit</code> cleanup</td><td>没有 disable 新 ESLint 规则</td></tr>
+            <tr><td>永久合同</td><td>Node/依赖最低版本、旧 package、旧导入 3/3 tests</td><td>允许安全 patch 升级，阻止已知风险回流</td></tr>
+            <tr><td>质量门</td><td>179/179 unit；lint；2,383 modules；audit 0；77/77 bundle；两层数据审计通过</td><td>正式 unit gate 使用串行 worker</td></tr>
+            <tr><td>浏览器</td><td>75 desktop + 75 mobile = 150/150；46 路由与 provenance guardrails</td><td>系统 Chrome 本地验收；未部署应用 bundle</td></tr>
+          </tbody></table></div>
+          <p><a href="../../architecture/p0-02-dependency-security-refresh-20260727.md">阅读 Batch 23 设计与使用手册</a> · <a href="./evidence/p0-02-dependency-security-refresh-20260727.json">打开 Batch 23 机器证据</a> · <a href="https://reactrouter.com/upgrading/v7">React Router 官方 v8 迁移指南</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status review">Batch 24 · local review complete / Git blocked</span>
+          <h3>全工作树已归属，8 个原子提交已编排</h3>
+          <div class="table-wrap"><table><thead><tr><th>复审域</th><th>结果</th><th>仍需关闭的门</th></tr></thead><tbody>
+            <tr><td>归属</td><td>起点 clean；基线 46 tracked modified + 161 untracked candidate；0 staged；全部属于 Graphify / 复盘 / Batch 01–23 连续链</td><td>混合文件必须 patch-stage；禁止 <code>git add -A</code></td></tr>
+            <tr><td>代码与安全</td><td><span class="status verified">clean</span> Codex review 无 accepted/actionable finding；高置信 secret scan 无真实 token / private key</td><td>每个 staged diff 仍需独立复扫</td></tr>
+            <tr><td>前端</td><td><span class="status verified">fresh 8/8</span> 179 unit、lint、audit 0、2,383-module build、77/77 bundle、43/107/53 数据合同、888 claims；Chrome desktop/mobile 150/150</td><td>聚合 E2E 1,403,478ms；首次被诊断中断的 7/8 未作为成功证据，运行时确定性继续优化</td></tr>
+            <tr><td>后端</td><td><span class="status verified">62 tests</span> 92.73% coverage；BE-07 fixture recovery、精确重放、append-only、RPO/RTO 通过；残留 0</td><td>在 Git handoff 前加入 backend CI job</td></tr>
+            <tr><td>提交顺序</td><td>DataManage/bundle → source governance → BE-01–07 → DATA-REG → ops → dependency → Graphify → docs</td><td>Commit 1–6 后重建 Graphify，使报告 HEAD 等于新 HEAD</td></tr>
+            <tr><td>授权边界</td><td>stage、commit、push、deploy、生产/provider/connector 写入均未发生</td><td>local commit、push、deploy 分别授权；授权不向后传递</td></tr>
+          </tbody></table></div>
+          <p><a href="./p0-local-release-review-20260727.md">阅读 Batch 24 原子提交与回滚方案</a> · <a href="./evidence/p0-local-release-review-20260727.json">打开 Batch 24 机器证据</a>。非阻断债务保留为 <code>ds-015</code>/<code>ds-018</code> 持久证据路径和 1 条 TestClient 迁移 warning，均未伪装为已补齐。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status review">Batch 25 · local CI-equivalent passed / GitHub pending</span>
+          <h3>BE-03–07 已进入独立 backend CI 门禁</h3>
+          <div class="table-wrap"><table><thead><tr><th>验收项</th><th>结果</th><th>边界</th></tr></thead><tbody>
+            <tr><td>工作流形态</td><td><code>app</code> / <code>backend</code> 并行；顶层仅 <code>contents: read</code>；backend timeout 30 分钟</td><td>任一 job 失败都阻止合并，不互相替代</td></tr>
+            <tr><td>可复现运行时</td><td>Python 3.12.13、uv 0.11.11、setup-uv 完整 SHA、<code>uv sync --frozen</code></td><td>未设置会弱化 <code>uv lock --check</code> 的 job 级 <code>UV_FROZEN</code></td></tr>
+            <tr><td>永久合同</td><td><span class="status verified">2/2</span> workflow parse、权限、版本、命令与 artifact 路径通过</td><td>禁止 SSH、rsync、deploy、cron、半月刷新与直接 Compose 启动</td></tr>
+            <tr><td>完整门禁</td><td><span class="status verified">64/64</span> tests；92.73% coverage；lock、Ruff、Compose、backup/restore、replay、append-only 全通过</td><td>仍有 1 条 TestClient 迁移 warning，不阻断</td></tr>
+            <tr><td>失败证据</td><td><code>report.json</code> / <code>cleanup.json</code> 使用 <code>if: always()</code>，保留 14 天</td><td>缺失只告警，避免覆盖先发生的门禁失败</td></tr>
+            <tr><td>隔离与清理</td><td>containers / networks / volumes = 0 / 0 / 0；production DB read/write=false；provider calls=0</td><td>L2 fixture-only，不是生产恢复或生产后端证明</td></tr>
+            <tr><td>Graphify</td><td>4,546 nodes / 7,204 edges / 346 communities；完整性缺陷 0</td><td>Batch 26 报告绑定代码修复提交 <code>d3fb8c4b</code>，由 <code>19b3ab0</code> 提交</td></tr>
+            <tr><td>Git handoff</td><td><code>BACKEND-CI</code> 已在工作树关闭</td><td>stage/commit、push、deploy 未授权；真实 GitHub Actions 尚未运行</td></tr>
+          </tbody></table></div>
+          <p><a href="../../architecture/p0-backend-ci-quality-gate-20260727.md">阅读 Batch 25 设计与使用手册</a> · <a href="./evidence/p0-backend-ci-quality-gate-20260727.json">打开 Batch 25 机器证据</a> · <a href="https://github.com/astral-sh/setup-uv">setup-uv 官方说明</a> · <a href="https://docs.github.com/en/actions/reference/runners/github-hosted-runners">GitHub 托管 runner 官方说明</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">Batch 26 · local committed / external handoff pending</span>
+          <h3>本地原子提交、复审修复与图谱已闭环</h3>
+          <div class="table-wrap"><table><thead><tr><th>验收域</th><th>结果</th><th>边界 / 下一门</th></tr></thead><tbody>
+            <tr><td>本地提交</td><td><span class="status verified">9 个实现/图谱提交</span> DataManage、source、BE、DATA-REG、ops、dependency、Graphify、review fixes；本 HTML 为第 10 个 docs 提交</td><td>相对远端同名分支基线 <code>0d44c332</code>；未 push、未建 PR</td></tr>
+            <tr><td>Review fixes</td><td>法规权威 host/日期/路径；两类问卷删行；customs 实际计数；portal smoke 拒绝意外 200，共 5 类已修复</td><td>修复提交 <code>d3fb8c4</code>；定向自动复审因 Codex 额度耗尽中断，不声明 clean</td></tr>
+            <tr><td>前端候选</td><td><span class="status verified">8/8</span> 182 unit、lint、audit 0、2,383 modules、77/77 bundle、数据审计 0、Chrome 150/150</td><td>本地候选 ready；不是 GitHub-hosted CI 或生产验证</td></tr>
+            <tr><td>后端</td><td><span class="status verified">64/64</span> 92.73%；RPO 1.246062s、RTO 4.695664s；残留 0；production DB read/write=false</td><td>L2 fixture-only；未部署 backend</td></tr>
+            <tr><td>Graphify</td><td>4,546 nodes / 7,204 edges / 346 communities；所有 multigraph integrity 计数为 0</td><td>报告 built from <code>d3fb8c4b</code>；0 模型 token</td></tr>
+            <tr><td>授权边界</td><td>local patch-stage / commit=true；push / PR / deploy / production write=false</td><td>下一门：独立 push 授权、GitHub app/backend CI、review retry、独立 deploy 授权</td></tr>
+          </tbody></table></div>
+          <p><a href="./p0-local-atomic-commits-20260727.md">阅读 Batch 26 原子提交、使用与回滚手册</a> · <a href="./evidence/p0-local-atomic-commits-20260727.json">打开 Batch 26 机器证据</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">Batch 27 · draft PR / GitHub CI green</span>
+          <h3>GitHub-hosted app/backend 门禁与定向修复已闭环</h3>
+          <div class="table-wrap"><table><thead><tr><th>验收域</th><th>结果</th><th>边界 / 下一门</th></tr></thead><tbody>
+            <tr><td>草稿 PR</td><td><span class="status verified">#32 open/draft</span> base=<code>main</code>；head=<code>codex/mkt53-release-candidate-20260630</code></td><td>已 push；未 merge、未 deploy</td></tr>
+            <tr><td>Review fixes</td><td>拒绝不可能日期和 <code>1junk</code> 计数；<code>ds-016</code> 改用加拿大法律官方 host；修复 uv cache glob</td><td>修复提交 <code>6674e0f</code>；88 app + 2 backend 聚焦测试通过</td></tr>
+            <tr><td>GitHub app</td><td><span class="status verified">8/8</span> 23 files / 183 unit、audit 0、2,383 modules、77/77 bundle、43/107/53、888 claims、Chrome 150/150</td><td>run <a href="https://github.com/zjgulai/mkt53/actions/runs/30257673802">30257673802</a>；annotations=0；不是生产验证</td></tr>
+            <tr><td>GitHub backend</td><td><span class="status verified">64/64</span> 92.73%；RPO 0.426246s、RTO 1.938102s；残留 0</td><td>L2 fixture-only；annotations=0；未部署 backend</td></tr>
+            <tr><td>Codex review</td><td>未发出新 actionable finding；diff、官方 setup-uv 规则和边界用例已检查</td><td>审查器三层自递归后有界终止，不声明 clean</td></tr>
+            <tr><td>Graphify</td><td>4,556 nodes / 7,215 edges / 344 communities；所有 multigraph integrity 计数为 0</td><td>report built from <code>0d4cf7a5</code>，由 <code>6674e0f</code> 连同修复提交；0 模型 token</td></tr>
+            <tr><td>授权边界</td><td>push / PR=true；merge / deploy / production write=false</td><td>下一门：人工 review、明确 merge 决策、独立 deploy 授权</td></tr>
+          </tbody></table></div>
+          <p><a href="./p0-github-ci-review-closeout-20260727.md">阅读 Batch 27 GitHub CI、使用与回滚手册</a> · <a href="./evidence/p0-github-ci-review-closeout-20260727.json">打开 Batch 27 机器证据</a> · <a href="https://github.com/zjgulai/mkt53/pull/32">打开草稿 PR #32</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">Batch 28 · full review findings closed / CI green</span>
+          <h3>完整 Codex 分支复核与证据治理修复已闭环</h3>
+          <div class="table-wrap"><table><thead><tr><th>验收域</th><th>结果</th><th>边界 / 下一门</th></tr></thead><tbody>
+            <tr><td>Codex review</td><td><span class="status verified">6/6 closed</span> 2 个 P1 + 4 个 P2；task/source scope、safety counters、proof fields、skip stale evidence、manual/regulation 日期</td><td>wrapper 的 clean 尾句与 findings 矛盾，已拒绝作为证据；以结构化 finding 为准</td></tr>
+            <tr><td>实现</td><td><code>212f7dc</code> 新增共享 strict ISO helper 并收紧 manual review、customs adapter、refresh 与 regulation intake</td><td>没有 source registry/page/fact/production 写入</td></tr>
+            <tr><td>本地候选</td><td><span class="status verified">通过</span> 98 focused、23 files / 186 unit、lint、2,383 modules、77/77 bundle、888 claims、Chrome 150/150</td><td>首次 E2E 仅缺本机 Chromium；安装浏览器缓存后完整通过</td></tr>
+            <tr><td>GitHub CI</td><td><span class="status verified">app + backend success</span> 精确 SHA <code>690fb9f</code>；两个 job annotations=0</td><td>run <a href="https://github.com/zjgulai/mkt53/actions/runs/30261698324">30261698324</a>；不是生产验证</td></tr>
+            <tr><td>Graphify</td><td>4,574 nodes / 7,249 edges / 335 communities；188 inferred edges；0 模型 token</td><td>report built from <code>212f7dcd</code>，由 <code>690fb9f</code> 提交；58 个 zero-AST 源文件须看原文</td></tr>
+            <tr><td>草稿 PR</td><td><span class="status verified">#32 open/draft</span> branch 已推送</td><td>未 merge、未 deploy、未生产写入；下一门为人工 review 与明确 merge 决策</td></tr>
+          </tbody></table></div>
+          <p><a href="./p0-full-codex-review-closeout-20260727.md">阅读 Batch 28 完整复核、使用与回滚手册</a> · <a href="./evidence/p0-full-codex-review-closeout-20260727.json">打开 Batch 28 机器证据</a> · <a href="https://github.com/zjgulai/mkt53/pull/32">打开草稿 PR #32</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status verified">Batch 29 · PR Ready / exact-head CI green</span>
+          <h3>最终复审、事实展示门、响应式导航与高优先级外部 finding 已闭环</h3>
+          <div class="table-wrap"><table><thead><tr><th>验收域</th><th>结果</th><th>边界 / 下一门</th></tr></thead><tbody>
+            <tr><td>增量复审</td><td><span class="status verified">5/5 closed</span> 2 个 P1 + 3 个 P2；pending review 旧 ETag、用户事实展示、三条严格日期、gate 导航与移动可见性</td><td>完整复审的首轮重试因 SIGKILL/137 无结论；采用 Batch 28 完整基线 + 本批逐提交复审</td></tr>
+            <tr><td>高优先级外部复审</td><td><span class="status verified">5/5 fixed</span> CodeRabbit 3 Critical + 1 Major，Codex Review 1 P2；最终受控只读复审为 <code>No actionable findings.</code></td><td>3/3 Critical inline threads 已回复并 resolved；33 个 Minor 留待独立批次验证</td></tr>
+            <tr><td>实现提交</td><td><code>1535602</code>、<code>257c1aa</code>、<code>99cfc3d</code>；高优先级修复 <code>f880ea5</code>；图谱 <code>5360ea6</code></td><td>未修改生产数据、连接器、nginx 或 cron</td></tr>
+            <tr><td>本地候选</td><td><span class="status verified">通过</span> 24 files / 190 unit、lint、2,384 modules、78 JS assets、43/107/53 audit、888 claims、Chromium 154/154</td><td>customs evidence/adapter/latest/safety counter 一致；桌面与移动双视口</td></tr>
+            <tr><td>后端</td><td><span class="status verified">66/66</span> 92.74%；Ruff/format 与 Compose 隔离恢复通过</td><td>request session 与 readiness probe 共享连接超时；L2 fixture-only</td></tr>
+            <tr><td>GitHub CI</td><td><span class="status verified">app + backend success</span> 精确 head <code>7ae8a19</code>；两个 job annotations=0</td><td>run <a href="https://github.com/zjgulai/mkt53/actions/runs/30271729225">30271729225</a>；app 4m20s、backend 1m1s；不是生产验证</td></tr>
+            <tr><td>Graphify</td><td>4,600 nodes / 7,312 edges / 346 communities；report built from <code>f880ea5</code></td><td>由 <code>5360ea6</code> 对齐提交；60 个 zero-AST 源文件须看原文</td></tr>
+            <tr><td>PR #32</td><td><span class="status verified">open / Ready</span></td><td>Batch 29 生成时 recheck 为 <code>Review queued</code>；该历史快照已被 Batch 30 的 c2fe terminal review 与 5 项 follow-up 取代，human review 与 merge 决策仍未完成</td></tr>
+          </tbody></table></div>
+          <p><a href="./p0-pr-ready-handoff-20260727.md">阅读 Batch 29 PR Ready、使用与回滚手册</a> · <a href="./evidence/p0-pr-ready-handoff-20260727.json">打开 Batch 29 机器证据</a> · <a href="https://github.com/zjgulai/mkt53/pull/32">打开 Ready PR #32</a>。</p>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <span class="status review">Batch 30 follow-up · e971 CI green / safety status local clean</span>
+          <h3>Owner intake、公开证据与恢复候选 Minor 风险进入精确 head follow-up</h3>
+          <div class="table-wrap"><table><thead><tr><th>验收域</th><th>结果</th><th>边界 / 下一门</th></tr></thead><tbody>
+            <tr><td>Owner 问题合同</td><td><span class="status verified">通过</span> 空问卷补齐为 missing；Q2 不再伪造采集窗口；模板只请求实际缺项；Q1–Q6 白名单覆盖 builder、merge 与 validator</td><td><code>ready_for_manual_review</code> 仍不授权 registry/page/CSV 写入</td></tr>
+            <tr><td>Chat pack / merge</td><td><span class="status verified">通过</span> 严格解析问题表达式；按 requested key 合并；重复、外部、缺行、计数错配与未知 ID 均失败关闭</td><td>错配时重新生成 pack，不允许手工绕过</td></tr>
+            <tr><td>公开证据</td><td><span class="status verified">真实边界</span> H2 no-network dry-run 39 planned；<code>networkCalls=0</code>、<code>businessDataWrites=0</code>；三条 seed 已绑定真实 Fortune BI / GMI URL</td><td>planned 不是 captured；Amazon/CRM/ERP/VOC 等仍 gated</td></tr>
+            <tr><td>页面门禁</td><td><span class="status verified">6 页共享收口</span> <code>usePublicEvidence(sourceId, page)</code> 统一 parser、作用域过滤、安全汇总与 eligible 派生；任一同页安全违规都会清空展示</td><td>只合并 in-flight 请求，结算后释放；路由重新挂载会 no-store 复验，ABC Kids Expo / Nielsen 未治理前不展示结论</td></tr>
+            <tr><td>恢复与权限</td><td><span class="status verified">通过</span> periodic/weekly byte parity + schema-aware nested object / every array shape；动态 count map、live-only optional 字段与 <code>localEvidence</code> 内层字段均验证</td><td>嵌套类型与必填字段漂移仍失败；候选仍是 L2；没有生产发布、cron 或 nginx 操作</td></tr>
+            <tr><td>本地门禁</td><td><span class="status verified">通过</span> 25 files / 205 tests、lint、2,386 modules、43/107/53 audit、46 routes / 884 claims / 0 high / medium / unsupported</td><td>精确 head <code>e971d75</code> 的 GitHub-hosted app/backend checks 已通过；当前 safety-label follow-up 新 head 待验证</td></tr>
+            <tr><td>CodeRabbit</td><td><span class="status verified">local fixed</span> run <code>d8869cb1-a4e7-4c73-b14b-6ab74d3996d5</code> / review <code>4794952413</code> 在 <code>e971d75</code> 给出 1 项安全边界文案 finding</td><td>login、bypass、writes 与 raw-text 触发原因已完整输出；新 head recheck 尚未开始</td></tr>
+            <tr><td>Codex review</td><td><span class="status verified">completed clean</span> session <code>019fa7af-1dfd-7793-ad05-84b4fa52c572</code> 为 0 actionable finding，exit 0</td><td>确认 fail-closed 保持，205 tests、lint、TypeScript 与 production build 通过</td></tr>
+            <tr><td>Graphify</td><td>4,671 nodes / 7,457 edges / 346 communities；0 dangling / 0 self-loop / 0 模型 token；MD037=0 / MD038=0</td><td>61 个 zero-AST 文件仍须结合原始 JSON/config 复核</td></tr>
+          </tbody></table></div>
+          <p><a href="./minor-data-integrity-closeout-20260728.md">阅读 Batch 30 设计、使用、回滚与 TODO 手册</a> · <a href="./evidence/minor-data-integrity-closeout-20260728.json">打开 Batch 30 机器证据</a> · <a href="https://github.com/zjgulai/mkt53/pull/32">打开 Ready PR #32</a>。</p>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item card">
+            <span class="status verified">Day 0–15 · 本地 P0 门禁已闭环</span>
+            <h3>恢复可信刷新与安全门禁</h3>
+            <p><b>已完成：</b>source schema、dependency security、bundle budget、候选证据包、P0-04 生产恢复，以及 P0-05 统一门户与 manifest 门禁生产激活。P0-04 首次定时运行仍待 8 月 1 日时间窗观察。</p>
+            <p><b>验收：</b>Batch 30 follow-up 本地 audit 为 0、unit 205/205；<code>e971d75</code> 的 exact-head GitHub-hosted app/backend CI 全绿，当前未提交安全边界文案修复仍须在推送后重新确认新 head。生产 freshness 已恢复到 H2，P0-05 使用独立写入授权和真实授权会话完成正负向验收，production E2E 为 8/8。</p>
+          </div>
+          <div class="timeline-item card">
+            <span class="status verified">Day 16–30 · BE-01–07 本地链路已验证</span>
+            <h3>身份、registry 与 review 状态机</h3>
+            <p>身份/RBAC、versioned source registry、immutable snapshot、review state machine、前端只读 adapter 和隔离恢复演练均已完成本地验收；生产 static 仍保持 canonical。</p>
+            <p><b>验收：</b>来源状态、审计、撤回、幂等与恢复链路在 fixture/isolated DB 成立；真实 portal identity、production database 与 backup schedule 尚未激活。</p>
+          </div>
+          <div class="timeline-item card">
+            <span class="status review">Day 31–60 · DATA-REG L2 合成闭环</span>
+            <h3>Amazon / CRM / VOC / 法规</h3>
+            <p>法规域已完成合同、owner/legal intake readiness、synthetic intake-to-draft projection 与 draft-to-review fail-closed handoff；真实输入仍为 0/6，因此没有启动 live collection。Amazon / CRM / VOC 继续保持 owner/auth gated。</p>
+            <p><b>下一门：</b>等待真实 owner 输入与独立授权；不再用合成 fixture 模拟业务完成。两个 bundle 例外和依赖安全回归均已关闭；保持 8 月 1 日 cron 首次运行只读观察。</p>
+          </div>
+          <div class="timeline-item card">
+            <span class="status verified">Day 61–90 · 决策与反馈</span>
+            <h3>报告、AI proxy 与 action lineage</h3>
+            <p>报告绑定 immutable snapshot；AI 任务绑定 dataset/model/review/cost；洞察可生成 action 并回填结果。</p>
+            <p><b>验收：</b>至少 3 类报告全引用可追溯；AI 输出 100% 有 request id；洞察引用到 action/result 可查询。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="acceptance">
+        <div class="chapter-head">
+          <div class="chapter-no">12 / ACCEPT</div>
+          <div><h2>指标体系与验收标准</h2><p class="section-intro">避免只统计页面数和访问量。指标分为可信度、数据、使用、决策、工程五层；没有采集系统的指标先定义，不宣称已经达到。</p></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>层</th><th>北极星指标</th><th>定义</th><th>90 天目标</th></tr></thead>
+            <tbody>
+              <tr><td>Trust</td><td>Decision-ready claim rate</td><td>有 source + scope + fresh snapshot + review 的已引用声明占比</td><td>核心 P0 页面 ≥80%</td></tr>
+              <tr><td>Data</td><td>Freshness SLA</td><td>周期内按时生成且通过审计的快照比例</td><td>≥95%，过期 24h 内告警</td></tr>
+              <tr><td>Governance</td><td>Gap closure lead time</td><td>从 needs-review 到 approve/reject 的中位时长</td><td>P0 ≤10 工作日</td></tr>
+              <tr><td>Use</td><td>Evidence trace rate</td><td>洞察会话中打开来源/口径的比例</td><td>基线后持续提升，不设伪精确值</td></tr>
+              <tr><td>Decision</td><td>Action lineage coverage</td><td>已引用洞察中绑定 action + owner + outcome 的比例</td><td>≥60%</td></tr>
+              <tr><td>AI</td><td>Reviewed output rate</td><td>进入报告或决策的 AI 输出中通过人工复核的比例</td><td>100%</td></tr>
+              <tr><td>Engineering</td><td>Release evidence completeness</td><td>test/lint/audit/build/e2e/data audit 证据齐全的发布比例</td><td>100%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="chapter" id="engineering">
+        <div class="chapter-head">
+          <div class="chapter-no">13 / ENGINEERING</div>
+          <div><h2>工程、质量与发布复盘</h2><p class="section-intro">生产动作仅发生在 P0-04 与 P0-05 各自独立授权范围；后续 BE-01–07 和 DATA-REG 均为本地/隔离验证，没有部署后端、调用 provider/connector 或提升业务事实。</p></div>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>本次验证</h3>
+            <div class="table-wrap"><table><thead><tr><th>检查</th><th>结果</th></tr></thead><tbody>
+              <tr><td>Graphify AST + cluster</td><td id="graphifyStatus"><span class="status verified">通过</span> 4,671 nodes / 7,457 edges / 346 communities；0 dangling / 0 self-loop / 0 model tokens；MD037=0 / MD038=0</td></tr>
+              <tr><td>Graph health</td><td><span class="status verified">通过</span> 0 integrity defects</td></tr>
+              <tr><td>Vitest</td><td><span class="status verified">通过</span> 25 files / 205 tests；owner 问题合同、schema-aware 恢复合同、runtime public evidence、完整 safety reason、in-flight-only revalidation 与 static scripts 回归通过；无失败</td></tr>
+              <tr><td>ESLint</td><td><span class="status verified">通过</span> ESLint 10；未禁用新增生命周期规则</td></tr>
+              <tr><td>TypeScript + Vite build</td><td><span class="status verified">通过</span> 2,386 modules</td></tr>
+              <tr><td>Data consistency</td><td><span class="status verified">通过</span> 0 issues</td></tr>
+              <tr><td>Deep audit</td><td><span class="status verified">通过</span> 884 low-risk claims；0 high / medium / unsupported</td></tr>
+              <tr><td>npm audit</td><td><span class="status verified">通过</span> 14 high → 0 vulnerabilities；依赖树完整</td></tr>
+              <tr><td>Bundle budget</td><td><span class="status verified">通过</span> 78 JS assets；0 temporary exception / 0 failures；DataManage 与 vendor-charts 例外均已删除</td></tr>
+              <tr><td>DataManage browser acceptance</td><td><span class="status verified">通过</span> desktop + mobile；manual lazy request verified；0 overflow；0 console errors</td></tr>
+              <tr><td>Chart route browser acceptance</td><td><span class="status verified">通过</span> 8 routes × desktop/mobile；16/16；chart 或 evidence gate 状态正确；导航可见；0 overflow；0 console/page errors</td></tr>
+              <tr><td>Release evidence</td><td><span class="status verified">GitHub-hosted 候选 ready</span> unit/lint/audit/build/bundle/data/E2E 与 backend 均通过；run 30266769844；生产仍 not deployed / not verified</td></tr>
+              <tr><td>P0-04 recovery candidate</td><td><span class="status verified">通过</span> 6 / 6；L2 dry-run；2026-07-H2；production writes=false</td></tr>
+              <tr><td>P0-04 authorized recovery</td><td><span class="status verified">通过</span> L4；H2 production 10/10 hashes；cron installed；首次调度观察待 8/1</td></tr>
+              <tr><td>P0-05 isolated candidate</td><td><span class="status verified">通过</span> L2 Docker fixture；nginx syntax；3×302；2×synthetic 200；internal auth 404；unit 3/3</td></tr>
+              <tr><td>BE-03–07 local chain</td><td><span class="status verified">通过</span> source/snapshot/review/adapter/recovery；生产激活 pending</td></tr>
+              <tr><td>DATA-REG synthetic projection</td><td><span class="status verified">通过</span> targeted 8/8；1 draft；byte-identical replay；withdrawal 0 records；0 fact promotion</td></tr>
+              <tr><td>DATA-REG review handoff gate</td><td><span class="status verified">通过</span> targeted 12/12；pending candidate 1；approve/reject blocked；withdrawn candidate 0；0 backend/review writes</td></tr>
+              <tr><td>Local E2E</td><td id="localE2EStatus"><span class="status verified">通过</span> 154 / 154；77 desktop + 77 mobile；Router 8、事实展示门与完整数据来源护栏复跑通过</td></tr>
+              <tr><td>Production freshness</td><td><span class="status verified">已恢复</span> production H2；cron installed；first scheduled observation pending；upstream unknown-gated</td></tr>
+              <tr><td>Production static smoke</td><td><span class="status verified">通过</span> 站点、静态资产与已发布 manifest 可读</td></tr>
+              <tr><td>Production E2E</td><td id="prodE2EStatus"><span class="status verified">通过</span> 8 / 8；2026-07-24 P0-05 激活后桌面/移动 landing、root、deep routes 与 manifest 门禁全部通过</td></tr>
+              <tr><td>GitHub Actions</td><td><span class="status verified">Batch 30 Graphify follow-up green</span> 精确 head <code>e971d75</code> 的 run <a href="https://github.com/zjgulai/mkt53/actions/runs/30338156933">30338156933</a> 已通过；app 4m39s、backend 1m1s，两个 checks annotations=0；当前 safety-label follow-up 仍须在新 head 复核</td></tr>
+              <tr><td>CodeRabbit</td><td><span class="status review">new head recheck pending</span> <code>e971d75</code> review 为 COMMENTED / 1 inline safety-label finding；本地已修复；status SUCCESS 不解释为批准</td></tr>
+              <tr><td>Codex review</td><td id="codexReviewStatus"><span class="status verified">completed clean</span> 最终受控 session <code>019fa7af-1dfd-7793-ad05-84b4fa52c572</code> 为 0 actionable finding，exit 0</td></tr>
+            </tbody></table></div>
+          </div>
+          <div class="card">
+            <h3>发布原则</h3>
+            <ul class="checklist">
+              <li>完整应用发布入口仍是 <code>npm run deploy:prod:verified</code>；P0-05 使用独立 nginx 写入授权完成 mkt-only 激活，没有部署应用 bundle。</li>
+              <li><code>rsync --delete</code> 具有真实覆盖副作用，只能在门禁通过和目标确认后执行。</li>
+              <li>宿主 landing 与 mkt53 静态目录分开；不要用 Vite dist 覆盖 landing。</li>
+              <li>生产 smoke、production E2E、生产 manifest 是独立证据，不能由本地 build 替代。</li>
+              <li>当前 cron daemon active/enabled 且唯一 mkt53 job 已安装；首次定时执行仍须在 2026-08-01 09:00 后以日志和生产哈希证明。</li>
+              <li>公开证据 capture 的 <code>businessDataWrites=0</code> 不代表连接器已接入。</li>
+              <li>构建后运行 <code>npm run quality:bundle-budget</code>；完整候选运行 <code>npm run quality:release-evidence</code>。</li>
+              <li>本地证据写入 <code>app/tmp/release-evidence/latest.json</code>；CI 同名 artifact 保留 14 天。</li>
+              <li>DataManage 与 <code>vendor-charts</code> 临时例外均已删除；shared chart core 使用 required、无 exception 的 180 KiB 永久规则。</li>
+              <li>当前新鲜 <code>npm audit</code> 为 0 vulnerabilities；Node ≥22.22、最低安全版本和禁止 <code>react-router-dom</code> 回流已由永久合同保护。</li>
+              <li>Batch 29 已把 PR #32 转为 Ready，完成原 5 项增量修复及当时 CodeRabbit/Codex Review 的高优先级修复、exact-head CI 与 3/3 thread resolve；其 queued 状态已被 Batch 30 的 c2fe terminal review 取代。</li>
+              <li>Batch 30 Graphify follow-up 已通过 <code>e971d75</code> exact-head CI；该 head 的 CodeRabbit safety-label finding 已本地关闭，并由 session <code>019fa7af-1dfd-7793-ad05-84b4fa52c572</code> clean recheck。下一步推送并确认 PR #32 精确新 head 的 GitHub checks 与 CodeRabbit recheck，不能沿用 <code>e971d75</code> 作为当前安全文案工作树 CI 证据。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="artifacts">
+        <div class="chapter-head">
+          <div class="chapter-no">14 / ARTIFACTS</div>
+          <div><h2>整体目录与交付产物</h2><p class="section-intro">核心安装、图谱和复盘文档各自有清晰归属。Graphify 运行时解释器、缓存和 lessons 留在本机，不进入版本库。</p></div>
+        </div>
+        <div class="grid grid-2">
+          <div class="card artifact-list">
+            <h3>正式产物</h3>
+            <a href="./index.html"><b>docs/reviews/…/index.html</b><span>本复盘与手册</span></a>
+            <a href="../../../graphify-out/graph.html"><b>graphify-out/graph.html</b><span>交互图谱</span></a>
+            <a href="../../../graphify-out/graph.json"><b>graphify-out/graph.json</b><span>查询数据</span></a>
+            <a href="../../../graphify-out/GRAPH_REPORT.md"><b>graphify-out/GRAPH_REPORT.md</b><span>结构报告</span></a>
+            <a href="../../../.codex/skills/graphify/SKILL.md"><b>.codex/skills/graphify/</b><span>项目级 skill</span></a>
+            <a href="../../../app/scripts/quality/bundle-budgets.json"><b>app/scripts/quality/bundle-budgets.json</b><span>可执行 chunk 预算合同</span></a>
+            <a href="../../../app/tmp/release-evidence/latest.json"><b>app/tmp/release-evidence/latest.json</b><span>忽略版本控制的本地候选证据</span></a>
+            <a href="../../../app/tmp/data-collection/recovery-candidates/2026-07-H2/recovery-preflight.json"><b>app/tmp/data-collection/recovery-candidates/2026-07-H2/recovery-preflight.json</b><span>P0-04 L2 隔离恢复候选</span></a>
+            <a href="./evidence/p0-04-production-readonly-20260723.json"><b>evidence/p0-04-production-readonly-20260723.json</b><span>P0-04 L3 生产只读证据</span></a>
+            <a href="./evidence/p0-04-production-recovery-20260723.json"><b>evidence/p0-04-production-recovery-20260723.json</b><span>P0-04 L4 授权生产恢复证据</span></a>
+            <a href="../../../app/configs/nginx/mkt53-portal-gate.candidate.conf"><b>app/configs/nginx/mkt53-portal-gate.candidate.conf</b><span>P0-05 L2 nginx 候选</span></a>
+            <a href="./evidence/p0-05-nginx-candidate-20260724.json"><b>evidence/p0-05-nginx-candidate-20260724.json</b><span>P0-05 L3/L2 只读与候选证据</span></a>
+            <a href="./evidence/p0-05-production-activation-20260724.json"><b>evidence/p0-05-production-activation-20260724.json</b><span>P0-05 L4 授权生产激活与真实会话证据</span></a>
+            <a href="../../architecture/data-reg-synthetic-intake-draft-projection-20260724.md"><b>docs/architecture/data-reg-synthetic-intake-draft-projection-20260724.md</b><span>Batch 19 设计逻辑与使用手册</span></a>
+            <a href="./evidence/data-reg-synthetic-intake-draft-projection-20260724.json"><b>evidence/data-reg-synthetic-intake-draft-projection-20260724.json</b><span>Batch 19 L2 机器证据</span></a>
+            <a href="../../../app/scripts/data/project-regulation-intake-to-sku-draft.mjs"><b>app/scripts/data/project-regulation-intake-to-sku-draft.mjs</b><span>纯合成 deterministic projector</span></a>
+            <a href="../../architecture/data-reg-synthetic-draft-review-handoff-gate-20260724.md"><b>docs/architecture/data-reg-synthetic-draft-review-handoff-gate-20260724.md</b><span>Batch 20 设计逻辑与使用手册</span></a>
+            <a href="./evidence/data-reg-synthetic-draft-review-handoff-gate-20260724.json"><b>evidence/data-reg-synthetic-draft-review-handoff-gate-20260724.json</b><span>Batch 20 L2 fail-closed 机器证据</span></a>
+            <a href="../../../app/scripts/data/build-regulation-review-handoff-gate.mjs"><b>app/scripts/data/build-regulation-review-handoff-gate.mjs</b><span>Draft → review handoff 本地门禁</span></a>
+            <a href="../../architecture/p0-03-datamanage-bundle-exception-retirement-20260724.md"><b>docs/architecture/p0-03-datamanage-bundle-exception-retirement-20260724.md</b><span>Batch 21 DataManage 拆分设计与使用手册</span></a>
+            <a href="./evidence/p0-03-datamanage-bundle-exception-retirement-20260724.json"><b>evidence/p0-03-datamanage-bundle-exception-retirement-20260724.json</b><span>Batch 21 L1 机器证据</span></a>
+            <a href="../../../app/src/features/data-manage/catalog.ts"><b>app/src/features/data-manage/</b><span>拆分后的 catalog、ERP、governance 与领域模型</span></a>
+            <a href="../../architecture/p0-03-vendor-charts-bundle-exception-retirement-20260727.md"><b>docs/architecture/p0-03-vendor-charts-bundle-exception-retirement-20260727.md</b><span>Batch 22 图表拆分设计与使用手册</span></a>
+            <a href="./evidence/p0-03-vendor-charts-bundle-exception-retirement-20260727.json"><b>evidence/p0-03-vendor-charts-bundle-exception-retirement-20260727.json</b><span>Batch 22 L1 机器证据与 audit 阻断</span></a>
+            <a href="../../../app/tests/e2e/chart-routes.spec.ts"><b>app/tests/e2e/chart-routes.spec.ts</b><span>图表 route 桌面/移动回归合同</span></a>
+            <a href="../../architecture/p0-02-dependency-security-refresh-20260727.md"><b>docs/architecture/p0-02-dependency-security-refresh-20260727.md</b><span>Batch 23 依赖兼容迁移设计与使用手册</span></a>
+            <a href="./evidence/p0-02-dependency-security-refresh-20260727.json"><b>evidence/p0-02-dependency-security-refresh-20260727.json</b><span>Batch 23 L1 安全、质量门与完整 E2E 证据</span></a>
+            <a href="../../../app/tests/scripts/dependency-security-contract.test.ts"><b>app/tests/scripts/dependency-security-contract.test.ts</b><span>Node、依赖版本与旧 Router 导入永久合同</span></a>
+            <a href="./p0-local-release-review-20260727.md"><b>p0-local-release-review-20260727.md</b><span>Batch 24 归属复审、8 个原子提交、回滚与授权边界</span></a>
+            <a href="./evidence/p0-local-release-review-20260727.json"><b>evidence/p0-local-release-review-20260727.json</b><span>Batch 24 本地代码/安全/前后端质量门机器证据</span></a>
+            <a href="../../architecture/p0-backend-ci-quality-gate-20260727.md"><b>docs/architecture/p0-backend-ci-quality-gate-20260727.md</b><span>Batch 25 backend CI 设计、使用与故障处理手册</span></a>
+            <a href="./evidence/p0-backend-ci-quality-gate-20260727.json"><b>evidence/p0-backend-ci-quality-gate-20260727.json</b><span>Batch 25 workflow、BE-07、Graphify 与授权边界机器证据</span></a>
+            <a href="../../../backend/tests/test_ci_workflow_contract.py"><b>backend/tests/test_ci_workflow_contract.py</b><span>最小权限、固定运行时与零外部变更永久合同</span></a>
+            <a href="./p0-local-atomic-commits-20260727.md"><b>p0-local-atomic-commits-20260727.md</b><span>Batch 26 原子提交、复审修复、验证、使用与回滚手册</span></a>
+            <a href="./evidence/p0-local-atomic-commits-20260727.json"><b>evidence/p0-local-atomic-commits-20260727.json</b><span>Batch 26 commits、review、release、BE-07、Graphify 与授权边界证据</span></a>
+            <a href="./p0-github-ci-review-closeout-20260727.md"><b>p0-github-ci-review-closeout-20260727.md</b><span>Batch 27 草稿 PR、GitHub CI、定向修复、使用与回滚手册</span></a>
+            <a href="./evidence/p0-github-ci-review-closeout-20260727.json"><b>evidence/p0-github-ci-review-closeout-20260727.json</b><span>Batch 27 PR、双 job、review、release、恢复与授权边界证据</span></a>
+            <a href="./p0-full-codex-review-closeout-20260727.md"><b>p0-full-codex-review-closeout-20260727.md</b><span>Batch 28 完整分支复核、6 项修复、验证、使用与回滚手册</span></a>
+            <a href="./evidence/p0-full-codex-review-closeout-20260727.json"><b>evidence/p0-full-codex-review-closeout-20260727.json</b><span>Batch 28 findings、本地门禁、Graphify、GitHub CI 与授权边界证据</span></a>
+            <a href="./p0-pr-ready-handoff-20260727.md"><b>p0-pr-ready-handoff-20260727.md</b><span>Batch 29 最终复审、PR Ready、合并前 TODO、使用与回滚手册</span></a>
+            <a href="./evidence/p0-pr-ready-handoff-20260727.json"><b>evidence/p0-pr-ready-handoff-20260727.json</b><span>Batch 29 findings、完整本地门禁、精确 SHA CI、Ready 与外部复审状态证据</span></a>
+            <a href="./minor-data-integrity-closeout-20260728.md"><b>minor-data-integrity-closeout-20260728.md</b><span>Batch 30 数据完整性设计、owner intake 使用、回滚与下一批 TODO</span></a>
+            <a href="./evidence/minor-data-integrity-closeout-20260728.json"><b>evidence/minor-data-integrity-closeout-20260728.json</b><span>Batch 30 本地门禁、CodeRabbit follow-up、Graphify 与授权边界机器证据</span></a>
+          </div>
+          <div class="card">
+            <h3>建议长期目录</h3>
+            <span class="command">docs/
+  architecture/   # 当前与目标系统边界
+  knowledge/      # 稳定规则与数据治理知识
+  product/        # PRD、roadmap、指标合同
+  reviews/        # 日期化项目复盘 HTML
+  workflows/      # 开发、数据、发布 runbook
+
+graphify-out/
+  graph.html
+  graph.json
+  GRAPH_REPORT.md
+
+.codex/skills/graphify/
+  SKILL.md
+  references/</span>
+          </div>
+        </div>
+        <div class="callout" style="margin-top:18px"><strong>后续维护：</strong>业务代码变化后运行 <code>graphify update .</code>，再运行 <code>graphify cluster-only . --min-community-size=0</code>；当前 346 个社区已重聚类。Graphify 本轮仍报告 61 个 JSON/config 等源文件产出 zero AST nodes，因此图谱不能替代这些原文核对。当前报告 built from <code>e971d75</code> 并包含未提交 safety-label follow-up working tree；Graphify 0.9.28 的本机用户级 report generator 已临时修正 thin-community 阈值计算，并以可变长 Markdown code-span delimiter 输出含嵌套反引号的社区 node label，当前 MD037=0 / MD038=0。升级工具后须重新检查 hotfix；本机路径变更也可能使修复失效。模块状态变化时同步 source registry、manifest、页面 gate、测试与本 HTML 的状态表。不要只改文案制造“已接入”。</div>
+      </section>
+
+      <footer>
+        <p><strong>mkt53 project review · 2026-07-22</strong></p>
+        <p>事实来源：仓库源码、Graphify AST、source registry、2026-07-H2 canonical manifest、授权生产证据、隔离后端演练、DATA-REG 合成合同与现场命令结果。推断已显式标注为设计建议；本地/fixture 结果未替代真实法规、SKU、法务或生产证据。</p>
+        <p class="only-print">打印提示：交互式 Graphify 图谱与源码链接请在电子版中打开。</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const progress = document.getElementById('readingProgress');
+    const tocLinks = [...document.querySelectorAll('#toc a')];
+    const chapters = [...document.querySelectorAll('.chapter')];
+    const updateScroll = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      progress.style.width = (max > 0 ? scrollY / max * 100 : 0) + '%';
+      let active = chapters[0]?.id;
+      for (const chapter of chapters) {
+        if (chapter.getBoundingClientRect().top <= 130) active = chapter.id;
+      }
+      tocLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + active));
+    };
+    addEventListener('scroll', updateScroll, { passive: true });
+    updateScroll();
+
+    const search = document.getElementById('moduleSearch');
+    const buttons = [...document.querySelectorAll('[data-filter]')];
+    const rows = [...document.querySelectorAll('#modules tbody tr[data-status]')];
+    let statusFilter = 'all';
+    const applyFilter = () => {
+      const query = search.value.trim().toLowerCase();
+      rows.forEach(row => {
+        const statusMatch = statusFilter === 'all' || row.dataset.status === statusFilter;
+        const textMatch = !query || row.textContent.toLowerCase().includes(query);
+        row.hidden = !(statusMatch && textMatch);
+      });
+      document.querySelectorAll('.module-card').forEach(card => {
+        const visible = [...card.querySelectorAll('tbody tr[data-status]')].some(row => !row.hidden);
+        card.hidden = !visible;
+        if (visible && query) card.open = true;
+      });
+    };
+    search.addEventListener('input', applyFilter);
+    buttons.forEach(button => button.addEventListener('click', () => {
+      statusFilter = button.dataset.filter;
+      buttons.forEach(item => item.classList.toggle('active', item === button));
+      applyFilter();
+    }));
+  </script>
+</body>
+</html>

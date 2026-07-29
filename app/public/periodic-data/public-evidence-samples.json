@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-14T05:06:37.375Z",
-  "mode": "live-browser-capture",
+  "generatedAt": "2026-07-28T03:02:43.213Z",
+  "mode": "dry-run",
   "generatedRule": "Browser-assisted public evidence captures only public visible pages. It does not log in, bypass access controls, write business datasets, or replace authorized connectors.",
   "seedPath": "scripts/data/public-evidence-seeds.json",
   "publicBundlePolicy": {
@@ -10,20 +10,23 @@
     "localEvidencePathsMayPointToTmp": true
   },
   "summary": {
-    "total": 12,
+    "total": 39,
     "captureStatusCounts": {
-      "captured": 12
+      "planned": 39
     },
     "evidenceClassCounts": {
       "public-page-sample": 1,
-      "brand-official-page": 2,
-      "brand-official-news": 1,
-      "official-regulatory-page": 1,
-      "market-report-public-page": 2,
+      "official-trade-data-page": 1,
+      "official-customs-ruling-page": 1,
+      "brand-official-page": 8,
+      "brand-official-news": 2,
+      "official-platform-doc-page": 3,
+      "market-report-public-page": 16,
+      "official-regulatory-page": 2,
       "exhibition-official-page": 4,
       "public-survey-page": 1
     },
-    "networkCalls": 12,
+    "networkCalls": 0,
     "businessDataWrites": 0
   },
   "records": [
@@ -33,18 +36,18 @@
       "page": "ProductManage",
       "metric": "Amazon public search sample",
       "label": "Amazon wearable breast pump public search sample",
-      "url": "https://www.amazon.com/s?k=wearable+breast+pump",
+      "url": "https://www.amazon.sg/s?k=wearable+breast+pump",
       "evidenceClass": "public-page-sample",
       "collectionBoundary": "Public visible search page only; no login, no bypass, no review scraping, no claim of complete pricing or review coverage.",
       "notFullPlatformDataset": true,
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:06:41.805Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -57,25 +60,71 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.amazon.com/s?k=wearable+breast+pump",
-      "httpStatus": 200,
-      "title": "Amazon.com : wearable breast pump",
-      "visibleTextLength": 24555,
-      "visibleTextHash": "4f98ac06953810aa3e679a96c2f854c88e36e4f5b784d8125ba8e37f43f1829c",
-      "matchedEvidenceTerms": [
-        "breast pump"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Amazon wearable breast pump public search sample: title captured (33 chars); matched 1/1 expected evidence terms; visible text length 24555.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/amazon-search-wearable-breast-pump-sample.txt",
-        "textArchiveBytes": 24569,
-        "screenshotPath": "tmp/public-evidence/screenshots/amazon-search-wearable-breast-pump-sample.png",
-        "screenshotHash": "a4d41da48ab4badf0a1c23fc0a038029cac88a54f059b750aa82f76c85bbf682"
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "us-census-merchandise-imports-database",
+      "sourceId": "ds-006",
+      "page": "CustomsData",
+      "metric": "Official public import data source availability",
+      "label": "U.S. Census Merchandise Trade Imports database",
+      "url": "https://www.census.gov/foreign-trade/data/IMDB.html",
+      "evidenceClass": "official-trade-data-page",
+      "collectionBoundary": "Public government data product page only; no company shipment records, no Import Genius replacement, no claim of complete cross-border trade panel.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
       },
-      "warnings": [],
-      "pageErrors": []
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "cbp-electric-breast-pump-hts-ruling",
+      "sourceId": "ds-006",
+      "page": "CustomsData",
+      "metric": "Breast pump HTS classification evidence",
+      "label": "CBP CROSS ruling for electric breast pump HTS classification",
+      "url": "https://rulings.cbp.gov/search?collection=ALL&page=1&pageSize=30&sortBy=RELEVANCE&term=breast+pump",
+      "evidenceClass": "official-customs-ruling-page",
+      "collectionBoundary": "Public customs ruling only; supports HS/HTS classification context, not import volume, supplier, importer, shipment, or country-share facts.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "momcozy-m5-official-sample",
@@ -90,11 +139,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:06:52.692Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -107,32 +156,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://momcozy.com/products/m5-smart-wearable-breast-pump-upgraded-with-app-control?variant=45415255441606",
-      "httpStatus": 200,
-      "title": "M5 Smart Wearable Breast Pump – Upgraded with App Control",
-      "visibleTextLength": 4911,
-      "visibleTextHash": "fba61581b89957a16c5430a3c3b82ae7140f5fe54542620480244f5c55e7fd35",
-      "matchedEvidenceTerms": [
-        "M5",
-        "breast pump"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Momcozy M5 official product page sample: title captured (57 chars); matched 2/2 expected evidence terms; visible text length 4911.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/momcozy-m5-official-sample.txt",
-        "textArchiveBytes": 4931,
-        "screenshotPath": "tmp/public-evidence/screenshots/momcozy-m5-official-sample.png",
-        "screenshotHash": "37ddab6ae00ff87074c753e5a2018df36a5648504e5d3300c724f5c57a171f62"
-      },
-      "warnings": [
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Failed to load resource: net::ERR_CONNECTION_RESET",
-        "Failed to load resource: the server responded with a status of 404 ()",
-        "Error producing monorail event MonorailRequestError: Error completing request. A network failure may have prevented the request from completing. Error: TypeError: Failed to fetch. Schemas: shopify_pay_page_load/2.7\n    at R.produce (https://cdn.shopify.com/shopifycloud/arrive-server/pay/vite-pay/assets/AnalyticsProvider-Dz4u8E-c.js:2:6804)"
-      ]
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "willow-go-official-sample",
@@ -147,11 +171,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:06:58.614Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -164,31 +188,359 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://onewillow.com/products/willow-go-pump-kit",
-      "httpStatus": 200,
-      "title": "Willow Go® Wearable Breast Pump | #1 for Comfort & Milk Output – Willow Pump",
-      "visibleTextLength": 4734,
-      "visibleTextHash": "f354620a641dbec322dcbf20e4b58660f8bc05ae219119b98de13a1560e03f3e",
-      "matchedEvidenceTerms": [
-        "Willow Go",
-        "breast pump"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Willow Go official product page sample: title captured (76 chars); matched 2/2 expected evidence terms; visible text length 4734.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/willow-go-official-sample.txt",
-        "textArchiveBytes": 4756,
-        "screenshotPath": "tmp/public-evidence/screenshots/willow-go-official-sample.png",
-        "screenshotHash": "e5ad045b330ae289240819604a967985554ad19f1aa347c28dbcda70ba43250b"
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "medela-magic-inbra-official-sample",
+      "sourceId": "ds-008",
+      "page": "NewCompetition",
+      "metric": "Brand official product page sample",
+      "label": "Medela Magic InBra official product page sample",
+      "url": "https://www.medela.com/en/breastfeeding-pumping/products/pumps/inbra-electric/magic-inbra",
+      "evidenceClass": "brand-official-page",
+      "collectionBoundary": "Public brand product page only; no checkout, no account area, no inventory, price, rating, sales, or market-share claim.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
       },
-      "warnings": [
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Cannot read properties of undefined (reading 'length')",
-        "Cannot read properties of undefined (reading 'unblock')"
-      ]
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "eufy-e20-official-sample",
+      "sourceId": "ds-008",
+      "page": "NewCompetition",
+      "metric": "Brand official product page sample",
+      "label": "eufy E20 official product page sample",
+      "url": "https://www.eufy.com/products/t6060121",
+      "evidenceClass": "brand-official-page",
+      "collectionBoundary": "Public brand product page only; no checkout, no account area, no inventory, price, rating, sales, or market-share claim.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "medela-pump-in-style-pro-2026-new-competition",
+      "sourceId": "ds-008",
+      "page": "NewCompetition",
+      "metric": "Brand official news evidence",
+      "label": "Medela Pump In Style Pro 2026 official news for new competition monitoring",
+      "url": "https://www.medela.com/en/about-medela/medela-news/pump-in-style-pro-named-best-new-product-in-the-us-for-2026",
+      "evidenceClass": "brand-official-news",
+      "collectionBoundary": "Public brand news page only; supports launch/news monitoring, not sales, share, ranking, or pricing conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "competition-medela-magic-inbra-official",
+      "sourceId": "ds-007",
+      "page": "CompetitionPage",
+      "metric": "Competition overview public brand source availability",
+      "label": "Medela Magic InBra official product page for competitor overview",
+      "url": "https://www.medela.com/en/breastfeeding-pumping/products/pumps/inbra-electric/magic-inbra",
+      "evidenceClass": "brand-official-page",
+      "collectionBoundary": "Public brand official page only; supports competitor brand/product source availability only, not Amazon rank, brand share, sales, GMV, price, rating, review count, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "competition-spectra-s1-plus-official",
+      "sourceId": "ds-007",
+      "page": "CompetitionPage",
+      "metric": "Competition overview public brand source availability",
+      "label": "Spectra S1 Plus official product page for competitor overview",
+      "url": "https://www.spectrababyusa.com/products/spectra-s1-plus-premier-rechargeable-double-electric-breast-pump",
+      "evidenceClass": "brand-official-page",
+      "collectionBoundary": "Public brand official page only; supports competitor brand/product source availability only, not Amazon rank, brand share, sales, GMV, price, rating, review count, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "competition-philips-avent-breast-pumps-official",
+      "sourceId": "ds-007",
+      "page": "CompetitionPage",
+      "metric": "Competition overview public brand source availability",
+      "label": "Philips Avent official breast pumps page for competitor overview",
+      "url": "https://www.usa.philips.com/c-m-mo/breast-pumps-care",
+      "evidenceClass": "brand-official-page",
+      "collectionBoundary": "Public brand official page only; supports competitor brand/product source availability only, not Amazon rank, brand share, sales, GMV, price, rating, review count, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "competition-eufy-breast-pump-category",
+      "sourceId": "ds-007",
+      "page": "CompetitionPage",
+      "metric": "Competition overview public brand source availability",
+      "label": "eufy official breast pump category page for competitor overview",
+      "url": "https://www.eufy.com/collections/breast-pump",
+      "evidenceClass": "brand-official-page",
+      "collectionBoundary": "Public brand official page only; supports competitor brand/product source availability only, not Amazon rank, brand share, sales, GMV, price, rating, review count, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "region-competition-amazon-spapi-marketplace-ids",
+      "sourceId": "ds-010",
+      "page": "RegionCompetition",
+      "metric": "Regional competition public source availability",
+      "label": "Amazon SP-API Marketplace IDs for regional marketplace mapping",
+      "url": "https://developer-docs.amazon.com/sp-api/docs/marketplace-ids",
+      "evidenceClass": "official-platform-doc-page",
+      "collectionBoundary": "Public Amazon documentation only; supports marketplace and country mapping source availability, not Amazon Brand Analytics regional share, country rank, brand share, sales, GMV, price, rating, SKU facts, or full-channel market share.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "region-competition-amazon-spapi-endpoints",
+      "sourceId": "ds-010",
+      "page": "RegionCompetition",
+      "metric": "Regional competition public source availability",
+      "label": "Amazon SP-API endpoints for regional request routing",
+      "url": "https://developer-docs.amazon.com/sp-api/docs/sp-api-endpoints",
+      "evidenceClass": "official-platform-doc-page",
+      "collectionBoundary": "Public Amazon documentation only; supports endpoint and region routing source availability, not Amazon Brand Analytics regional share, country rank, brand share, sales, GMV, price, rating, SKU facts, or full-channel market share.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "region-competition-amazon-brand-analytics-help",
+      "sourceId": "ds-010",
+      "page": "RegionCompetition",
+      "metric": "Regional competition public source availability",
+      "label": "Amazon Seller Central Brand Analytics public help page",
+      "url": "https://sellercentral.amazon.com/help/hub/reference/external/GH2Z5B4HMF5ZXCG2",
+      "evidenceClass": "official-platform-doc-page",
+      "collectionBoundary": "Public Amazon help page only; supports Brand Analytics source availability and access context, not regional share, country rank, brand share, sales, GMV, price, rating, SKU facts, or full-channel market share.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "region-competition-mordor-breast-pumps-market",
+      "sourceId": "ds-010",
+      "page": "RegionCompetition",
+      "metric": "Regional competition public source availability",
+      "label": "Mordor breast pumps market public page for regional context",
+      "url": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports regional market context source availability only, not Amazon Brand Analytics regional share, country rank, brand share, sales, GMV, price, rating, SKU facts, or full-channel market share.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "medela-pump-in-style-pro-2026-news",
@@ -203,11 +555,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:07:03.435Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -220,26 +572,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.medela.com/en/about-medela/medela-news/pump-in-style-pro-named-best-new-product-in-the-us-for-2026",
-      "httpStatus": 200,
-      "title": "Pump In Style® Pro Named Best New Product in the U.S. for 2026",
-      "visibleTextLength": 2850,
-      "visibleTextHash": "0245cec2262807bc9f77540bc7f7e39bb7d68ce3123989ebfec7daf8212f06cd",
-      "matchedEvidenceTerms": [
-        "Pump In Style",
-        "2026"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Medela Pump In Style Pro 2026 official news: title captured (62 chars); matched 2/2 expected evidence terms; visible text length 2850.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/medela-pump-in-style-pro-2026-news.txt",
-        "textArchiveBytes": 2878,
-        "screenshotPath": "tmp/public-evidence/screenshots/medela-pump-in-style-pro-2026-news.png",
-        "screenshotHash": "9b29f0e1ccdbe7fd7fb8fd97a7501053eea2e9db8e8158f2e72b20c7f6277f91"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "cpsc-nursing-pillows-rule",
@@ -254,11 +587,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:07:09.104Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -271,26 +604,39 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.cpsc.gov/Business--Manufacturing/Business-Education/Business-Guidance/Nursing-Pillows",
-      "httpStatus": 200,
-      "title": "Nursing Pillows Business Guidance | CPSC.gov",
-      "visibleTextLength": 7381,
-      "visibleTextHash": "0902c3efad5f37a37d81180ebf8ab6ad3cceaac74b158b68c91e25c23cf8c097",
-      "matchedEvidenceTerms": [
-        "16 CFR Part 1242",
-        "April 23, 2025"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "CPSC nursing pillows rule public evidence: title captured (44 chars); matched 2/2 expected evidence terms; visible text length 7381.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/cpsc-nursing-pillows-rule.txt",
-        "textArchiveBytes": 7428,
-        "screenshotPath": "tmp/public-evidence/screenshots/cpsc-nursing-pillows-rule.png",
-        "screenshotHash": "659c2dd3822dafadd0a41867558f57d797089d6ad7176ce569e4b62e7bf5dcc2"
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "cpsc-16-cfr-1242-nursing-pillows-guidance",
+      "sourceId": "ds-016",
+      "page": "PolicyInsight",
+      "metric": "Official CPSC nursing pillow safety standard guidance",
+      "label": "CPSC 16 CFR part 1242 nursing pillow business guidance",
+      "url": "https://www.cpsc.gov/Business--Manufacturing/Business-Education/Business-Guidance/Nursing-Pillows",
+      "evidenceClass": "official-regulatory-page",
+      "collectionBoundary": "Public federal regulation document only; supports regulatory source-entry context, not product-level legal opinion or SKU compliance status.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
       },
-      "warnings": [],
-      "pageErrors": []
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "mordor-wearable-breast-pumps-market",
@@ -305,11 +651,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:07:14.056Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -322,45 +668,26 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.mordorintelligence.com/industry-reports/wearable-breast-pumps-market",
-      "httpStatus": 200,
-      "title": "Wearable Breast Pumps Market Size & Share Outlook to 2030",
-      "visibleTextLength": 16211,
-      "visibleTextHash": "3198b4247f82a513a785c1dcbea0fe17a85f7e9710305e7e735bee0cf9edba55",
-      "matchedEvidenceTerms": [
-        "Wearable Breast Pumps",
-        "Market Size"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Mordor wearable breast pumps market public page: title captured (57 chars); matched 2/2 expected evidence terms; visible text length 16211.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/mordor-wearable-breast-pumps-market.txt",
-        "textArchiveBytes": 16226,
-        "screenshotPath": "tmp/public-evidence/screenshots/mordor-wearable-breast-pumps-market.png",
-        "screenshotHash": "8f273da5a19f88ee2a935b401348d249855bc10740959403bd1ba75a4b0bf6cd"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
-      "seedId": "fortune-bi-breast-pump-market",
+      "seedId": "ds002-mordor-breast-pump-market-substitute",
       "sourceId": "ds-002",
       "page": "MarketPage",
-      "metric": "Market report public page sample",
-      "label": "Fortune BI breast pump market public page",
-      "url": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "metric": "Market report substitute public page sample",
+      "label": "Mordor breast pumps market public substitute for ds-002",
+      "url": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
       "evidenceClass": "market-report-public-page",
-      "collectionBoundary": "Public report landing page only; no paid report extraction.",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; substitute evidence for source availability when the Fortune BI supplier page blocks automation. Does not support brand share, channel share, or Amazon facts.",
       "notFullPlatformDataset": true,
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:07:22.706Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -373,32 +700,423 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
-      "httpStatus": 200,
-      "title": "Breast Pump Market Size, Share, Value | Growth Report [2034]",
-      "visibleTextLength": 29348,
-      "visibleTextHash": "dab57c5cba52b8cd59dd5eb7aa84ed08404b80062b6cc1d52f80c2b7d4929d7b",
-      "matchedEvidenceTerms": [
-        "Breast Pump Market",
-        "Market Size"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Fortune BI breast pump market public page: title captured (60 chars); matched 2/2 expected evidence terms; visible text length 29348.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/fortune-bi-breast-pump-market.txt",
-        "textArchiveBytes": 29374,
-        "screenshotPath": "tmp/public-evidence/screenshots/fortune-bi-breast-pump-market.png",
-        "screenshotHash": "b4d4bf4c17498d216c945483e92b6d0896971baa7111a169c4f4b39977035c1a"
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "ds045-mordor-wearable-breast-pumps-market-substitute",
+      "sourceId": "ds-045",
+      "page": "MarketPage",
+      "metric": "Wearable breast pump market substitute public page sample",
+      "label": "Mordor wearable breast pumps market public substitute for ds-045",
+      "url": "https://www.mordorintelligence.com/industry-reports/wearable-breast-pumps-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; substitute evidence for source availability when the Fortune BI supplier page blocks automation. Does not support SAM, SOM, brand share, pricing, ranking, or sales facts.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
       },
-      "warnings": [
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Failed to load resource: the server responded with a status of 404 ()",
-        "Cannot read properties of null (reading 'addEventListener')",
-        "Cannot read properties of null (reading 'add')"
-      ]
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "category-mordor-breast-pumps-market",
+      "sourceId": "ds-038",
+      "page": "CategoryAnalysis",
+      "metric": "Category analysis public report source availability",
+      "label": "Mordor breast pumps market public page for category analysis",
+      "url": "https://www.mordorintelligence.com/industry-reports/breast-pumps-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports category context source availability only, not BSR, ranking, sales, margin, brand share, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "category-mordor-wearable-breast-pumps-market",
+      "sourceId": "ds-038",
+      "page": "CategoryAnalysis",
+      "metric": "Category analysis public report source availability",
+      "label": "Mordor wearable breast pumps market public page for category analysis",
+      "url": "https://www.mordorintelligence.com/industry-reports/wearable-breast-pumps-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports wearable category context source availability only, not BSR, ranking, sales, margin, brand share, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "category-fortune-bi-breast-pump-market",
+      "sourceId": "ds-038",
+      "page": "CategoryAnalysis",
+      "metric": "Category analysis public report source availability",
+      "label": "Fortune BI breast pump market public page for category analysis",
+      "url": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports category context source availability only, not BSR, ranking, sales, margin, brand share, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "category-precedence-breast-pump-market",
+      "sourceId": "ds-038",
+      "page": "CategoryAnalysis",
+      "metric": "Category analysis public report source availability",
+      "label": "Precedence breast pump market public page for category analysis",
+      "url": "https://www.precedenceresearch.com/breast-pump-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports category context source availability only, not BSR, ranking, sales, margin, brand share, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "nursing-products-the-insight-breastfeeding-accessories-market",
+      "sourceId": "ds-039",
+      "page": "NursingProducts",
+      "metric": "Nursing products public report source availability",
+      "label": "The Insight Partners breastfeeding accessories market public page",
+      "url": "https://www.theinsightpartners.com/reports/breastfeeding-accessories-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports nursing accessories category context source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "nursing-products-techsci-nursing-bras-market",
+      "sourceId": "ds-039",
+      "page": "NursingProducts",
+      "metric": "Nursing products public report source availability",
+      "label": "TechSci nursing bras market public page",
+      "url": "https://www.techsciresearch.com/report/nursing-bras-market/20978.html",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports nursing bra segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "nursing-products-gmi-breast-pads-market",
+      "sourceId": "ds-039",
+      "page": "NursingProducts",
+      "metric": "Nursing products public report source availability",
+      "label": "Global Market Insights breast pads market public page",
+      "url": "https://www.gminsights.com/industry-analysis/breast-pads-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports breast pads segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "nursing-products-spherical-breast-milk-storage-products",
+      "sourceId": "ds-039",
+      "page": "NursingProducts",
+      "metric": "Nursing products public report source availability",
+      "label": "Spherical Insights breast milk storage products market public page",
+      "url": "https://www.sphericalinsights.com/reports/breast-milk-storage-products-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports milk storage products source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "babycare-mordor-baby-care-products-market",
+      "sourceId": "ds-037",
+      "page": "BabyCare",
+      "metric": "Baby care public report source availability",
+      "label": "Mordor baby care products market public page",
+      "url": "https://www.mordorintelligence.com/industry-reports/baby-care-products-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports baby care category context source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "babycare-gmi-bottle-warmer-sterilizer-market",
+      "sourceId": "ds-037",
+      "page": "BabyCare",
+      "metric": "Baby care public report source availability",
+      "label": "Global Market Insights baby bottle warmer and sterilizer market public page",
+      "url": "https://www.gminsights.com/industry-analysis/baby-bottle-warmer-and-sterilizer-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports baby care segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "babycare-tbrc-baby-monitoring-devices-market",
+      "sourceId": "ds-037",
+      "page": "BabyCare",
+      "metric": "Baby care public report source availability",
+      "label": "The Business Research Company baby monitoring devices market public page",
+      "url": "https://www.thebusinessresearchcompany.com/report/baby-monitoring-devices-global-market-report",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports baby monitoring devices segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
+    },
+    {
+      "seedId": "babycare-mordor-humidifier-market",
+      "sourceId": "ds-037",
+      "page": "BabyCare",
+      "metric": "Baby care public report source availability",
+      "label": "Mordor humidifier market public page",
+      "url": "https://www.mordorintelligence.com/industry-reports/humidifier-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction; supports humidifier segment source availability only, not Amazon rank, brand share, sales, GMV, price, or SKU-level conclusions.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
+      "safety": {
+        "networkCalls": 0,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "abc-kids-expo-2026",
@@ -406,18 +1124,18 @@
       "page": "Exhibition",
       "metric": "Exhibition official schedule evidence",
       "label": "ABC Kids Expo 2026 public exhibitor page",
-      "url": "https://theabcshow.com/pages/exhibitors-2024",
+      "url": "https://abckids2026.mapyourshow.com/",
       "evidenceClass": "exhibition-official-page",
       "collectionBoundary": "Public exhibition page only; no exhibitor portal login.",
       "notFullPlatformDataset": true,
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:07:31.214Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -430,26 +1148,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://theabcshow.com/pages/exhibitors-2024",
-      "httpStatus": 200,
-      "title": "Exhibit at 2026 ABC Kids Expo | Reach Top Baby & Juvenile Retailers",
-      "visibleTextLength": 3610,
-      "visibleTextHash": "e3d89934785338ad08fe772be4bfc78a23d43fbf027b5b85bc24e53f6405c8aa",
-      "matchedEvidenceTerms": [
-        "2026",
-        "Mandalay Bay"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "ABC Kids Expo 2026 public exhibitor page: title captured (67 chars); matched 2/2 expected evidence terms; visible text length 3610.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/abc-kids-expo-2026.txt",
-        "textArchiveBytes": 3614,
-        "screenshotPath": "tmp/public-evidence/screenshots/abc-kids-expo-2026.png",
-        "screenshotHash": "3ee6e9c391ff9ac2f1e679d977fc593cfc6637e68eda459225698b48530725c2"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "kind-und-jugend-2026",
@@ -464,11 +1163,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:07:39.800Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -481,27 +1180,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.kindundjugend.com/trade-fair/kind-jugend/",
-      "httpStatus": 200,
-      "title": "Kind + Jugend | K+J",
-      "visibleTextLength": 3320,
-      "visibleTextHash": "4a0156c94479667d05ebb1f080a44f23b61395bc8639a13c525b9840dfbd0585",
-      "matchedEvidenceTerms": [
-        "15",
-        "17",
-        "2026"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Kind + Jugend 2026 official page: title captured (19 chars); matched 3/3 expected evidence terms; visible text length 3320.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/kind-und-jugend-2026.txt",
-        "textArchiveBytes": 3331,
-        "screenshotPath": "tmp/public-evidence/screenshots/kind-und-jugend-2026.png",
-        "screenshotHash": "82340cac49dd83c16f75a7ccbfb7c69782d6d9005444524f05a091440b85b0b6"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "cbme-china-2026",
@@ -516,11 +1195,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:07:44.070Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -533,34 +1212,14 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.cbmexpochina.com/about-cbme-china/",
-      "httpStatus": 200,
-      "title": "CBME China – 15-17 July 2026 | NECC, Shanghai, China",
-      "visibleTextLength": 2188,
-      "visibleTextHash": "2ce7a78cf5c9a0aa1713020c33ebc1ed47cf2ba464a8d6fce5e0b8812b5a2c94",
-      "matchedEvidenceTerms": [
-        "2026",
-        "July",
-        "NECC"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "CBME China 2026 official page: title captured (52 chars); matched 3/3 expected evidence terms; visible text length 2188.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/cbme-china-2026.txt",
-        "textArchiveBytes": 2199,
-        "screenshotPath": "tmp/public-evidence/screenshots/cbme-china-2026.png",
-        "screenshotHash": "0a40d8871e49b6c83384a4ce2f2c18ed9bcec946d5b25378a9eb78ad55d12a0a"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
-      "seedId": "tokyo-baby-kids-expo-2026",
+      "seedId": "tokyo-baby-kids-expo-2027",
       "sourceId": "ds-018",
       "page": "Exhibition",
       "metric": "Exhibition official schedule evidence",
-      "label": "Baby & Kids Expo Tokyo Summer 2026 official page",
+      "label": "Baby & Kids Expo Tokyo Summer 2027 official page",
       "url": "https://www.lifestyle-expo.jp/summer/en-gb.html",
       "evidenceClass": "exhibition-official-page",
       "collectionBoundary": "Public exhibition page only.",
@@ -568,11 +1227,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:07:49.290Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -585,27 +1244,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.lifestyle-expo.jp/summer/en-gb.html",
-      "httpStatus": 200,
-      "title": "LIFESTYLE Week TOKYO [Summer] | Japan’s Leading Lifestyle Trade Fair",
-      "visibleTextLength": 5623,
-      "visibleTextHash": "5d08fb28a298a1daeb9a38f2105a0df16224cb42ad06a3fa1ee6c9b03e9a1693",
-      "matchedEvidenceTerms": [
-        "June 24",
-        "2026",
-        "Tokyo Big Sight"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Baby & Kids Expo Tokyo Summer 2026 official page: title captured (68 chars); matched 3/3 expected evidence terms; visible text length 5623.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/tokyo-baby-kids-expo-2026.txt",
-        "textArchiveBytes": 5695,
-        "screenshotPath": "tmp/public-evidence/screenshots/tokyo-baby-kids-expo-2026.png",
-        "screenshotHash": "521796e27c689c6ca01bdd29422e23bd726db73ff44369bcd1cf71e415450115"
-      },
-      "warnings": [],
-      "pageErrors": []
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     },
     {
       "seedId": "mamava-medela-2025-breastfeeding-survey",
@@ -620,11 +1259,11 @@
       "publicBundleAllowed": true,
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
-      "captureStatus": "captured",
-      "capturedAt": "2026-06-14T05:07:56.407Z",
-      "browser": "chromium",
+      "captureStatus": "planned",
+      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "browser": "not-launched",
       "safety": {
-        "networkCalls": 1,
+        "networkCalls": 0,
         "loginAttempted": false,
         "bypassAttempted": false,
         "businessDataWrites": 0,
@@ -637,30 +1276,7 @@
         "termsValid": true,
         "boundaryValid": true
       },
-      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
-      "finalUrl": "https://www.mamava.com/why-buy-blog/2025-state-of-breastfeeding-survey",
-      "httpStatus": 200,
-      "title": "The 2025 State of Breastfeeding Survey | Mamava",
-      "visibleTextLength": 7171,
-      "visibleTextHash": "48b68057750402e366372e05e317c3575eac62a6574d4ff75b9f1e4873235052",
-      "matchedEvidenceTerms": [
-        "2025 State of Breastfeeding",
-        "Medela"
-      ],
-      "missingEvidenceTerms": [],
-      "nonVerbatimSummary": "Mamava / Medela 2025 breastfeeding survey public page: title captured (47 chars); matched 2/2 expected evidence terms; visible text length 7171.",
-      "localEvidence": {
-        "textArchivePath": "tmp/public-evidence/text/mamava-medela-2025-breastfeeding-survey.txt",
-        "textArchiveBytes": 7209,
-        "screenshotPath": "tmp/public-evidence/screenshots/mamava-medela-2025-breastfeeding-survey.png",
-        "screenshotHash": "ad712720487201e40ab917c06cc79127806743f33589454991049771400deee2"
-      },
-      "warnings": [
-        "browser console or page errors were observed"
-      ],
-      "pageErrors": [
-        "Failed to load resource: the server responded with a status of 403 ()"
-      ]
+      "note": "Dry-run only. This seed is eligible for browser-assisted public evidence capture when --live is passed."
     }
   ]
 }

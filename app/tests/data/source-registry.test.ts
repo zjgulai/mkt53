@@ -7,6 +7,27 @@ import {
 } from '@/data/source-registry';
 
 describe('source registry', () => {
+  it('declares every governance field explicitly instead of relying on runtime defaults', () => {
+    const requiredGovernanceFields = [
+      'privacyLevel',
+      'collectionMethod',
+      'evidenceGrade',
+      'canDisplayAsFact',
+      'blockingReason',
+      'evidenceArtifactPath',
+      'claimScope',
+    ] as const;
+
+    const incompleteRows = sourceRegistry.flatMap((item) => {
+      const missingFields = requiredGovernanceFields.filter((field) => !Object.hasOwn(item, field));
+      return missingFields.length > 0 ? [{ id: item.id, missingFields }] : [];
+    });
+
+    expect(incompleteRows).toEqual([]);
+    expect(sourceRegistry.every((item) => item.claimScope.trim().length > 0)).toBe(true);
+    expect(sourceRegistry.every((item) => item.canDisplayAsFact || item.blockingReason.length > 0)).toBe(true);
+  });
+
   it('keeps registry ids unique and usable by module', () => {
     const ids = sourceRegistry.map((item) => item.id);
 
@@ -49,24 +70,42 @@ describe('source registry', () => {
     expect(mamava.note).toContain('不应与QuestMobile');
   });
 
-  it('keeps public report URLs specific and separates blocked reports from verified survey evidence', () => {
+  it('keeps public report URLs specific and separates verified model inputs from survey evidence', () => {
     const fortune = getSourceRegistryItem('ds-002');
     const mordor = getSourceRegistryItem('ds-004');
     const mamava = getSourceRegistryItem('ds-043');
 
     expect(fortune.sourceUrl).toBe('https://www.fortunebusinessinsights.com/breast-pump-market-107054');
-    expect(fortune.action).toContain('人工复核凭证');
+    expect(fortune.collectionMethod).toBe('manual-required');
+    expect(fortune.canDisplayAsFact).toBe(true);
+    expect(fortune.action).toContain('品牌份额仍需');
     expect(mordor.sourceUrl).toBe('https://www.mordorintelligence.com/industry-reports/breast-pumps-market');
-    expect(mordor.verificationStatus).toBe('example');
-    expect([fortune, mordor].every((item) => item.note.includes('Cloudflare challenge'))).toBe(true);
+    expect(mordor.verificationStatus).toBe('verified');
+    expect(mordor.note).toContain('公开报告交叉证据');
+    expect(mordor.note).toContain('外部机构原始结论');
+    expect(fortune.note).toContain('自动采集返回403');
     expect(mamava.verificationStatus).toBe('verified');
     expect(mamava.note).toContain('2,842份回复');
     expect(mamava.gap).toContain('不支撑全球用户画像');
   });
 
+  it('keeps customs public adapter as source planning evidence instead of shipment facts', () => {
+    const customs = getSourceRegistryItem('ds-006');
+
+    expect(customs.sourceName).toContain('U.S. Census');
+    expect(customs.sourceName).toContain('Import Genius gate');
+    expect(customs.collectionMethod).toBe('connector-required');
+    expect(customs.evidenceGrade).toBe('LO-S-synthetic');
+    expect(customs.canDisplayAsFact).toBe(false);
+    expect(customs.evidenceArtifactPath).toBe('public/periodic-data/customs-public-adapter.json');
+    expect(customs.claimScope).toContain('not shipment');
+    expect(customs.note).toContain('HTS 8413.81.0040');
+    expect(customs.note).toContain('不支撑进口商');
+    expect(customs.action).toContain('release review');
+  });
+
   it('binds every static-data page from the weekly audit backlog to a registry item', () => {
     const pages = [
-      'AIAssistantPage',
       'AIGallery',
       'DataManage',
       'DataSourcePage',
@@ -75,9 +114,7 @@ describe('source registry', () => {
       'YoutubeReview',
       'FlavorMap',
       'FlavorReport',
-      'IndustryNews',
       'SupplyChain',
-      'TechNews',
       'BabyCare',
       'CategoryAnalysis',
       'NursingProducts',
@@ -94,16 +131,13 @@ describe('source registry', () => {
 
   it('keeps newly bound static or model-driven pages below verified until real collection evidence exists', () => {
     const evidenceGatedPages = [
-      'AIAssistantPage',
       'AIGallery',
       'DesignAssistant',
       'ReviewAnalysis',
       'YoutubeReview',
       'FlavorMap',
       'FlavorReport',
-      'IndustryNews',
       'SupplyChain',
-      'TechNews',
       'BabyCare',
       'CategoryAnalysis',
       'NursingProducts',
@@ -116,6 +150,50 @@ describe('source registry', () => {
 
     expect(gatedItems.length).toBe(evidenceGatedPages.length);
     expect(gatedItems.every((item) => item.verificationStatus !== 'verified')).toBe(true);
+  });
+
+  it('promotes AI assistant only as a static local code asset while keeping runtime claims gated', () => {
+    const assistant = getSourceRegistryItem('ds-025');
+
+    expect(assistant.verificationStatus).toBe('verified');
+    expect(assistant.collectionMethod).toBe('local-file-check');
+    expect(assistant.evidenceGrade).toBe('L1-public-or-runtime');
+    expect(assistant.canDisplayAsFact).toBe(true);
+    expect(assistant.sourceName).toBe('app/src/pages/AIAssistantPage.tsx');
+    expect(assistant.claimScope).toContain('static AI assistant entry');
+    expect(assistant.note).toContain('不代表真实助手调用量');
+    expect(assistant.note).toContain('模型效果');
+  });
+
+  it('keeps P0 connector gaps as explicit L0 readiness gates instead of fact surfaces', () => {
+    const p0ConnectorSourceIds = ['ds-007', 'ds-009', 'ds-010', 'ds-013', 'ds-019', 'ds-021', 'ds-023', 'ds-032', 'ds-038', 'ds-039', 'ds-041'];
+    const p0Sources = p0ConnectorSourceIds.map((id) => getSourceRegistryItem(id));
+
+    expect(p0Sources.every((item) => item.collectionMethod === 'connector-required')).toBe(true);
+    expect(p0Sources.every((item) => item.evidenceGrade === 'L0-unverified')).toBe(true);
+    expect(p0Sources.every((item) => item.privacyLevel === 'private/internal')).toBe(true);
+    expect(p0Sources.every((item) => item.canDisplayAsFact === false)).toBe(true);
+    expect(p0Sources.every((item) => item.blockingReason === 'authorized-connector-or-private-snapshot-required')).toBe(true);
+    expect(p0Sources.every((item) => item.evidenceArtifactPath === 'tmp/audits/p0-connector-readiness-binding-batch4-20260630/readiness_packets.csv')).toBe(true);
+    expect(p0Sources.map((item) => item.note).join(' ')).toContain('P0');
+    expect(p0Sources.map((item) => item.action).join(' ')).toContain('证据包');
+    expect(p0Sources.map((item) => item.claimScope).join(' ')).toContain('readiness gate only');
+  });
+
+  it('promotes bounded public industry evidence without implying legal, patent, or benchmark conclusions', () => {
+    const policy = getSourceRegistryItem('ds-016');
+    const patents = getSourceRegistryItem('ds-017');
+    const news = getSourceRegistryItem('ds-034');
+    const tech = getSourceRegistryItem('ds-036');
+
+    expect([policy, patents, news, tech].every((item) => item.verificationStatus === 'verified')).toBe(true);
+    expect([policy, patents, news, tech].every((item) => item.evidenceGrade === 'L1-public-or-runtime')).toBe(true);
+    expect([policy, patents, news, tech].every((item) => item.collectionMethod === 'public-url-check')).toBe(true);
+    expect(policy.note).toContain('METI日本入口快照返回Page Not Found');
+    expect(policy.note).toContain('不支撑SKU合规结论');
+    expect(patents.note).toContain('不支撑专利数量');
+    expect(news.claimScope).toContain('verified rows only');
+    expect(tech.note).toContain('不支撑性能排名');
   });
 
   it('keeps ERP internal operating sources private, connector-backed, and Batch19 approved', () => {

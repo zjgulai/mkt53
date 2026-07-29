@@ -5,7 +5,7 @@ module: data-collection
 topic: semi-monthly-refresh
 status: stable
 created: 2026-06-11
-updated: 2026-06-14
+updated: 2026-07-23
 owner: self
 source: human+ai
 ---
@@ -20,7 +20,36 @@ mkt53 数据刷新节奏从周度调整为半月一次。正式计划为每月 1
 
 ## 最新验证状态
 
-2026-06-14 已完成一次带浏览器辅助公开证据的半月生产发布和线上复核：
+2026-07-23 先经生产只读审计确认生产与本地 canonical manifest 停在 `2026-07-H1`、服务器没有 mkt53 cron、automation 副本仍为 `2026-06-H1`。随后经独立 P0-04 生产写入授权，automation 已同步并通过 staging run-report gate，`2026-07-H2` periodic/weekly 共 10 个生产文件完成 HTTPS SHA-256 核对，半月 cron 已唯一安装。
+
+当前 P0-04 状态为 `production-recovered-first-scheduled-observation-pending`：生产 freshness 已恢复，cron service active/enabled，下一次运行是 `2026-08-01T09:00:00+08:00`；在该时间窗完成前，不能把“已安装”写成“定时执行已成功”。P0-05 门户登录与 manifest 保护仍是独立授权项。
+
+同日已生成 `2026-07-H2` 隔离恢复候选：
+
+| 项 | 结果 |
+|---|---|
+| 证据层 | `L2-fixture-or-dry-run` |
+| 候选周期 | `2026-07-H2`，窗口 7 月 16–31 日 |
+| 候选目录 | `tmp/data-collection/recovery-candidates/2026-07-H2/` |
+| 本地预检 | 6/6 passed；43 pages / 107 tables / 53 sources / 0 issues |
+| 公开证据 | dry-run 39 条；networkCalls=0；businessDataWrites=0 |
+| 受限来源 | 28 connector-required；9 manual-required；未调用真实连接器 |
+| 副作用 | canonicalPublicWrites=false；productionWrites=false；cronInstalled=false |
+| 发布结论 | `blocked-auth`；不得把候选写成生产已恢复 |
+
+经授权执行的生产恢复结果：
+
+| 项 | 结果 |
+|---|---|
+| 证据层 | `L4-authorized-production-write` |
+| 备份 | `/opt/mkt53/backups/p0-04/20260723T152641+0800/`；HTML 数据、crontab 与 automation source 均可回滚 |
+| Automation gate | 114/114 tests；lint pass；0 vulnerabilities；2,323 modules；bundle pass；run-report gate pass |
+| 生产发布 | `2026-07-H2`；periodic/weekly 10/10 HTTPS hashes verified；两路径内容一致 |
+| Cron | `0 9 1,16 * *` 唯一安装；unrelated jobs preserved；service active/enabled |
+| 运行观察 | 首次计划运行 2026-08-01 09:00 +08:00；当前日志尚未由 cron 创建 |
+| 边界 | 未修改/重启 nginx；未部署应用 bundle；未调用 provider 或受限连接器；未提升业务事实 |
+
+2026-06-14 的历史成功发布只说明当时的生产状态，不代表当前 cron 仍在运行：
 
 | 项 | 结果 |
 |---|---|
@@ -43,6 +72,7 @@ npm run data:public-evidence:dry-run
 npm run data:source-tasks
 npm run data:refresh:semi-monthly
 npm run data:refresh:semi-monthly:public-evidence
+npm run data:recovery:semi-monthly:candidate
 ```
 
 输出文件：
@@ -62,6 +92,20 @@ npm run data:refresh:semi-monthly:public-evidence
 | `tmp/data-collection/runs/<period>-connectors.json` | 本地连接器 backlog 留痕 |
 | `tmp/data-collection/runs/<period>-source-tasks.json` | 本地补证任务队列留痕 |
 | `tmp/data-collection/runs/<period>-public-evidence-samples.json` | 本地公开证据样本留痕 |
+| `tmp/data-collection/recovery-candidates/<period>/` | 隔离恢复候选、cron 只读预览、文件哈希和 L2 预检 |
+
+## 生产恢复候选
+
+生产恢复授权前先执行：
+
+```bash
+cd app
+npm run data:recovery:semi-monthly:candidate
+```
+
+该命令固定使用 no-network collection 与公开证据 dry-run，只写 `tmp/data-collection/recovery-candidates/<period>/`。它生成内容完全一致的 periodic/weekly 兼容候选，并校验每个候选文件与对应 canonical 文件的顶层字段/类型合同；同时通过 `install-semi-monthly-cron.sh --print` 记录目标 cron，`--print` 不创建日志目录，也不修改 crontab。
+
+候选通过只证明脚本在 L2 副作用边界内可执行。生产发布仍需另行授权，并依次完成 automation 副本校验、现有文件备份、候选复核、静态发布、cron 安装和后续日志观察。2026-07-23 的 H2 候选已按该顺序完成授权发布；候选命令自身的无生产副作用合同不变。
 
 ## 浏览器辅助公开证据
 
@@ -293,7 +337,7 @@ bash scripts/data/install-semi-monthly-cron.sh
 0 9 1,16 * *
 ```
 
-2026-06-12 起线上 crontab 已确认使用该计划，2026-06-14 二次验证期间未变更：
+目标 crontab 合同为：
 
 ```cron
 # mkt53 semi-monthly data refresh
@@ -308,6 +352,8 @@ MKT53_SEMI_MONTHLY_CRON="30 8 1,16 * *" bash scripts/data/install-semi-monthly-c
 
 安装脚本会移除旧的 mkt53 weekly cron marker 和旧的 `data:publish:weekly:local` / `data:deploy:weekly` 任务。`weekly-data` 文件路径只保留为消费者兼容层，不再保留 weekly 调度。
 
+2026-07-23 只读核对最初确认该任务未安装；同日取得独立生产写入授权后已安装上述唯一任务，并保留其他 cron job。`--print` 仍仅用于预览且零写入；不带 `--print` 的安装会修改 crontab，后续重装同样需要明确生产写入范围。首次定时触发证据需在 2026-08-01 09:00 +08:00 后核对日志、run-report gate、H1 周期推进和 periodic/weekly 哈希一致性。
+
 ## 兼容边界
 
 `public/periodic-data/*` 是新主路径。`public/weekly-data/*` 只作为兼容层保留，内容由半月刷新脚本同步写入，不再代表真实周度节奏。
@@ -321,6 +367,7 @@ MKT53_SEMI_MONTHLY_CRON="30 8 1,16 * *" bash scripts/data/install-semi-monthly-c
 | 检查项 | 命令或证据 |
 |---|---|
 | 数据一致性 | `npm run data:audit` |
+| 隔离恢复候选 | `npm run data:recovery:semi-monthly:candidate`；检查 `recovery-preflight.json` 为 6/6 且 `blocked-auth` |
 | 半月 manifest | `npm run data:refresh:semi-monthly -- --no-network` 或正式刷新输出 |
 | 公开证据 manifest | `npm run data:public-evidence:dry-run`；需要 live 样本时使用 `--public-evidence-live` |
 | 本地测试 | `npm run test` |

@@ -1,0 +1,184 @@
+{
+  "schemaVersion": "mkt53.p0-github-ci-review-closeout.v1",
+  "generatedAt": "2026-07-27T10:29:19Z",
+  "status": "draft-pr-ci-green-not-merged-not-deployed",
+  "repository": "zjgulai/mkt53",
+  "branch": "codex/mkt53-release-candidate-20260630",
+  "pullRequest": {
+    "number": 32,
+    "url": "https://github.com/zjgulai/mkt53/pull/32",
+    "title": "feat: complete Batch 01-26 evidence-governed release candidate",
+    "state": "OPEN",
+    "draft": true,
+    "base": "main",
+    "head": "codex/mkt53-release-candidate-20260630",
+    "createdAt": "2026-07-27T10:07:26Z"
+  },
+  "push": {
+    "initialCandidateHead": "0d4cf7a54356a8e0f41d07d825726558be781e38",
+    "reviewFixHead": "6674e0fd29897f00e7d75b4da8f93e56e725341b",
+    "reviewFixSubject": "fix(governance): harden evidence dates and CI cache",
+    "remoteBranchUpdated": true,
+    "forcePush": false
+  },
+  "githubActions": {
+    "workflow": "quality-gate",
+    "initialRun": {
+      "runId": 30256791125,
+      "url": "https://github.com/zjgulai/mkt53/actions/runs/30256791125",
+      "event": "pull_request",
+      "headSha": "0d4cf7a54356a8e0f41d07d825726558be781e38",
+      "status": "completed",
+      "conclusion": "success",
+      "createdAt": "2026-07-27T10:07:29Z",
+      "completedAt": "2026-07-27T10:11:14Z",
+      "jobs": {
+        "app": "success",
+        "backend": "success"
+      },
+      "warning": {
+        "job": "backend",
+        "path": ".github",
+        "message": "cache-dependency-glob resolved backend/backend/uv.lock, so the cache would never be invalidated",
+        "fixed": true
+      }
+    },
+    "reviewFixRun": {
+      "runId": 30257673802,
+      "url": "https://github.com/zjgulai/mkt53/actions/runs/30257673802",
+      "event": "pull_request",
+      "headSha": "6674e0fd29897f00e7d75b4da8f93e56e725341b",
+      "status": "completed",
+      "conclusion": "success",
+      "createdAt": "2026-07-27T10:20:29Z",
+      "completedAt": "2026-07-27T10:25:01Z",
+      "jobs": {
+        "app": {
+          "conclusion": "success",
+          "annotations": 0
+        },
+        "backend": {
+          "conclusion": "success",
+          "annotations": 0
+        }
+      }
+    }
+  },
+  "reviewFixes": [
+    {
+      "finding": "Impossible calendar dates could pass Date.parse-based evidence validation.",
+      "fix": "Require strict ISO shapes and round-trip calendar validity for dates and date-times.",
+      "regression": "Impossible dates and malformed date-times are rejected."
+    },
+    {
+      "finding": "required_question_count accepted numeric prefixes such as 1junk.",
+      "fix": "Require a positive base-10 integer string and a safe integer before comparison.",
+      "regression": "Malformed count stays blocked."
+    },
+    {
+      "finding": "ds-016 official-source host policy trusted a secondary TUV host and omitted the Canadian law host.",
+      "fix": "Trust laws-lois.justice.gc.ca for ds-016 and keep TUV as non-official secondary evidence.",
+      "regression": "Canadian law host is accepted and TUV secondary source is rejected."
+    },
+    {
+      "finding": "Backend uv cache dependency glob was evaluated from backend/ and duplicated the path.",
+      "fix": "Use uv.lock relative to the backend job working directory and lock it with a workflow contract test.",
+      "regression": "The second GitHub-hosted run emitted zero app/backend annotations."
+    }
+  ],
+  "codexReview": {
+    "preFixReview": {
+      "command": "codex review --commit d3fb8c4bb5af0ad4359950a1b18e2e42cf873c4b",
+      "reproducedFindingGroups": 3,
+      "fixedBy": "6674e0fd29897f00e7d75b4da8f93e56e725341b"
+    },
+    "reviewFixReview": {
+      "command": "codex review --commit 6674e0fd29897f00e7d75b4da8f93e56e725341b",
+      "focusedChecksCompleted": true,
+      "newActionableFindingEmitted": false,
+      "completed": false,
+      "termination": "stopped-after-three-level-self-recursive-codex-review-invocation",
+      "cleanClaimAllowed": false
+    }
+  },
+  "frontend": {
+    "artifact": "mkt53-release-evidence",
+    "summary": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "localCandidateReady": true
+    },
+    "facts": {
+      "testFilesPassed": 23,
+      "unitTestsPassed": 183,
+      "e2eTestsPassed": 150,
+      "vulnerabilities": 0,
+      "modulesTransformed": 2383,
+      "bundleAssets": 77,
+      "bundleAssetsWithinTarget": 77,
+      "temporaryBundleExceptions": 0,
+      "pages": 43,
+      "tables": 107,
+      "sources": 53,
+      "dataIssues": 0,
+      "claims": 888,
+      "highRiskClaims": 0,
+      "unsupportedClaims": 0
+    }
+  },
+  "backend": {
+    "artifact": "mkt53-backend-be07-evidence",
+    "testsPassed": 64,
+    "coveragePercent": 92.73,
+    "recovery": {
+      "drillId": "be07-20260727t102049z-2521",
+      "evidenceGrade": "L2-fixture-or-dry-run",
+      "status": "passed",
+      "rpoSeconds": 0.426246,
+      "rtoSeconds": 1.938102,
+      "containersRemaining": 0,
+      "networksRemaining": 0,
+      "volumesRemaining": 0,
+      "productionDatabaseRead": false,
+      "productionDatabaseWrite": false,
+      "productionConfigWrite": false,
+      "deployment": false,
+      "providerOrConnectorCalls": 0
+    }
+  },
+  "graphify": {
+    "reportBuiltFromCommit": "0d4cf7a5",
+    "committedBy": "6674e0fd29897f00e7d75b4da8f93e56e725341b",
+    "nodes": 4556,
+    "edges": 7215,
+    "communities": 344,
+    "missingEndpointEdges": 0,
+    "danglingEndpointEdges": 0,
+    "selfLoopEdges": 0,
+    "exactDuplicateEdges": 0,
+    "collapsedEdges": 0,
+    "modelTokens": 0
+  },
+  "authorization": {
+    "push": true,
+    "pullRequest": true,
+    "merge": false,
+    "deployment": false,
+    "productionWrite": false,
+    "productionDatabaseRead": false,
+    "productionDatabaseWrite": false,
+    "nginxWrite": false,
+    "cronInstall": false,
+    "providerCalls": 0,
+    "connectorCalls": 0
+  },
+  "remainingGates": [
+    "human review and explicit merge decision for draft pull request 32",
+    "independent deployment authorization",
+    "first cron observation after 2026-08-01T09:00:00+08:00",
+    "DATA-REG six real input groups and independent legal authorization",
+    "a non-recursive completed Codex clean review if that advisory signal is still required"
+  ]
+}

@@ -8,8 +8,6 @@ SEMI_MONTHLY_COMMAND="${MKT53_SEMI_MONTHLY_COMMAND:-npm run data:publish:semi-mo
 MARKER="mkt53 semi-monthly data refresh"
 LEGACY_WEEKLY_MARKER="mkt53 weekly data refresh"
 
-mkdir -p "${LOG_DIR}"
-
 JOB="# ${MARKER}
 ${SCHEDULE} cd \"${APP_DIR}\" && ${SEMI_MONTHLY_COMMAND} >> \"${LOG_DIR}/semi-monthly-refresh.log\" 2>&1"
 
@@ -17,6 +15,8 @@ if [[ "${1:-}" == "--print" ]]; then
   printf '%s\n' "${JOB}"
   exit 0
 fi
+
+mkdir -p "${LOG_DIR}"
 
 tmp_file="$(mktemp)"
 {

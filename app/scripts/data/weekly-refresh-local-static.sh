@@ -41,6 +41,7 @@ npm run test
 npm run lint
 npm audit
 npm run build
+npm run quality:bundle-budget
 
 rsync -az --delete dist/ "${HTML_DIR}/"
 echo "Published weekly refreshed dist/ to ${HTML_DIR}/"

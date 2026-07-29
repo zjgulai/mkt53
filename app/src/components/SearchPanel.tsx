@@ -2,7 +2,7 @@
 // 全局搜索面板 — 搜索产品/报告/法规/数据
 // ═══════════════════════════════════════════════════════════════
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Search, X, FileText, Target, Shield, BarChart3, Clock, TrendingUp } from 'lucide-react';
 
 interface SearchResult {
@@ -13,6 +13,7 @@ interface SearchResult {
   desc: string;
   icon: typeof FileText;
   color: string;
+  sourceIds?: string[];
 }
 
 const allSearchData: SearchResult[] = [
@@ -24,7 +25,7 @@ const allSearchData: SearchResult[] = [
   // 报告
   { id: 'sr-01', title: 'Momcozy vs Medela vs Willow 品牌竞争力深度对比', category: '报告', path: '/reports', desc: '报告目录条目 · 页数/发布日期需内部报告库复核', icon: FileText, color: '#C25B6E' },
   { id: 'sr-02', title: '全球吸奶器市场竞争格局报告', category: '报告', path: '/reports', desc: '报告目录条目 · 竞争数据需来源矩阵确认', icon: FileText, color: '#C25B6E' },
-  { id: 'sr-03', title: 'Momcozy W1 加热款拆解与BOM成本分析', category: '报告', path: '/reports', desc: '报告目录条目 · BOM成本需内部授权文件支撑', icon: FileText, color: '#ff9500' },
+  { id: 'sr-03', sourceIds: ['ds-028'], title: 'Momcozy W1 加热款拆解与BOM成本分析', category: '报告', path: '/reports', desc: '报告目录条目 · BOM成本需内部授权文件支撑', icon: FileText, color: '#ff9500' },
   { id: 'sr-04', title: '北美母婴护理市场深度分析', category: '报告', path: '/reports', desc: '报告目录条目 · 区域宏观引用需绑定 source registry', icon: FileText, color: '#5856d6' },
   // 政策法规
   { id: 'sl-01', title: 'CPSC CPC/eFiling：证书数据要求复核', category: '法规', path: '/industry/regulation', desc: '美国 · 官方规则可公开复核 · SKU影响待确认', icon: Shield, color: '#ff3b30' },
