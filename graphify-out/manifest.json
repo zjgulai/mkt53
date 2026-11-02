@@ -18,9 +18,9 @@
     "semantic_hash": "8e27c781db8c9145a2dc8d832c73146d"
   },
   "app/package.json": {
-    "mtime": 1786265151.341076,
-    "seen": 1793451591.1568341,
-    "ast_hash": "51de469ddef380cb51a54e1ceb3cc539",
+    "mtime": 1793577111.3477254,
+    "seen": 1793579070.913992,
+    "ast_hash": "eedd12b490f5aa6fea9dfbd4e3411b8e",
     "semantic_hash": ""
   },
   "app/playwright.config.ts": {
@@ -4854,9 +4854,9 @@
     "semantic_hash": ""
   },
   "docs/reviews/mkt53-data-completeness-mece-20260729/evidence/dq-017-current-state-integrity-20260809.json": {
-    "mtime": 1786271316.6644394,
-    "seen": 1793451591.157165,
-    "ast_hash": "652603f2d15a32cd488a62e7e1f6174b",
+    "mtime": 1793578972.788965,
+    "seen": 1793579070.914335,
+    "ast_hash": "73cca59a6c3c25e35381cf81945b360b",
     "semantic_hash": ""
   },
   "app/output/playwright/dq017/mece-report-final.png": {
@@ -4917,6 +4917,24 @@
     "mtime": 1793450383.8207598,
     "seen": 1793451591.157255,
     "ast_hash": "cdbd3a3dd683fffb64b6827a4d28b6e6",
+    "semantic_hash": ""
+  },
+  "app/scripts/data/audit-data-plane.mjs": {
+    "mtime": 1793577084.8086398,
+    "seen": 1793579070.914006,
+    "ast_hash": "64c169f159929dd110587d1477880add",
+    "semantic_hash": ""
+  },
+  "docs/knowledge/mkt53-memory-maintenance-stable.md": {
+    "mtime": 1793452333.2858965,
+    "seen": 1793579070.914399,
+    "ast_hash": "912d9c883f19c64adb5ee4f8b53310e3",
+    "semantic_hash": ""
+  },
+  "docs/reviews/mkt53-week-retro-20261102/retro-index.md": {
+    "mtime": 1793577252.081138,
+    "seen": 1793579070.914412,
+    "ast_hash": "dc1c2a04edecbfa14accb3c44a5261be",
     "semantic_hash": ""
   }
 }

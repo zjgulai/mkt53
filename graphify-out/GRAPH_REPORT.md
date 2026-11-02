@@ -1,17 +1,15 @@
-# Graph Report - mkt53  (2026-10-31)
+# Graph Report - mkt53  (2026-11-02)
 
 ## Corpus Check
-- 536 files · ~2,348,403 words
-- Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 41 file(s) not represented in the graph (top: .xml 13, .csv 6, (none) 5)
+- cluster-only mode — file stats not available
 
 ## Summary
-- 4623 nodes · 9001 edges · 243 communities (220 shown, 23 thin omitted)
+- 4654 nodes · 9039 edges · 249 communities
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 351 edges (avg confidence: 0.93)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cead7b78`
+- Built from commit: `2f925336`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -26,10 +24,10 @@
 - build-semi-monthly-recovery-candidate.mjs
 - internal-crm-dry-run.mjs
 - mkt53 ERP 与全站页面数据融合治理方案
-- lucide-react
+- EvidenceGatePage
 - market-insight-data.ts
 - mkt53 项目理解、问题地图与工作流
-- 3. 债务诊断
+- vitest
 - build-erp-owner-approval-preflight-batch11.mjs
 - build-erp-owner-submission-intake-batch12.mjs
 - build-semi-monthly-report.mjs
@@ -38,7 +36,7 @@
 - DataManage.tsx
 - build-erp-owner-approval-batch8.mjs
 - build-public-source-manual-release-review.mjs
-- utils.ts
+- react
 - prefill-source-gap-owner-intake.mjs
 - compilerOptions
 - build-erp-manual-release-review-batch19.mjs
@@ -74,13 +72,13 @@
 - source_registry.py
 - command.tsx
 - mkt53 记忆系统与知识图谱构建 Tickets
-- item.tsx
+- class-variance-authority
 - 数据时效与联网补证审计草稿
 - components.json
-- vitest
+- UsersPage.tsx
 - test_auth.py
 - 二、迁移任务清单
-- AiReportGovernancePanel.tsx
+- ReportsPage.tsx
 - HomePage.tsx
 - OperationsManual.tsx
 - mkt53 — Momcozy 市场洞察看板
@@ -91,7 +89,7 @@
 - project-analysis.mjs
 - build-ai-report-governance-batch4.mjs
 - context-menu.tsx
-- dropdown-menu.tsx
+- AiReviewGovernancePanel.tsx
 - mkt53 Loop5 半月数据刷新门禁
 - build-ai-design-governance-batch6.mjs
 - build-ai-review-governance-batch5.mjs
@@ -108,9 +106,9 @@
 - ChannelInterviews.tsx
 - mkt53 Loop2 半月 Manifest 新鲜度核对报告
 - mkt53 Momcozy 市场洞察工作台价值分析报告
-- react
+- react-router
 - drawer.tsx
-- AppEnvironment
+- pytest
 - usePeriodicManifest.ts
 - MarketPage.tsx
 - 静态部署工作流
@@ -128,12 +126,12 @@
 - test_compose_contract.py
 - build-source-freshness-projection.mjs
 - select.tsx
-- ref_node_url
+- ref_node_crypto
 - 市场洞察产品路线图
 - navigation-menu.tsx
 - mkt53 — Momcozy 市场洞察看板
 - validate-source-freshness-projection.mjs
-- 3. 页面级数据完成度
+- P0-03 vendor-charts Bundle 临时例外退出方案
 - validate-p0-05-nginx-candidate.sh
 - mkt53 Loop9 公开来源人工补证包门禁
 - models.py
@@ -147,7 +145,7 @@
 - Q: 继续下一批未完成任务时，P0-04 半月恢复候选如何在不写生产的前提下执行
 - tsconfig.json
 - 5. 整合治理方案
-- mkt53 Loop10 Commit Push Deploy Gate
+- refresh-semi-monthly-data.mjs
 - package.json
 - smoke-prod.sh
 - Q: 针对复盘文档中的迭代路线图制定完整方案和执行 TODO，并开始执行
@@ -156,13 +154,23 @@
 - test_review_registry_api.py
 - 2. 审计证据
 - Q: 同意下一执行批次
-- scroll-area.tsx
+- check-bundle-budget.mjs
 - regulation-review-handoff-gate.test.ts
 - static-scripts.test.ts
+- dq015-owner-packets.test.ts
+- 数据来源治理规则
+- scaffold-amazon-mapping-fill-draft.mjs
+- refresh-weekly-data.mjs
 - Q: bundle build vite chunk route release evidence quality audit manifest script test [expanded: bundle, build, vite, chunk, route, release, evidence, quality, audit, manifest, script, test]
 - semi-monthly-refresh-and-deploy.sh
 - weekly-refresh-local-static.sh
+- DATA-REG 来源与法务 Intake Readiness
+- ErrorBoundary
+- mkt53 记忆系统维护规范
 - source_api.py
+- mkt53 周报复盘（2026-10-26 → 2026-11-02）
+- input-otp.tsx
+- ReportPreview.tsx
 - validate-dq015-owner-packets.mjs
 - Q: 从上一步断点恢复后，验证生产 SSH key contract 是否被 deploy 和 smoke 共同使用
 - mkt53 backend · BE-07 local recovery drill
@@ -172,7 +180,6 @@
 - Batch 25：P0 后端 CI 质量门禁
 - project-regulation-intake-to-sku-draft.mjs
 - public-evidence.ts
-- SourceBackedReviewPacket.tsx
 - PageEvidenceNotice.tsx
 - validate-dq014-public-report-receipts.mjs
 - Batch 24：P0 本地发布复审与原子提交方案
@@ -195,7 +202,7 @@
 - install-weekly-cron.sh
 - weekly-refresh-and-deploy.sh
 - deploy-static-and-verify.sh
-- dq015-owner-packets.test.ts
+- dq016-source-freshness.test.ts
 - Q: 已登录，可以继续
 - P0-03 DataManage Bundle 临时例外退出方案
 - Q: 同意下一批执行建议，请开始执行
@@ -222,16 +229,15 @@
 - EvidenceGatePage.tsx
 - quality-be05.sh
 - Q: 同意下一批建议
-- list_snapshots
+- snapshot_registry.py
 - BE-07 审计与恢复隔离演练
 - validate-regulation-sku-contract.mjs
 - DATA-REG 合成 Intake → SKU Draft 投影演练
-- dq016-source-freshness.test.ts
 - Q: 同意下一批建议
 - Batch 29：最终复审、PR Ready 门禁与合并前交接
 - quality-be07.sh
 - index.md
-- @testing-library/react
+- RegulationDetail.tsx
 - Q: 同意下一批建议
 - customs-public-data-adapter.mjs
 - 六组输入
@@ -240,22 +246,20 @@
 - Q: 同意下一批建议
 - Batch 28：完整 Codex 复核、证据治理修复与最终候选交接
 - DATA-REG 合成 Draft → Review Handoff 门禁
-- build-dq020-amazon-owner-evidence-acceptance.mjs
+- promote-amazon-readiness-fill-draft.mjs
 - Q: Which local nodes implement the DATA-REG synthetic intake draft projection, lineage, idempotency, and withdrawal blocking?
-- dq020-amazon-owner-intake.test.ts
-- assertSafePrivatePath
+- ref_node_url
 - Q: Which nodes implement the DATA-REG synthetic draft-to-review handoff gate and its fail-closed evidence rules?
 - Q: How was the vendor-charts temporary exception retired without raising bundle limits?
 - Q: dependency audit router react eslint typescript postcss build test playwright route security
-- promote-amazon-mapping-fill-draft.mjs
-- areValuesContractCompatible
+- build-dq020-amazon-owner-evidence-acceptance.mjs
 - DQ-020 Amazon Owner Evidence 填报与验收手册
 - dq-020-amazon-owner-intake-20260730/index.md
 - regulation-source-legal-intake.test.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 274 edges
-2. `scripts` - 108 edges
+2. `scripts` - 110 edges
 3. `lucide-react` - 93 edges
 4. `react` - 91 edges
 5. `PageEvidenceNotice()` - 57 edges
@@ -266,33 +270,33 @@
 10. `Settings` - 34 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `8.3 脚本改造范围` --references--> `collectSemiMonthlySources()`  [INFERRED]
-  drafts/analysis/project-debt-audit-and-governance-plan-draft-20260611.md → app/scripts/data/collect-weekly-sources.mjs
-- `Loop 8：Source Task Coverage Gate` --references--> `buildSourceTaskQueue()`  [INFERRED]
-  drafts/analysis/mkt53-loop-engineering-execution-plan-draft-20260701.md → app/scripts/data/lib/source-tasks.mjs
-- `3.2 ESLint 10 为什么修代码而不是关闭新规则` --references--> `useIsMobile()`  [INFERRED]
-  docs/architecture/p0-02-dependency-security-refresh-20260727.md → app/src/hooks/use-mobile.ts
-- `4. 页面状态` --references--> `usePeriodicManifest()`  [INFERRED]
-  docs/architecture/be-06-data-source-api-adapter-20260724.md → app/src/hooks/usePeriodicManifest.ts
+- `2.2 Portal identity fixture` --references--> `Principal`  [INFERRED]
+  docs/architecture/be-02-identity-rbac-local-skeleton-20260724.md → backend/src/mkt53_backend/auth.py
+- `Registry 字段` --references--> `SourceRegistryItem`  [INFERRED]
+  docs/knowledge/knowledge-data-source-governance-stable.md → app/src/data/source-registry.ts
+- `4.2 source-error 明细` --references--> `MarketPage()`  [INFERRED]
+  drafts/analysis/mkt53-loop5-semi-monthly-refresh-gate-draft-20260701.md → app/src/pages/MarketPage.tsx
 - `6. 下一执行门` --references--> `DataManage()`  [INFERRED]
   docs/architecture/data-reg-synthetic-draft-review-handoff-gate-20260724.md → app/src/pages/DataManage.tsx
+- `1. 结论` --references--> `DataManage()`  [INFERRED]
+  docs/architecture/p0-03-datamanage-bundle-exception-retirement-20260724.md → app/src/pages/DataManage.tsx
 
 ## Import Cycles
 - None detected.
 
-## Communities (243 total, 23 thin omitted)
+## Communities (249 total, 0 thin omitted)
 
 ### Community 0 - "scripts"
 Cohesion: 0.02
-Nodes (108): scripts, build, data:ai-design:governance-batch6, data:ai-report:governance-batch4, data:ai-review:governance-batch5, data:audit, data:audit:deep, data:audit:deep:json (+100 more)
+Nodes (110): scripts, build, data:ai-design:governance-batch6, data:ai-report:governance-batch4, data:ai-review:governance-batch5, data:audit, data:audit:deep, data:audit:deep:json (+102 more)
 
 ### Community 1 - "amazon-commerce-private-input-audit.mjs"
-Cohesion: 0.27
-Nodes (15): aggregateMissingFields(), assertSafeWritePath(), buildAmazonCommercePrivateInputAudit(), checklistAudit(), findForbiddenKeys(), isIsoDate(), main(), mappingAudit() (+7 more)
+Cohesion: 0.16
+Nodes (24): aggregateMissingFields(), assertSafeWritePath(), buildAmazonCommercePrivateInputAudit(), checklistAudit(), findForbiddenKeys(), isIsoDate(), main(), mappingAudit() (+16 more)
 
 ### Community 2 - "cn"
-Cohesion: 0.05
-Nodes (57): Avatar(), AvatarFallback(), AvatarImage(), BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink(), BreadcrumbList(), BreadcrumbPage() (+49 more)
+Cohesion: 0.04
+Nodes (68): BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink(), BreadcrumbList(), BreadcrumbPage(), BreadcrumbSeparator(), ButtonGroup(), ButtonGroupSeparator() (+60 more)
 
 ### Community 3 - "build-erp-owner-approval-intake-batch9.mjs"
 Cohesion: 0.11
@@ -303,40 +307,40 @@ Cohesion: 0.05
 Nodes (84): auditSourceContextFromComment(), buildDeepAudit(), buildReport(), buildRouteRows(), buildTableRows(), businessFiles(), canDisplayAsFact(), claimSourceText() (+76 more)
 
 ### Community 5 - "sidebar.tsx"
-Cohesion: 0.06
-Nodes (43): Sheet(), SheetContent(), SheetDescription(), SheetFooter(), SheetHeader(), SheetOverlay(), SheetPortal(), SheetTitle() (+35 more)
+Cohesion: 0.07
+Nodes (42): Sheet(), SheetContent(), SheetDescription(), SheetFooter(), SheetHeader(), SheetOverlay(), SheetPortal(), SheetTitle() (+34 more)
 
 ### Community 6 - "App.tsx"
 Cohesion: 0.10
 Nodes (48): App(), PageFallback(), Navbar(), useScrollTop(), NotFoundPage(), Aesthetics, AIAssistantPage, AIGallery (+40 more)
 
 ### Community 7 - "build-semi-monthly-recovery-candidate.mjs"
-Cohesion: 0.10
-Nodes (30): assertCandidateWritePath(), assertNoSymlinkComponents(), buildChecks(), buildPublicManifest(), buildSemiMonthlyRecoveryCandidate(), compareCandidateContract(), cronPreview(), describeContract() (+22 more)
+Cohesion: 0.09
+Nodes (39): areValuesContractCompatible(), assertCandidateWritePath(), assertNoSymlinkComponents(), buildChecks(), buildPublicManifest(), buildSemiMonthlyRecoveryCandidate(), compareCandidateContract(), cronPreview() (+31 more)
 
 ### Community 8 - "internal-crm-dry-run.mjs"
-Cohesion: 0.13
-Nodes (43): buildAmazonCommerceReadinessGate(), readReadinessRecord(), buildInternalCrmDryRun(), buildInternalCrmReadinessGate(), buildReadinessView(), exportFieldsAreSafe(), main(), parseArgs() (+35 more)
+Cohesion: 0.10
+Nodes (54): buildCurrentSourceTaskQueue(), main(), parseArgs(), writeJson(), buildAmazonCommerceReadinessGate(), readReadinessRecord(), buildInternalCrmDryRun(), buildInternalCrmReadinessGate() (+46 more)
 
 ### Community 9 - "mkt53 ERP 与全站页面数据融合治理方案"
-Cohesion: 0.12
-Nodes (16): 1.1 已确认事实, 1.2 部署前判断, 1. 当前结论, 2. 证据等级与部署门禁, 4.1 已沉淀, 4.2 尚未正式沉淀但高价值, 4.3 数据管理页需要新增的治理对象, 4. ERP 高价值表格内化机会 (+8 more)
+Cohesion: 0.08
+Nodes (25): 1.1 已确认事实, 1.2 部署前判断, 1. 当前结论, 2. 证据等级与部署门禁, 3.1 首页与治理页面, 3.2 市场模块, 3.3 竞争模块, 3.4 用户模块 (+17 more)
 
-### Community 10 - "lucide-react"
-Cohesion: 0.07
-Nodes (54): AiDesignGovernancePanel(), AiReportGovernancePanel(), AiReviewFocus, AiReviewGovernancePanel(), AiReviewGovernancePanelProps, focusSurfaces, metricByFocus, AiVocBlockerPanel() (+46 more)
+### Community 10 - "EvidenceGatePage"
+Cohesion: 0.09
+Nodes (43): AiDesignGovernancePanel(), AiReportGovernancePanel(), AiReportGovernancePanelProps, metricByFocus, AiReviewGovernancePanel(), AiVocBlockerPanel(), blockerLanes, EvidenceGatePage() (+35 more)
 
 ### Community 11 - "market-insight-data.ts"
 Cohesion: 0.08
-Nodes (43): erpBatch10TemplatePolicy, erpBatch11PreflightPolicy, erpBatch12SubmissionPolicy, erpBatch13SubmissionPackPolicy, erpBatch14DropboxWatchlistPolicy, erpBatch15AcceptanceGatePolicy, erpBatch16SyntheticFixturePolicy, erpBatch17SyntheticPipelinePolicy (+35 more)
+Nodes (44): erpBatch10TemplatePolicy, erpBatch11PreflightPolicy, erpBatch12SubmissionPolicy, erpBatch13SubmissionPackPolicy, erpBatch14DropboxWatchlistPolicy, erpBatch15AcceptanceGatePolicy, erpBatch16SyntheticFixturePolicy, erpBatch17SyntheticPipelinePolicy (+36 more)
 
 ### Community 12 - "mkt53 项目理解、问题地图与工作流"
 Cohesion: 0.05
 Nodes (36): 10. 后续升级路线, 1. 结论摘要, 2.1 服务对象, 2.2 核心业务闭环, 2. 业务定位, 3.1 一级业务域, 3.2 数据管理结构, 3. 产品结构 (+28 more)
 
-### Community 13 - "3. 债务诊断"
-Cohesion: 0.25
-Nodes (9): stable(), 3.1 已治理：P0 项目管理债务，版本基线漂移, 3.2 已治理：P0 工程债务，质量门与依赖锁漂移, 3.3 已治理：P0 产品脆弱点债务，线上数据状态不可由本地复现, 3.5 P1 文档管理债务：正式文档、草稿、临时同步文件混杂, 3.6 P1 数据可信度债务：业务指标仍是静态声明主导, 3.7 P2 UI 与前端体验债务：移动端回归保护不足, 3. 债务诊断 (+1 more)
+### Community 13 - "vitest"
+Cohesion: 0.14
+Nodes (12): resolveDataSourceRegistryRuntime(), getSourceRegistryItemsByModule(), sourceRegistry, verificationStatusMeta, apiRuntime, mockNavigate, apiRuntime, retry (+4 more)
 
 ### Community 14 - "build-erp-owner-approval-preflight-batch11.mjs"
 Cohesion: 0.11
@@ -355,8 +359,8 @@ Cohesion: 0.12
 Nodes (32): answerForQuestion(), buildAnswerMap(), buildSkeleton(), buildSkeletonMarkdown(), buildSummary(), CHAT_PACKET_REQUIRED_COLUMNS, CHAT_QUESTION_REQUIRED_COLUMNS, csvEscape() (+24 more)
 
 ### Community 18 - "build-release-evidence.mjs"
-Cohesion: 0.07
-Nodes (43): assembleReleaseEvidence(), CHECK_PLAN, compactFacts(), countLines(), DEFAULT_OUTPUT_PATH, executeCheck(), extractCheckFacts(), getReleaseCheckPlan() (+35 more)
+Cohesion: 0.16
+Nodes (20): assembleReleaseEvidence(), CHECK_PLAN, compactFacts(), countLines(), DEFAULT_OUTPUT_PATH, executeCheck(), extractCheckFacts(), getReleaseCheckPlan() (+12 more)
 
 ### Community 19 - "DataManage.tsx"
 Cohesion: 0.13
@@ -370,9 +374,9 @@ Nodes (27): appRoot, backlogRow(), buildArtifacts(), buildBacklogRows(), buildCa
 Cohesion: 0.13
 Nodes (30): ALLOWED_REVIEW_STATUSES, approvedSourceIds(), approvedTaskIds(), BOUNDARY_FIELDS, buildBoundaryRows(), buildDecisionRows(), buildManifest(), buildQueueRows() (+22 more)
 
-### Community 22 - "utils.ts"
-Cohesion: 0.08
-Nodes (19): InputGroup(), InputGroupAddon(), inputGroupAddonVariants, InputGroupButton(), inputGroupButtonVariants, InputGroupInput(), InputGroupText(), InputGroupTextarea() (+11 more)
+### Community 22 - "react"
+Cohesion: 0.04
+Nodes (35): Avatar(), AvatarFallback(), AvatarImage(), Checkbox(), HoverCardContent(), InputGroup(), InputGroupAddon(), inputGroupAddonVariants (+27 more)
 
 ### Community 23 - "prefill-source-gap-owner-intake.mjs"
 Cohesion: 0.12
@@ -420,15 +424,15 @@ Nodes (26): acceptanceGate(), buildIndexMarkdown(), buildPackets(), buildQuestio
 
 ### Community 34 - "collect-weekly-sources.mjs"
 Cohesion: 0.18
-Nodes (23): checkLocalFile(), checkPublicUrl(), checkPublicUrlAttempt(), checkPublicUrlWithBrowserFallback(), collectionPeriod(), collectSemiMonthlySources(), collectWeeklySources(), hashBuffer() (+15 more)
+Nodes (22): checkLocalFile(), checkPublicUrl(), checkPublicUrlAttempt(), checkPublicUrlWithBrowserFallback(), collectionPeriod(), collectSemiMonthlySources(), collectWeeklySources(), hashBuffer() (+14 more)
 
 ### Community 35 - "ReviewRegistryService"
-Cohesion: 0.16
-Nodes (18): _approve_review(), ReviewEvent, ReviewSubject, utc_now(), _get_review_subject(), open_review(), _record_linked_transition(), reopen_review() (+10 more)
+Cohesion: 0.14
+Nodes (22): _approve_review(), ReviewEvent, ReviewSubject, utc_now(), _get_review_subject(), open_review(), _record_linked_transition(), reopen_review() (+14 more)
 
 ### Community 36 - "8. 执行看板（2026-07-23）"
 Cohesion: 0.08
-Nodes (24): 8. 执行看板（2026-07-23）, Batch 02 — Dependency security remediation, Batch 03 — Bundle budget and release evidence gate, Batch 05 — Production SSH key contract, Batch 06 — P0-04 isolated recovery candidate, Batch 07 — P0-04 authorized production recovery, Batch 08 — P0-05 portal-gate isolated candidate, Batch 09 — P0-05 production activation preflight (+16 more)
+Nodes (25): 8. 执行看板（2026-07-23）, Batch 02 — Dependency security remediation, Batch 03 — Bundle budget and release evidence gate, Batch 05 — Production SSH key contract, Batch 06 — P0-04 isolated recovery candidate, Batch 07 — P0-04 authorized production recovery, Batch 08 — P0-05 portal-gate isolated candidate, Batch 09 — P0-05 production activation preflight (+17 more)
 
 ### Community 37 - "build-erp-owner-submission-dropbox-watchlist-batch14.mjs"
 Cohesion: 0.13
@@ -443,8 +447,8 @@ Cohesion: 0.14
 Nodes (25): ACCEPTANCE_GATE_REQUIRED_COLUMNS, ALLOWED_DECISIONS, buildManifest(), buildPacketValidation(), buildRunbook(), buildSummary(), countBy(), csvEscape() (+17 more)
 
 ### Community 40 - "field.tsx"
-Cohesion: 0.17
-Nodes (14): FieldLabel(), FormControl(), FormDescription(), FormFieldContext, FormFieldContextValue, FormItem(), FormItemContext, FormItemContextValue (+6 more)
+Cohesion: 0.13
+Nodes (17): Badge(), badgeVariants, FieldLabel(), FormControl(), FormDescription(), FormFieldContext, FormFieldContextValue, FormItem() (+9 more)
 
 ### Community 41 - "prioritize-source-gaps.mjs"
 Cohesion: 0.14
@@ -463,12 +467,12 @@ Cohesion: 0.14
 Nodes (23): appRoot, BATCH8_DIR, BATCH9_DIR, buildArtifacts(), buildEvidenceRows(), buildOwnerPacketRows(), buildRecordTemplateRows(), buildSubmissionRows() (+15 more)
 
 ### Community 45 - "extractSourceRegistry"
-Cohesion: 0.10
-Nodes (31): buildCurrentSourceTaskQueue(), main(), parseArgs(), writeJson(), amazonCommerceSourceIds, buildConnectorBacklog(), connectorDefinitionFor(), connectorDefinitions (+23 more)
+Cohesion: 0.13
+Nodes (22): classifyCollectionMethod(), acceptanceCriteriaFor(), buildSourceTaskQueue(), buildTask(), countBy(), evidenceChecklistFor(), groupTasks(), ownerTeamFor() (+14 more)
 
 ### Community 46 - "AiDesignGovernancePanel.tsx"
-Cohesion: 0.24
-Nodes (11): AiDesignFocus, AiDesignGovernancePanelProps, focusSurfaces, metricByFocus, aiDesignAssetHashRows, aiDesignBatch6Artifact, aiDesignBatch6DisplayPolicy, aiDesignBatch6Metrics (+3 more)
+Cohesion: 0.16
+Nodes (15): AiDesignFocus, AiDesignGovernancePanelProps, focusSurfaces, metricByFocus, aiDesignAssetHashRows, aiDesignBatch6Artifact, aiDesignBatch6DisplayPolicy, aiDesignBatch6Metrics (+7 more)
 
 ### Community 47 - "MemoizedCharts.tsx"
 Cohesion: 0.08
@@ -491,8 +495,8 @@ Cohesion: 0.13
 Nodes (22): appRoot, BATCH10_DIR, BATCH15_DIR, buildArtifacts(), buildGatePlanRows(), buildRecordAuditRows(), buildSyntheticRecords(), csvEscape() (+14 more)
 
 ### Community 52 - "source-registry-adapter.ts"
-Cohesion: 0.17
-Nodes (20): collectionMethods, DataSourceRegistryLoadError, DataSourceRegistryMode, endpointWithPagination(), evidenceGrades, fetchDataSourceRegistry(), FetchDataSourceRegistryOptions, isAbortError() (+12 more)
+Cohesion: 0.16
+Nodes (21): collectionMethods, DataSourceRegistryLoadError, DataSourceRegistryMode, endpointWithPagination(), evidenceGrades, fetchDataSourceRegistry(), FetchDataSourceRegistryOptions, isAbortError() (+13 more)
 
 ### Community 53 - "compilerOptions"
 Cohesion: 0.10
@@ -503,8 +507,8 @@ Cohesion: 0.15
 Nodes (19): erpBatch2DisplayPolicy, erpBatch7DisplayPolicy, erpBatch8ApprovalPolicy, erpBreastPumpMonthlyProxy, erpCategoryProxySummary, erpCategoryReviewQueueSummary, erpDerivedBatch2Artifact, erpFieldDictionaryCoverageSummary (+11 more)
 
 ### Community 55 - "source_registry.py"
-Cohesion: 0.10
-Nodes (29): AuditEvent, Base, IdempotencyRecord, Snapshot, Source, ApiModel, AuditEventResponse, SnapshotCreate (+21 more)
+Cohesion: 0.14
+Nodes (16): Source, SourceCreate, SourceListResponse, SourceResponse, SourceUpdate, validate_source_fact_governance(), get_source(), canonical_request_hash() (+8 more)
 
 ### Community 56 - "command.tsx"
 Cohesion: 0.15
@@ -514,9 +518,9 @@ Nodes (17): Command(), CommandDialog(), CommandGroup(), CommandInput(), CommandI
 Cohesion: 0.10
 Nodes (20): MKG-01 创建 mkt53 Space, MKG-02 创建 mkt53-assistant Identity, MKG-03 写入 2 条 Space Rules, MKG-04 写入 Working Memory, MKG-05 发布 12 条种子记忆, MKG-06 应用 mkt53 本体, MKG-07 写入 10 条记忆关系, MKG-08 图谱实体与 graphify 映射 (+12 more)
 
-### Community 58 - "item.tsx"
-Cohesion: 0.07
-Nodes (35): Alert(), AlertDescription(), AlertTitle(), alertVariants, Badge(), badgeVariants, ButtonGroup(), ButtonGroupSeparator() (+27 more)
+### Community 58 - "class-variance-authority"
+Cohesion: 0.11
+Nodes (19): Alert(), AlertDescription(), AlertTitle(), alertVariants, Empty(), EmptyContent(), EmptyDescription(), EmptyHeader() (+11 more)
 
 ### Community 59 - "数据时效与联网补证审计草稿"
 Cohesion: 0.14
@@ -526,9 +530,9 @@ Nodes (13): 2025 年来源复核判断, Mamava / Medela 2025 State of Breastfeed
 Cohesion: 0.11
 Nodes (18): aliases, components, hooks, lib, ui, utils, iconLibrary, registries (+10 more)
 
-### Community 61 - "vitest"
-Cohesion: 0.05
-Nodes (50): FactDisplayGate(), FactDisplayGateProps, isFactDisplayReady(), getDominantStatus(), PageEvidenceNoticeProps, statusPriority, toneStyles, getSourceRegistryItem() (+42 more)
+### Community 61 - "UsersPage.tsx"
+Cohesion: 0.06
+Nodes (30): clusterData, detailedPersonas, discussTrendData, eightPersonasRadar, getStateForPath(), hotTopics, incomeData, industryMentionData (+22 more)
 
 ### Community 62 - "test_auth.py"
 Cohesion: 0.36
@@ -538,17 +542,17 @@ Nodes (8): test_analyst_cannot_use_write_probe(), test_invalid_proxy_token_retur
 Cohesion: 0.11
 Nodes (18): 1.1 品牌标识, 1.2 色彩系统, 1.3 导航结构（Momcozy官网）, 1.4 产品体系, 1.5 竞品, Momcozy 品牌迁移完整计划, Phase 10: 构建部署, Phase 1: 全局系统更新 (+10 more)
 
-### Community 64 - "AiReportGovernancePanel.tsx"
-Cohesion: 0.09
-Nodes (22): AiReportGovernancePanelProps, metricByFocus, aiDatasetReadinessRows, aiErpContextBridgeRows, aiModelRunReadinessRows, aiReportBatch4Artifact, aiReportBatch4DisplayPolicy, aiReportBatch4Metrics (+14 more)
+### Community 64 - "ReportsPage.tsx"
+Cohesion: 0.17
+Nodes (11): aiDatasetReadinessRows, aiErpContextBridgeRows, aiModelRunReadinessRows, aiReportBatch4Artifact, aiReportBatch4DisplayPolicy, aiReportBatch4Metrics, reportGenerationQueueRows, categories (+3 more)
 
 ### Community 65 - "HomePage.tsx"
 Cohesion: 0.11
 Nodes (17): marketCagrLines, marketQuickInsights, marketSizeTrendData, actionColors2, countryColors, countryFlags, cpscEfilingSource, euMdrSource (+9 more)
 
 ### Community 66 - "OperationsManual.tsx"
-Cohesion: 0.29
-Nodes (6): insightStories, OperationsManual(), pageGuides, OperationsManual, 4. 构建与预算结果, Batch 21 — P0-03 DataManage temporary bundle exception retirement
+Cohesion: 0.14
+Nodes (12): insightStories, OperationsManual(), pageGuides, OperationsManual, 1. 结论, 2. 问题与目标, 4. 构建与预算结果, 5. 使用与维护手册 (+4 more)
 
 ### Community 67 - "mkt53 — Momcozy 市场洞察看板"
 Cohesion: 0.12
@@ -571,8 +575,8 @@ Cohesion: 0.11
 Nodes (30): appRoot, BATCH10_DIR, BATCH12_DIR, BLANK_FIELDS, buildArtifacts(), buildChecklistRows(), buildHandoffGuideRows(), buildPacketIndexRows() (+22 more)
 
 ### Community 72 - "project-analysis.mjs"
-Cohesion: 0.13
-Nodes (24): analyzeConsistency(), arrayFromVariable(), extractDataModules(), extractSourceRegistry(), extractTableGovernanceIds(), findVariableInitializer(), visit(), listPageComponents() (+16 more)
+Cohesion: 0.22
+Nodes (16): args, result, writeArgIndex, analyzeConsistency(), arrayFromVariable(), extractDataModules(), extractTableGovernanceIds(), findVariableInitializer() (+8 more)
 
 ### Community 73 - "build-ai-report-governance-batch4.mjs"
 Cohesion: 0.17
@@ -582,9 +586,9 @@ Nodes (15): buildArtifacts(), csvEscape(), datasetRows, __dirname, erpBridgeRows
 Cohesion: 0.12
 Nodes (10): ContextMenuCheckboxItem(), ContextMenuContent(), ContextMenuItem(), ContextMenuLabel(), ContextMenuRadioItem(), ContextMenuSeparator(), ContextMenuShortcut(), ContextMenuSubContent() (+2 more)
 
-### Community 75 - "dropdown-menu.tsx"
-Cohesion: 0.12
-Nodes (10): DropdownMenuCheckboxItem(), DropdownMenuContent(), DropdownMenuItem(), DropdownMenuLabel(), DropdownMenuRadioItem(), DropdownMenuSeparator(), DropdownMenuShortcut(), DropdownMenuSubContent() (+2 more)
+### Community 75 - "AiReviewGovernancePanel.tsx"
+Cohesion: 0.24
+Nodes (11): AiReviewFocus, AiReviewGovernancePanelProps, focusSurfaces, metricByFocus, aiReviewBatch5Artifact, aiReviewBatch5DisplayPolicy, aiReviewBatch5Metrics, aiReviewEvalQueueRows (+3 more)
 
 ### Community 76 - "mkt53 Loop5 半月数据刷新门禁"
 Cohesion: 0.12
@@ -640,7 +644,7 @@ Nodes (13): Amazon 私有输入 sidecar, 兼容边界, 半月发布报告（run 
 
 ### Community 89 - "ChannelInterviews.tsx"
 Cohesion: 0.04
-Nodes (69): ExportButton(), ExportButtonProps, Agent, defaultAgents, InterviewAgents(), InterviewAgentsProps, typeMeta, PageEvidenceNotice() (+61 more)
+Nodes (83): ExportButton(), ExportButtonProps, FactDisplayGate(), FactDisplayGateProps, isFactDisplayReady(), Agent, defaultAgents, InterviewAgents() (+75 more)
 
 ### Community 90 - "mkt53 Loop2 半月 Manifest 新鲜度核对报告"
 Cohesion: 0.17
@@ -650,17 +654,17 @@ Nodes (11): 1. 边界, 2. 时间基线, 3. 本地 Manifest, 4. 生产只读 Mani
 Cohesion: 0.18
 Nodes (10): 0. 证据基线, 1. 整体完成度判断, 2. 待优化项, 2. 拓展能力, 3. 高价值拓展方向, mkt53 Momcozy 市场洞察工作台价值分析报告, 第一步：项目能力剖析, 第三步：经典场景闭环 (+2 more)
 
-### Community 92 - "react"
-Cohesion: 0.05
-Nodes (24): BrandIconProps, sizeMap, ErrorBoundary, Props, State, NavGroup, navGroups, initialNotifications (+16 more)
+### Community 92 - "react-router"
+Cohesion: 0.09
+Nodes (26): NavGroup, navGroups, initialNotifications, Notification, NotificationCenter(), NotificationCenterProps, priorityConfig, typeConfig (+18 more)
 
 ### Community 93 - "drawer.tsx"
 Cohesion: 0.20
 Nodes (8): DrawerContent(), DrawerDescription(), DrawerFooter(), DrawerHeader(), DrawerOverlay(), DrawerPortal(), DrawerTitle(), vaul
 
-### Community 94 - "AppEnvironment"
-Cohesion: 0.11
-Nodes (11): AppEnvironment, production_settings(), test_database_url_hides_password_when_stringified(), test_nonproduction_allows_fixture_defaults_but_keeps_dev_identity_disabled(), test_production_accepts_empty_or_exact_https_origin(), test_production_configuration_fails_closed(), test_production_disables_openapi(), test_secret_files_are_loaded_from_explicit_directory() (+3 more)
+### Community 94 - "pytest"
+Cohesion: 0.10
+Nodes (13): AppEnvironment, test_audit_event_rejects_orm_update_and_delete(), test_review_event_rejects_orm_update_and_delete(), production_settings(), test_database_url_hides_password_when_stringified(), test_nonproduction_allows_fixture_defaults_but_keeps_dev_identity_disabled(), test_production_accepts_empty_or_exact_https_origin(), test_production_configuration_fails_closed() (+5 more)
 
 ### Community 95 - "usePeriodicManifest.ts"
 Cohesion: 0.21
@@ -687,8 +691,8 @@ Cohesion: 0.18
 Nodes (10): 1. 授权与目标, 2. 发布策略, 3. 发布前证据, 4. 远端备份, 5. 生产写入, 6. 发布后验证, 7. E2E 修正说明, 8. 边界关闭 (+2 more)
 
 ### Community 101 - "mkt53 Loop7 Source Error 补证门禁"
-Cohesion: 0.18
-Nodes (10): 1. 本轮目标, 2. 范围与边界, 3. 当前基线, 4. 新鲜只读重试证据, 5. 历史证据与治理冲突, 6. 业务影响判断, 7. 补证路径, 8. 本轮结论 (+2 more)
+Cohesion: 0.12
+Nodes (16): MarketPage(), 1. 展会页 `Exhibition.tsx`, 2. 行业资讯页 `IndustryNews.tsx`, 3. 市场报告口径, 4. 法规与官方条目, 可联网补证并优先更新, 1. 本轮目标, 2. 范围与边界 (+8 more)
 
 ### Community 102 - "smoke-prod-routes.mjs"
 Cohesion: 0.29
@@ -696,7 +700,7 @@ Nodes (9): collectRouteCheck(), csvEscape(), DEFAULT_ROUTES, DEFAULT_VIEWPORTS, 
 
 ### Community 103 - "schemas.py"
 Cohesion: 0.07
-Nodes (17): get_review(), list_review_events(), list_reviews(), _require_idempotency_key(), _require_if_match(), transition_review(), CollectionMethod, EvidenceGrade (+9 more)
+Nodes (16): get_review(), list_review_events(), list_reviews(), _require_idempotency_key(), _require_if_match(), transition_review(), CollectionMethod, EvidenceGrade (+8 more)
 
 ### Community 104 - "mkt53 Codex Session 接手摘要"
 Cohesion: 0.20
@@ -730,9 +734,9 @@ Nodes (16): absoluteFromApp(), addDays(), ageInDays(), buildSourceFreshnessProje
 Cohesion: 0.20
 Nodes (8): SelectContent(), SelectItem(), SelectLabel(), SelectScrollDownButton(), SelectScrollUpButton(), SelectSeparator(), SelectTrigger(), @radix-ui/react-select
 
-### Community 112 - "ref_node_url"
-Cohesion: 0.15
-Nodes (14): buildDq015OwnerPacketBundle(), buildIndex(), buildPacket(), parseArgs(), runCli(), serializeJson(), sha256(), { chromium } (+6 more)
+### Community 112 - "ref_node_crypto"
+Cohesion: 0.09
+Nodes (21): args, asJson, evidence, issues, latest, MANIFEST_FILES, result, taskIds (+13 more)
 
 ### Community 113 - "市场洞察产品路线图"
 Cohesion: 0.22
@@ -747,12 +751,12 @@ Cohesion: 0.22
 Nodes (8): mkt53 — Momcozy 市场洞察看板, 应用结构, 当前产品形态, 当前数据状态, 最短路径, 正式文档, 生产部署, 质量门禁
 
 ### Community 116 - "validate-source-freshness-projection.mjs"
-Cohesion: 0.33
-Nodes (8): absoluteFromApp(), DEFAULT_POLICY_PATH, DEFAULT_PROJECTION_PATH, main(), readJson(), REQUIRED_FALSE_BOUNDARIES, validateSourceFreshnessProjection(), valueAfter()
+Cohesion: 0.22
+Nodes (12): absoluteFromApp(), DEFAULT_POLICY_PATH, DEFAULT_PROJECTION_PATH, main(), readJson(), REQUIRED_FALSE_BOUNDARIES, stable(), validateSourceFreshnessProjection() (+4 more)
 
-### Community 117 - "3. 页面级数据完成度"
-Cohesion: 0.25
-Nodes (8): 3.1 首页与治理页面, 3.2 市场模块, 3.3 竞争模块, 3.4 用户模块, 3.5 行业模块, 3.6 自身经营模块, 3.7 AI 助手与 AI 资产模块, 3. 页面级数据完成度
+### Community 117 - "P0-03 vendor-charts Bundle 临时例外退出方案"
+Cohesion: 0.15
+Nodes (12): 2. 问题与退出标准, 3. 完整设计逻辑, 4. 构建与预算结果, 5. 回归合同, 6. 使用与维护手册, 7. 实测证据与未通过门禁, 8. 边界与下一批, P0-03 vendor-charts Bundle 临时例外退出方案 (+4 more)
 
 ### Community 118 - "validate-p0-05-nginx-candidate.sh"
 Cohesion: 0.48
@@ -779,8 +783,8 @@ Cohesion: 0.06
 Nodes (33): 10. 被否决或延期的选项, 11. 实施顺序与门禁, 12.1 BE-02 本地实现证据, 12. 验收与未决项, 1. 决策摘要, 2.1 已确认基线, 2.2 决策驱动因素, 2. 背景与约束 (+25 more)
 
 ### Community 124 - "ref_node_fs"
-Cohesion: 0.07
-Nodes (23): args, result, writeArgIndex, args, audit, maxAttemptsIndex, noNetwork, publicManifest (+15 more)
+Cohesion: 0.10
+Nodes (18): isIsoDate(), resolveCurrentPeriodWindow(), validateWindow(), isAtLeast(), numericVersion(), PackageManifest, retiredRouterPackage, sourceFiles() (+10 more)
 
 ### Community 125 - "@playwright/test"
 Cohesion: 0.09
@@ -806,13 +810,13 @@ Nodes (5): compilerOptions, baseUrl, paths, files, references
 Cohesion: 0.29
 Nodes (7): 5. 整合治理方案, Phase 0：冻结错误基线（已完成）, Phase 1：统一项目事实基线（已完成）, Phase 2：修复部署与质量门债务, Phase 3：建立数据资产事实源, Phase 4：前端架构瘦身, Phase 6：生产韧性治理
 
-### Community 131 - "mkt53 Loop10 Commit Push Deploy Gate"
-Cohesion: 0.33
-Nodes (5): Commit Scope, Exclusions, Goal, mkt53 Loop10 Commit Push Deploy Gate, Verification Plan
+### Community 131 - "refresh-semi-monthly-data.mjs"
+Cohesion: 0.17
+Nodes (10): args, audit, customsPublicAdapter, maxAttemptsIndex, noNetwork, publicEvidenceMaxSourcesIndex, publicEvidenceTimeoutIndex, publicManifest (+2 more)
 
 ### Community 132 - "package.json"
-Cohesion: 0.04
-Nodes (39): engines, node, name, private, type, version, Checkbox(), HoverCardContent() (+31 more)
+Cohesion: 0.05
+Nodes (37): engines, node, name, private, type, version, ResizableHandle(), ResizablePanelGroup() (+29 more)
 
 ### Community 133 - "smoke-prod.sh"
 Cohesion: 0.40
@@ -831,8 +835,8 @@ Cohesion: 0.83
 Nodes (3): publish_private_amazon_audit(), run_step(), semi-monthly-refresh-local-static.sh script
 
 ### Community 137 - "test_review_registry_api.py"
-Cohesion: 0.11
-Nodes (31): _canonical_request_hash(), test_audit_event_rejects_orm_update_and_delete(), test_review_event_rejects_orm_update_and_delete(), analyst_headers(), test_concurrent_review_transition_cannot_silently_overwrite(), test_pending_review_can_be_withdrawn_directly(), test_pending_source_update_invalidates_a_reviewers_stale_decision(), test_review_permissions_and_creation_open_pending_reviews() (+23 more)
+Cohesion: 0.14
+Nodes (27): _canonical_request_hash(), analyst_headers(), test_pending_review_can_be_withdrawn_directly(), test_review_permissions_and_creation_open_pending_reviews(), test_review_validation_missing_entities_and_uninitialized_state_fail_closed(), test_snapshot_review_rejection_then_withdrawal_and_illegal_jump(), test_source_review_approval_withdrawal_etag_and_idempotency(), test_source_update_reopens_approval_and_lifecycle_withdraw_syncs_review() (+19 more)
 
 ### Community 138 - "2. 审计证据"
 Cohesion: 0.33
@@ -842,9 +846,9 @@ Nodes (6): 2.1 Git 与版本基线, 2.2 质量门, 2.3 产品与线上状态, 2.
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: 同意下一执行批次, Source Nodes
 
-### Community 140 - "scroll-area.tsx"
-Cohesion: 0.67
-Nodes (3): ScrollArea(), ScrollBar(), @radix-ui/react-scroll-area
+### Community 140 - "check-bundle-budget.mjs"
+Cohesion: 0.27
+Nodes (11): compileRule(), DEFAULT_CONFIG_PATH, DEFAULT_DIST_PATH, evaluateAsset(), evaluateBundleAssets(), isExceptionActive(), main(), parseArgs() (+3 more)
 
 ### Community 141 - "regulation-review-handoff-gate.test.ts"
 Cohesion: 0.83
@@ -854,13 +858,61 @@ Nodes (3): activeProjection(), readJson(), syntheticPrerequisites()
 Cohesion: 0.25
 Nodes (4): buildManualEvidenceValidationToTemp(), copyManualEvidencePackToTemp(), MANUAL_EVIDENCE_EMPTY_FIXTURE_DIR, sourceGapTempDirs
 
+### Community 143 - "dq015-owner-packets.test.ts"
+Cohesion: 0.20
+Nodes (7): APP_ROOT, BUNDLE_PATH, FALSE_BOUNDARIES, REPO_ROOT, SOURCE_IDS, SPEC_PATH, tempDirs
+
+### Community 144 - "数据来源治理规则"
+Cohesion: 0.20
+Nodes (9): Registry 字段, 修改流程, 半月采集 manifest, 可信度等级, 复核状态, 当前硬约束, 数据展示规则, 数据来源治理规则 (+1 more)
+
+### Community 145 - "scaffold-amazon-mapping-fill-draft.mjs"
+Cohesion: 0.42
+Nodes (8): buildCsv(), csvEscape(), expandDraftMappings(), main(), parseArgs(), readMappingTemplate(), scaffoldAmazonMappingFillDraft(), writePrivateFile()
+
+### Community 146 - "refresh-weekly-data.mjs"
+Cohesion: 0.22
+Nodes (7): args, audit, maxAttemptsIndex, noNetwork, publicManifest, retryDelayIndex, timeoutIndex
+
 ### Community 147 - "Q: bundle build vite chunk route release evidence quality audit manifest script test [expanded: bundle, build, vite, chunk, route, release, evidence, quality, audit, manifest, script, test]"
 Cohesion: 0.50
 Nodes (3): Answer, Outcome, Q: bundle build vite chunk route release evidence quality audit manifest script test [expanded: bundle, build, vite, chunk, route, release, evidence, quality, audit, manifest, script, test]
 
+### Community 148 - "semi-monthly-refresh-and-deploy.sh"
+Cohesion: 1.00
+Nodes (2): run_step(), semi-monthly-refresh-and-deploy.sh script
+
+### Community 149 - "weekly-refresh-local-static.sh"
+Cohesion: 1.00
+Nodes (2): publish_private_amazon_audit(), weekly-refresh-local-static.sh script
+
+### Community 150 - "DATA-REG 来源与法务 Intake Readiness"
+Cohesion: 0.22
+Nodes (8): 1. 结论, 2. 六组 Readiness 输入, 3. 状态机, 4. 安全边界, 6. 验证, 7. 未覆盖与停止条件, 8. 下一批建议, DATA-REG 来源与法务 Intake Readiness
+
+### Community 151 - "ErrorBoundary"
+Cohesion: 0.25
+Nodes (3): ErrorBoundary, Props, State
+
+### Community 152 - "mkt53 记忆系统维护规范"
+Cohesion: 0.25
+Nodes (7): mkt53 记忆系统维护规范, 增量触发器, 复审周期, 故障恢复, 联系, 资产清单, 边界与禁止事项
+
 ### Community 153 - "source_api.py"
-Cohesion: 0.15
-Nodes (9): create_source(), get_source(), list_source_audit(), list_sources(), _require_idempotency_key(), _require_if_match(), _run_mutation(), update_source() (+1 more)
+Cohesion: 0.16
+Nodes (8): create_source(), list_source_audit(), list_sources(), _require_idempotency_key(), _require_if_match(), _run_mutation(), update_source(), withdraw_source()
+
+### Community 154 - "mkt53 周报复盘（2026-10-26 → 2026-11-02）"
+Cohesion: 0.25
+Nodes (7): 1. 本周真实发生了什么, 2. 坑点, 3. 本次沉淀的可复用资产, 4. 未完成任务盘点（依据 EXECUTION_TODO.md）, 5. 下一批推荐执行方案, 6. 本轮证据, mkt53 周报复盘（2026-10-26 → 2026-11-02）
+
+### Community 155 - "input-otp.tsx"
+Cohesion: 0.33
+Nodes (4): InputOTP(), InputOTPGroup(), InputOTPSlot(), input-otp
+
+### Community 156 - "ReportPreview.tsx"
+Cohesion: 0.33
+Nodes (5): defaultReport, reportDB, ReportPreviewModel, reportQuarter, reportYear
 
 ### Community 157 - "validate-dq015-owner-packets.mjs"
 Cohesion: 0.36
@@ -884,27 +936,23 @@ Nodes (37): boundaries, connectorCalls, credentialValuesIncluded, databaseWrites
 
 ### Community 164 - "main.py"
 Cohesion: 0.04
-Nodes (47): _authentication_error(), _authorization_error(), get_current_principal(), _parse_roles(), Permission, Principal, require_permission(), dependency() (+39 more)
+Nodes (48): _authentication_error(), _authorization_error(), get_current_principal(), _parse_roles(), Permission, Principal, require_permission(), dependency() (+40 more)
 
 ### Community 165 - "Batch 25：P0 后端 CI 质量门禁"
 Cohesion: 0.11
 Nodes (17): 1. 目标与结论, 2.1 独立失败域, 2.2 可复现运行时, 2.3 最小权限与零外部写入, 2.4 失败证据, 2. 设计逻辑, 3. 永久合同测试, 4. 使用手册 (+9 more)
 
 ### Community 167 - "project-regulation-intake-to-sku-draft.mjs"
-Cohesion: 0.21
-Nodes (19): assertTmpWritePath(), buildLineage(), buildMatrix(), buildRecord(), canonicalize(), canonicalSha256(), emptyMatrix(), isIsoDateTime() (+11 more)
+Cohesion: 0.20
+Nodes (20): assertTmpWritePath(), buildLineage(), buildMatrix(), buildRecord(), canonicalize(), canonicalSha256(), emptyMatrix(), isIsoDateTime() (+12 more)
 
 ### Community 169 - "public-evidence.ts"
-Cohesion: 0.08
-Nodes (43): getSidebarItems(), MarketDataGate(), fetchPublicEvidenceManifest(), usePublicEvidence(), derivePublicEvidenceView(), hasSameHttpsOrigin(), isCanonicalIsoTimestamp(), isConsistentValidation() (+35 more)
-
-### Community 172 - "SourceBackedReviewPacket.tsx"
-Cohesion: 0.27
-Nodes (10): decisionReadinessMeta, RouteReadinessStatus(), sourceReadinessMeta, StatusBadge(), canonicalRoute(), DecisionReadiness, routeReadinessProjection, getRouteReadiness() (+2 more)
+Cohesion: 0.15
+Nodes (23): derivePublicEvidenceView(), hasSameHttpsOrigin(), isCanonicalIsoTimestamp(), isConsistentValidation(), isEligibleCapturedPublicEvidenceRecord(), isHttpsUrl(), isNonEmptyString(), isNonNegativeNumber() (+15 more)
 
 ### Community 174 - "PageEvidenceNotice.tsx"
-Cohesion: 0.12
-Nodes (24): MarketDataGateProps, SourceFreshnessOverview(), SourceFreshnessOverviewProps, sourceFreshnessProjection, getAllSourceFreshness(), getSourceFreshness(), getSourceFreshnessMeta(), runtimeTemporalStatus() (+16 more)
+Cohesion: 0.09
+Nodes (35): getSidebarItems(), MarketDataGate(), MarketDataGateProps, SourceFreshnessOverview(), SourceFreshnessOverviewProps, sourceFreshnessProjection, getAllSourceFreshness(), getSourceFreshness() (+27 more)
 
 ### Community 176 - "validate-dq014-public-report-receipts.mjs"
 Cohesion: 0.25
@@ -938,13 +986,17 @@ Nodes (4): Answer, Outcome, Q: 下一批的执行建议是？, Source Nodes
 Cohesion: 0.15
 Nodes (12): 1. 结论, 2. 基线问题与修复映射, 3.1 Router 为什么直接迁移而不是继续保留兼容包, 3.2 ESLint 10 为什么修代码而不是关闭新规则, 3.3 为什么保留串行单测作为正式门禁, 3. 完整设计逻辑, 4. 依赖结果, 5. 永久回归合同 (+4 more)
 
+### Community 207 - "0001_be02_baseline.py"
+Cohesion: 0.40
+Nodes (2): downgrade(), upgrade()
+
 ### Community 208 - "build-dq020-amazon-owner-intake.mjs"
-Cohesion: 0.18
-Nodes (13): buildDq020AmazonOwnerIntakeBundle(), buildIndex(), buildPacket(), parseArgs(), requiredSlots(), runCli(), serializeJson(), sha256() (+5 more)
+Cohesion: 0.44
+Nodes (8): buildDq020AmazonOwnerIntakeBundle(), buildIndex(), buildPacket(), parseArgs(), requiredSlots(), runCli(), serializeJson(), sha256()
 
 ### Community 209 - "useDataSourceRegistry.ts"
-Cohesion: 0.16
-Nodes (14): DataSourceRegistryErrorKind, dataSourceRegistryRuntime, resolveDataSourceRegistryRuntime(), DataSourceRegistryState, DataSourceRegistryStatus, loadingState(), publicErrorMessage(), SourceLoader (+6 more)
+Cohesion: 0.27
+Nodes (11): DataSourceRegistryErrorKind, dataSourceRegistryRuntime, SourceRegistryItem, DataSourceRegistryState, DataSourceRegistryStatus, loadingState(), publicErrorMessage(), SourceLoader (+3 more)
 
 ### Community 210 - "Q: Which code paths connect the Batch 26 data governance, bundle, backend review/recovery, regulation intake, dependency and Graphify work?"
 Cohesion: 0.40
@@ -966,17 +1018,37 @@ Nodes (21): allowedMappingStatuses, archiveMappingCoverageReport(), buildAmazonC
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: How should GitHub Actions enforce the mkt53 BE-03-07 backend quality gate without production side effects?, Source Nodes
 
-### Community 229 - "dq015-owner-packets.test.ts"
-Cohesion: 0.09
-Nodes (15): buildCaptureRecord(), buildFixture(), REPO_ROOT, SEED_PATH, SOURCE_IDS, tempDirs, APP_ROOT, BUNDLE_PATH (+7 more)
+### Community 216 - "app/README.md"
+Cohesion: 1.00
+Nodes (1): mkt53 App
+
+### Community 217 - "nginx/README.md"
+Cohesion: 1.00
+Nodes (1): mkt53 nginx candidates
+
+### Community 218 - "install-weekly-cron.sh"
+Cohesion: 1.00
+Nodes (1): install-weekly-cron.sh script
+
+### Community 219 - "weekly-refresh-and-deploy.sh"
+Cohesion: 1.00
+Nodes (1): weekly-refresh-and-deploy.sh script
+
+### Community 221 - "deploy-static-and-verify.sh"
+Cohesion: 1.00
+Nodes (1): deploy-static-and-verify.sh script
+
+### Community 229 - "dq016-source-freshness.test.ts"
+Cohesion: 0.07
+Nodes (21): buildCaptureRecord(), buildFixture(), REPO_ROOT, SEED_PATH, SOURCE_IDS, tempDirs, APP_ROOT, FALSE_BOUNDARIES (+13 more)
 
 ### Community 242 - "Q: 已登录，可以继续"
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: 已登录，可以继续, Source Nodes
 
 ### Community 243 - "P0-03 DataManage Bundle 临时例外退出方案"
-Cohesion: 0.12
-Nodes (13): manualChunks(), 1. 结论, 2. 问题与目标, 3. 完整设计逻辑, 5. 使用与维护手册, 6. 实测证据, 7. 边界与下一批, P0-03 DataManage Bundle 临时例外退出方案 (+5 more)
+Cohesion: 0.22
+Nodes (7): manualChunks(), 3. 完整设计逻辑, 审计覆盖修复, 职责边界, 1. 结论, Batch 22 — P0-03 vendor-charts temporary bundle exception retirement, @vitejs/plugin-react
 
 ### Community 245 - "Q: 同意下一批执行建议，请开始执行"
 Cohesion: 0.40
@@ -1004,11 +1076,23 @@ Nodes (7): 1. 结果, 2. 本批修复, 3. Review 结论, 4. 使用与复核, 5. 
 
 ### Community 253 - "validate-regulation-source-legal-intake.mjs"
 Cohesion: 0.13
-Nodes (32): OFFICIAL_SOURCE_REGISTRY_IDS, addError(), addMissing(), ALLOWED_DOCUMENT_TYPES, arraysEqual(), asArray(), buildReadinessGroups(), buildRegulationSourceLegalIntakeReport() (+24 more)
+Nodes (31): OFFICIAL_SOURCE_REGISTRY_IDS, addError(), addMissing(), ALLOWED_DOCUMENT_TYPES, arraysEqual(), asArray(), buildReadinessGroups(), findSensitiveKeys() (+23 more)
+
+### Community 255 - "quality-be02.sh"
+Cohesion: 1.00
+Nodes (1): quality-be02.sh script
+
+### Community 258 - "mkt53-backend"
+Cohesion: 1.00
+Nodes (1): mkt53-backend
 
 ### Community 259 - "recovery_drill_be07.py"
 Cohesion: 0.19
 Nodes (19): append_only_statements(), assert_isolated_settings(), build_report(), _canonical_json(), cleanup_result(), _database_command(), database_fingerprint(), _json_value() (+11 more)
+
+### Community 260 - "quality-be03.sh"
+Cohesion: 1.00
+Nodes (1): quality-be03.sh script
 
 ### Community 261 - "Q: 同意下一批建议"
 Cohesion: 0.40
@@ -1017,6 +1101,10 @@ Nodes (4): Answer, Outcome, Q: 同意下一批建议, Source Nodes
 ### Community 263 - "BE-05 本地 Review 状态机"
 Cohesion: 0.20
 Nodes (9): 1. 结论与边界, 2. 状态合同, 3. 数据模型与迁移, 4. API 与权限, 5. 幂等与并发, 6. 新鲜验证, 7. 生产停止条件, 8. 下一批建议 (+1 more)
+
+### Community 265 - "quality-be04.sh"
+Cohesion: 1.00
+Nodes (1): quality-be04.sh script
 
 ### Community 266 - "strict-iso-date.mjs"
 Cohesion: 0.90
@@ -1035,8 +1123,8 @@ Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: How was the DataManage temporary bundle exception retired while preserving audit coverage?, Source Nodes
 
 ### Community 271 - "BE-06 本地数据来源 API Adapter"
-Cohesion: 0.25
-Nodes (7): 1. 结论与边界, 2. 运行模式, 4. 页面状态, 5. 新鲜验证, 6. 生产停止条件, 7. 下一批建议, BE-06 本地数据来源 API Adapter
+Cohesion: 0.22
+Nodes (8): 1. 结论与边界, 2. 运行模式, 3. Adapter 合同, 4. 页面状态, 5. 新鲜验证, 6. 生产停止条件, 7. 下一批建议, BE-06 本地数据来源 API Adapter
 
 ### Community 272 - "recovery-drill-be07.sh"
 Cohesion: 0.16
@@ -1047,16 +1135,20 @@ Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: 同意下一批建议, Source Nodes
 
 ### Community 276 - "EvidenceGatePage.tsx"
-Cohesion: 0.18
-Nodes (15): ReviewSection(), ReviewSectionProps, SourceBackedReviewPacket(), SourceBackedReviewPacketProps, Exhibition(), exhibitions, reviewSummary, industrySidebarItems (+7 more)
+Cohesion: 0.13
+Nodes (19): BrandIconProps, sizeMap, EmptyStateProps, ReviewSection(), ReviewSectionProps, SourceBackedReviewPacket(), SourceBackedReviewPacketProps, Exhibition() (+11 more)
+
+### Community 278 - "quality-be05.sh"
+Cohesion: 1.00
+Nodes (1): quality-be05.sh script
 
 ### Community 279 - "Q: 同意下一批建议"
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: 同意下一批建议, Source Nodes
 
-### Community 285 - "list_snapshots"
-Cohesion: 0.12
-Nodes (5): create_snapshot(), get_snapshot(), list_snapshot_audit(), list_snapshots(), _require_idempotency_key()
+### Community 285 - "snapshot_registry.py"
+Cohesion: 0.09
+Nodes (18): AuditEvent, Base, IdempotencyRecord, Snapshot, AuditEventResponse, SnapshotCreate, SnapshotListResponse, SnapshotResponse (+10 more)
 
 ### Community 287 - "BE-07 审计与恢复隔离演练"
 Cohesion: 0.22
@@ -1070,21 +1162,25 @@ Nodes (22): addError(), APPLICABILITY_VALUES, buildRegulationSkuContractReport()
 Cohesion: 0.18
 Nodes (10): 1. 结论, 2. 设计逻辑, 3. 使用手册, 4. 验证结果, 5. 未覆盖与停止条件, 6. 下一批建议, DATA-REG 合成 Intake → SKU Draft 投影演练, 幂等合同 (+2 more)
 
-### Community 291 - "dq016-source-freshness.test.ts"
-Cohesion: 0.20
-Nodes (7): APP_ROOT, FALSE_BOUNDARIES, L3_SOURCE_IDS, POLICY_PATH, PROJECTION_PATH, REPO_ROOT, tempDirs
-
 ### Community 295 - "Q: 同意下一批建议"
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: 同意下一批建议, Source Nodes
 
 ### Community 298 - "Batch 29：最终复审、PR Ready 门禁与合并前交接"
-Cohesion: 0.20
-Nodes (9): 1. 结果, 2. 本批关闭的缺口, 3. 提交链, 4. 本地验证, 5. Graphify, 6. PR Ready 操作与外部门禁, 7. 合并前 TODO, 8. 回滚 (+1 more)
+Cohesion: 0.22
+Nodes (8): 1. 结果, 3. 提交链, 4. 本地验证, 5. Graphify, 6. PR Ready 操作与外部门禁, 7. 合并前 TODO, 8. 回滚, Batch 29：最终复审、PR Ready 门禁与合并前交接
 
-### Community 306 - "@testing-library/react"
-Cohesion: 0.07
-Nodes (27): readinessGroups, RegulationIntakeReadinessPanel(), contractFields, evidenceCounts, RegulationSkuContractPanel(), getIndustrySidebarItems(), RegulationDetail(), 1. 结论 (+19 more)
+### Community 299 - "quality-be07.sh"
+Cohesion: 1.00
+Nodes (1): quality-be07.sh script
+
+### Community 305 - "index.md"
+Cohesion: 1.00
+Nodes (1): DQ-015 owner packet readiness bundle
+
+### Community 306 - "RegulationDetail.tsx"
+Cohesion: 0.12
+Nodes (17): readinessGroups, RegulationIntakeReadinessPanel(), contractFields, evidenceCounts, RegulationSkuContractPanel(), getIndustrySidebarItems(), RegulationDetail(), 1. 结论 (+9 more)
 
 ### Community 310 - "Q: 同意下一批建议"
 Cohesion: 0.40
@@ -1103,8 +1199,8 @@ Cohesion: 0.13
 Nodes (14): 1. 本批结论, 2.1 产物发现与路径安全, 2.2 Owner 问题合同, 2.3 公开证据与页面计数, 2.4 恢复候选与敏感草稿, 2. 完整设计逻辑, 3.1 Owner intake 流程, 3.2 半月本地候选 (+6 more)
 
 ### Community 318 - "DataSourcePage.tsx"
-Cohesion: 0.13
-Nodes (19): DataSourceRegistryStatus(), Props, calcModels, DataSource, DataSourcePage(), DataSourceTabId, divergenceData, FactDisplayFilter (+11 more)
+Cohesion: 0.14
+Nodes (18): DataSourceRegistryStatus(), Props, calcModels, DataSource, DataSourcePage(), DataSourceTabId, divergenceData, FactDisplayFilter (+10 more)
 
 ### Community 320 - "Q: 同意下一批建议"
 Cohesion: 0.40
@@ -1118,21 +1214,17 @@ Nodes (8): 1. 结果, 2. 六项 review finding 与修复, 3. Review 证据解释
 Cohesion: 0.18
 Nodes (10): 1. 结论, 2. 设计逻辑, 3. 使用手册, 4. 实测结果, 5. 未覆盖与停止条件, 6. 下一执行门, DATA-REG 合成 Draft → Review Handoff 门禁, Review handoff 合同 (+2 more)
 
-### Community 335 - "build-dq020-amazon-owner-evidence-acceptance.mjs"
-Cohesion: 0.13
-Nodes (28): buildDq020AmazonOwnerEvidenceAcceptance(), mappingOwnerContentDetected(), mappingOwnerFields, metadata(), parseArgs(), readinessOwnerContentDetected(), readJson(), runCli() (+20 more)
+### Community 335 - "promote-amazon-readiness-fill-draft.mjs"
+Cohesion: 0.27
+Nodes (13): findForbiddenReadinessKeys(), hasRequiredValue(), isIsoDate(), main(), normalizeReadiness(), normalizeReadinessFields(), normalizeValue(), parseArgs() (+5 more)
 
 ### Community 338 - "Q: Which local nodes implement the DATA-REG synthetic intake draft projection, lineage, idempotency, and withdrawal blocking?"
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: Which local nodes implement the DATA-REG synthetic intake draft projection, lineage, idempotency, and withdrawal blocking?, Source Nodes
 
-### Community 340 - "dq020-amazon-owner-intake.test.ts"
-Cohesion: 0.20
-Nodes (7): APP_ROOT, BUNDLE_PATH, FALSE_BOUNDARIES, REPO_ROOT, SOURCE_IDS, SPEC_PATH, tempDirs
-
-### Community 343 - "assertSafePrivatePath"
+### Community 343 - "ref_node_url"
 Cohesion: 0.12
-Nodes (30): assertSafeWritePath(), buildChecklist(), checklistRow(), main(), parseArgs(), readJson(), resolveGeneratedAt(), timestampForFile() (+22 more)
+Nodes (20): assertSafeWritePath(), buildChecklist(), checklistRow(), main(), parseArgs(), readJson(), resolveGeneratedAt(), timestampForFile() (+12 more)
 
 ### Community 346 - "Q: Which nodes implement the DATA-REG synthetic draft-to-review handoff gate and its fail-closed evidence rules?"
 Cohesion: 0.40
@@ -1146,26 +1238,25 @@ Nodes (4): Answer, Outcome, Q: How was the vendor-charts temporary exception ret
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: dependency audit router react eslint typescript postcss build test playwright route security, Source Nodes
 
-### Community 354 - "promote-amazon-mapping-fill-draft.mjs"
-Cohesion: 0.33
-Nodes (11): csvParse(), isIsoDate(), main(), normalizeMapping(), parseArgs(), promoteAmazonMappingFillDraft(), readDraftMappings(), readJson() (+3 more)
-
-### Community 356 - "areValuesContractCompatible"
-Cohesion: 0.27
-Nodes (10): areValuesContractCompatible(), isOptionalField(), isPlainRecord(), isSourceObservationField(), isValidBlockerArray(), isValidLocalEvidence(), isValidOptionalFieldValue(), isValidSourceAttempts() (+2 more)
+### Community 354 - "build-dq020-amazon-owner-evidence-acceptance.mjs"
+Cohesion: 0.16
+Nodes (23): buildDq020AmazonOwnerEvidenceAcceptance(), mappingOwnerContentDetected(), mappingOwnerFields, metadata(), parseArgs(), readinessOwnerContentDetected(), readJson(), runCli() (+15 more)
 
 ### Community 359 - "DQ-020 Amazon Owner Evidence 填报与验收手册"
 Cohesion: 0.20
 Nodes (9): 1. 当前结论, 2. 角色与职责, 3. 私有文件边界, 4. Mapping 填报合同, 5. Readiness 填报合同, 6. 安全验收命令, 7. 分阶段执行门禁, 8. 当前执行 TODO (+1 more)
+
+### Community 362 - "dq-020-amazon-owner-intake-20260730/index.md"
+Cohesion: 1.00
+Nodes (1): DQ-020 Amazon owner intake bundle
 
 ### Community 364 - "regulation-source-legal-intake.test.ts"
 Cohesion: 0.83
 Nodes (3): buildOwnerPacket(), buildSyntheticPacket(), readTemplate()
 
 ## Knowledge Gaps
-- **26 isolated node(s):** `@hookform/resolvers`, `date-fns`, `zod`, `@testing-library/dom`, `@types/node` (+21 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2014 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **23 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **26 isolated node(s):** `./scripts/data/build-dq020-amazon-owner-evidence-acceptance.mjs`, `autoprefixer`, `date-fns`, `@hookform/resolvers`, `jsdom` (+21 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2040 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 
 ## Work-memory lessons
 
@@ -1184,17 +1275,17 @@ Nodes (3): buildOwnerPacket(), buildSyntheticPacket(), readTemplate()
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `2. 本批关闭的缺口` connect `Batch 29：最终复审、PR Ready 门禁与合并前交接` to `strict-iso-date.mjs`, `ReviewRegistryService`, `main.py`, `vitest`?**
-  _High betweenness centrality (0.174) - this node is a cross-community bridge._
-- **What connects `@hookform/resolvers`, `date-fns`, `zod` to the rest of the system?**
+- **Why does `2. 本批关闭的缺口` connect `main.py` to `ChannelInterviews.tsx`, `strict-iso-date.mjs`, `ReviewRegistryService`, `Batch 29：最终复审、PR Ready 门禁与合并前交接`?**
+  _High betweenness centrality (0.127) - this node is a cross-community bridge._
+- **What connects `./scripts/data/build-dq020-amazon-owner-evidence-acceptance.mjs`, `autoprefixer`, `date-fns` to the rest of the system?**
   _26 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `scripts` be split into smaller, more focused modules?**
-  _Cohesion score 0.018518518518518517 - nodes in this community are weakly interconnected._
-- **Why does `react` connect `react` to `cn`, `package.json`, `sidebar.tsx`, `App.tsx`, `accordion.tsx`, `lucide-react`, `market-insight-data.ts`, `scroll-area.tsx`, `DataManage.tsx`, `utils.ts`, `alert-dialog.tsx`, `field.tsx`, `public-evidence.ts`, `SourceBackedReviewPacket.tsx`, `PageEvidenceNotice.tsx`, `MemoizedCharts.tsx`, `react`, `command.tsx`, `item.tsx`, `vitest`, `DataSourcePage.tsx`, `AiReportGovernancePanel.tsx`, `HomePage.tsx`, `OperationsManual.tsx`, `menubar.tsx`, `IndustryPage.tsx`, `context-menu.tsx`, `dropdown-menu.tsx`, `useDataSourceRegistry.ts`, `ChannelInterviews.tsx`, `drawer.tsx`, `usePeriodicManifest.ts`, `select.tsx`, `navigation-menu.tsx`?**
-  _High betweenness centrality (0.127) - this node is a cross-community bridge._
+  _Cohesion score 0.01818181818181818 - nodes in this community are weakly interconnected._
+- **Why does `react` connect `react` to `cn`, `package.json`, `sidebar.tsx`, `App.tsx`, `accordion.tsx`, `EvidenceGatePage`, `market-insight-data.ts`, `DataManage.tsx`, `EvidenceGatePage.tsx`, `ErrorBoundary`, `alert-dialog.tsx`, `input-otp.tsx`, `field.tsx`, `PageEvidenceNotice.tsx`, `MemoizedCharts.tsx`, `react`, `AiDesignGovernancePanel.tsx`, `command.tsx`, `class-variance-authority`, `UsersPage.tsx`, `DataSourcePage.tsx`, `ReportsPage.tsx`, `HomePage.tsx`, `OperationsManual.tsx`, `menubar.tsx`, `IndustryPage.tsx`, `context-menu.tsx`, `useDataSourceRegistry.ts`, `ChannelInterviews.tsx`, `react-router`, `drawer.tsx`, `usePeriodicManifest.ts`, `select.tsx`, `navigation-menu.tsx`?**
+  _High betweenness centrality (0.115) - this node is a cross-community bridge._
 - **Should `cn` be split into smaller, more focused modules?**
-  _Cohesion score 0.05010351966873706 - nodes in this community are weakly interconnected._
-- **Why does `DatabaseSessionManager` connect `main.py` to `Batch 29：最终复审、PR Ready 门禁与合并前交接`, `recovery_drill_be07.py`?**
-  _High betweenness centrality (0.103) - this node is a cross-community bridge._
+  _Cohesion score 0.04397759103641457 - nodes in this community are weakly interconnected._
+- **Why does `vitest` connect `vitest` to `package.json`, `audit-deep.mjs`, `regulation-review-handoff-gate.test.ts`, `static-scripts.test.ts`, `dq015-owner-packets.test.ts`, `build-release-evidence.mjs`, `DataManage.tsx`, `EvidenceGatePage.tsx`, `validate-regulation-sku-contract.mjs`, `public-evidence.ts`, `PageEvidenceNotice.tsx`, `RegulationDetail.tsx`, `IndustryPage.tsx`, `ChannelInterviews.tsx`, `react-router`, `usePeriodicManifest.ts`, `dq016-source-freshness.test.ts`, `regulation-source-legal-intake.test.ts`, `ref_node_crypto`, `P0-03 DataManage Bundle 临时例外退出方案`, `ref_node_fs`?**
+  _High betweenness centrality (0.089) - this node is a cross-community bridge._
 - **Should `build-erp-owner-approval-intake-batch9.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.10887096774193548 - nodes in this community are weakly interconnected._
