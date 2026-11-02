@@ -22,6 +22,8 @@ export interface PublicEvidenceRecord {
   evidenceClass: string;
   captureStatus: string;
   capturedAt?: string;
+  plannedAt?: string;
+  plannedAt?: string;
   title?: string;
   label?: string;
   url: string;
@@ -116,7 +118,7 @@ function isPublicEvidenceRecord(value: unknown): value is PublicEvidenceRecord {
   const requiredStrings = ['seedId', 'sourceId', 'page', 'evidenceClass', 'captureStatus', 'url', 'collectionBoundary'];
   if (!requiredStrings.every((key) => typeof value[key] === 'string' && String(value[key]).trim().length > 0)) return false;
   if (typeof value.notFullPlatformDataset !== 'boolean') return false;
-  const optionalStrings = ['metric', 'capturedAt', 'title', 'label', 'finalUrl', 'nonVerbatimSummary', 'visibleTextHash'];
+  const optionalStrings = ['metric', 'capturedAt', 'plannedAt', 'title', 'label', 'finalUrl', 'nonVerbatimSummary', 'visibleTextHash'];
   if (optionalStrings.some((key) => !isOptionalString(value[key]))) return false;
   const optionalBooleans = ['publicBundleAllowed', 'rawTextPublicBundleAllowed', 'screenshotPublicBundleAllowed'];
   if (optionalBooleans.some((key) => !isOptionalBoolean(value[key]))) return false;

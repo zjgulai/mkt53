@@ -276,7 +276,7 @@ function plannedRecord(seed, generatedAt) {
     rawTextPublicBundleAllowed: false,
     screenshotPublicBundleAllowed: false,
     captureStatus: validation.valid ? 'planned' : 'invalid-seed',
-    capturedAt: generatedAt,
+    plannedAt: generatedAt,
     browser: 'not-launched',
     safety: {
       networkCalls: 0,
