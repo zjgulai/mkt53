@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "gate": "DQ-020",
   "connectorId": "amazon-commerce",
-  "generatedAt": "2026-08-09T10:38:13.569Z",
+  "generatedAt": "2026-11-02T01:08:27.605Z",
   "acceptanceStatus": "blocked-no-owner-submission",
   "maximumEvidenceGrade": "L2-fixture-or-dry-run",
   "sourceEvidenceGrade": "L0-unverified",
