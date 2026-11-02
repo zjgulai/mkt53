@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-30T07:13:59.760Z",
+  "mode": "live-browser-capture",
+  "generatedRule": "Browser-assisted public evidence captures only public visible pages. It does not log in, bypass access controls, write business datasets, or replace authorized connectors.",
+  "seedPath": "../docs/reviews/mkt53-data-completeness-mece-20260729/evidence/dq-014-public-report-seeds.json",
+  "publicBundlePolicy": {
+    "rawTextIncluded": false,
+    "screenshotsIncluded": false,
+    "localEvidencePathsMayPointToTmp": true
+  },
+  "summary": {
+    "total": 3,
+    "captureStatusCounts": {
+      "source-error": 3
+    },
+    "evidenceClassCounts": {
+      "market-report-public-page": 3
+    },
+    "networkCalls": 3,
+    "businessDataWrites": 0
+  },
+  "records": [
+    {
+      "seedId": "dq014-ds002-fortune-breast-pump-market",
+      "sourceId": "ds-002",
+      "page": "MarketPage",
+      "metric": "北美区域份额",
+      "label": "Fortune Business Insights breast pump market public landing page",
+      "url": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction, login, access-control bypass, brand-share inference, channel-share inference, or full-platform claim.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "source-error",
+      "capturedAt": "2026-07-30T07:14:03.152Z",
+      "browser": "chromium",
+      "safety": {
+        "networkCalls": 1,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
+      "finalUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "httpStatus": 403,
+      "title": "Just a moment...",
+      "visibleTextLength": 1332,
+      "visibleTextHash": "990d7aa93c920fab63956b3794aa3c5a02f63939e76baac95f7dc90f5db56b20",
+      "matchedEvidenceTerms": [],
+      "missingEvidenceTerms": [
+        "Breast Pump Market",
+        "North America",
+        "45.05%",
+        "2025"
+      ],
+      "nonVerbatimSummary": "Fortune Business Insights breast pump market public landing page: title captured (16 chars); matched 0/4 expected evidence terms; visible text length 1332.",
+      "localEvidence": {
+        "textArchivePath": "tmp/public-evidence/dq-014/dq014-ds002-fortune-breast-pump-market.txt",
+        "textArchiveBytes": 1339,
+        "screenshotPath": "output/playwright/dq-014/dq014-ds002-fortune-breast-pump-market.png",
+        "screenshotHash": "fa8336f6562643bb39dcd689450f5fdeb1d4dd64a290542f3a560d8b2c6aeb13"
+      },
+      "warnings": [
+        "expected evidence terms were not matched in visible text",
+        "browser console or page errors were observed"
+      ],
+      "pageErrors": [
+        "Failed to load resource: the server responded with a status of 403 ()"
+      ]
+    },
+    {
+      "seedId": "dq014-ds044-grand-view-baby-products-market",
+      "sourceId": "ds-044",
+      "page": "MarketPage",
+      "metric": "全球婴童用品上层TAM",
+      "label": "Grand View Research baby products market public landing page",
+      "url": "https://www.grandviewresearch.com/industry-analysis/baby-products-market",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction, login, access-control bypass, breast-pump SAM/SOM inference, brand-share inference, or full-platform claim.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "source-error",
+      "capturedAt": "2026-07-30T07:14:04.683Z",
+      "browser": "chromium",
+      "safety": {
+        "networkCalls": 1,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
+      "finalUrl": "https://www.grandviewresearch.com/industry-analysis/baby-products-market",
+      "httpStatus": 403,
+      "title": "Just a moment...",
+      "visibleTextLength": 1320,
+      "visibleTextHash": "94886c84b088854a413b446f7b5d0a0e40c75912a1c44c99d3dd27692901ab73",
+      "matchedEvidenceTerms": [],
+      "missingEvidenceTerms": [
+        "Baby Products Market",
+        "USD 355.9 billion",
+        "USD 579.5 billion",
+        "6.4%"
+      ],
+      "nonVerbatimSummary": "Grand View Research baby products market public landing page: title captured (16 chars); matched 0/4 expected evidence terms; visible text length 1320.",
+      "localEvidence": {
+        "textArchivePath": "tmp/public-evidence/dq-014/dq014-ds044-grand-view-baby-products-market.txt",
+        "textArchiveBytes": 1327,
+        "screenshotPath": "output/playwright/dq-014/dq014-ds044-grand-view-baby-products-market.png",
+        "screenshotHash": "bf867a53dfe9e3ad331ca80e842f402ff310082d4983786a0a065689cb1ef941"
+      },
+      "warnings": [
+        "expected evidence terms were not matched in visible text",
+        "browser console or page errors were observed"
+      ],
+      "pageErrors": [
+        "Failed to load resource: the server responded with a status of 403 ()"
+      ]
+    },
+    {
+      "seedId": "dq014-ds045-fortune-wearable-breast-pumps-market",
+      "sourceId": "ds-045",
+      "page": "MarketPage",
+      "metric": "穿戴式吸奶器细分TAM",
+      "label": "Fortune Business Insights wearable breast pumps market public landing page",
+      "url": "https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880",
+      "evidenceClass": "market-report-public-page",
+      "collectionBoundary": "Public report landing page only; no paid report extraction, login, access-control bypass, SAM/SOM inference, brand-sales inference, or full-platform claim.",
+      "notFullPlatformDataset": true,
+      "publicBundleAllowed": true,
+      "rawTextPublicBundleAllowed": false,
+      "screenshotPublicBundleAllowed": false,
+      "captureStatus": "source-error",
+      "capturedAt": "2026-07-30T07:14:06.401Z",
+      "browser": "chromium",
+      "safety": {
+        "networkCalls": 1,
+        "loginAttempted": false,
+        "bypassAttempted": false,
+        "businessDataWrites": 0,
+        "rawTextWrittenToPublicBundle": false
+      },
+      "validation": {
+        "valid": true,
+        "missingFields": [],
+        "urlValid": true,
+        "termsValid": true,
+        "boundaryValid": true
+      },
+      "note": "Browser-assisted public evidence sample captured. Treat as public sample evidence, not a complete platform dataset.",
+      "finalUrl": "https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880",
+      "httpStatus": 403,
+      "title": "Just a moment...",
+      "visibleTextLength": 1332,
+      "visibleTextHash": "c0657a49ccb505c6d0fe0bb5383830c1afff85b012027966d03726208f254111",
+      "matchedEvidenceTerms": [],
+      "missingEvidenceTerms": [
+        "Wearable Breast Pumps Market",
+        "USD 202.6 million",
+        "USD 233.0 million",
+        "USD 635.1 million",
+        "15.08%"
+      ],
+      "nonVerbatimSummary": "Fortune Business Insights wearable breast pumps market public landing page: title captured (16 chars); matched 0/5 expected evidence terms; visible text length 1332.",
+      "localEvidence": {
+        "textArchivePath": "tmp/public-evidence/dq-014/dq014-ds045-fortune-wearable-breast-pumps-market.txt",
+        "textArchiveBytes": 1339,
+        "screenshotPath": "output/playwright/dq-014/dq014-ds045-fortune-wearable-breast-pumps-market.png",
+        "screenshotHash": "7338cb9155418f2ed5770495400b0108177996c780cc113527a5864494fd0298"
+      },
+      "warnings": [
+        "expected evidence terms were not matched in visible text",
+        "browser console or page errors were observed"
+      ],
+      "pageErrors": [
+        "Failed to load resource: the server responded with a status of 403 ()"
+      ]
+    }
+  ]
+}

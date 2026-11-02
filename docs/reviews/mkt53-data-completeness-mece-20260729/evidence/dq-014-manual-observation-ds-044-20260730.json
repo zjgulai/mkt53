@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "gate": "DQ-014",
+  "sourceId": "ds-044",
+  "publisher": "Grand View Research",
+  "canonicalUrl": "https://www.grandviewresearch.com/industry-analysis/baby-products-market",
+  "accessedAt": "2026-07-30T07:11:00.000Z",
+  "retrievedVia": "official-public-page-read-only",
+  "evidenceGrade": "L1-public-or-runtime",
+  "pageTitle": "Baby Products Market Size And Share Report, 2026-2033",
+  "publisherUpdatedAt": "2026-06",
+  "observedFacts": [
+    "The public landing page lists the global baby-products market at USD 355.9 billion for 2025.",
+    "It lists USD 375.8 billion for 2026, USD 579.5 billion for 2033, and a 6.4% CAGR for 2026-2033.",
+    "It identifies Asia Pacific as 43.7% of 2025 revenue."
+  ],
+  "contradictions": [],
+  "limitations": [
+    "This is a public landing-page observation, not the paid report dataset or methodology workbook.",
+    "The receipt is only upper-level global baby-products TAM context; it is not a breast-pump segment, brand share, SAM, SOM, sales, or decision-ready denominator.",
+    "The bounded local Chromium capture returned HTTP 403 from the publisher security layer; no challenge bypass or login was attempted."
+  ],
+  "boundaries": {
+    "loginAttempted": false,
+    "bypassAttempted": false,
+    "paidReportExtracted": false,
+    "rawPageTextStored": false,
+    "businessDataWrites": 0,
+    "productionWrites": false
+  }
+}

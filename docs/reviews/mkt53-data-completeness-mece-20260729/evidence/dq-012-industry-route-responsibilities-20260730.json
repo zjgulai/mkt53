@@ -1,0 +1,174 @@
+{
+  "gateId": "DQ-012",
+  "status": "completed-local",
+  "executedAt": "2026-07-30T13:44:06+08:00",
+  "baseline": {
+    "branch": "main",
+    "head": "cead7b78f811fbec186440395c073a089dfc856b",
+    "worktreeWasDirty": true,
+    "priorChangesPreserved": true
+  },
+  "scope": {
+    "authorized": [
+      "remove the /industry/macro and /industry/reports route responsibility mismatches",
+      "add dedicated evidence-gated page implementations",
+      "update target metric component identities and deterministic readiness projection",
+      "add local tests, browser verification, documentation, and evidence"
+    ],
+    "notAuthorized": [
+      "DQ-013",
+      "production data changes",
+      "provider or restricted connector calls",
+      "database writes",
+      "deployment",
+      "commit",
+      "push"
+    ]
+  },
+  "routeResponsibilities": [
+    {
+      "route": "/industry/macro",
+      "beforeComponent": "RegulationDetail",
+      "afterComponent": "MacroAnalysis",
+      "pageTitle": "区域宏观分析",
+      "targetMetricId": "macro_indicator_threshold_breach_rate",
+      "sourceIds": [
+        "ds-002",
+        "ds-044",
+        "ds-045"
+      ],
+      "sourceReadiness": "partial",
+      "decisionReady": false,
+      "blockedSourceCount": 0,
+      "scopeGapCount": 3,
+      "businessValuesDisplayed": false
+    },
+    {
+      "route": "/industry/reports",
+      "beforeComponent": "IndustryNews",
+      "afterComponent": "IndustryReports",
+      "pageTitle": "母婴行业报告",
+      "targetMetricId": "industry_report_approved_version_rate",
+      "sourceIds": [
+        "ds-001",
+        "ds-002",
+        "ds-034"
+      ],
+      "sourceReadiness": "partial",
+      "decisionReady": false,
+      "blockedSourceCount": 0,
+      "scopeGapCount": 1,
+      "downloadableReportsDisplayed": false
+    }
+  ],
+  "implementation": [
+    "dedicated MacroAnalysis page owns official macro source, indicator dictionary, baseline, threshold, and reviewer gaps",
+    "dedicated IndustryReports page owns report catalog, immutable version, citation, approval, withdrawal, and download governance gaps",
+    "shared industry sidebar definition keeps navigation consistent across both pages",
+    "exact /industry navigation matching and unique aria-current prevent duplicate active states",
+    "App and lazy page registry route each path to its dedicated component",
+    "target metric contracts and generated readiness projection identify the new components",
+    "definition-only pages expose an absent business-value contract when no approved internal summary exists",
+    "browser regression asserts expected headings, rejects the former regulation/news responsibilities, and fails on business values, charts, tables, or download controls"
+  ],
+  "verification": {
+    "consistencyAudit": {
+      "pages": 45,
+      "tables": 107,
+      "governedTables": 107,
+      "sources": 53,
+      "issues": 0
+    },
+    "targetMetricContract": {
+      "expectedRoutes": 45,
+      "coveredRoutes": 45,
+      "uniqueMetrics": 45,
+      "missing": 0,
+      "unexpected": 0,
+      "invalid": 0,
+      "decisionReady": 0
+    },
+    "deepAudit": {
+      "routes": 46,
+      "businessRoutes": 45,
+      "scannedFiles": 82,
+      "pages": 45,
+      "claims": 885,
+      "csvExports": 12,
+      "highRiskClaims": 0,
+      "mediumRiskClaims": 0,
+      "unsupportedClaims": 0,
+      "unmappedRoutes": 0,
+      "sourceReadiness": {
+        "blocked": 19,
+        "partial": 22,
+        "source-backed": 4
+      },
+      "providerCalls": false,
+      "productionWrites": false,
+      "publicEvidenceLiveCapture": false,
+      "restrictedConnectorAccess": false
+    },
+    "unitTests": {
+      "filesPassed": 28,
+      "testsPassed": 223,
+      "testsFailed": 0
+    },
+    "routeE2E": {
+      "routes": 45,
+      "viewports": [
+        "chromium-desktop",
+        "chromium-mobile"
+      ],
+      "testsPassed": 90,
+      "testsFailed": 0,
+      "responsibilityChecks": [
+        "/industry/macro contains 区域宏观分析 and excludes 行业法规与标准解读",
+        "/industry/reports contains 母婴行业报告 and excludes 母婴行业资讯",
+        "both routes remain source readiness partial and decision readiness not-ready",
+        "each route has exactly one aria-current navigation link",
+        "definition-only governance copy contains no digits after registered source ids are excluded",
+        "no business-value markers, KPI or metric-value selectors, Recharts, tables, download attributes, or download/export/CSV controls"
+      ]
+    },
+    "visualSampling": {
+      "macroDesktopExpanded": "app/output/playwright/dq012-macro-desktop-expanded.png",
+      "reportsMobileExpanded": "app/output/playwright/dq012-reports-mobile-expanded.png",
+      "consoleErrors": 0,
+      "consoleWarnings": 0
+    },
+    "graphify": {
+      "nodes": 4791,
+      "edges": 7708,
+      "communities": 344,
+      "update": "passed",
+      "clusterOnly": "passed"
+    },
+    "codexReview": {
+      "command": "/Users/pray/.codex/skills/codex-review/scripts/codex-review",
+      "actualCommand": "codex review --uncommitted",
+      "exitCode": 0,
+      "status": "clean",
+      "actionableFindings": 0,
+      "acceptedFindingsResolved": 3,
+      "resolvedFindings": [
+        "exact /industry matching plus a unique aria-current page link removes duplicate active navigation",
+        "route-specific E2E locks partial and not-ready while rejecting business values, charts, tables, and download or export controls",
+        "the machine evidence now carries the final clean review receipt"
+      ]
+    },
+    "lint": "passed",
+    "build": "passed",
+    "routeProjectionCheck": "passed"
+  },
+  "boundaries": {
+    "productionWrites": false,
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "databaseWrites": false,
+    "deployment": false,
+    "commit": false,
+    "push": false
+  },
+  "nextGate": "DQ-013"
+}

@@ -1,0 +1,103 @@
+{
+  "gate": "DQ-016",
+  "status": "completed-local",
+  "executedAt": "2026-07-30T09:25:00.000Z",
+  "scope": "source freshness scoring, expiry alerts, and current-use fail-closed binding",
+  "decision": "allowed-with-alerts",
+  "facts": {
+    "sourceCount": 53,
+    "alertCount": 43,
+    "l3SourceCount": 5,
+    "l3DateOnlyBasisCount": 0,
+    "l3ArtifactUnavailableCount": 5,
+    "l3CurrentUseAllowedCount": 0,
+    "historicalL3EvidenceGradesRetained": 5,
+    "unmappedSourceCount": 0,
+    "decisionReadyRouteCount": 0
+  },
+  "l3Sources": [
+    "ds-047",
+    "ds-048",
+    "ds-049",
+    "ds-050",
+    "ds-051"
+  ],
+  "contract": {
+    "path": "app/contracts/source-freshness-policy.json",
+    "sha256": "e3818838c853b1be74cda88522e0927d7d73ff956d7dd8b97ce5b842acde9fe7",
+    "evaluationAt": "2026-07-30T09:00:00.000Z",
+    "collectionMethodsCovered": [
+      "public-url-check",
+      "manual-required",
+      "connector-required",
+      "local-file-check"
+    ],
+    "l3CurrentUseRequirements": [
+      "snapshotObservedThrough",
+      "evidenceArtifactAvailable",
+      "artifactSha256Contract",
+      "refreshReceipt"
+    ]
+  },
+  "projection": {
+    "jsonPath": "docs/reviews/mkt53-data-completeness-mece-20260729/evidence/dq-016-source-freshness-projection-20260730.json",
+    "jsonSha256": "f346178850d63417787cd5ba4233e7d478e4f8dd2bbd9e7b271b8446764e6e28",
+    "typescriptPath": "app/src/data/source-freshness.generated.ts",
+    "typescriptSha256": "ea0d32cc1f2c6fcf47d5adfc12eac057d6f41e6d873090fbeb1d50b536c7bdfd",
+    "validationPassed": true,
+    "validatorBlockers": []
+  },
+  "failClosedBindings": [
+    "app/src/components/PageEvidenceNotice.tsx",
+    "app/src/components/SourceFreshnessOverview.tsx",
+    "app/src/components/MarketDataGate.tsx",
+    "app/src/pages/DataSourcePage.tsx",
+    "app/src/pages/DataManage.tsx",
+    "app/src/pages/MarketPage.tsx",
+    "app/src/pages/market/BreastPump.tsx",
+    "app/src/pages/market/CategoryAnalysis.tsx",
+    "app/src/pages/competition/RegionCompetition.tsx",
+    "app/src/pages/SelfInsight.tsx"
+  ],
+  "redGreenEvidence": {
+    "red": {
+      "command": "npm run test -- --run tests/scripts/dq016-source-freshness.test.ts",
+      "result": "5 failed of 5 before implementation"
+    },
+    "green": {
+      "focusedCommand": "npm run test -- --run tests/scripts/dq016-source-freshness.test.ts tests/data/source-freshness.test.tsx tests/data/source-registry.test.ts tests/pages/DataSourcePage.test.tsx",
+      "focusedResult": "23 passed of 23",
+      "fullUnitResult": "247 passed of 247"
+    },
+    "negativeGate": "tampered L3 date-only promotion is rejected with l3-date-only-basis-forbidden, l3-artifact-contract-incomplete, l3-current-use-must-be-blocked, and projection-record-mismatch"
+  },
+  "verification": {
+    "freshnessProjection": "current; 53 sources; 43 alerts; 0 blockers",
+    "dataConsistencyAudit": "45 pages; 107 tables; 53 sources; 0 issues",
+    "deepAudit": "0 high; 0 medium; 0 unsupported; 0 unmapped; 0 decision-ready",
+    "lint": "passed",
+    "dependencyAudit": "0 vulnerabilities",
+    "build": "passed",
+    "bundleBudget": "passed; 85 JavaScript assets",
+    "fullE2E": "154 passed of 154",
+    "releaseEvidence": "8 passed; 0 failed; 0 skipped",
+    "gitDiffCheck": "passed"
+  },
+  "boundaries": {
+    "networkCalls": false,
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "connectorCalls": false,
+    "databaseWrites": false,
+    "productionWrites": false,
+    "deployment": false,
+    "liveCollection": false,
+    "externalSend": false,
+    "factPromotion": false,
+    "evidenceGradePromotion": false,
+    "commit": false,
+    "push": false
+  },
+  "nextGate": "DQ-020",
+  "nextGateExecuted": false
+}

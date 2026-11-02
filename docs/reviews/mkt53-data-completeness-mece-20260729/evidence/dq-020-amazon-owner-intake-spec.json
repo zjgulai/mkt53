@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "dq020-amazon-owner-intake-v1",
+  "gate": "DQ-020",
+  "connectorId": "amazon-commerce",
+  "maximumPacketEvidenceGrade": "L2-fixture-or-dry-run",
+  "generatedBundlePurpose": "Create source-specific Amazon owner intake templates and prove the local fail-closed contract without collecting live data, storing private ASIN/SKU values, approving claims, or changing source evidence grades.",
+  "hashAlgorithm": "sha256",
+  "exactSourceIds": [
+    "ds-007",
+    "ds-009",
+    "ds-010",
+    "ds-019",
+    "ds-037",
+    "ds-038",
+    "ds-039"
+  ],
+  "templateRefs": {
+    "mapping": "scripts/data/connectors/templates/amazon-commerce-mapping-template.json",
+    "readiness": "scripts/data/connectors/templates/amazon-commerce-readiness-template.json",
+    "privateChecklistCommand": "npm run data:connector:amazon:readiness:checklist",
+    "privateMappingScaffoldCommand": "npm run data:connector:amazon:mapping:scaffold -- --target-dir <private-dir>",
+    "privateReadinessScaffoldCommand": "npm run data:connector:amazon:readiness:scaffold -- --target-dir <private-dir>"
+  },
+  "boundaries": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "connectorCalls": false,
+    "databaseWrites": false,
+    "productionWrites": false,
+    "deployment": false,
+    "liveCollection": false,
+    "externalSend": false,
+    "realAsinSkuIncluded": false,
+    "credentialValuesIncluded": false,
+    "ownerIdentityIncluded": false,
+    "factPromotion": false,
+    "decisionReady": false
+  },
+  "commonMappingFields": [
+    "sourceId",
+    "site",
+    "marketplaceId",
+    "asin",
+    "sku",
+    "brand",
+    "productName",
+    "category",
+    "mappingStatus",
+    "mappingUpdatedAt",
+    "mappingOwner"
+  ],
+  "snapshotFieldContracts": {
+    "product_snapshot": [
+      "requestId",
+      "sourceId",
+      "site",
+      "marketplaceId",
+      "asin",
+      "sku",
+      "brand",
+      "productName",
+      "category",
+      "variantKey",
+      "priceAmount",
+      "currency",
+      "taxIncluded",
+      "promotionType",
+      "promotionAmount",
+      "collectionWindowStart",
+      "collectionWindowEnd",
+      "capturedAt",
+      "schemaVersion"
+    ],
+    "review_snapshot": [
+      "requestId",
+      "sourceId",
+      "site",
+      "marketplaceId",
+      "asin",
+      "rating",
+      "reviewCount",
+      "capturedAt",
+      "sampleWindow",
+      "schemaVersion"
+    ],
+    "brand_share_snapshot": [
+      "requestId",
+      "sourceId",
+      "site",
+      "marketplaceId",
+      "countryOrRegion",
+      "brand",
+      "category",
+      "shareMetric",
+      "numerator",
+      "denominator",
+      "unit",
+      "collectionWindowStart",
+      "collectionWindowEnd",
+      "metricDefinitionVersion",
+      "capturedAt",
+      "schemaVersion"
+    ],
+    "category_rank_snapshot": [
+      "requestId",
+      "sourceId",
+      "site",
+      "marketplaceId",
+      "asin",
+      "category",
+      "rankType",
+      "rankValue",
+      "collectionWindowStart",
+      "collectionWindowEnd",
+      "capturedAt",
+      "schemaVersion"
+    ]
+  },
+  "commonRequiredEvidenceSlots": [
+    { "id": "owner-role-alias", "label": "Business owner role alias and accountable lane", "classification": "internal", "required": true },
+    { "id": "authorization-record", "label": "Approved Amazon read-only authorization record reference", "classification": "restricted", "required": true },
+    { "id": "authorization-scope", "label": "Authorized API or Brand Analytics scope and permitted uses", "classification": "restricted", "required": true },
+    { "id": "site-marketplace-scope", "label": "Amazon site, marketplaceId, country or region scope", "classification": "internal", "required": true },
+    { "id": "collection-window-timezone", "label": "Collection window start, end, timezone, and capturedAt rule", "classification": "internal", "required": true },
+    { "id": "asin-sku-mapping-artifact", "label": "Private ASIN/SKU/brand/product/category mapping artifact reference", "classification": "restricted", "required": true },
+    { "id": "asin-sku-mapping-hash", "label": "SHA-256 of the immutable mapping artifact", "classification": "restricted", "required": true },
+    { "id": "mapping-coverage-report", "label": "Per-source mapped row count and minimum coverage report", "classification": "internal", "required": true },
+    { "id": "field-dictionary-artifact", "label": "Versioned field dictionary, units, null rules, and enumerations", "classification": "internal", "required": true },
+    { "id": "field-dictionary-hash", "label": "SHA-256 of the field dictionary artifact", "classification": "internal", "required": true },
+    { "id": "snapshot-manifest", "label": "Immutable authorized snapshot manifest reference", "classification": "restricted", "required": true },
+    { "id": "snapshot-content-hash", "label": "SHA-256 of the immutable snapshot content", "classification": "restricted", "required": true },
+    { "id": "snapshot-row-count", "label": "Snapshot row count and rejected row count", "classification": "internal", "required": true },
+    { "id": "snapshot-schema-version", "label": "Snapshot schema version and migration compatibility", "classification": "internal", "required": true },
+    { "id": "owner-review", "label": "Business owner review record", "classification": "internal", "required": true },
+    { "id": "compliance-review", "label": "Platform terms, privacy, and compliance review record", "classification": "internal", "required": true },
+    { "id": "release-review", "label": "Independent evidence release review and claim-scope decision", "classification": "internal", "required": true }
+  ],
+  "packets": [
+    {
+      "packetId": "dq020-ds-007-amazon-owner-intake",
+      "sourceId": "ds-007",
+      "page": "CompetitionPage",
+      "scope": "competitor_catalog",
+      "minimumMappedItems": 15,
+      "sourceEvidenceGrade": "L0-unverified",
+      "ownerRole": "amazon-competition-data-owner",
+      "reviewerRoles": ["commerce-data-reviewer", "platform-compliance-reviewer", "business-evidence-reviewer"],
+      "requiredSnapshotTypes": ["product_snapshot", "review_snapshot", "category_rank_snapshot"],
+      "sourceSpecificEvidenceSlots": [
+        { "id": "competitor-entity-version", "label": "Competitor, brand, seller, ASIN, variant, and comparable-entity version", "classification": "restricted", "required": true },
+        { "id": "catalog-change-rule", "label": "Catalog entry, exit, variant, and product-change event rule", "classification": "internal", "required": true }
+      ],
+      "claimBoundary": "Amazon competitor catalog readiness only; no price, rating, review count, rank, sales, GMV, market share, or threat conclusion.",
+      "forbiddenClaims": ["A generated intake packet proves Amazon authorization or collection.", "Public brand entrypoints prove Amazon platform metrics.", "A mapping template proves any competitor, ASIN, SKU, price, rating, rank, sales, or share fact."]
+    },
+    {
+      "packetId": "dq020-ds-009-amazon-owner-intake",
+      "sourceId": "ds-009",
+      "page": "ProductManage",
+      "scope": "product_price_rating",
+      "minimumMappedItems": 25,
+      "sourceEvidenceGrade": "L0-unverified",
+      "ownerRole": "amazon-product-data-owner",
+      "reviewerRoles": ["commerce-data-reviewer", "pricing-definition-reviewer", "business-evidence-reviewer"],
+      "requiredSnapshotTypes": ["product_snapshot", "review_snapshot"],
+      "sourceSpecificEvidenceSlots": [
+        { "id": "price-currency-tax-promotion", "label": "Price amount, currency, tax inclusion, promotion type, and promotion amount definitions", "classification": "internal", "required": true },
+        { "id": "variant-version-contract", "label": "SKU, ASIN, parent-child variant, and mapping version contract", "classification": "restricted", "required": true }
+      ],
+      "claimBoundary": "Product, price, rating, and review readiness only; no current Amazon value or cross-site comparison.",
+      "forbiddenClaims": ["A product clue is a current Amazon listing fact.", "A price without site, currency, tax, promotion, window, and hash is comparable.", "A generated intake packet proves any ASIN, SKU, rating, review count, or price."]
+    },
+    {
+      "packetId": "dq020-ds-010-amazon-owner-intake",
+      "sourceId": "ds-010",
+      "page": "RegionCompetition",
+      "scope": "brand_analytics_region_share",
+      "minimumMappedItems": 1,
+      "sourceEvidenceGrade": "L0-unverified",
+      "ownerRole": "amazon-brand-analytics-owner",
+      "reviewerRoles": ["brand-analytics-reviewer", "metric-definition-reviewer", "business-evidence-reviewer"],
+      "requiredSnapshotTypes": ["brand_share_snapshot"],
+      "sourceSpecificEvidenceSlots": [
+        { "id": "country-marketplace-mapping", "label": "Country, region, Amazon site, and marketplaceId mapping", "classification": "internal", "required": true },
+        { "id": "share-denominator-channel-boundary", "label": "Share numerator, denominator, unit, metric version, and Amazon-channel-only boundary", "classification": "internal", "required": true }
+      ],
+      "claimBoundary": "Amazon-channel regional proxy readiness only; no all-channel regional or market share claim.",
+      "forbiddenClaims": ["Amazon Brand Analytics is an all-channel market denominator.", "A regional proxy is a country or global market share fact.", "A generated intake packet proves regional share, rank, sales, GMV, price, or SKU facts."]
+    },
+    {
+      "packetId": "dq020-ds-019-amazon-owner-intake",
+      "sourceId": "ds-019",
+      "page": "SelfInsight",
+      "scope": "momcozy_channel_product_snapshot",
+      "minimumMappedItems": 8,
+      "sourceEvidenceGrade": "L0-unverified",
+      "ownerRole": "amazon-self-insight-data-owner",
+      "reviewerRoles": ["commerce-data-reviewer", "internal-external-boundary-reviewer", "business-evidence-reviewer"],
+      "requiredSnapshotTypes": ["product_snapshot", "review_snapshot"],
+      "sourceSpecificEvidenceSlots": [
+        { "id": "internal-external-source-separation", "label": "Amazon, DTC, advertising, and ERP source separation contract", "classification": "internal", "required": true },
+        { "id": "marketing-4p-metric-definition", "label": "Product, price, place, and promotion field definitions and allowed comparisons", "classification": "internal", "required": true }
+      ],
+      "claimBoundary": "External Amazon evidence readiness for marketing 4P only; ERP and other internal proxies remain separate.",
+      "forbiddenClaims": ["Amazon data is equivalent to DTC, advertising, ERP, or all-channel performance.", "A generated intake packet proves marketing effectiveness or market share.", "An internal proxy fills missing Amazon platform fields."]
+    },
+    {
+      "packetId": "dq020-ds-037-amazon-owner-intake",
+      "sourceId": "ds-037",
+      "page": "BabyCare",
+      "scope": "baby_care_category_rank",
+      "minimumMappedItems": 5,
+      "sourceEvidenceGrade": "L0-unverified",
+      "ownerRole": "amazon-baby-care-category-owner",
+      "reviewerRoles": ["category-taxonomy-reviewer", "commerce-data-reviewer", "business-evidence-reviewer"],
+      "requiredSnapshotTypes": ["product_snapshot", "category_rank_snapshot"],
+      "sourceSpecificEvidenceSlots": [
+        { "id": "baby-care-category-taxonomy", "label": "Baby-care category, subcategory, inclusion, and exclusion taxonomy", "classification": "internal", "required": true },
+        { "id": "category-weight-formula", "label": "Category weighting formula, denominator, version, and sensitivity rule", "classification": "internal", "required": true }
+      ],
+      "claimBoundary": "Baby-care Amazon category readiness only; public report entrypoints remain source-availability evidence.",
+      "forbiddenClaims": ["Public report entrypoints prove Amazon category size or rank.", "Amazon rank proves GMV, sales, penetration, or market share.", "A generated intake packet proves baby-care category, brand, or product performance."]
+    },
+    {
+      "packetId": "dq020-ds-038-amazon-owner-intake",
+      "sourceId": "ds-038",
+      "page": "CategoryAnalysis",
+      "scope": "category_lifecycle_bsr",
+      "minimumMappedItems": 8,
+      "sourceEvidenceGrade": "L0-unverified",
+      "ownerRole": "amazon-category-analysis-owner",
+      "reviewerRoles": ["category-methodology-reviewer", "commerce-data-reviewer", "business-evidence-reviewer"],
+      "requiredSnapshotTypes": ["product_snapshot", "category_rank_snapshot"],
+      "sourceSpecificEvidenceSlots": [
+        { "id": "bsr-rank-type-category", "label": "BSR rank type, category node, site, and comparison-set definition", "classification": "internal", "required": true },
+        { "id": "lifecycle-weight-model", "label": "Lifecycle and category weighting model, version, denominator, and limitations", "classification": "internal", "required": true }
+      ],
+      "claimBoundary": "Category lifecycle and BSR readiness only; ERP proxies and public reports cannot replace an authorized Amazon snapshot.",
+      "forbiddenClaims": ["BSR directly measures sales, GMV, margin, or market share.", "Cross-category ranks are comparable without category node and site.", "A generated intake packet proves lifecycle stage or category performance."]
+    },
+    {
+      "packetId": "dq020-ds-039-amazon-owner-intake",
+      "sourceId": "ds-039",
+      "page": "NursingProducts",
+      "scope": "nursing_products_category_rank",
+      "minimumMappedItems": 5,
+      "sourceEvidenceGrade": "L0-unverified",
+      "ownerRole": "amazon-nursing-category-owner",
+      "reviewerRoles": ["category-taxonomy-reviewer", "commerce-data-reviewer", "business-evidence-reviewer"],
+      "requiredSnapshotTypes": ["product_snapshot", "category_rank_snapshot", "brand_share_snapshot"],
+      "sourceSpecificEvidenceSlots": [
+        { "id": "nursing-category-taxonomy", "label": "Nursing-products category, subcategory, inclusion, and exclusion taxonomy", "classification": "internal", "required": true },
+        { "id": "brand-share-denominator", "label": "Amazon-channel brand-share numerator, denominator, unit, and weighting rule", "classification": "internal", "required": true }
+      ],
+      "claimBoundary": "Nursing-products Amazon category trend readiness only; no all-channel brand share, sales, GMV, or market ranking.",
+      "forbiddenClaims": ["Public report entrypoints prove Amazon or all-channel brand share.", "Amazon category rank is equivalent to sales or GMV.", "A generated intake packet proves nursing-products category performance."]
+    }
+  ]
+}

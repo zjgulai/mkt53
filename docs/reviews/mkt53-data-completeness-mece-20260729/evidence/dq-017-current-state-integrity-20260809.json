@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "artifactType": "current-state-integrity-evidence",
+  "gate": "DQ-017",
+  "generatedAt": "2026-08-09T09:44:01.083Z",
+  "evidenceGrade": "L1-local-candidate",
+  "status": "local-candidate-ready",
+  "baseline": {
+    "branch": "main",
+    "commit": "cead7b78f811fbec186440395c073a089dfc856b",
+    "dirty": true
+  },
+  "scope": {
+    "businessRoutes": 45,
+    "allRoutesIncluding404": 46,
+    "sourceMappedRoutes": 45,
+    "decisionReadyRoutes": 0,
+    "sourceRegistryCount": 53
+  },
+  "currentStateFixes": [
+    "past nextScheduledAt renders as overdue",
+    "missing or invalid nextScheduledAt renders as unknown warning",
+    "data module totals derive from the seven-domain catalog",
+    "catalog lineage no longer renders pseudo JSX text",
+    "unconnected daily and weekly cadences are labeled as targets",
+    "regulation progress remains unknown without owner receipts",
+    "recovery candidate accepts only strictly validated live-observation fields while preserving no-network isolation"
+  ],
+  "manifestCandidate": {
+    "period": "2026-08-H1",
+    "windowStart": "2026-08-01",
+    "windowEnd": "2026-08-15",
+    "nextScheduledAt": "2026-08-16T09:00:00+08:00",
+    "productionCronVerified": false,
+    "publicEvidenceMode": "dry-run",
+    "publicEvidenceCaptured": 0,
+    "publicEvidencePlanned": 39,
+    "publicEvidenceNetworkCalls": 0,
+    "businessDataWrites": 0
+  },
+  "candidateArtifacts": [
+    {
+      "path": "app/src/hooks/usePeriodicManifest.ts",
+      "sha256": "030401572b8821fbad9c53cb4c09bcc9e9d167771899480c037d4031d366bb65"
+    },
+    {
+      "path": "app/src/pages/DataManage.tsx",
+      "sha256": "d2273534be25a95c0ea688948feef14a949237df0a096e719c73d4f2021794ea"
+    },
+    {
+      "path": "app/src/pages/DataSourcePage.tsx",
+      "sha256": "f3d32b2027c313803fd89e7d13187e330364f3b1952b0420fd44bfd0b65097b7"
+    },
+    {
+      "path": "app/src/pages/HomePage.tsx",
+      "sha256": "c6409c667f8bd15b61bf909f164e0bdb87ed066e1eb621e2224dd102431aa8d8"
+    },
+    {
+      "path": "app/scripts/data/build-semi-monthly-recovery-candidate.mjs",
+      "sha256": "dcf37d4a9c075282d931c9b14c0a0090eb10f6692c76b87bb449868b9d5f59b2"
+    },
+    {
+      "path": "app/package.json",
+      "sha256": "7802b52440d58f692bd78a0965deec1dc08ce426aa7b99fe880f333d97ed3053"
+    },
+    {
+      "path": "app/package-lock.json",
+      "sha256": "38a231d41ab4024cd77734c1c60dc7b98560242bfa41017fef391f4b284d7a8d"
+    },
+    {
+      "path": "app/src/features/data-manage/catalog-core.tsx",
+      "sha256": "5ac378f02c2bd35995559af3f47f9ac61849a6d3a0eb9f95fd46fddcda9d784f"
+    },
+    {
+      "path": "app/src/features/data-manage/governance.ts",
+      "sha256": "06bcbc04efa3288c3fbf4ffb3d46793224c7d571f2fa30613ce78d796d853d13"
+    },
+    {
+      "path": "app/public/periodic-data/latest.json",
+      "sha256": "81284a85bcaa1bf07ba7f9cdc559704df6e592cb3615b1ed8c48064febd3c208"
+    },
+    {
+      "path": "app/public/weekly-data/latest.json",
+      "sha256": "81284a85bcaa1bf07ba7f9cdc559704df6e592cb3615b1ed8c48064febd3c208"
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "releaseEvidencePath": "app/tmp/release-evidence/latest.json",
+    "releaseEvidenceSha256": "d60f75488d78c31eb3c95126d62da00c33ff8defbcbcb0b0a50c79975c7eb00d",
+    "releaseEvidenceGeneratedAt": "2026-08-09T10:27:56.622Z",
+    "checksPassed": 8,
+    "checksTotal": 8,
+    "unitTestFilesPassed": 37,
+    "unitTestsPassed": 266,
+    "e2eTestsPassed": 154,
+    "modulesTransformed": 2397,
+    "deepAuditClaims": 855,
+    "deepAuditHighRiskClaims": 0,
+    "deepAuditUnsupportedClaims": 0,
+    "dataConsistencyIssues": 0,
+    "dependencyVulnerabilities": 0,
+    "bundleAssetsWithinBudget": 85,
+    "bundleFailures": 0
+  },
+  "review": {
+    "status": "independent-review-clean",
+    "acceptedFindingCount": 5,
+    "acceptedFindingsFixed": 5,
+    "finalActionableFindingCount": 0,
+    "codexCliStatus": "blocked-recursive-invocation",
+    "toolBoundary": "codex review recursively invoked itself on repeated attempts; descendant processes were terminated precisely and final closure used an independent read-only code-review agent"
+  },
+  "boundaries": {
+    "productionDeploy": false,
+    "productionVerified": false,
+    "productionWrites": false,
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "databaseWrites": false,
+    "factPromotion": false,
+    "ownerApproval": false
+  },
+  "nextGate": {
+    "id": "DQ-020",
+    "status": "blocked-owner-evidence-required",
+    "reason": "authorized Amazon owner, mapping, snapshot, hash, and review artifacts remain missing"
+  }
+}

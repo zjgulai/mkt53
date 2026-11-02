@@ -1,0 +1,144 @@
+{
+  "gateId": "DQ-011",
+  "status": "completed-local",
+  "executedAt": "2026-07-30T08:08:57+08:00",
+  "baseline": {
+    "branch": "main",
+    "head": "cead7b78f811",
+    "worktreeWasDirty": true,
+    "priorChangesPreserved": true
+  },
+  "scope": {
+    "authorized": [
+      "render source readiness and decision readiness as independent page states",
+      "cover all 45 governed business routes",
+      "add local validation, tests, documentation, and browser evidence"
+    ],
+    "notAuthorized": [
+      "DQ-012",
+      "production data changes",
+      "provider or restricted connector calls",
+      "database writes",
+      "deployment",
+      "commit",
+      "push"
+    ]
+  },
+  "routeReadiness": {
+    "businessRouteCount": 45,
+    "sourceReadiness": {
+      "blocked": 19,
+      "partial": 22,
+      "source-backed": 4,
+      "unmapped": 0
+    },
+    "decisionReadiness": {
+      "ready": 0,
+      "not-ready": 45
+    },
+    "metricContractCoverage": {
+      "covered": 45,
+      "missing": 0,
+      "invalid": 0,
+      "status": "definition-only"
+    }
+  },
+  "implementation": [
+    "global route-aware dual readiness status mounted in App",
+    "deterministic projection generated from the deep-audit route evidence matrix",
+    "dynamic report ids normalized to /report/:id",
+    "build fails when the generated projection is stale",
+    "expanded disclosure states that source-backed does not imply decision-ready"
+  ],
+  "verification": {
+    "consistencyAudit": {
+      "pages": 43,
+      "tables": 107,
+      "governedTables": 107,
+      "sources": 53,
+      "issues": 0
+    },
+    "deepAudit": {
+      "routes": 46,
+      "businessRoutes": 45,
+      "scannedFiles": 80,
+      "claims": 885,
+      "csvExports": 12,
+      "highRiskClaims": 0,
+      "mediumRiskClaims": 0,
+      "providerCalls": false,
+      "productionWrites": false
+    },
+    "unitTests": {
+      "filesPassed": 27,
+      "testsPassed": 220,
+      "testsFailed": 0
+    },
+    "reviewFixes": {
+      "acceptedFindings": 4,
+      "resolvedFindings": [
+        "shared route taxonomy now rejects legal but incorrect MECE categories",
+        "projection generation rejects unmapped routes before browser data can be written",
+        "projection generation rejects a failed overall target metric contract validation",
+        "a top-level null target metric contract returns structured object-required errors"
+      ],
+      "regressionTests": [
+        "mece-category-mismatch",
+        "unmapped projection rejection",
+        "failed target metric contract validation rejection",
+        "top-level null contract structured error"
+      ]
+    },
+    "routeE2E": {
+      "routes": 45,
+      "viewports": [
+        "chromium-desktop",
+        "chromium-mobile"
+      ],
+      "testsPassed": 90,
+      "testsFailed": 0,
+      "checks": [
+        "dual readiness status is visible",
+        "source readiness uses blocked, partial, or source-backed",
+        "decision readiness remains not-ready",
+        "no horizontal overflow",
+        "no console errors",
+        "no page errors",
+        "no unsupported overclaim"
+      ]
+    },
+    "visualSampling": {
+      "desktopExpanded": "app/output/playwright/dq011-market-trend-expanded.png",
+      "mobileCollapsed": "app/output/playwright/dq011-market-dtl-mobile-collapsed.png",
+      "mobileExpanded": "app/output/playwright/dq011-market-dtl-mobile-expanded.png",
+      "consoleErrors": 0
+    },
+    "graphify": {
+      "nodes": 4781,
+      "edges": 7688,
+      "communities": 352,
+      "update": "passed",
+      "clusterOnly": "passed"
+    },
+    "codexReview": {
+      "command": "/Users/pray/.codex/skills/codex-review/scripts/codex-review",
+      "exitCode": 0,
+      "status": "clean",
+      "actionableFindings": 0,
+      "priorFixesConfirmedClosed": 4
+    },
+    "lint": "passed",
+    "build": "passed",
+    "routeProjectionCheck": "passed"
+  },
+  "boundaries": {
+    "productionWrites": false,
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "databaseWrites": false,
+    "deployment": false,
+    "commit": false,
+    "push": false
+  },
+  "nextGate": "DQ-012"
+}

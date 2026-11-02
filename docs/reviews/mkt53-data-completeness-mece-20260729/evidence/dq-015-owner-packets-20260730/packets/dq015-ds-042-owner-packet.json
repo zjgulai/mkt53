@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "dq015-owner-packet-v1",
+  "gate": "DQ-015",
+  "generatedAt": "2026-07-30T08:00:00.000Z",
+  "packetId": "dq015-ds-042-owner-packet",
+  "sourceId": "ds-042",
+  "domain": "interview",
+  "page": "StoreInterviews",
+  "purpose": "Prepare a governed handoff for store interviews and auditable operating snapshots.",
+  "status": "awaiting-owner-input",
+  "packetEvidenceGrade": "L2-fixture-or-dry-run",
+  "sourceEvidenceGrade": "L0-unverified",
+  "ownerRole": "store-operations-research-owner",
+  "reviewerRoles": [
+    "privacy-reviewer",
+    "retail-operations-reviewer",
+    "business-evidence-reviewer"
+  ],
+  "claimBoundary": "Readiness and missing-evidence state only; no conversion, traffic, revenue, efficiency, NPS, or interview conclusion.",
+  "templateRef": "tmp/audits/source-gap-readiness-packets-p1-manual-public-20260630/packets/p1-business-owner-manual-review-01.md",
+  "requiredEvidenceSlots": [
+    {
+      "id": "operations-owner",
+      "label": "Store operations owner record and role",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "store-selection-frame",
+      "label": "Store selection frame and exclusions",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "consent-authorization",
+      "label": "Interview consent and operating-data authorization",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "interview-window",
+      "label": "Interview and snapshot window",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "redacted-field-notes",
+      "label": "Redacted field-note manifest",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "field-note-hashes",
+      "label": "Field-note evidence hashes",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "store-metric-snapshot",
+      "label": "Immutable store metric snapshot reference",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "snapshot-schema-hash",
+      "label": "Snapshot schema and content hashes",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "metric-definitions",
+      "label": "Metric formulas, denominators, and units",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "anonymization-method",
+      "label": "Store and participant anonymization method",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "reviewer-signoff",
+      "label": "Privacy, retail operations, and business reviewer signoff",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    }
+  ],
+  "decision": {
+    "ownerApproved": false,
+    "reviewerApproved": false,
+    "acceptanceStatus": "blocked-required-input",
+    "factPromotionAllowed": false,
+    "decisionReady": false
+  },
+  "boundaries": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "connectorCalls": false,
+    "databaseWrites": false,
+    "productionWrites": false,
+    "deployment": false,
+    "liveCollection": false,
+    "externalSend": false,
+    "realUserDataIncluded": false,
+    "realSkuEvaluation": false,
+    "legalAdviceGenerated": false,
+    "factPromotion": false,
+    "decisionReady": false
+  },
+  "forbiddenClaims": [
+    "Current conversion, traffic, revenue, efficiency, or NPS values are real store results.",
+    "An ERP proxy replaces a store-level authorized snapshot.",
+    "A generated packet proves collection, owner approval, or reviewer approval."
+  ],
+  "disclosures": [
+    "This file is a deterministic readiness template, not an owner submission or approval record.",
+    "No live collection, external send, provider call, connector call, database write, production write, or deployment occurred.",
+    "The source evidence grade and display scope remain unchanged until independently reviewed evidence is accepted."
+  ]
+}

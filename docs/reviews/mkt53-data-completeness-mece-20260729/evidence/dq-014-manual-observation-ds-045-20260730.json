@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "gate": "DQ-014",
+  "sourceId": "ds-045",
+  "publisher": "Fortune Business Insights",
+  "canonicalUrl": "https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880",
+  "accessedAt": "2026-07-30T07:11:00.000Z",
+  "retrievedVia": "official-public-page-read-only",
+  "evidenceGrade": "L1-public-or-runtime",
+  "pageTitle": "Wearable Breast Pumps Market Size, Share | Growth [2034]",
+  "publisherUpdatedAt": "2026-07-13",
+  "observedFacts": [
+    "The key-insights section lists USD 202.6 million for 2025, USD 233.0 million for 2026, USD 635.1 million for 2034, and a 15.08% CAGR.",
+    "The same page lists North America at USD 118.42 million for 2025 while also displaying a 12.31% regional share.",
+    "A separate FAQ section lists USD 268.17 million for 2026 and USD 825.18 million for 2034."
+  ],
+  "contradictions": [
+    "The key-insights and FAQ sections expose different 2026 and 2034 global market values.",
+    "The displayed 2025 North America value is not mathematically consistent with the displayed global value and 12.31% regional-share label."
+  ],
+  "limitations": [
+    "This is a public landing-page observation, not the paid report dataset or methodology workbook.",
+    "The source must remain blocked for fact promotion until the publisher or an authorized report resolves the internal inconsistencies.",
+    "The bounded local Chromium capture returned HTTP 403 from the publisher security layer; no challenge bypass or login was attempted."
+  ],
+  "boundaries": {
+    "loginAttempted": false,
+    "bypassAttempted": false,
+    "paidReportExtracted": false,
+    "rawPageTextStored": false,
+    "businessDataWrites": 0,
+    "productionWrites": false
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "gate": "DQ-020-private-owner-evidence",
+  "generatedAt": "2026-07-30T10:31:41.000Z",
+  "status": "blocked-real-owner-evidence-absent",
+  "evidenceLevel": "L2-local-private-readiness-audit",
+  "overallDecision": "stop-without-promotion-or-collection",
+  "scope": {
+    "connectorId": "amazon-commerce",
+    "sourceIds": [
+      "ds-007",
+      "ds-009",
+      "ds-010",
+      "ds-019",
+      "ds-037",
+      "ds-038",
+      "ds-039"
+    ],
+    "privatePathInventory": true,
+    "mappingCoverage": true,
+    "readinessGate": true,
+    "privateInputAudit": true,
+    "networkOrProviderExecution": false
+  },
+  "privateBoundary": {
+    "directory": "app/configs/private/",
+    "directoryExists": true,
+    "directoryMode": "700",
+    "gitIgnored": true,
+    "expectedFileMode": "600",
+    "authoritativeFinalMappingExists": false,
+    "authoritativeFinalReadinessExists": false,
+    "checklistExists": true,
+    "checklistMode": "600",
+    "mappingDraftExists": true,
+    "mappingDraftMode": "600",
+    "mappingCsvDraftExists": true,
+    "mappingCsvDraftMode": "600",
+    "readinessDraftExists": true,
+    "readinessDraftMode": "600",
+    "symlinksAccepted": false,
+    "privateValuesCopiedIntoReceipt": false,
+    "privateFileHashesCopiedIntoReceipt": false
+  },
+  "privateAudit": {
+    "authoritativeInputs": {
+      "status": "blocked",
+      "blockers": [
+        "missing-mapping-file",
+        "missing-readiness-file"
+      ],
+      "checklistStatus": "ready",
+      "interpretation": "Checklist structure and private-file permissions are ready; no authoritative owner-completed mapping or readiness record exists."
+    },
+    "draftInputs": {
+      "status": "blocked",
+      "mappingRows": 67,
+      "validMappingRows": 0,
+      "invalidMappingRows": 67,
+      "duplicateMappingRows": 0,
+      "missingMappingItems": 67,
+      "missingMappingFieldsPerRow": [
+        "asin",
+        "sku",
+        "brand",
+        "productName",
+        "category",
+        "mappingOwner"
+      ],
+      "missingReadinessFields": [
+        "authorizationRecordId",
+        "authorizationOwner",
+        "reviewOwner"
+      ],
+      "invalidReadinessDateFields": [
+        "authorizationApprovedAt",
+        "collectionWindowStart",
+        "collectionWindowEnd",
+        "reviewApprovedAt"
+      ],
+      "checklistStatus": "ready"
+    },
+    "redaction": {
+      "credentialValues": true,
+      "businessValues": true,
+      "asinValues": true,
+      "skuValues": true,
+      "authorizationValues": true,
+      "ownerValues": true
+    }
+  },
+  "mappingCoverage": {
+    "status": "blocked",
+    "totalRequiredItems": 67,
+    "totalMappedItems": 0,
+    "missingItemCount": 67,
+    "readySourceCount": 0,
+    "missingSourceCount": 7,
+    "invalidMappingCount": 67,
+    "duplicateMappingCount": 0,
+    "networkCalls": 0,
+    "businessDataWrites": 0,
+    "reportWriteDisabled": true
+  },
+  "readinessGate": {
+    "status": "blocked",
+    "blockedChecks": [
+      "credentials",
+      "mappingCoverage",
+      "authorizationRecord",
+      "collectionWindow",
+      "ownerReview"
+    ],
+    "structurallyReadyChecks": [
+      "complianceReview",
+      "snapshotScope",
+      "privateBoundary",
+      "safetyBoundary"
+    ],
+    "structuralReadyInterpretation": "The compliance and snapshot-scope values came from an unfilled local scaffold. They are template defaults only and are not owner approval, authorization evidence, a collected snapshot, or an evidence-grade promotion.",
+    "networkCalls": 0,
+    "businessDataWrites": 0,
+    "credentialValuesRedacted": true,
+    "dryRunOnly": true
+  },
+  "currentReadiness": {
+    "mappedItemCount": 0,
+    "ownerApprovedCount": 0,
+    "authorizationRecordReadyCount": 0,
+    "collectionWindowReadyCount": 0,
+    "authorizedSnapshotReadyCount": 0,
+    "snapshotHashReadyCount": 0,
+    "decisionReadyCount": 0,
+    "factPromotionCount": 0
+  },
+  "blockingEvidence": [
+    "Approved business owner and authorization record in the private readiness draft",
+    "Sixty-seven valid private source/site/marketplace/ASIN/SKU mapping rows with mapping owner and date",
+    "Approved collection window and owner review",
+    "Authorized immutable snapshot manifest, row counts, schema version, content hash, and field-dictionary hash",
+    "Compliance and independent release-review receipts based on real evidence rather than scaffold defaults"
+  ],
+  "verification": {
+    "dq020BundleValidator": {
+      "passed": true,
+      "packetCount": 7,
+      "missingRequiredSlotCount": 133,
+      "validationBlockers": 0
+    },
+    "privateStateAssertion": "passed",
+    "receiptJsonParse": "passed",
+    "receiptPrivacyKeyAudit": "passed",
+    "focusedRegression": {
+      "testFilesPassed": 2,
+      "testsPassed": 97,
+      "testsFailed": 0
+    },
+    "gitDiffCheck": "passed"
+  },
+  "boundaries": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "connectorCalls": false,
+    "credentialEntry": false,
+    "liveCollection": false,
+    "databaseWrites": false,
+    "productionWrites": false,
+    "deployment": false,
+    "externalSend": false,
+    "finalPrivateFilePromotion": false,
+    "factPromotion": false,
+    "decisionReady": false,
+    "commit": false,
+    "push": false,
+    "dq021Executed": false
+  },
+  "nextAction": "Keep DQ-020 open. The authorized business owner must complete the existing private mapping and readiness drafts with real evidence. After a separate authorization, rerun the redacted private audit and coverage/readiness gates; only a fully ready result may proceed to authorized snapshot collection and independent release review.",
+  "nextGate": "DQ-020-private-owner-evidence-owner-fill",
+  "nextGateExecuted": false
+}

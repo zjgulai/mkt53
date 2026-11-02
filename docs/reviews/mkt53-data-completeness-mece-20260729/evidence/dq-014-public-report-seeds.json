@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "gate": "DQ-014",
+  "generatedRule": "Capture only the three original public report landing pages required by DQ-014. Preserve L1 public evidence boundaries; do not log in, extract paid reports, promote facts, or write production data.",
+  "seeds": [
+    {
+      "id": "dq014-ds002-fortune-breast-pump-market",
+      "sourceId": "ds-002",
+      "page": "MarketPage",
+      "metric": "北美区域份额",
+      "label": "Fortune Business Insights breast pump market public landing page",
+      "url": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": [
+        "Breast Pump Market",
+        "North America",
+        "45.05%",
+        "2025"
+      ],
+      "collectionBoundary": "Public report landing page only; no paid report extraction, login, access-control bypass, brand-share inference, channel-share inference, or full-platform claim.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "dq014-ds044-grand-view-baby-products-market",
+      "sourceId": "ds-044",
+      "page": "MarketPage",
+      "metric": "全球婴童用品上层TAM",
+      "label": "Grand View Research baby products market public landing page",
+      "url": "https://www.grandviewresearch.com/industry-analysis/baby-products-market",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": [
+        "Baby Products Market",
+        "USD 355.9 billion",
+        "USD 579.5 billion",
+        "6.4%"
+      ],
+      "collectionBoundary": "Public report landing page only; no paid report extraction, login, access-control bypass, breast-pump SAM/SOM inference, brand-share inference, or full-platform claim.",
+      "notFullPlatformDataset": true
+    },
+    {
+      "id": "dq014-ds045-fortune-wearable-breast-pumps-market",
+      "sourceId": "ds-045",
+      "page": "MarketPage",
+      "metric": "穿戴式吸奶器细分TAM",
+      "label": "Fortune Business Insights wearable breast pumps market public landing page",
+      "url": "https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880",
+      "evidenceClass": "market-report-public-page",
+      "expectedEvidenceTerms": [
+        "Wearable Breast Pumps Market",
+        "USD 202.6 million",
+        "USD 233.0 million",
+        "USD 635.1 million",
+        "15.08%"
+      ],
+      "collectionBoundary": "Public report landing page only; no paid report extraction, login, access-control bypass, SAM/SOM inference, brand-sales inference, or full-platform claim.",
+      "notFullPlatformDataset": true
+    }
+  ]
+}

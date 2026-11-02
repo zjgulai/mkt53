@@ -1,0 +1,379 @@
+{
+  "schemaVersion": 2,
+  "gate": "DQ-020",
+  "connectorId": "amazon-commerce",
+  "generatedAt": "2026-08-09T10:38:13.569Z",
+  "acceptanceStatus": "blocked-no-owner-submission",
+  "maximumEvidenceGrade": "L2-fixture-or-dry-run",
+  "sourceEvidenceGrade": "L0-unverified",
+  "dq020Closed": false,
+  "factPromotionAllowed": false,
+  "currentPeriod": {
+    "period": "2026-08-H1",
+    "windowStart": "2026-08-01",
+    "windowEnd": "2026-08-15",
+    "source": "periodic-manifest"
+  },
+  "packetContract": {
+    "localContractDecision": "allowed-intake-template-only",
+    "overallGateDecision": "blocked-owner-evidence-required",
+    "blockers": [],
+    "summary": {
+      "packetCount": 7,
+      "totalMinimumMappedItems": 67,
+      "missingRequiredSlotCount": 133,
+      "mappedItemCount": 0,
+      "siteMarketplaceReadyCount": 0,
+      "collectionWindowReadyCount": 0,
+      "fieldDictionaryReadyCount": 0,
+      "snapshotHashReadyCount": 0,
+      "ownerApprovedCount": 0,
+      "authorizedSnapshotReadyCount": 0,
+      "decisionReadyCount": 0,
+      "factPromotionCount": 0,
+      "validationPassed": true
+    }
+  },
+  "privateSubmission": {
+    "status": "draft-scaffold-only-or-absent",
+    "draftFileCount": 2,
+    "draftFilesComplete": true,
+    "ownerSubmissionDetected": false,
+    "ownerSubmissionPartial": false,
+    "ownerSubmissionComplete": false,
+    "draftValidationReady": false,
+    "privateDirectoryMode": "700",
+    "files": {
+      "mappingDraft": {
+        "fileName": "amazon-commerce-mapping-fill-draft.json",
+        "exists": true,
+        "mode": "600",
+        "size": 26885,
+        "modifiedAt": "2026-07-02T02:23:13.937Z"
+      },
+      "readinessDraft": {
+        "fileName": "amazon-commerce-readiness-fill-draft.json",
+        "exists": true,
+        "mode": "600",
+        "size": 1935,
+        "modifiedAt": "2026-07-02T02:23:14.060Z"
+      },
+      "checklist": {
+        "fileName": "amazon-commerce-readiness-checklist.md",
+        "exists": true,
+        "mode": "600",
+        "size": 4973,
+        "modifiedAt": "2026-08-09T10:22:30.382Z"
+      },
+      "formalMapping": {
+        "fileName": "amazon-commerce-mapping.json",
+        "exists": false,
+        "mode": "",
+        "size": 0,
+        "modifiedAt": null
+      },
+      "formalReadiness": {
+        "fileName": "amazon-commerce-readiness.json",
+        "exists": false,
+        "mode": "",
+        "size": 0,
+        "modifiedAt": null
+      }
+    },
+    "selectedInputKind": "draft"
+  },
+  "privatePromotion": {
+    "status": "not-promoted",
+    "formalFileCount": 0,
+    "formalFilesComplete": false,
+    "independentlyAuthorizedWriteRequired": true
+  },
+  "mappingPromotion": {
+    "status": "blocked",
+    "draftExists": true,
+    "blockerTypes": [
+      "invalid-mapping-rows",
+      "missing-asin-sku-mapping",
+      "missing-asin-sku-mapping",
+      "missing-asin-sku-mapping",
+      "missing-asin-sku-mapping",
+      "missing-asin-sku-mapping",
+      "missing-asin-sku-mapping",
+      "missing-asin-sku-mapping"
+    ],
+    "counts": {
+      "mappingCount": 67,
+      "validMappingCount": 0,
+      "uniqueValidMappingCount": 0,
+      "invalidMappingCount": 67,
+      "duplicateMappingCount": 0
+    },
+    "coverage": {
+      "status": "blocked",
+      "totalRequiredItems": 67,
+      "totalMappedItems": 0,
+      "missingItemCount": 67,
+      "readySourceCount": 0,
+      "missingSourceCount": 7,
+      "invalidMappingCount": 67,
+      "duplicateMappingCount": 0
+    }
+  },
+  "readinessPromotion": {
+    "status": "blocked",
+    "draftExists": true,
+    "blockerTypes": [
+      "missing-readiness-fields",
+      "invalid-readiness-date-fields",
+      "collection-window-mismatch"
+    ],
+    "checks": {
+      "requiredFields": {
+        "status": "blocked",
+        "missingRequiredFields": [
+          "authorizationRecordId",
+          "authorizationOwner",
+          "reviewOwner",
+          "complianceReviewer"
+        ]
+      },
+      "ownerContent": {
+        "status": "absent",
+        "detected": false
+      },
+      "dates": {
+        "status": "blocked",
+        "invalidDateFields": [
+          "authorizationApprovedAt",
+          "collectionWindowStart",
+          "collectionWindowEnd",
+          "reviewApprovedAt"
+        ]
+      },
+      "collectionWindow": {
+        "status": "blocked",
+        "expectedStart": "2026-08-01",
+        "expectedEnd": "2026-08-15",
+        "orderInvalid": false,
+        "matchesExpected": false
+      },
+      "complianceReview": {
+        "status": "ready"
+      },
+      "snapshotScope": {
+        "status": "ready",
+        "expectedSnapshotTypes": [
+          "product_snapshot",
+          "review_snapshot",
+          "brand_share_snapshot",
+          "category_rank_snapshot"
+        ],
+        "allowedSnapshotTypeCount": 4,
+        "missingSnapshotTypes": []
+      },
+      "privateBoundary": {
+        "status": "ready",
+        "forbiddenFieldNames": []
+      }
+    }
+  },
+  "privateAudit": {
+    "status": "blocked",
+    "blockerTypes": [
+      "mapping:mapping-coverage-blocked",
+      "mapping:invalid-mapping-rows",
+      "readiness:missing-readiness-fields",
+      "readiness:invalid-readiness-date-fields",
+      "readiness:collection-window-mismatch"
+    ],
+    "mapping": {
+      "status": "blocked",
+      "counts": {
+        "mappingCount": 67,
+        "validMappingCount": 0,
+        "uniqueValidMappingCount": 0,
+        "invalidMappingCount": 67,
+        "duplicateMappingCount": 0
+      },
+      "coverage": {
+        "status": "blocked",
+        "totalRequiredItems": 67,
+        "totalMappedItems": 0,
+        "missingItemCount": 67,
+        "readySourceCount": 0,
+        "missingSourceCount": 7
+      },
+      "missingRequiredFieldCounts": {
+        "asin": 67,
+        "sku": 67,
+        "brand": 67,
+        "productName": 67,
+        "category": 67,
+        "mappingOwner": 67
+      },
+      "invalidRowCounts": {
+        "missingRequiredFields": 67,
+        "invalidAsin": 67,
+        "invalidSourceId": 0,
+        "siteMismatch": 0,
+        "marketplaceMismatch": 0,
+        "invalidStatus": 0,
+        "invalidMappingUpdatedAt": 67
+      }
+    },
+    "readiness": {
+      "status": "blocked",
+      "missingRequiredFields": [
+        "authorizationRecordId",
+        "authorizationOwner",
+        "reviewOwner",
+        "complianceReviewer"
+      ],
+      "invalidDateFields": [
+        "authorizationApprovedAt",
+        "collectionWindowStart",
+        "collectionWindowEnd",
+        "reviewApprovedAt"
+      ],
+      "collectionWindowOrderInvalid": false,
+      "collectionWindowMatchesExpected": false,
+      "expectedCollectionWindow": {
+        "start": "2026-08-01",
+        "end": "2026-08-15"
+      },
+      "missingSnapshotTypes": [],
+      "forbiddenFieldNames": []
+    },
+    "checklist": {
+      "status": "ready",
+      "missingChecklistItems": []
+    }
+  },
+  "formalAudit": null,
+  "connectorReadiness": {
+    "status": "blocked",
+    "readyCheckIds": [
+      "complianceReview",
+      "snapshotScope",
+      "privateBoundary",
+      "safetyBoundary"
+    ],
+    "blockedCheckIds": [
+      "credentials",
+      "mappingCoverage",
+      "authorizationRecord",
+      "collectionWindow",
+      "ownerReview"
+    ],
+    "blockerTypes": [
+      "missing-credentials",
+      "mapping-coverage-blocked",
+      "invalid-authorization-record",
+      "invalid-collection-window",
+      "missing-owner-review"
+    ],
+    "mappingCoverage": {
+      "status": "blocked",
+      "totalRequiredItems": 67,
+      "totalMappedItems": 0,
+      "missingItemCount": 67,
+      "readySourceCount": 0,
+      "missingSourceCount": 7,
+      "invalidMappingCount": 67,
+      "duplicateMappingCount": 0,
+      "rows": [
+        {
+          "sourceId": "ds-007",
+          "page": "CompetitionPage",
+          "scope": "competitor_catalog",
+          "minimumMappedItems": 15,
+          "mappedItems": 0,
+          "status": "missing-mapping",
+          "missingItems": 15
+        },
+        {
+          "sourceId": "ds-009",
+          "page": "ProductManage",
+          "scope": "product_price_rating",
+          "minimumMappedItems": 25,
+          "mappedItems": 0,
+          "status": "missing-mapping",
+          "missingItems": 25
+        },
+        {
+          "sourceId": "ds-010",
+          "page": "RegionCompetition",
+          "scope": "brand_analytics_region_share",
+          "minimumMappedItems": 1,
+          "mappedItems": 0,
+          "status": "missing-mapping",
+          "missingItems": 1
+        },
+        {
+          "sourceId": "ds-019",
+          "page": "SelfInsight",
+          "scope": "momcozy_channel_product_snapshot",
+          "minimumMappedItems": 8,
+          "mappedItems": 0,
+          "status": "missing-mapping",
+          "missingItems": 8
+        },
+        {
+          "sourceId": "ds-037",
+          "page": "BabyCare",
+          "scope": "baby_care_category_rank",
+          "minimumMappedItems": 5,
+          "mappedItems": 0,
+          "status": "missing-mapping",
+          "missingItems": 5
+        },
+        {
+          "sourceId": "ds-038",
+          "page": "CategoryAnalysis",
+          "scope": "category_lifecycle_bsr",
+          "minimumMappedItems": 8,
+          "mappedItems": 0,
+          "status": "missing-mapping",
+          "missingItems": 8
+        },
+        {
+          "sourceId": "ds-039",
+          "page": "NursingProducts",
+          "scope": "nursing_products_category_rank",
+          "minimumMappedItems": 5,
+          "mappedItems": 0,
+          "status": "missing-mapping",
+          "missingItems": 5
+        }
+      ]
+    }
+  },
+  "nextGate": "business-owner-private-submission",
+  "ownerHandoffTodo": [
+    "Complete all 67 private mapping rows with authorized ASIN/SKU, product identity, mapping date and mapping owner.",
+    "Set the private readiness collection window to 2026-08-01..2026-08-15.",
+    "Provide authorization record, authorization owner/date, business review owner/date and compliance reviewer evidence in private storage.",
+    "Run mapping and readiness promotion without --write-final; obtain ready-to-promote results first.",
+    "Have an independent owner/compliance/release reviewer verify the redacted acceptance receipt and immutable private evidence hashes.",
+    "Do not load credentials, call Amazon, write snapshots or promote page facts until a separate authorized connector gate is approved."
+  ],
+  "safety": {
+    "credentialValuesIncluded": false,
+    "asinValuesIncluded": false,
+    "skuValuesIncluded": false,
+    "ownerValuesIncluded": false,
+    "authorizationValuesIncluded": false,
+    "privateFileContentsIncluded": false,
+    "privateFileHashesIncluded": false,
+    "networkCalls": 0,
+    "businessDataWrites": 0,
+    "privateInputWrites": 0,
+    "productionWrites": 0,
+    "deployment": false,
+    "restrictedConnectorAccess": false
+  },
+  "disclosures": [
+    "This receipt validates only local contracts, private-file metadata and redacted readiness counts.",
+    "A ready owner submission still requires independent review, immutable snapshot/hash evidence and separately authorized connector execution before DQ-020 can close."
+  ]
+}

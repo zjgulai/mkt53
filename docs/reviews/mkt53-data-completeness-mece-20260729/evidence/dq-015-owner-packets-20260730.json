@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "gate": "DQ-015",
+  "executedAt": "2026-07-30T08:41:40Z",
+  "decision": "completed-readiness-only",
+  "scope": {
+    "sourceIds": [
+      "ds-014",
+      "ds-040",
+      "ds-042",
+      "policy-cpsc-efiling",
+      "policy-eu-mdr-transition"
+    ],
+    "nextGate": "DQ-016",
+    "nextGateEntered": false
+  },
+  "tdd": {
+    "red": {
+      "command": "npm run test -- --run tests/scripts/dq015-owner-packets.test.ts",
+      "testCount": 5,
+      "failedCount": 5,
+      "cause": "The source-specific spec, generator, validator, bundle, and registry/page bindings did not yet exist."
+    },
+    "green": {
+      "command": "npm run test -- --run tests/scripts/dq015-owner-packets.test.ts",
+      "testCount": 5,
+      "passedCount": 5
+    }
+  },
+  "bundle": {
+    "specPath": "docs/reviews/mkt53-data-completeness-mece-20260729/evidence/dq-015-owner-packet-spec.json",
+    "bundlePath": "docs/reviews/mkt53-data-completeness-mece-20260729/evidence/dq-015-owner-packets-20260730",
+    "manifestSha256": "5d663646e2759d43ed53f167949ce3aa08f932f04e16f7866e793bc08fa90eea",
+    "packetEvidenceGrade": "L2-fixture-or-dry-run",
+    "packetCount": 5,
+    "domainCounts": {
+      "interview": 2,
+      "aesthetics": 1,
+      "regulation": 2
+    },
+    "missingRequiredSlotCount": 55,
+    "ownerApprovedCount": 0,
+    "reviewerApprovedCount": 0,
+    "decisionReadyCount": 0,
+    "factPromotionCount": 0,
+    "packets": [
+      {
+        "sourceId": "ds-014",
+        "path": "packets/dq015-ds-014-owner-packet.json",
+        "requiredSlotCount": 11,
+        "sha256": "2410c15a0eddb0f4790ee31f95d13c122376e9272bb6c98702207d0748363152"
+      },
+      {
+        "sourceId": "ds-040",
+        "path": "packets/dq015-ds-040-owner-packet.json",
+        "requiredSlotCount": 11,
+        "sha256": "24ba14e0d32068677e82e61df86d01983b6cc5a4e87479d9eb4dd4fad90cb788"
+      },
+      {
+        "sourceId": "ds-042",
+        "path": "packets/dq015-ds-042-owner-packet.json",
+        "requiredSlotCount": 11,
+        "sha256": "9a1eeabe37f05aa0a0a5ea3bc2115bbfa676951d25623ca50b4dc36f364b5d0f"
+      },
+      {
+        "sourceId": "policy-cpsc-efiling",
+        "path": "packets/dq015-policy-cpsc-efiling-owner-packet.json",
+        "requiredSlotCount": 11,
+        "sha256": "c31901a28335187c80657ac2c81b60ca3a114467f1999902ec49550662adeb58"
+      },
+      {
+        "sourceId": "policy-eu-mdr-transition",
+        "path": "packets/dq015-policy-eu-mdr-transition-owner-packet.json",
+        "requiredSlotCount": 11,
+        "sha256": "84616774e18ac3a22955132db405b89a9b9eebc4d7e807a0ac322c6edfa51de0"
+      }
+    ]
+  },
+  "sourceRegistryInvariants": [
+    {
+      "sourceId": "ds-014",
+      "evidenceGradeBefore": "L0-unverified",
+      "evidenceGradeAfter": "L0-unverified",
+      "canDisplayAsFact": false
+    },
+    {
+      "sourceId": "ds-040",
+      "evidenceGradeBefore": "LO-S-synthetic",
+      "evidenceGradeAfter": "LO-S-synthetic",
+      "canDisplayAsFact": false
+    },
+    {
+      "sourceId": "ds-042",
+      "evidenceGradeBefore": "L0-unverified",
+      "evidenceGradeAfter": "L0-unverified",
+      "canDisplayAsFact": false
+    },
+    {
+      "sourceId": "policy-cpsc-efiling",
+      "evidenceGradeBefore": "L1-public-or-runtime",
+      "evidenceGradeAfter": "L1-public-or-runtime",
+      "canDisplayAsFact": true,
+      "displayScopeUnchanged": "Public CPSC eFiling entrypoints and resources only."
+    },
+    {
+      "sourceId": "policy-eu-mdr-transition",
+      "evidenceGradeBefore": "L1-public-or-runtime",
+      "evidenceGradeAfter": "L1-public-or-runtime",
+      "canDisplayAsFact": true,
+      "displayScopeUnchanged": "Public EU MDR and IVDR regulatory timeline only."
+    }
+  ],
+  "verification": {
+    "dq015FocusedTests": {
+      "passed": 5,
+      "failed": 0
+    },
+    "fullUnitTests": {
+      "passed": 238,
+      "failed": 0
+    },
+    "dataConsistency": {
+      "issues": 0,
+      "pageCount": 45,
+      "sourceRegistryCount": 53
+    },
+    "deepAudit": {
+      "businessRouteCount": 45,
+      "highRiskClaimCount": 0,
+      "mediumRiskClaimCount": 0,
+      "unsupportedClaimCount": 0,
+      "unmappedBusinessRouteCount": 0,
+      "sourceGapCount": 27,
+      "decisionReadyBusinessRouteCount": 0
+    },
+    "lint": "passed",
+    "build": "passed",
+    "bundleBudget": "passed",
+    "browserE2e": {
+      "passed": 154,
+      "failed": 0,
+      "projects": [
+        "chromium-desktop",
+        "chromium-mobile"
+      ]
+    },
+    "releaseEvidence": {
+      "path": "app/tmp/release-evidence/latest.json",
+      "sha256": "2d09a66e5087578cfeb3fbee0002e6bec5b4f02b40cb325ada039a8321034843",
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "localCandidateReady": true
+    },
+    "graphify": {
+      "update": "passed",
+      "clusterOnly": "passed",
+      "nodeCount": 4893,
+      "edgeCount": 7869,
+      "communityCount": 350,
+      "dq015ValidatorDiscovered": true
+    },
+    "gitDiffCheck": "passed"
+  },
+  "boundaries": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "connectorCalls": false,
+    "databaseWrites": false,
+    "productionWrites": false,
+    "deployment": false,
+    "liveCollection": false,
+    "externalSend": false,
+    "realUserDataIncluded": false,
+    "realSkuEvaluation": false,
+    "legalAdviceGenerated": false,
+    "factPromotion": false,
+    "decisionReady": false,
+    "commit": false,
+    "push": false
+  },
+  "disclosures": [
+    "The five packets are deterministic empty readiness templates, not owner submissions or approval records.",
+    "The successful validator result proves packet completeness and fail-closed boundaries only.",
+    "No real interview, aesthetics study, product/SKU regulatory evaluation, or legal conclusion was produced.",
+    "Public regulation evidence retains its previous limited scope; product-level and legal conclusions remain blocked."
+  ]
+}

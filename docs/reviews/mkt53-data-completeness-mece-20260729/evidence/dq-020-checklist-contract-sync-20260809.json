@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "gate": "DQ-020-checklist-contract-sync",
+  "generatedAt": "2026-08-09T10:23:10.495Z",
+  "decision": "completed-contract-sync-owner-submission-still-blocked",
+  "maximumEvidenceGrade": "L2-fixture-or-dry-run",
+  "authorizationScope": {
+    "privateChecklistBackup": true,
+    "privateChecklistTemplateSync": true,
+    "ownerBusinessContent": false,
+    "privateFinalPromotion": false,
+    "credentialLoading": false,
+    "restrictedConnectorExecution": false,
+    "snapshotWrite": false,
+    "factPromotion": false,
+    "productionWrite": false,
+    "deployment": false
+  },
+  "checklist": {
+    "fileName": "amazon-commerce-readiness-checklist.md",
+    "status": "replaced-from-current-template",
+    "previousSizeBytes": 4883,
+    "currentSizeBytes": 4973,
+    "previousMode": "600",
+    "currentMode": "600",
+    "privateDirectoryMode": "700",
+    "templateMatch": true,
+    "requiredSchemaMarkerPresent": true,
+    "backup": {
+      "fileName": "amazon-commerce-readiness-checklist-backup-2026-08-09T10-22-22-000Z.md",
+      "status": "created",
+      "sizeBytes": 4883,
+      "mode": "600",
+      "directoryMode": "700",
+      "matchesPreviousBaselineSize": true,
+      "checklistHeaderPresent": true,
+      "priorSchemaGapPreserved": true
+    }
+  },
+  "acceptanceBefore": {
+    "status": "blocked-no-owner-submission",
+    "checklistStatus": "blocked",
+    "checklistBlockerTypes": [
+      "checklist-items-missing"
+    ],
+    "ownerSubmissionDetected": false,
+    "validMappingCount": 0,
+    "minimumMappingCount": 67
+  },
+  "acceptanceAfter": {
+    "status": "blocked-no-owner-submission",
+    "checklistStatus": "ready",
+    "checklistBlockerTypes": [],
+    "ownerSubmissionDetected": false,
+    "validMappingCount": 0,
+    "minimumMappingCount": 67,
+    "formalFileCount": 0,
+    "dq020Closed": false,
+    "factPromotionAllowed": false
+  },
+  "blockerChange": {
+    "removed": [
+      "checklist:checklist-items-missing"
+    ],
+    "introduced": [],
+    "businessGateAdvanced": false
+  },
+  "persistentBlockers": {
+    "mapping": [
+      "mapping-coverage-blocked",
+      "invalid-mapping-rows"
+    ],
+    "readiness": [
+      "missing-readiness-fields",
+      "invalid-readiness-date-fields",
+      "collection-window-mismatch"
+    ],
+    "missingResponsibilityFields": 4,
+    "invalidDateFields": 4,
+    "missingMappingItems": 67,
+    "ownerSubmissionDetected": false
+  },
+  "quality": {
+    "focusedTestFileCount": 1,
+    "focusedTestCount": 92,
+    "focusedTestsPassed": 92,
+    "templateMatch": true,
+    "acceptanceRecomputed": true,
+    "releaseEvidenceGeneratedAt": "2026-08-09T10:27:56.622Z",
+    "releaseChecksPassed": 8,
+    "releaseChecksTotal": 8,
+    "unitTestFilesPassed": 37,
+    "unitTestsPassed": 266,
+    "e2eTestsPassed": 154,
+    "dependencyVulnerabilities": 0,
+    "modulesTransformed": 2397,
+    "bundleAssetsWithinBudget": 85,
+    "bundleFailures": 0,
+    "dataConsistencyIssues": 0,
+    "deepAuditClaims": 855,
+    "deepAuditHighRiskClaims": 0,
+    "deepAuditUnsupportedClaims": 0
+  },
+  "safety": {
+    "credentialValuesIncluded": false,
+    "asinValuesIncluded": false,
+    "skuValuesIncluded": false,
+    "ownerValuesIncluded": false,
+    "authorizationValuesIncluded": false,
+    "privateFileContentsIncluded": false,
+    "privateFileHashesIncluded": false,
+    "networkCalls": 0,
+    "businessDataWrites": 0,
+    "privateInputWrites": 1,
+    "privateBackupWrites": 1,
+    "privateFileWrites": 2,
+    "productionWrites": 0,
+    "deployment": false,
+    "restrictedConnectorAccess": false
+  },
+  "nextGate": "business-owner-private-submission"
+}

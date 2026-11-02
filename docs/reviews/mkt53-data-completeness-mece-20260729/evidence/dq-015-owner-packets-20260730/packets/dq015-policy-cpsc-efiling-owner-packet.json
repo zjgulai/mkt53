@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "dq015-owner-packet-v1",
+  "gate": "DQ-015",
+  "generatedAt": "2026-07-30T08:00:00.000Z",
+  "packetId": "dq015-policy-cpsc-efiling-owner-packet",
+  "sourceId": "policy-cpsc-efiling",
+  "domain": "regulation",
+  "page": "RegulationDetail",
+  "purpose": "Prepare product-level CPSC CPC/eFiling applicability and legal review intake while preserving the existing public-source scope.",
+  "status": "awaiting-owner-input",
+  "packetEvidenceGrade": "L2-fixture-or-dry-run",
+  "sourceEvidenceGrade": "L1-public-or-runtime",
+  "ownerRole": "us-product-regulatory-owner",
+  "reviewerRoles": [
+    "product-scope-owner",
+    "legal-reviewer",
+    "regulatory-evidence-reviewer"
+  ],
+  "claimBoundary": "Existing official CPSC entrypoints and resources remain L1 displayable; no SKU applicability, certificate completeness, account readiness, import compliance, or legal conclusion.",
+  "templateRef": "scripts/data/templates/regulation-source-legal-intake-template.json",
+  "requiredEvidenceSlots": [
+    {
+      "id": "regulatory-owner",
+      "label": "US regulatory owner record and role",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "legal-reviewer",
+      "label": "Legal reviewer assignment",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "official-source-retrieval",
+      "label": "Official source URL, retrieval time, title, and hash",
+      "classification": "public",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "product-sku-mapping",
+      "label": "Product family and SKU mapping",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "jurisdiction-scope",
+      "label": "Jurisdiction and commercial scope",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "applicability-rationale",
+      "label": "Regulatory applicability rationale",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "certificate-evidence",
+      "label": "Certificate and testing evidence references",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "account-readiness-evidence",
+      "label": "eFiling account and role readiness evidence",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "effective-dates",
+      "label": "Effective dates and review window",
+      "classification": "public",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "withdrawal-semantics",
+      "label": "Withdrawal and affected-surface propagation plan",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "legal-signoff",
+      "label": "Legal and regulatory reviewer signoff",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    }
+  ],
+  "decision": {
+    "ownerApproved": false,
+    "reviewerApproved": false,
+    "acceptanceStatus": "blocked-required-input",
+    "factPromotionAllowed": false,
+    "decisionReady": false
+  },
+  "boundaries": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "connectorCalls": false,
+    "databaseWrites": false,
+    "productionWrites": false,
+    "deployment": false,
+    "liveCollection": false,
+    "externalSend": false,
+    "realUserDataIncluded": false,
+    "realSkuEvaluation": false,
+    "legalAdviceGenerated": false,
+    "factPromotion": false,
+    "decisionReady": false
+  },
+  "forbiddenClaims": [
+    "A public CPSC entrypoint proves SKU compliance or certificate completeness.",
+    "eFiling account readiness, import readiness, or legal approval is complete.",
+    "A generated packet is legal advice or an approval record."
+  ],
+  "disclosures": [
+    "This file is a deterministic readiness template, not an owner submission or approval record.",
+    "No live collection, external send, provider call, connector call, database write, production write, or deployment occurred.",
+    "The source evidence grade and display scope remain unchanged until independently reviewed evidence is accepted."
+  ]
+}

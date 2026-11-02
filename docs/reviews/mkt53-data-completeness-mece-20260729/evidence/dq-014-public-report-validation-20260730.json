@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "gate": "DQ-014",
+  "decision": "allowed-with-label",
+  "maximumEvidenceGrade": "L1-public-or-runtime",
+  "supportedClaim": "Three current public landing-page receipts were reviewed; accepted records remain bounded L1 context and ds-045 remains blocked for source inconsistency.",
+  "forbiddenClaims": [
+    "No receipt proves a paid report dataset, brand share, channel share, SAM, SOM, sales, production readiness, or decision readiness.",
+    "No receipt authorizes automatic or production registry writes, page fact promotion, CSV fact export, deployment, provider calls, or restricted connector access; only the reviewed local registry contract patch is in scope."
+  ],
+  "summary": {
+    "targetSourceCount": 3,
+    "validCaptureCount": 0,
+    "validCaptureDiagnosticCount": 3,
+    "automationAccessBlockedCount": 3,
+    "manualObservationArtifactCount": 3,
+    "acceptedL1Count": 2,
+    "blockedSourceInconsistencyCount": 1,
+    "blockedAccessCount": 0,
+    "decisionReadyCount": 0,
+    "factPromotionCount": 0,
+    "validationPassed": true
+  },
+  "boundaries": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "productionWrites": false,
+    "deployment": false,
+    "automaticSourceRegistryWrites": false,
+    "productionSourceRegistryWrites": false,
+    "pageWrites": false,
+    "csvFactExport": false,
+    "factPromotion": false,
+    "decisionReady": false,
+    "localSourceRegistryContractPatch": true
+  },
+  "perSource": [
+    {
+      "sourceId": "ds-002",
+      "captureStatus": "source-error",
+      "evidenceGrade": "L1-public-or-runtime",
+      "reviewDecision": "accepted_for_l1_public_context",
+      "validationStatus": "passed",
+      "blockers": [],
+      "factPromotion": false,
+      "decisionReady": false
+    },
+    {
+      "sourceId": "ds-044",
+      "captureStatus": "source-error",
+      "evidenceGrade": "L1-public-or-runtime",
+      "reviewDecision": "accepted_for_l1_public_context",
+      "validationStatus": "passed",
+      "blockers": [],
+      "factPromotion": false,
+      "decisionReady": false
+    },
+    {
+      "sourceId": "ds-045",
+      "captureStatus": "source-error",
+      "evidenceGrade": "L1-public-or-runtime",
+      "reviewDecision": "blocked_source_inconsistency",
+      "validationStatus": "passed",
+      "blockers": [],
+      "factPromotion": false,
+      "decisionReady": false
+    }
+  ],
+  "blockers": []
+}

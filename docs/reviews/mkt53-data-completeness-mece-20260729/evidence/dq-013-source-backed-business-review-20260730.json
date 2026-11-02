@@ -1,0 +1,217 @@
+{
+  "gateId": "DQ-013",
+  "status": "completed-local",
+  "executedAt": "2026-07-30T14:33:00+08:00",
+  "baseline": {
+    "branch": "main",
+    "head": "cead7b78f811fbec186440395c073a089dfc856b",
+    "worktreeWasDirty": true,
+    "priorChangesPreserved": true
+  },
+  "scope": {
+    "authorized": [
+      "add bounded model, evidence scope, allowed use, prohibited use, owner, and sign-off contracts to four source-backed pages",
+      "move the AI assistant root into explicit AI and VOC blocker governance",
+      "update local target metric contracts, tests, documentation, graph, and evidence"
+    ],
+    "notAuthorized": [
+      "DQ-014 or later gates",
+      "production data changes",
+      "provider or restricted connector calls",
+      "database writes",
+      "deployment",
+      "commit",
+      "push"
+    ]
+  },
+  "businessReviewCandidates": [
+    {
+      "route": "/market/trend",
+      "component": "MarketTrend",
+      "targetMetricId": "market_trend_verified_signal_rate",
+      "modelContract": "trend-signal-review-v1",
+      "sourceIds": [
+        "ds-003",
+        "ds-004"
+      ],
+      "sourceReadiness": "source-backed",
+      "reviewStatus": "business-review-candidate",
+      "decisionReady": false,
+      "prohibitedUse": "不得解释为销量、GMV、市场份额或外部机构评分"
+    },
+    {
+      "route": "/industry/tech",
+      "component": "TechNews",
+      "targetMetricId": "technology_spec_comparability_rate",
+      "modelContract": "technology-spec-ontology-v1",
+      "sourceIds": [
+        "ds-036"
+      ],
+      "sourceReadiness": "source-backed",
+      "reviewStatus": "business-review-candidate",
+      "decisionReady": false,
+      "prohibitedUse": "不得解释为独立性能排名、实验室结论或技术领先性"
+    },
+    {
+      "route": "/industry/ip",
+      "component": "IPAnalysis",
+      "targetMetricId": "patent_family_review_coverage",
+      "modelContract": "patent-query-family-review-v1",
+      "sourceIds": [
+        "ds-017"
+      ],
+      "sourceReadiness": "source-backed",
+      "reviewStatus": "business-review-candidate",
+      "decisionReady": false,
+      "prohibitedUse": "不得解释为侵权判断、FTO 或法律意见"
+    },
+    {
+      "route": "/industry/exhibition",
+      "component": "Exhibition",
+      "targetMetricId": "exhibition_intelligence_action_rate",
+      "modelContract": "exhibition-task-evidence-v1",
+      "sourceIds": [
+        "ds-018"
+      ],
+      "sourceReadiness": "source-backed",
+      "reviewStatus": "business-review-candidate",
+      "decisionReady": false,
+      "prohibitedUse": "不得解释为线索转化、订单、ROI 或参展成效"
+    }
+  ],
+  "aiVocGovernance": {
+    "route": "/ai-assistant",
+    "component": "AIAssistantPage",
+    "targetMetricId": "ai_task_decision_ready_rate",
+    "requiredSourceIds": [
+      "ds-021",
+      "ds-022",
+      "ds-023",
+      "ds-024",
+      "ds-029"
+    ],
+    "sourceReadiness": "partial",
+    "governanceState": "blocked",
+    "decisionReady": false,
+    "blockers": [
+      "authorized review and VOC dataset",
+      "model evaluation and human agreement",
+      "provider request lineage"
+    ],
+    "fixtureOrSyntheticPromotionAllowed": false,
+    "providerCalls": false,
+    "productionWrites": false
+  },
+  "implementation": [
+    "shared SourceBackedReviewPacket renders a consistent auditable business-review-candidate contract",
+    "review packets read target metric identity from the generated route-readiness projection and fail closed unless source-backed, defined-not-certified, and not-ready remain aligned",
+    "four pages expose route, source readiness, review status, decision readiness, and target metric machine attributes",
+    "market and industry overview links use exact matching so each reviewed route has one aria-current page link",
+    "shared industry sidebar removes duplicated route definitions from TechNews, IPAnalysis, and Exhibition",
+    "AiVocBlockerPanel exposes explicit blocked, partial, not-ready, providerCalls=false, and productionWrites=false boundaries",
+    "AI evidence source list now makes the governed dataset, evaluation, and provider-lineage sources visible",
+    "target metric blockers distinguish the established review packet from the still-missing owner sign-off and real evidence"
+  ],
+  "verification": {
+    "redGreenRegression": {
+      "red": "5 of 5 focused DQ-013 tests failed before implementation",
+      "green": "5 of 5 focused DQ-013 tests passed after implementation"
+    },
+    "consistencyAudit": {
+      "pages": 45,
+      "tables": 107,
+      "governedTables": 107,
+      "sources": 53,
+      "issues": 0
+    },
+    "targetMetricContract": {
+      "expectedRoutes": 45,
+      "coveredRoutes": 45,
+      "uniqueMetrics": 45,
+      "missing": 0,
+      "unexpected": 0,
+      "invalid": 0,
+      "decisionReady": 0
+    },
+    "deepAudit": {
+      "routes": 46,
+      "businessRoutes": 45,
+      "scannedFiles": 84,
+      "pages": 45,
+      "claims": 889,
+      "csvExports": 12,
+      "highRiskClaims": 0,
+      "mediumRiskClaims": 0,
+      "unsupportedClaims": 0,
+      "unmappedRoutes": 0,
+      "sourceReadiness": {
+        "blocked": 19,
+        "partial": 22,
+        "source-backed": 4
+      },
+      "providerCalls": false,
+      "productionWrites": false,
+      "publicEvidenceLiveCapture": false,
+      "restrictedConnectorAccess": false
+    },
+    "unitTests": {
+      "filesPassed": 29,
+      "testsPassed": 229,
+      "testsFailed": 0
+    },
+    "browserE2E": {
+      "totalTestsPassed": 154,
+      "totalTestsFailed": 0,
+      "routeSweepTestsPassed": 90,
+      "viewports": [
+        "chromium-desktop",
+        "chromium-mobile"
+      ],
+      "checks": [
+        "all four candidate pages expose the correct model and metric contract",
+        "all four candidate pages remain source-backed and not-ready",
+        "each candidate page has exactly one aria-current navigation link",
+        "AI root remains partial and not-ready with an explicit blocker panel",
+        "no horizontal overflow, console error, page error, 404, or forbidden overclaim"
+      ]
+    },
+    "visualSampling": {
+      "marketTrendDesktop": "app/output/playwright/dq-013/market-trend-desktop.png",
+      "aiVocMobileFullPage": "app/output/playwright/dq-013/ai-voc-blocker-mobile.png",
+      "aiVocMobilePanel": "app/output/playwright/dq-013/ai-voc-blocker-mobile-panel.png",
+      "consoleErrors": 0,
+      "consoleWarnings": 0
+    },
+    "graphify": {
+      "nodes": 4799,
+      "edges": 7734,
+      "communities": 348,
+      "update": "passed",
+      "clusterOnly": "passed"
+    },
+    "codexReview": {
+      "method": "independent Codex read-only review of the current diff and focused DQ-013 tests",
+      "status": "clean",
+      "actionableFindings": 0,
+      "acceptedFindingsResolved": 2,
+      "resolvedFindings": [
+        "review packet metric id, name, owner, and grain are projected from the validated target metric contract and fail closed on drift",
+        "documentation and machine evidence carry the final clean review receipt"
+      ]
+    },
+    "lint": "passed",
+    "build": "passed",
+    "routeProjectionCheck": "passed",
+    "gitDiffCheck": "passed"
+  },
+  "boundaries": {
+    "productionWrites": false,
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "databaseWrites": false,
+    "deployment": false,
+    "commit": false,
+    "push": false
+  },
+  "nextGate": "DQ-014"
+}

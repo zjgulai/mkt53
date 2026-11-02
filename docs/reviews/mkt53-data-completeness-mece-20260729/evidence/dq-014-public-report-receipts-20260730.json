@@ -1,0 +1,199 @@
+{
+  "gateId": "DQ-014",
+  "status": "completed-local",
+  "executedAt": "2026-07-30T15:48:29+08:00",
+  "baseline": {
+    "branch": "main",
+    "head": "cead7b78f811fbec186440395c073a089dfc856b",
+    "worktreeWasDirty": true,
+    "priorChangesPreserved": true
+  },
+  "scope": {
+    "authorized": [
+      "refresh bounded manual public-page evidence receipts for ds-002, ds-044, and ds-045",
+      "apply the reviewed local source registry contract patch",
+      "remove ds-045 wearable market values from user-visible facts and exports while the source is inconsistent",
+      "update local validation, tests, documentation, and graph evidence"
+    ],
+    "notAuthorized": [
+      "DQ-015 or later gates",
+      "paid report access or anti-bot bypass",
+      "provider or restricted connector calls",
+      "automatic or production source registry writes",
+      "production data changes",
+      "database writes",
+      "deployment",
+      "commit",
+      "push"
+    ]
+  },
+  "decision": {
+    "status": "allowed-with-label",
+    "maximumEvidenceGrade": "L1-public-or-runtime",
+    "decisionReady": false,
+    "factPromotion": false,
+    "supportedClaim": "Three current public landing pages were reviewed; ds-002 and ds-044 remain bounded L1 public context, while ds-045 remains blocked because the public source is internally inconsistent.",
+    "forbiddenClaim": "The receipts do not prove paid report datasets, brand or channel share, SAM, SOM, sales, production readiness, or decision readiness."
+  },
+  "sources": [
+    {
+      "sourceId": "ds-002",
+      "publisher": "Fortune Business Insights",
+      "url": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "automationCaptureStatus": "source-error",
+      "automationHttpStatus": 403,
+      "manualObservation": "current public landing-page context reviewed",
+      "reviewDecision": "accepted_for_l1_public_context",
+      "evidenceGrade": "L1-public-or-runtime",
+      "canDisplayAsFact": true,
+      "claimScope": "public North America regional share context only; not brand share or channel share",
+      "artifact": "evidence/dq-014-manual-observation-ds-002-20260730.json",
+      "artifactSha256": "0f7cd8f99c0ad0f50cf8e72a3bd50ae164029ca1ef4911f4a9442bc84b3b16f2",
+      "factPromotion": false,
+      "decisionReady": false
+    },
+    {
+      "sourceId": "ds-044",
+      "publisher": "Grand View Research",
+      "url": "https://www.grandviewresearch.com/industry-analysis/baby-products-market",
+      "automationCaptureStatus": "source-error",
+      "automationHttpStatus": 403,
+      "manualObservation": "current public landing-page context reviewed",
+      "reviewDecision": "accepted_for_l1_public_context",
+      "evidenceGrade": "L1-public-or-runtime",
+      "canDisplayAsFact": true,
+      "claimScope": "public upper TAM context for global baby products only",
+      "artifact": "evidence/dq-014-manual-observation-ds-044-20260730.json",
+      "artifactSha256": "bd094e491797cdf536355f10b4e1e843c143e3c007243524221eef61bafc6a2",
+      "factPromotion": false,
+      "decisionReady": false
+    },
+    {
+      "sourceId": "ds-045",
+      "publisher": "Fortune Business Insights",
+      "url": "https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880",
+      "automationCaptureStatus": "source-error",
+      "automationHttpStatus": 403,
+      "manualObservation": "the current public page contains conflicting market-size and regional-share statements",
+      "reviewDecision": "blocked_source_inconsistency",
+      "evidenceGrade": "L1-public-or-runtime",
+      "verificationStatus": "needs-review",
+      "canDisplayAsFact": false,
+      "blockingReason": "public-source-internal-inconsistency-and-automation-403",
+      "claimScope": "source existence and inconsistency record only; no wearable TAM, CAGR, share, SAM, SOM, sales, or brand claim",
+      "artifact": "evidence/dq-014-manual-observation-ds-045-20260730.json",
+      "artifactSha256": "b5c8bb58361db7fdd5534786f1dc042c726a5da0b72fb49abed8c36233a950d4",
+      "factPromotion": false,
+      "decisionReady": false
+    }
+  ],
+  "captureSafety": {
+    "targetSourceCount": 3,
+    "successfulBusinessDataCaptureCount": 0,
+    "valid403DiagnosticCount": 3,
+    "networkCalls": 3,
+    "businessDataWrites": 0,
+    "loginAttempted": false,
+    "antiBotBypassAttempted": false,
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "productionWrites": false
+  },
+  "implementation": [
+    "added a deterministic DQ-014 seed, capture, review, and validation contract",
+    "bound ds-002 and ds-044 to current manual L1 artifacts without raising evidence grade or decision readiness",
+    "demoted ds-045 to needs-review and canDisplayAsFact=false because the public page is internally inconsistent",
+    "removed wearable market values, CAGR, trend line, search card, and export fields from user-facing surfaces",
+    "kept explicit blocked-source disclosures on home, market, competition, data-source, and operations-manual surfaces",
+    "corrected deep-audit handling for explicit blocked disclosures and priority labels without suppressing real source gaps"
+  ],
+  "verification": {
+    "redGreenRegression": {
+      "initialRed": "3 of 3 focused tests failed before the DQ-014 seed and validator existed",
+      "bindingRed": "the added registry and user-surface contract failed before the local source patch",
+      "green": "4 of 4 focused DQ-014 tests passed"
+    },
+    "dq014Validator": {
+      "validationPassed": true,
+      "targetSourceCount": 3,
+      "validCaptureDiagnosticCount": 3,
+      "manualObservationArtifactCount": 3,
+      "acceptedL1Count": 2,
+      "blockedSourceInconsistencyCount": 1,
+      "factPromotionCount": 0,
+      "decisionReadyCount": 0
+    },
+    "consistencyAudit": {
+      "pages": 45,
+      "tables": 107,
+      "sources": 53,
+      "issues": 0
+    },
+    "deepAudit": {
+      "routes": 46,
+      "businessRoutes": 45,
+      "scannedFiles": 84,
+      "pages": 45,
+      "claims": 864,
+      "csvExports": 12,
+      "highRiskClaims": 0,
+      "mediumRiskClaims": 0,
+      "unsupportedClaims": 0,
+      "sourceGaps": 27,
+      "sourceReadiness": {
+        "blocked": 19,
+        "partial": 22,
+        "source-backed": 4
+      },
+      "decisionReadyRoutes": 0,
+      "providerCalls": false,
+      "productionWrites": false
+    },
+    "unitTests": {
+      "filesPassed": 30,
+      "testsPassed": 233,
+      "testsFailed": 0,
+      "mode": "serial"
+    },
+    "browserE2E": {
+      "totalTestsPassed": 154,
+      "totalTestsFailed": 0,
+      "routeSweepTestsPassed": 90,
+      "viewports": [
+        "chromium-desktop",
+        "chromium-mobile"
+      ]
+    },
+    "releaseEvidence": {
+      "checksPassed": 8,
+      "checksFailed": 0,
+      "checksSkipped": 0,
+      "localCandidateReady": true,
+      "artifact": "app/tmp/release-evidence/latest.json"
+    },
+    "lint": "passed",
+    "dependencyAudit": "passed",
+    "build": "passed",
+    "bundleBudget": "passed",
+    "routeProjectionCheck": "passed",
+    "gitDiffCheck": "passed"
+  },
+  "graphify": {
+    "nodes": 4827,
+    "edges": 7786,
+    "communities": 352,
+    "update": "passed",
+    "clusterOnly": "passed"
+  },
+  "boundary": {
+    "dq015Started": false,
+    "automaticSourceRegistryWrites": false,
+    "productionSourceRegistryWrites": false,
+    "pageFactWrites": false,
+    "csvFactExport": false,
+    "deployment": false,
+    "commit": false,
+    "push": false
+  },
+  "nextGate": "DQ-015"
+}

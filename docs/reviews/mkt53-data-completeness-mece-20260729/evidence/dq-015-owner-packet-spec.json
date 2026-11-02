@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "dq015-owner-packet-v1",
+  "gate": "DQ-015",
+  "maximumPacketEvidenceGrade": "L2-fixture-or-dry-run",
+  "generatedBundlePurpose": "Create source-specific owner intake templates without collecting live data, identifying owners, approving claims, or changing source evidence grades.",
+  "boundaries": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "connectorCalls": false,
+    "databaseWrites": false,
+    "productionWrites": false,
+    "deployment": false,
+    "liveCollection": false,
+    "externalSend": false,
+    "realUserDataIncluded": false,
+    "realSkuEvaluation": false,
+    "legalAdviceGenerated": false,
+    "factPromotion": false,
+    "decisionReady": false
+  },
+  "packets": [
+    {
+      "packetId": "dq015-ds-014-owner-packet",
+      "sourceId": "ds-014",
+      "domain": "interview",
+      "page": "ConsumerInterviews",
+      "sourceEvidenceGrade": "L0-unverified",
+      "ownerRole": "consumer-research-owner",
+      "reviewerRoles": [
+        "privacy-reviewer",
+        "research-methodology-reviewer",
+        "business-evidence-reviewer"
+      ],
+      "purpose": "Prepare a governed handoff for real consumer interview evidence.",
+      "claimBoundary": "Readiness and missing-evidence state only; no NPS, satisfaction, quote, theme-share, Kano, or journey claim.",
+      "templateRef": "tmp/audits/source-gap-readiness-packets-p1-manual-public-20260630/packets/p1-business-owner-manual-review-01.md",
+      "requiredEvidenceSlots": [
+        { "id": "research-owner", "label": "Research owner record and role", "classification": "internal", "required": true },
+        { "id": "consent-ethics-basis", "label": "Consent, privacy, and ethics basis", "classification": "restricted", "required": true },
+        { "id": "recruitment-criteria", "label": "Recruitment and exclusion criteria", "classification": "internal", "required": true },
+        { "id": "population-locale-language", "label": "Population, locale, and interview language", "classification": "internal", "required": true },
+        { "id": "sample-size-window", "label": "Sample size, quotas, and interview window", "classification": "internal", "required": true },
+        { "id": "interview-guide-version", "label": "Interview guide version and hash", "classification": "internal", "required": true },
+        { "id": "redacted-transcript-manifest", "label": "Redacted transcript manifest", "classification": "restricted", "required": true },
+        { "id": "transcript-hashes", "label": "Transcript evidence hashes", "classification": "restricted", "required": true },
+        { "id": "coding-schema-version", "label": "Coding schema, codebook, and version", "classification": "internal", "required": true },
+        { "id": "saturation-rule", "label": "Saturation rule and stopping rationale", "classification": "internal", "required": true },
+        { "id": "reviewer-signoff", "label": "Privacy, methodology, and business reviewer signoff", "classification": "internal", "required": true }
+      ],
+      "forbiddenClaims": [
+        "The current sample represents a market population.",
+        "NPS, satisfaction, quotations, themes, Kano results, or journey metrics are verified.",
+        "A generated packet proves consent, collection, owner approval, or reviewer approval."
+      ]
+    },
+    {
+      "packetId": "dq015-ds-040-owner-packet",
+      "sourceId": "ds-040",
+      "domain": "aesthetics",
+      "page": "Aesthetics",
+      "sourceEvidenceGrade": "LO-S-synthetic",
+      "ownerRole": "aesthetics-research-owner",
+      "reviewerRoles": [
+        "research-methodology-reviewer",
+        "asset-rights-reviewer",
+        "business-evidence-reviewer"
+      ],
+      "purpose": "Prepare a governed handoff for real aesthetics preference research.",
+      "claimBoundary": "Design exploration and missing-evidence state only; no population preference, regional ranking, trend, award, or experiment result.",
+      "templateRef": "tmp/audits/source-gap-readiness-packets-p1-manual-public-20260630/packets/p1-business-owner-manual-review-01.md",
+      "requiredEvidenceSlots": [
+        { "id": "research-owner", "label": "Research owner record and role", "classification": "internal", "required": true },
+        { "id": "study-population", "label": "Study population and eligibility", "classification": "internal", "required": true },
+        { "id": "region-quota-sample", "label": "Region quotas and sample size", "classification": "internal", "required": true },
+        { "id": "consent-privacy-basis", "label": "Consent and privacy basis", "classification": "restricted", "required": true },
+        { "id": "questionnaire-experiment-version", "label": "Questionnaire or experiment version", "classification": "internal", "required": true },
+        { "id": "stimulus-asset-manifest", "label": "Image stimulus asset manifest", "classification": "internal", "required": true },
+        { "id": "stimulus-license-hashes", "label": "Asset licenses and content hashes", "classification": "internal", "required": true },
+        { "id": "randomization-protocol", "label": "Randomization and exposure protocol", "classification": "internal", "required": true },
+        { "id": "response-export-hash", "label": "De-identified response export hash", "classification": "restricted", "required": true },
+        { "id": "analysis-plan", "label": "Analysis plan and comparison controls", "classification": "internal", "required": true },
+        { "id": "reviewer-signoff", "label": "Methodology, rights, and business reviewer signoff", "classification": "internal", "required": true }
+      ],
+      "forbiddenClaims": [
+        "The current color, style, or regional values represent real user preferences.",
+        "An image asset is licensed or an award/source claim is verified without its evidence slot.",
+        "A generated packet proves collection, owner approval, or reviewer approval."
+      ]
+    },
+    {
+      "packetId": "dq015-ds-042-owner-packet",
+      "sourceId": "ds-042",
+      "domain": "interview",
+      "page": "StoreInterviews",
+      "sourceEvidenceGrade": "L0-unverified",
+      "ownerRole": "store-operations-research-owner",
+      "reviewerRoles": [
+        "privacy-reviewer",
+        "retail-operations-reviewer",
+        "business-evidence-reviewer"
+      ],
+      "purpose": "Prepare a governed handoff for store interviews and auditable operating snapshots.",
+      "claimBoundary": "Readiness and missing-evidence state only; no conversion, traffic, revenue, efficiency, NPS, or interview conclusion.",
+      "templateRef": "tmp/audits/source-gap-readiness-packets-p1-manual-public-20260630/packets/p1-business-owner-manual-review-01.md",
+      "requiredEvidenceSlots": [
+        { "id": "operations-owner", "label": "Store operations owner record and role", "classification": "internal", "required": true },
+        { "id": "store-selection-frame", "label": "Store selection frame and exclusions", "classification": "internal", "required": true },
+        { "id": "consent-authorization", "label": "Interview consent and operating-data authorization", "classification": "restricted", "required": true },
+        { "id": "interview-window", "label": "Interview and snapshot window", "classification": "internal", "required": true },
+        { "id": "redacted-field-notes", "label": "Redacted field-note manifest", "classification": "restricted", "required": true },
+        { "id": "field-note-hashes", "label": "Field-note evidence hashes", "classification": "restricted", "required": true },
+        { "id": "store-metric-snapshot", "label": "Immutable store metric snapshot reference", "classification": "restricted", "required": true },
+        { "id": "snapshot-schema-hash", "label": "Snapshot schema and content hashes", "classification": "restricted", "required": true },
+        { "id": "metric-definitions", "label": "Metric formulas, denominators, and units", "classification": "internal", "required": true },
+        { "id": "anonymization-method", "label": "Store and participant anonymization method", "classification": "restricted", "required": true },
+        { "id": "reviewer-signoff", "label": "Privacy, retail operations, and business reviewer signoff", "classification": "internal", "required": true }
+      ],
+      "forbiddenClaims": [
+        "Current conversion, traffic, revenue, efficiency, or NPS values are real store results.",
+        "An ERP proxy replaces a store-level authorized snapshot.",
+        "A generated packet proves collection, owner approval, or reviewer approval."
+      ]
+    },
+    {
+      "packetId": "dq015-policy-cpsc-efiling-owner-packet",
+      "sourceId": "policy-cpsc-efiling",
+      "domain": "regulation",
+      "page": "RegulationDetail",
+      "sourceEvidenceGrade": "L1-public-or-runtime",
+      "ownerRole": "us-product-regulatory-owner",
+      "reviewerRoles": [
+        "product-scope-owner",
+        "legal-reviewer",
+        "regulatory-evidence-reviewer"
+      ],
+      "purpose": "Prepare product-level CPSC CPC/eFiling applicability and legal review intake while preserving the existing public-source scope.",
+      "claimBoundary": "Existing official CPSC entrypoints and resources remain L1 displayable; no SKU applicability, certificate completeness, account readiness, import compliance, or legal conclusion.",
+      "templateRef": "scripts/data/templates/regulation-source-legal-intake-template.json",
+      "requiredEvidenceSlots": [
+        { "id": "regulatory-owner", "label": "US regulatory owner record and role", "classification": "internal", "required": true },
+        { "id": "legal-reviewer", "label": "Legal reviewer assignment", "classification": "internal", "required": true },
+        { "id": "official-source-retrieval", "label": "Official source URL, retrieval time, title, and hash", "classification": "public", "required": true },
+        { "id": "product-sku-mapping", "label": "Product family and SKU mapping", "classification": "restricted", "required": true },
+        { "id": "jurisdiction-scope", "label": "Jurisdiction and commercial scope", "classification": "internal", "required": true },
+        { "id": "applicability-rationale", "label": "Regulatory applicability rationale", "classification": "internal", "required": true },
+        { "id": "certificate-evidence", "label": "Certificate and testing evidence references", "classification": "restricted", "required": true },
+        { "id": "account-readiness-evidence", "label": "eFiling account and role readiness evidence", "classification": "restricted", "required": true },
+        { "id": "effective-dates", "label": "Effective dates and review window", "classification": "public", "required": true },
+        { "id": "withdrawal-semantics", "label": "Withdrawal and affected-surface propagation plan", "classification": "internal", "required": true },
+        { "id": "legal-signoff", "label": "Legal and regulatory reviewer signoff", "classification": "internal", "required": true }
+      ],
+      "forbiddenClaims": [
+        "A public CPSC entrypoint proves SKU compliance or certificate completeness.",
+        "eFiling account readiness, import readiness, or legal approval is complete.",
+        "A generated packet is legal advice or an approval record."
+      ]
+    },
+    {
+      "packetId": "dq015-policy-eu-mdr-transition-owner-packet",
+      "sourceId": "policy-eu-mdr-transition",
+      "domain": "regulation",
+      "page": "PolicyInsight",
+      "sourceEvidenceGrade": "L1-public-or-runtime",
+      "ownerRole": "eu-product-regulatory-owner",
+      "reviewerRoles": [
+        "product-scope-owner",
+        "legal-reviewer",
+        "regulatory-evidence-reviewer"
+      ],
+      "purpose": "Prepare product-level EU MDR/IVDR classification and transition review intake while preserving the existing public-source scope.",
+      "claimBoundary": "Existing official EU regulatory timeline remains L1 displayable; no product classification, notified-body path, certificate status, transition eligibility, market access, or legal conclusion.",
+      "templateRef": "scripts/data/templates/regulation-source-legal-intake-template.json",
+      "requiredEvidenceSlots": [
+        { "id": "regulatory-owner", "label": "EU regulatory owner record and role", "classification": "internal", "required": true },
+        { "id": "legal-reviewer", "label": "Legal reviewer assignment", "classification": "internal", "required": true },
+        { "id": "official-source-retrieval", "label": "Official source URL, retrieval time, title, and hash", "classification": "public", "required": true },
+        { "id": "intended-use-product-sku", "label": "Intended use, product family, and SKU mapping", "classification": "restricted", "required": true },
+        { "id": "classification-rationale", "label": "Product classification rationale", "classification": "internal", "required": true },
+        { "id": "target-markets", "label": "EU target markets and commercial scope", "classification": "internal", "required": true },
+        { "id": "notified-body-status", "label": "Notified body path and status evidence", "classification": "restricted", "required": true },
+        { "id": "certificate-status", "label": "Certificate status and evidence references", "classification": "restricted", "required": true },
+        { "id": "transition-eligibility", "label": "Transition eligibility rationale and evidence", "classification": "internal", "required": true },
+        { "id": "effective-dates", "label": "Effective dates and review window", "classification": "public", "required": true },
+        { "id": "withdrawal-legal-signoff", "label": "Withdrawal plan plus legal and regulatory signoff", "classification": "internal", "required": true }
+      ],
+      "forbiddenClaims": [
+        "The public EU timeline proves a product classification or transition eligibility.",
+        "Notified body, certificate, market access, or legal approval is complete.",
+        "A generated packet is legal advice or an approval record."
+      ]
+    }
+  ]
+}

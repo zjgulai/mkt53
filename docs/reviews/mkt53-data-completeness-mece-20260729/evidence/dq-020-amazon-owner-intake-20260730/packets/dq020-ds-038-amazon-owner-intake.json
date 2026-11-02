@@ -1,0 +1,348 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "dq020-amazon-owner-intake-v1",
+  "gate": "DQ-020",
+  "connectorId": "amazon-commerce",
+  "generatedAt": "2026-07-30T10:00:00.000Z",
+  "packetId": "dq020-ds-038-amazon-owner-intake",
+  "sourceId": "ds-038",
+  "page": "CategoryAnalysis",
+  "scope": "category_lifecycle_bsr",
+  "status": "awaiting-private-owner-input",
+  "packetEvidenceGrade": "L2-fixture-or-dry-run",
+  "sourceEvidenceGrade": "L0-unverified",
+  "ownerRole": "amazon-category-analysis-owner",
+  "reviewerRoles": [
+    "category-methodology-reviewer",
+    "commerce-data-reviewer",
+    "business-evidence-reviewer"
+  ],
+  "claimBoundary": "Category lifecycle and BSR readiness only; ERP proxies and public reports cannot replace an authorized Amazon snapshot.",
+  "templateRefs": {
+    "mapping": "scripts/data/connectors/templates/amazon-commerce-mapping-template.json",
+    "readiness": "scripts/data/connectors/templates/amazon-commerce-readiness-template.json",
+    "privateChecklistCommand": "npm run data:connector:amazon:readiness:checklist",
+    "privateMappingScaffoldCommand": "npm run data:connector:amazon:mapping:scaffold -- --target-dir <private-dir>",
+    "privateReadinessScaffoldCommand": "npm run data:connector:amazon:readiness:scaffold -- --target-dir <private-dir>"
+  },
+  "mappingContract": {
+    "minimumMappedItems": 8,
+    "requiredFields": [
+      "sourceId",
+      "site",
+      "marketplaceId",
+      "asin",
+      "sku",
+      "brand",
+      "productName",
+      "category",
+      "mappingStatus",
+      "mappingUpdatedAt",
+      "mappingOwner"
+    ],
+    "rowIdentity": [
+      "sourceId",
+      "site",
+      "marketplaceId",
+      "asin"
+    ],
+    "privateOnly": true,
+    "hashAlgorithm": "sha256"
+  },
+  "snapshotContract": {
+    "requiredSnapshotTypes": [
+      "product_snapshot",
+      "category_rank_snapshot"
+    ],
+    "requiredFieldsBySnapshotType": {
+      "product_snapshot": [
+        "requestId",
+        "sourceId",
+        "site",
+        "marketplaceId",
+        "asin",
+        "sku",
+        "brand",
+        "productName",
+        "category",
+        "variantKey",
+        "priceAmount",
+        "currency",
+        "taxIncluded",
+        "promotionType",
+        "promotionAmount",
+        "collectionWindowStart",
+        "collectionWindowEnd",
+        "capturedAt",
+        "schemaVersion"
+      ],
+      "category_rank_snapshot": [
+        "requestId",
+        "sourceId",
+        "site",
+        "marketplaceId",
+        "asin",
+        "category",
+        "rankType",
+        "rankValue",
+        "collectionWindowStart",
+        "collectionWindowEnd",
+        "capturedAt",
+        "schemaVersion"
+      ]
+    },
+    "requiredManifestFields": [
+      "sourceId",
+      "site",
+      "marketplaceId",
+      "collectionWindowStart",
+      "collectionWindowEnd",
+      "timezone",
+      "capturedAt",
+      "rowCount",
+      "rejectedRowCount",
+      "schemaVersion",
+      "fieldDictionaryVersion",
+      "fieldDictionarySha256",
+      "contentSha256"
+    ],
+    "hashAlgorithm": "sha256",
+    "privateOnly": true
+  },
+  "requiredEvidenceSlots": [
+    {
+      "id": "owner-role-alias",
+      "label": "Business owner role alias and accountable lane",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "authorization-record",
+      "label": "Approved Amazon read-only authorization record reference",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "authorization-scope",
+      "label": "Authorized API or Brand Analytics scope and permitted uses",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "site-marketplace-scope",
+      "label": "Amazon site, marketplaceId, country or region scope",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "collection-window-timezone",
+      "label": "Collection window start, end, timezone, and capturedAt rule",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "asin-sku-mapping-artifact",
+      "label": "Private ASIN/SKU/brand/product/category mapping artifact reference",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "asin-sku-mapping-hash",
+      "label": "SHA-256 of the immutable mapping artifact",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "mapping-coverage-report",
+      "label": "Per-source mapped row count and minimum coverage report",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "field-dictionary-artifact",
+      "label": "Versioned field dictionary, units, null rules, and enumerations",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "field-dictionary-hash",
+      "label": "SHA-256 of the field dictionary artifact",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "snapshot-manifest",
+      "label": "Immutable authorized snapshot manifest reference",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "snapshot-content-hash",
+      "label": "SHA-256 of the immutable snapshot content",
+      "classification": "restricted",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "snapshot-row-count",
+      "label": "Snapshot row count and rejected row count",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "snapshot-schema-version",
+      "label": "Snapshot schema version and migration compatibility",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "owner-review",
+      "label": "Business owner review record",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "compliance-review",
+      "label": "Platform terms, privacy, and compliance review record",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "release-review",
+      "label": "Independent evidence release review and claim-scope decision",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "bsr-rank-type-category",
+      "label": "BSR rank type, category node, site, and comparison-set definition",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    },
+    {
+      "id": "lifecycle-weight-model",
+      "label": "Lifecycle and category weighting model, version, denominator, and limitations",
+      "classification": "internal",
+      "required": true,
+      "value": null,
+      "evidenceHash": null,
+      "receivedAt": null,
+      "status": "missing"
+    }
+  ],
+  "readiness": {
+    "mappedItemCount": 0,
+    "siteMarketplaceReady": false,
+    "collectionWindowReady": false,
+    "fieldDictionaryReady": false,
+    "snapshotManifestReady": false,
+    "snapshotHashReady": false,
+    "ownerApproved": false,
+    "complianceApproved": false,
+    "releaseReviewApproved": false
+  },
+  "decision": {
+    "acceptanceStatus": "blocked-owner-evidence-required",
+    "readyForPrivateValidation": false,
+    "readyForAuthorizedConnector": false,
+    "factPromotionAllowed": false,
+    "decisionReady": false
+  },
+  "boundaries": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "connectorCalls": false,
+    "databaseWrites": false,
+    "productionWrites": false,
+    "deployment": false,
+    "liveCollection": false,
+    "externalSend": false,
+    "realAsinSkuIncluded": false,
+    "credentialValuesIncluded": false,
+    "ownerIdentityIncluded": false,
+    "factPromotion": false,
+    "decisionReady": false
+  },
+  "forbiddenClaims": [
+    "BSR directly measures sales, GMV, margin, or market share.",
+    "Cross-category ranks are comparable without category node and site.",
+    "A generated intake packet proves lifecycle stage or category performance."
+  ],
+  "disclosures": [
+    "This committed file is an empty deterministic owner-intake template, not an owner submission or approval record.",
+    "Real owner aliases, authorization records, ASIN/SKU mappings, snapshot paths, field dictionaries, and hashes belong only in approved private paths.",
+    "No provider call, connector call, restricted access, live collection, database write, production write, deployment, or fact promotion occurred.",
+    "The source remains L0, needs-review, non-displayable, and not decision-ready until private evidence passes separate mapping, readiness, and release-review gates."
+  ]
+}

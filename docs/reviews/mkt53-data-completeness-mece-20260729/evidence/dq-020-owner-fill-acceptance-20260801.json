@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "gate": "DQ-020-private-owner-evidence-owner-fill",
+  "generatedAt": "2026-07-31T22:14:55.000Z",
+  "generatedAtLocal": "2026-08-01T06:14:55+08:00",
+  "status": "blocked-no-owner-submission",
+  "maximumSupportedEvidenceGrade": "L2-fixture-or-dry-run",
+  "decision": "stop-without-final-promotion-or-collection",
+  "authorizationInterpretation": {
+    "proceduralGateExecutionAuthorized": true,
+    "businessOwnerApprovalProvided": false,
+    "amazonReadOnlyAuthorizationRecordProvided": false,
+    "realAsinSkuMappingProvided": false,
+    "authorizedSnapshotProvided": false,
+    "note": "The user's authorization allowed execution of this bounded acceptance gate. It is not a substitute for business-owner identity, an authorization record, private mapping values, or live collection evidence."
+  },
+  "privateInputInventory": {
+    "directory": "app/configs/private/",
+    "directoryMode": "700",
+    "gitIgnored": true,
+    "authoritativeFinalMappingExists": false,
+    "authoritativeFinalReadinessExists": false,
+    "mappingDraft": {
+      "exists": true,
+      "mode": "600",
+      "lastModifiedAt": "2026-07-02T02:23:13.937Z"
+    },
+    "mappingCsvDraft": {
+      "exists": true,
+      "mode": "600",
+      "lastModifiedAt": "2026-07-02T02:23:13.938Z"
+    },
+    "readinessDraft": {
+      "exists": true,
+      "mode": "600",
+      "lastModifiedAt": "2026-07-02T02:23:14.060Z"
+    },
+    "readinessChecklist": {
+      "exists": true,
+      "mode": "600",
+      "lastModifiedAt": "2026-07-02T02:23:14.179Z"
+    },
+    "ownerSubmissionChangeDetected": false,
+    "privateValuesCopiedIntoReceipt": false,
+    "privateHashesCopiedIntoReceipt": false
+  },
+  "promotionPreflight": {
+    "mapping": {
+      "status": "blocked",
+      "outputStatus": "blocked-not-written",
+      "privateInputWrites": 0,
+      "mappingCount": 67,
+      "validMappingCount": 0,
+      "invalidMappingCount": 67,
+      "duplicateMappingCount": 0,
+      "missingItemCount": 67,
+      "readySourceCount": 0,
+      "missingSourceCount": 7,
+      "missingFieldsPerRow": [
+        "asin",
+        "sku",
+        "brand",
+        "productName",
+        "category",
+        "mappingOwner"
+      ]
+    },
+    "readiness": {
+      "status": "blocked",
+      "outputStatus": "blocked-not-written",
+      "privateInputWrites": 0,
+      "missingRequiredFields": [
+        "authorizationRecordId",
+        "authorizationOwner",
+        "reviewOwner"
+      ],
+      "invalidDateFields": [
+        "authorizationApprovedAt",
+        "collectionWindowStart",
+        "collectionWindowEnd",
+        "reviewApprovedAt"
+      ],
+      "collectionWindowMatchesExpected": false
+    }
+  },
+  "readinessGate": {
+    "status": "blocked",
+    "blockedChecks": [
+      "credentials",
+      "mappingCoverage",
+      "authorizationRecord",
+      "collectionWindow",
+      "ownerReview"
+    ],
+    "structurallyReadyChecks": [
+      "complianceReview",
+      "snapshotScope",
+      "privateBoundary",
+      "safetyBoundary"
+    ],
+    "structuralReadyInterpretation": "These ready checks come from scaffold defaults and local safety structure. They are not real compliance approval, an authorized snapshot, owner evidence, or production readiness.",
+    "mappingCoverage": {
+      "totalRequiredItems": 67,
+      "totalMappedItems": 0,
+      "missingItemCount": 67,
+      "readySourceCount": 0,
+      "missingSourceCount": 7,
+      "invalidMappingCount": 67,
+      "duplicateMappingCount": 0
+    }
+  },
+  "privateAudit": {
+    "authoritativeInputsStatus": "blocked",
+    "authoritativeBlockers": [
+      "missing-mapping-file",
+      "missing-readiness-file"
+    ],
+    "draftInputsStatus": "blocked",
+    "checklistStatus": "ready",
+    "credentialValuesRedacted": true,
+    "businessValuesRedacted": true,
+    "asinValuesRedacted": true,
+    "skuValuesRedacted": true,
+    "authorizationValuesRedacted": true,
+    "ownerValuesRedacted": true
+  },
+  "safety": {
+    "networkCalls": 0,
+    "businessDataWrites": 0,
+    "privateInputWrites": 0,
+    "finalMappingWritten": false,
+    "finalReadinessWritten": false,
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "liveCollection": false,
+    "databaseWrites": false,
+    "productionWrites": false,
+    "deployment": false,
+    "externalSend": false,
+    "factPromotion": false,
+    "decisionReady": false,
+    "dq021Executed": false,
+    "commit": false,
+    "push": false
+  },
+  "blockingEvidence": [
+    "Real business-owner completion of the private mapping draft for all 67 required rows",
+    "Real authorization record and authorization owner",
+    "Valid approved collection window and owner review",
+    "Authorized immutable Amazon snapshot manifest, counts, schema version, and hashes",
+    "Compliance and independent release-review receipts based on real evidence rather than scaffold defaults"
+  ],
+  "verification": {
+    "graphifyQuery": "passed-owner-fill-and-promotion-symbols-found",
+    "mappingPromotionPreflight": "passed-as-expected-blocked-not-written",
+    "readinessPromotionPreflight": "passed-as-expected-blocked-not-written",
+    "authoritativePrivateAudit": "passed-as-expected-blocked",
+    "draftPrivateAudit": "passed-as-expected-blocked",
+    "mappingCoverage": "passed-as-expected-blocked",
+    "readinessGate": "passed-as-expected-blocked",
+    "dq020BundleValidator": {
+      "passed": true,
+      "packetCount": 7,
+      "missingRequiredSlotCount": 133,
+      "validationBlockers": 0
+    },
+    "focusedRegression": {
+      "testFilesPassed": 2,
+      "testsPassed": 97,
+      "testsFailed": 0
+    },
+    "receiptJsonParse": "passed",
+    "receiptPrivacyKeyAudit": "passed",
+    "trackedDiffWhitespaceCheck": "passed"
+  },
+  "nextAction": "Keep DQ-020 open. Wait for a real owner submission in the existing private drafts, then rerun the same redacted promotion preflights, coverage, readiness, and private audit. Do not use --write-final or perform Amazon collection until every preflight is ready and a separate live-collection authorization exists.",
+  "nextGate": "DQ-020-private-owner-evidence-owner-submission",
+  "nextGateExecuted": false
+}

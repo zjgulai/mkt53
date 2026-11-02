@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "gate": "DQ-014",
+  "sourceId": "ds-002",
+  "publisher": "Fortune Business Insights",
+  "canonicalUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+  "accessedAt": "2026-07-30T07:11:00.000Z",
+  "retrievedVia": "official-public-page-read-only",
+  "evidenceGrade": "L1-public-or-runtime",
+  "pageTitle": "Breast Pump Market Size, Share, Value | Growth Report [2034]",
+  "publisherUpdatedAt": "2026-07-13",
+  "observedFacts": [
+    "The public landing page identifies report FBI107054 and a 2026-2034 forecast window.",
+    "Its public summary lists a 2025 global market value of USD 2.14 billion and a North America share of 45.05%.",
+    "Its regional section lists North America at USD 0.96 billion for 2025 and USD 1.04 billion for 2026."
+  ],
+  "contradictions": [],
+  "limitations": [
+    "This is a public landing-page observation, not the paid report dataset or methodology workbook.",
+    "The receipt supports only public North America regional context; it does not support Momcozy share, channel share, SAM, SOM, sales, or decision readiness.",
+    "The bounded local Chromium capture returned HTTP 403 from the publisher security layer; no challenge bypass or login was attempted."
+  ],
+  "boundaries": {
+    "loginAttempted": false,
+    "bypassAttempted": false,
+    "paidReportExtracted": false,
+    "rawPageTextStored": false,
+    "businessDataWrites": 0,
+    "productionWrites": false
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "gate": "DQ-020-business-owner-private-submission",
+  "generatedAt": "2026-08-09T10:38:13.569Z",
+  "decision": "blocked-external-owner-submission-required",
+  "maximumEvidenceGrade": "L2-fixture-or-dry-run",
+  "sourceEvidenceGrade": "L0-unverified",
+  "authorizationScope": {
+    "localGateExecution": true,
+    "redactedPrivateMetadataRead": true,
+    "promotionDryRuns": true,
+    "privateAudit": true,
+    "businessOwnerContentProvided": false,
+    "privateFinalPromotion": false,
+    "credentialLoading": false,
+    "restrictedConnectorExecution": false,
+    "snapshotWrite": false,
+    "factPromotion": false,
+    "productionWrite": false,
+    "deployment": false
+  },
+  "submission": {
+    "status": "draft-scaffold-only-or-absent",
+    "draftFileCount": 2,
+    "draftFilesComplete": true,
+    "ownerSubmissionDetected": false,
+    "ownerSubmissionPartial": false,
+    "ownerSubmissionComplete": false,
+    "draftValidationReady": false,
+    "privateDirectoryMode": "700",
+    "mappingDraft": {
+      "fileName": "amazon-commerce-mapping-fill-draft.json",
+      "exists": true,
+      "mode": "600",
+      "sizeBytes": 26885,
+      "modifiedAt": "2026-07-02T02:23:13.937Z"
+    },
+    "readinessDraft": {
+      "fileName": "amazon-commerce-readiness-fill-draft.json",
+      "exists": true,
+      "mode": "600",
+      "sizeBytes": 1935,
+      "modifiedAt": "2026-07-02T02:23:14.060Z"
+    }
+  },
+  "checks": {
+    "mappingPromotionDryRun": {
+      "status": "blocked",
+      "mappingCount": 67,
+      "validMappingCount": 0,
+      "invalidMappingCount": 67,
+      "missingMappingCount": 67,
+      "readySourceCount": 0,
+      "missingSourceCount": 7
+    },
+    "readinessPromotionDryRun": {
+      "status": "blocked",
+      "ownerContentDetected": false,
+      "missingResponsibilityFields": 4,
+      "invalidDateFields": 4,
+      "collectionWindowMatchesExpected": false
+    },
+    "draftPrivateAudit": {
+      "status": "blocked",
+      "checklistStatus": "ready",
+      "checklistMissingItemCount": 0,
+      "blockerTypes": [
+        "mapping:mapping-coverage-blocked",
+        "mapping:invalid-mapping-rows",
+        "readiness:missing-readiness-fields",
+        "readiness:invalid-readiness-date-fields",
+        "readiness:collection-window-mismatch"
+      ]
+    },
+    "connectorReadiness": {
+      "status": "blocked",
+      "blockedCheckIds": [
+        "credentials",
+        "mappingCoverage",
+        "authorizationRecord",
+        "collectionWindow",
+        "ownerReview"
+      ]
+    },
+    "acceptance": {
+      "status": "blocked-no-owner-submission",
+      "nextGate": "business-owner-private-submission",
+      "readyForIndependentOwnerReview": false,
+      "formalFileCount": 0,
+      "dq020Closed": false,
+      "factPromotionAllowed": false
+    }
+  },
+  "requiredExternalEvidence": [
+    "Complete all 67 private mapping rows with authorized product identity, mapping date and mapping owner.",
+    "Provide authorization record, authorization owner/date, business review owner/date and compliance reviewer evidence in private storage.",
+    "Set the private collection window to 2026-08-01..2026-08-15 or establish a separately reviewed backfill period.",
+    "Have the authorized Owners confirm the current private checklist against the completed evidence."
+  ],
+  "safety": {
+    "credentialValuesIncluded": false,
+    "asinValuesIncluded": false,
+    "skuValuesIncluded": false,
+    "ownerValuesIncluded": false,
+    "authorizationValuesIncluded": false,
+    "privateFileContentsIncluded": false,
+    "privateFileHashesIncluded": false,
+    "networkCalls": 0,
+    "businessDataWrites": 0,
+    "privateInputWrites": 0,
+    "productionWrites": 0,
+    "deployment": false,
+    "restrictedConnectorAccess": false
+  },
+  "nextEvidenceGate": "authorized-business-owner-completes-private-mapping-and-readiness-drafts"
+}

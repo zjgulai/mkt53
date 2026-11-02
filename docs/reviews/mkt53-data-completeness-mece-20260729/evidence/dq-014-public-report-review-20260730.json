@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "gate": "DQ-014",
+  "reviewedAt": "2026-07-30T07:16:58.000Z",
+  "maximumEvidenceGrade": "L1-public-or-runtime",
+  "decision": "allowed-with-label",
+  "decisionRationale": "All three sources have current manual public-page observation receipts and bounded Chromium access diagnostics. ds-002 and ds-044 support only narrow L1 public context; ds-045 remains blocked because its public page contains internally inconsistent values.",
+  "boundaries": {
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "productionWrites": false,
+    "deployment": false,
+    "automaticSourceRegistryWrites": false,
+    "productionSourceRegistryWrites": false,
+    "localSourceRegistryContractPatch": true,
+    "pageWrites": false,
+    "csvFactExport": false,
+    "factPromotion": false,
+    "decisionReady": false
+  },
+  "records": [
+    {
+      "sourceId": "ds-002",
+      "canonicalUrl": "https://www.fortunebusinessinsights.com/breast-pump-market-107054",
+      "captureVisibleTextHash": "990d7aa93c920fab63956b3794aa3c5a02f63939e76baac95f7dc90f5db56b20",
+      "manualObservationArtifactPath": "docs/reviews/mkt53-data-completeness-mece-20260729/evidence/dq-014-manual-observation-ds-002-20260730.json",
+      "manualObservationArtifactSha256": "0f7cd8cea55971a05c714a0ab17ea3b08cbf60cff7e6921f100b6c36a11316f2",
+      "reviewerAlias": "codex-public-web-review",
+      "reviewedAt": "2026-07-30T07:16:58.000Z",
+      "evidenceGrade": "L1-public-or-runtime",
+      "decision": "accepted_for_l1_public_context",
+      "supportedClaims": [
+        "The publisher landing page currently provides North America regional breast-pump market context for the stated 2025 report scope."
+      ],
+      "forbiddenClaims": [
+        "The receipt does not support Momcozy share, channel share, Amazon facts, SAM, SOM, sales, paid-report completeness, or decision readiness."
+      ],
+      "contradictions": [],
+      "limitations": [
+        "Manual public observation is the content receipt; bounded Chromium independently recorded HTTP 403 without bypassing the publisher security layer."
+      ],
+      "sourceRegistryPatchAllowed": true,
+      "factPromotion": false,
+      "decisionReady": false
+    },
+    {
+      "sourceId": "ds-044",
+      "canonicalUrl": "https://www.grandviewresearch.com/industry-analysis/baby-products-market",
+      "captureVisibleTextHash": "94886c84b088854a413b446f7b5d0a0e40c75912a1c44c99d3dd27692901ab73",
+      "manualObservationArtifactPath": "docs/reviews/mkt53-data-completeness-mece-20260729/evidence/dq-014-manual-observation-ds-044-20260730.json",
+      "manualObservationArtifactSha256": "bd094e8775525000ad43ae5d8beaa679f48575cf84c969133b8e11e72d6026a2",
+      "reviewerAlias": "codex-public-web-review",
+      "reviewedAt": "2026-07-30T07:16:58.000Z",
+      "evidenceGrade": "L1-public-or-runtime",
+      "decision": "accepted_for_l1_public_context",
+      "supportedClaims": [
+        "The publisher landing page currently supports upper-level global baby-products market context for the stated 2025-2033 scope."
+      ],
+      "forbiddenClaims": [
+        "The receipt is not a breast-pump segment, brand share, channel share, SAM, SOM, sales, paid-report completeness, or decision-ready denominator."
+      ],
+      "contradictions": [],
+      "limitations": [
+        "Manual public observation is the content receipt; bounded Chromium independently recorded HTTP 403 without bypassing the publisher security layer."
+      ],
+      "sourceRegistryPatchAllowed": true,
+      "factPromotion": false,
+      "decisionReady": false
+    },
+    {
+      "sourceId": "ds-045",
+      "canonicalUrl": "https://www.fortunebusinessinsights.com/wearable-breast-pumps-market-112880",
+      "captureVisibleTextHash": "c0657a49ccb505c6d0fe0bb5383830c1afff85b012027966d03726208f254111",
+      "manualObservationArtifactPath": "docs/reviews/mkt53-data-completeness-mece-20260729/evidence/dq-014-manual-observation-ds-045-20260730.json",
+      "manualObservationArtifactSha256": "b5c8bb1322f5c96f60ed75f47fd4798ad085bb9a0e11d8489e8b2c0cd90a50d4",
+      "reviewerAlias": "codex-public-web-review",
+      "reviewedAt": "2026-07-30T07:16:58.000Z",
+      "evidenceGrade": "L1-public-or-runtime",
+      "decision": "blocked_source_inconsistency",
+      "supportedClaims": [
+        "The receipt supports only the existence and current visible state of the publisher landing page."
+      ],
+      "forbiddenClaims": [
+        "No wearable-market size, CAGR, regional-share, SAM, SOM, sales, brand-share, paid-report completeness, or decision-ready claim may be promoted from this receipt."
+      ],
+      "contradictions": [
+        "The key-insights and FAQ sections expose different 2026 and 2034 global market values.",
+        "The displayed 2025 North America value is not mathematically consistent with the displayed global value and regional-share label."
+      ],
+      "limitations": [
+        "The source remains blocked until the publisher or an authorized report resolves the internal inconsistencies; Chromium also recorded HTTP 403 without bypass."
+      ],
+      "sourceRegistryPatchAllowed": true,
+      "factPromotion": false,
+      "decisionReady": false
+    }
+  ]
+}
