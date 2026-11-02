@@ -34,6 +34,14 @@ describe('DataManage route split contract', () => {
     expect(pageSource).toContain('<Suspense fallback=');
   });
 
+  it('derives the visible module count and documents the ERP domain as the seventh module', () => {
+    const pageSource = readFileSync(resolve(process.cwd(), 'src/pages/DataManage.tsx'), 'utf8');
+
+    expect(pageSource).not.toContain('6大模块');
+    expect(pageSource).toContain('{dataModules.length}大模块');
+    expect(pageSource).toContain('ERP内部经营（受限历史快照）');
+  });
+
   it('retires the DataManage exception from the checked bundle contract', () => {
     const bundleConfig = JSON.parse(
       readFileSync(resolve(process.cwd(), 'scripts/quality/bundle-budgets.json'), 'utf8'),

@@ -721,6 +721,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(packageJson.scripts['data:audit:deep']).toContain('scripts/data/audit-deep.mjs');
     expect(packageJson.scripts['data:audit:deep:json']).toContain('--json --no-write');
     expect(packageJson.scripts['data:audit:deep:summary']).toContain('--summary-json --no-write');
+    expect(packageJson.scripts['data:target-metrics:validate']).toContain('scripts/data/validate-route-target-metrics.mjs');
     expect(packageJson.scripts['data:source-gaps:prioritize']).toContain('scripts/data/prioritize-source-gaps.mjs');
     expect(packageJson.scripts['data:source-gaps:readiness-packets']).toContain('scripts/data/build-source-gap-readiness-packets.mjs');
     expect(packageJson.scripts['data:source-gaps:readiness-coverage']).toContain('scripts/data/build-source-gap-readiness-coverage.mjs');
@@ -2094,10 +2095,284 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(audit.summary.collectionMethods['public-url-check']).toBeGreaterThan(0);
   });
 
-  it('deep-audits visible data claims without provider calls or production writes', () => {
-    const output = execFileSync('node', ['scripts/data/audit-deep.mjs', '--summary-json', '--no-write'], {
+  it('defines and validates one target metric contract for every business route without certifying data readiness', () => {
+    const output = execFileSync('node', ['scripts/data/validate-route-target-metrics.mjs', '--json'], {
       cwd: process.cwd(),
       encoding: 'utf8',
+    });
+    const validation = JSON.parse(output) as {
+      definitionStatus: string;
+      evidenceBoundary: {
+        containsMetricValues: boolean;
+        certifiesDataCollection: boolean;
+        certifiesDecisionReadiness: boolean;
+        productionWrites: boolean;
+      };
+      passed: boolean;
+      summary: {
+        expectedRouteCount: number;
+        contractRouteCount: number;
+        coveredRouteCount: number;
+        missingRouteCount: number;
+        unexpectedRouteCount: number;
+        metricDefinitionCount: number;
+        decisionReadyRouteCount: number;
+        errorCount: number;
+      };
+      routes: Array<{
+        route: string;
+        component: string;
+        meceCategory: string;
+        metricId: string;
+        definitionStatus: string;
+        decisionReady: boolean;
+        requiredSourceIds: string[];
+      }>;
+    };
+
+    expect(validation.passed).toBe(true);
+    expect(validation.definitionStatus).toBe('definition-only');
+    expect(validation.evidenceBoundary).toEqual({
+      containsMetricValues: false,
+      certifiesDataCollection: false,
+      certifiesDecisionReadiness: false,
+      productionWrites: false,
+    });
+    expect(validation.summary).toMatchObject({
+      expectedRouteCount: 45,
+      contractRouteCount: 45,
+      coveredRouteCount: 45,
+      missingRouteCount: 0,
+      unexpectedRouteCount: 0,
+      metricDefinitionCount: 45,
+      decisionReadyRouteCount: 0,
+      errorCount: 0,
+    });
+    expect(new Set(validation.routes.map((route) => route.metricId)).size).toBe(45);
+    expect(validation.routes.every((route) => (
+      route.definitionStatus === 'definition-only'
+      && route.decisionReady === false
+      && route.requiredSourceIds.length > 0
+    ))).toBe(true);
+    expect(validation.routes.find((route) => route.route === '/industry/macro')).toMatchObject({
+      component: 'MacroAnalysis',
+      meceCategory: 'industry_policy_ip_exhibition_supply',
+      metricId: 'macro_indicator_threshold_breach_rate',
+      decisionReady: false,
+    });
+    expect(validation.routes.find((route) => route.route === '/industry/reports')).toMatchObject({
+      component: 'IndustryReports',
+      meceCategory: 'industry_policy_ip_exhibition_supply',
+      metricId: 'industry_report_approved_version_rate',
+      decisionReady: false,
+    });
+    expect(validation.routes.find((route) => route.route === '/report/:id')).toMatchObject({
+      component: 'ReportPreview',
+      metricId: 'report_claim_approved_citation_rate',
+      decisionReady: false,
+    });
+  });
+
+  it('rejects a legal but incorrect MECE category against the declared route taxonomy', () => {
+    const canonical = JSON.parse(
+      readFileSync(join(process.cwd(), 'contracts/route-target-metrics.json'), 'utf8'),
+    ) as {
+      routes: Array<Record<string, unknown> & { route: string }>;
+    };
+    const tempRoot = createSourceGapTempDir('mkt53-route-mece-mismatch-');
+    const contractDir = join(tempRoot, 'contracts');
+    const dataDir = join(tempRoot, 'src', 'data');
+    mkdirSync(contractDir, { recursive: true });
+    mkdirSync(dataDir, { recursive: true });
+
+    const trendContract = structuredClone(
+      canonical.routes.find((route) => route.route === '/market/trend'),
+    ) as Record<string, unknown>;
+    trendContract.meceCategory = 'competitor_price_rank_product';
+
+    writeFileSync(
+      join(contractDir, 'route-target-metrics.json'),
+      `${JSON.stringify({ ...canonical, routes: [trendContract] }, null, 2)}\n`,
+    );
+    writeFileSync(
+      join(tempRoot, 'src', 'App.tsx'),
+      'export const routes = <Route path="/market/trend" element={<MarketTrend />} />;\n',
+    );
+    writeFileSync(
+      join(dataDir, 'source-registry.ts'),
+      readFileSync(join(process.cwd(), 'src', 'data', 'source-registry.ts'), 'utf8'),
+    );
+
+    let cliStdout: string;
+    try {
+      execFileSync('node', [join(process.cwd(), 'scripts/data/validate-route-target-metrics.mjs'), '--json'], {
+        cwd: tempRoot,
+        encoding: 'utf8',
+      });
+      throw new Error('Expected incorrect MECE category validation to fail.');
+    } catch (error) {
+      const failedRun = error as { status?: number; stdout?: string | Buffer };
+      expect(failedRun.status).toBe(1);
+      cliStdout = String(failedRun.stdout ?? '');
+    }
+
+    const result = JSON.parse(cliStdout) as {
+      passed: boolean;
+      errors: Array<{ path: string; code: string }>;
+    };
+    expect(result.passed).toBe(false);
+    expect(result.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: '$.routes[0].meceCategory',
+          code: 'mece-category-mismatch',
+        }),
+      ]),
+    );
+  });
+
+  it('fails closed with structured errors when a route target metric contract is structurally damaged', async () => {
+    const { loadRouteTargetMetrics } = (await import('../../scripts/data/lib/route-target-metrics.mjs')) as {
+      loadRouteTargetMetrics: (
+        appRoot: string,
+        expectedRoutes: Array<{ route: string; component: string; meceCategory: string }>,
+        knownSourceIds: Set<string>,
+      ) => {
+        validation: { passed: boolean; errors: Array<{ path: string; code: string; message: string }> };
+        contractByRoute: Map<string, Record<string, unknown>>;
+      };
+    };
+    const canonical = JSON.parse(
+      readFileSync(join(process.cwd(), 'contracts/route-target-metrics.json'), 'utf8'),
+    ) as {
+      routes: Array<{
+        route: string;
+        component: string;
+        meceCategory: string;
+        metric: { requiredSourceIds: string[] };
+      }>;
+    };
+    const expectedRoutes = canonical.routes.map(({ route, component, meceCategory }) => ({
+      route,
+      component,
+      meceCategory,
+    }));
+    const knownSourceIds = new Set(canonical.routes.flatMap((route) => route.metric.requiredSourceIds));
+    const tempRoot = createSourceGapTempDir('mkt53-route-target-metrics-');
+    const contractDir = join(tempRoot, 'contracts');
+    const contractPath = join(contractDir, 'route-target-metrics.json');
+    mkdirSync(contractDir, { recursive: true });
+
+    const loadDamaged = (mutate: (contract: Record<string, unknown>) => void) => {
+      const contract = structuredClone(canonical) as unknown as Record<string, unknown>;
+      mutate(contract);
+      writeFileSync(contractPath, `${JSON.stringify(contract, null, 2)}\n`);
+      return loadRouteTargetMetrics(tempRoot, expectedRoutes, knownSourceIds);
+    };
+
+    const nonArrayRoutes = loadDamaged((contract) => {
+      contract.routes = {};
+    });
+    expect(nonArrayRoutes.validation.passed).toBe(false);
+    expect(nonArrayRoutes.validation.errors).toEqual(
+      expect.arrayContaining([expect.objectContaining({ path: '$.routes', code: 'array-required' })]),
+    );
+    expect(nonArrayRoutes.contractByRoute.size).toBe(0);
+
+    const missingMetric = loadDamaged((contract) => {
+      const routes = contract.routes as Array<Record<string, unknown>>;
+      delete routes[0].metric;
+    });
+    expect(missingMetric.validation.passed).toBe(false);
+    expect(missingMetric.validation.errors).toEqual(
+      expect.arrayContaining([expect.objectContaining({ path: '$.routes[0].metric', code: 'required' })]),
+    );
+
+    const nonArrayRequiredSources = loadDamaged((contract) => {
+      const routes = contract.routes as Array<{ metric: Record<string, unknown> }>;
+      routes[0].metric.requiredSourceIds = {};
+    });
+    expect(nonArrayRequiredSources.validation.passed).toBe(false);
+    expect(nonArrayRequiredSources.validation.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ path: '$.routes[0].metric.requiredSourceIds', code: 'non-empty-array' }),
+      ]),
+    );
+
+    mkdirSync(join(tempRoot, 'src', 'data'), { recursive: true });
+    writeFileSync(
+      join(tempRoot, 'src', 'App.tsx'),
+      'export const routes = <Route path="/" element={<HomePage />} />;\n',
+    );
+    writeFileSync(
+      join(tempRoot, 'src', 'data', 'source-registry.ts'),
+      "export const sourceRegistry = [{ id: 'ds-001' }];\n",
+    );
+    writeFileSync(contractPath, `${JSON.stringify({ ...canonical, routes: {} }, null, 2)}\n`);
+    let cliStdout: string;
+    try {
+      execFileSync('node', [join(process.cwd(), 'scripts/data/validate-route-target-metrics.mjs'), '--json'], {
+        cwd: tempRoot,
+        encoding: 'utf8',
+      });
+      throw new Error('Expected damaged route target metric contract validation to fail.');
+    } catch (error) {
+      const failedRun = error as {
+        status?: number;
+        stdout?: string | Buffer;
+        stderr?: string | Buffer;
+      };
+      expect(failedRun.status).toBe(1);
+      cliStdout = String(failedRun.stdout ?? '');
+      expect(String(failedRun.stderr ?? '')).not.toContain('TypeError');
+    }
+    const cliResult = JSON.parse(cliStdout) as {
+      passed: boolean;
+      summary: { errorCount: number };
+      errors: Array<{ path: string; code: string }>;
+      routes: unknown[];
+    };
+    expect(cliResult.passed).toBe(false);
+    expect(cliResult.routes).toEqual([]);
+    expect(cliResult.errors).toEqual(
+      expect.arrayContaining([expect.objectContaining({ path: '$.routes', code: 'array-required' })]),
+    );
+
+    writeFileSync(contractPath, 'null\n');
+    let nullCliStdout: string;
+    try {
+      execFileSync('node', [join(process.cwd(), 'scripts/data/validate-route-target-metrics.mjs'), '--json'], {
+        cwd: tempRoot,
+        encoding: 'utf8',
+      });
+      throw new Error('Expected null route target metric contract validation to fail.');
+    } catch (error) {
+      const failedRun = error as {
+        status?: number;
+        stdout?: string | Buffer;
+        stderr?: string | Buffer;
+      };
+      expect(failedRun.status).toBe(1);
+      nullCliStdout = String(failedRun.stdout ?? '');
+      expect(String(failedRun.stderr ?? '')).not.toContain('TypeError');
+    }
+    const nullCliResult = JSON.parse(nullCliStdout) as {
+      passed: boolean;
+      errors: Array<{ path: string; code: string }>;
+      routes: unknown[];
+    };
+    expect(nullCliResult.passed).toBe(false);
+    expect(nullCliResult.routes).toEqual([]);
+    expect(nullCliResult.errors).toEqual(
+      expect.arrayContaining([expect.objectContaining({ path: '$', code: 'object-required' })]),
+    );
+  });
+
+  it('deep-audits visible data claims without provider calls or production writes', () => {
+    const output = execFileSync('node', ['scripts/data/audit-deep.mjs', '--json', '--no-write'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      maxBuffer: 4 * 1024 * 1024,
     });
     const audit = JSON.parse(output) as {
       boundaries: {
@@ -2116,9 +2391,49 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
         unsupportedClaimCount: number;
         sourceGapCount: number;
         issueCounts: Record<string, number>;
+        businessRouteCount: number;
+        routeSourceReadinessCounts: Record<string, number>;
+        unmappedBusinessRouteCount: number;
+        blockedBusinessRouteCount: number;
+        partialBusinessRouteCount: number;
+        sourceBackedBusinessRouteCount: number;
+        targetMetricContractDefinitionCount: number;
+        targetMetricContractCoveredBusinessRouteCount: number;
+        missingTargetMetricContractBusinessRouteCount: number;
+        invalidTargetMetricContractErrorCount: number;
+        decisionReadyBusinessRouteCount: number;
       };
-      highRiskClaimSamples: Array<{ risk: string; issue_code: string; source_coverage: string }>;
+      targetMetricContractValidation: {
+        passed: boolean;
+        errors: Array<{ path: string; code: string; message: string }>;
+      };
       sourceGapMatrix: Array<{ source_id: string; can_display_as_fact: boolean; recommended_collection_lane: string }>;
+      routeEvidenceMatrix: Array<{
+        route: string;
+        component: string;
+        embedded: boolean;
+        target_metric_contract_status: string;
+        target_metric_contract_id: string;
+        target_metric_name: string;
+        target_metric_owner: string;
+        target_metric_required_source_ids: string[];
+        decision_question: string;
+        decision_ready: boolean;
+        source_readiness: string;
+        source_ids: string[];
+        source_count: number;
+        blocked_source_count: number;
+        scope_gap_source_count: number;
+        mece_category: string;
+        next_actions: Array<{ source_id: string; lane: string; gap: string; action: string }>;
+      }>;
+      pageClaims: Array<{
+        page_component: string;
+        source_ids: string[];
+        risk: string;
+        issue_code: string;
+        source_coverage: string;
+      }>;
     };
 
     expect(audit.boundaries).toMatchObject({
@@ -2127,7 +2442,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       publicEvidenceLiveCapture: false,
       restrictedConnectorAccess: false,
     });
-    expect(audit.summary.pageCount).toBe(43);
+    expect(audit.summary.pageCount).toBe(45);
     expect(audit.summary.tableCount).toBe(107);
     expect(audit.summary.sourceRegistryCount).toBe(53);
     expect(audit.summary.claimCount).toBeGreaterThan(0);
@@ -2135,12 +2450,147 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(audit.summary.highRiskClaimCount).toBe(0);
     expect(audit.summary.unsupportedClaimCount).toBe(0);
     expect(audit.summary.sourceGapCount).toBeGreaterThan(0);
+    expect(audit.summary.businessRouteCount).toBe(45);
+    expect(audit.summary.unmappedBusinessRouteCount).toBe(0);
+    expect(audit.summary.blockedBusinessRouteCount).toBeGreaterThan(0);
+    expect(audit.summary.partialBusinessRouteCount).toBeGreaterThan(0);
+    expect(audit.summary.sourceBackedBusinessRouteCount).toBeGreaterThan(0);
+    expect(audit.summary.targetMetricContractDefinitionCount).toBe(45);
+    expect(audit.summary.targetMetricContractCoveredBusinessRouteCount).toBe(45);
+    expect(audit.summary.missingTargetMetricContractBusinessRouteCount).toBe(0);
+    expect(audit.summary.invalidTargetMetricContractErrorCount).toBe(0);
+    expect(audit.summary.decisionReadyBusinessRouteCount).toBe(0);
+    expect(audit.targetMetricContractValidation).toMatchObject({ passed: true, errors: [] });
+    expect(Object.values(audit.summary.routeSourceReadinessCounts).reduce((sum, count) => sum + count, 0)).toBe(45);
     expect(audit.summary.issueCounts['no-displayable-source-evidence'] ?? 0).toBe(0);
     expect(audit.summary.issueCounts['gated-source-disclosure'] ?? 0).toBe(0);
     expect(audit.summary.issueCounts['claim-is-explicit-gated-disclosure'] ?? 0).toBeGreaterThan(0);
-    expect(audit.highRiskClaimSamples).toHaveLength(0);
+    expect(audit.pageClaims.filter((claim) => claim.risk === 'high')).toHaveLength(0);
     expect(audit.sourceGapMatrix.some((source) => !source.can_display_as_fact)).toBe(true);
     expect(audit.sourceGapMatrix.some((source) => source.recommended_collection_lane === 'connector-readiness-or-authorized-private-snapshot')).toBe(true);
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/market/dtl')).toMatchObject({
+      component: 'NursingProducts',
+      source_readiness: 'blocked',
+      source_ids: ['ds-039'],
+      source_count: 1,
+      blocked_source_count: 1,
+      mece_category: 'market_size_share_trend',
+    });
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/report/:id')).toMatchObject({
+      component: 'ReportPreview',
+      source_readiness: 'partial',
+      source_ids: ['ds-024', 'ds-001', 'ds-044', 'ds-045', 'ds-009', 'ds-035', 'ds-047', 'ds-049', 'ds-050', 'ds-051'],
+    });
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/market/trend')).toMatchObject({
+      component: 'MarketTrend',
+      source_readiness: 'source-backed',
+      source_ids: ['ds-003', 'ds-004'],
+    });
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/market/mtl')).toMatchObject({
+      component: 'BreastPump',
+      source_readiness: 'partial',
+      source_ids: ['ds-005', 'ds-047', 'ds-049', 'ds-048', 'ds-050', 'ds-051'],
+    });
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/market')?.source_ids).toEqual(
+      expect.arrayContaining(['ds-035', 'ds-050', 'ds-051']),
+    );
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/data')?.source_ids).toEqual(
+      expect.arrayContaining(['ds-021', 'ds-023', 'ds-030', 'ds-031', 'ds-032', 'ds-033']),
+    );
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/industry/supply')).toMatchObject({
+      component: 'SupplyChain',
+      source_readiness: 'partial',
+      source_ids: ['ds-035', 'ds-049', 'ds-050', 'ds-051'],
+      source_count: 4,
+      blocked_source_count: 1,
+    });
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/industry/reports')).toMatchObject({
+      component: 'IndustryReports',
+      source_readiness: 'partial',
+      source_ids: ['ds-001', 'ds-002', 'ds-034'],
+      source_count: 3,
+      blocked_source_count: 0,
+      scope_gap_source_count: 1,
+      decision_ready: false,
+    });
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/industry/macro')).toMatchObject({
+      component: 'MacroAnalysis',
+      source_readiness: 'partial',
+      source_ids: ['ds-002', 'ds-044', 'ds-045'],
+      source_count: 3,
+      blocked_source_count: 1,
+      scope_gap_source_count: 3,
+      decision_ready: false,
+    });
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/reports')).toMatchObject({
+      component: 'ReportsPage',
+      source_readiness: 'partial',
+      source_ids: ['ds-024', 'ds-035', 'ds-047', 'ds-049', 'ds-050', 'ds-051', 'ds-048', 'ds-009', 'ds-010'],
+      source_count: 9,
+      blocked_source_count: 4,
+    });
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/data-source')).toMatchObject({
+      component: 'DataSourcePage',
+      source_readiness: 'partial',
+      source_count: 53,
+      blocked_source_count: 27,
+    });
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/ai-assistant')).toMatchObject({
+      component: 'AIAssistantPage',
+      source_readiness: 'partial',
+      source_ids: [
+        'ds-025', 'ds-021', 'ds-022', 'ds-023', 'ds-024', 'ds-026', 'ds-029', 'ds-030',
+        'ds-031', 'ds-035', 'ds-047', 'ds-049', 'ds-050', 'ds-051', 'ds-032', 'ds-033',
+      ],
+      source_count: 16,
+      blocked_source_count: 11,
+    });
+    expect(
+      audit.pageClaims
+        .filter((claim) => claim.page_component === 'AIGallery')
+        .every((claim) => !claim.source_ids.some((id) => ['ds-021', 'ds-023', 'ds-024'].includes(id))),
+    ).toBe(true);
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/competition/region')?.mece_category).toBe(
+      'competitor_price_rank_product',
+    );
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/industry/flavor-map')?.mece_category).toBe(
+      'industry_policy_ip_exhibition_supply',
+    );
+    expect(audit.routeEvidenceMatrix.find((row) => row.route === '/ai-assistant')?.mece_category).toBe(
+      'ai_analysis_output',
+    );
+    expect(
+      audit.routeEvidenceMatrix
+        .filter((row) => !row.embedded && row.route !== '*')
+        .every((row) => (
+          row.source_ids.length > 0
+          && row.mece_category.length > 0
+          && row.target_metric_contract_status === 'defined-not-certified'
+          && row.target_metric_contract_id.length > 0
+          && row.target_metric_name.length > 0
+          && row.target_metric_owner.length > 0
+          && row.target_metric_required_source_ids.length > 0
+          && row.decision_question.length > 0
+          && row.decision_ready === false
+        )),
+    ).toBe(true);
+
+    const pageFiles: string[] = [];
+    const collectPageFiles = (directory: string) => {
+      for (const name of readdirSync(directory)) {
+        const path = join(directory, name);
+        if (statSync(path).isDirectory()) collectPageFiles(path);
+        else if (path.endsWith('.tsx')) pageFiles.push(path);
+      }
+    };
+    collectPageFiles(join(process.cwd(), 'src/pages'));
+    const missingAiReportSourceContracts = pageFiles.flatMap((path) => {
+      const source = readFileSync(path, 'utf8');
+      const usageCount = source.match(/<AiReportGovernancePanel\b/g)?.length ?? 0;
+      const contractCount = source.match(/route-audit-source: AiReportGovernancePanel focus=/g)?.length ?? 0;
+      return usageCount === contractCount ? [] : [{ path, usageCount, contractCount }];
+    });
+    expect(missingAiReportSourceContracts).toEqual([]);
   }, 30_000);
 
   it('builds a connector backlog without claiming restricted sources were collected', () => {
@@ -2848,6 +3298,10 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       blockers: Array<{ type: string; key?: string; sourceId?: string }>;
       snapshotContracts: Array<{ snapshotType: string; requiredFields: string[] }>;
     };
+    const currentManifest = JSON.parse(readFileSync(join(process.cwd(), 'public/periodic-data/latest.json'), 'utf8')) as {
+      windowStart: string;
+      windowEnd: string;
+    };
 
     expect(output).not.toContain('SHOULD_NOT_LEAK_IN_DRY_RUN');
     expect(dryRun.connectorId).toBe('amazon-commerce');
@@ -2858,7 +3312,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(dryRun.safety.networkCalls).toBe(0);
     expect(dryRun.safety.businessDataWrites).toBe(0);
     expect(dryRun.safety.credentialValuesRedacted).toBe(true);
-    expect(dryRun.collectionWindow).toMatchObject({ start: '2026-06-01', end: '2026-06-15' });
+    expect(dryRun.collectionWindow).toMatchObject({ start: currentManifest.windowStart, end: currentManifest.windowEnd });
     expect(dryRun.mapping.missingSourceIds).toEqual(expect.arrayContaining(dryRun.sourceIds));
     expect(dryRun.blockers.some((item) => item.type === 'missing-credential')).toBe(true);
     expect(dryRun.blockers.some((item) => item.type === 'missing-asin-sku-mapping')).toBe(true);
@@ -5249,6 +5703,10 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     };
 
     expect(output).not.toContain('fixture-client-secret');
+    expect(output).not.toContain('fixture-auth-record-20260602');
+    expect(output).not.toContain('fixture-commerce-owner');
+    expect(output).not.toContain('fixture-market-insight-owner');
+    expect(output).not.toContain('fixture-compliance-owner');
     expect(dryRun.status).toBe('blocked');
     expect(dryRun.privateInput).toMatchObject({
       mappingPathSource: 'cli',
@@ -5256,7 +5714,11 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       publicBundleAllowed: false,
       gitAllowed: false,
     });
-    expect(dryRun.collectionWindow).toMatchObject({ start: '2026-06-01', end: '2026-06-15' });
+    const currentManifest = JSON.parse(readFileSync(join(process.cwd(), 'public/periodic-data/latest.json'), 'utf8')) as {
+      windowStart: string;
+      windowEnd: string;
+    };
+    expect(dryRun.collectionWindow).toMatchObject({ start: currentManifest.windowStart, end: currentManifest.windowEnd });
     expect(dryRun.mappingContract.requiredFields).toEqual(
       expect.arrayContaining(['sourceId', 'site', 'marketplaceId', 'asin', 'sku', 'brand', 'productName', 'mappingOwner']),
     );
@@ -5774,7 +6236,7 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       expect(manifest.output).toMatchObject({ status: 'blocked-not-written', overwritten: false });
       expect(manifest.validation.checks.requiredFields).toMatchObject({
         status: 'blocked',
-        missingRequiredFields: ['authorizationRecordId', 'authorizationOwner', 'reviewOwner'],
+        missingRequiredFields: ['authorizationRecordId', 'authorizationOwner', 'reviewOwner', 'complianceReviewer'],
       });
       expect(manifest.validation.checks.dates.status).toBe('blocked');
       expect(manifest.validation.checks.collectionWindow).toMatchObject({ status: 'blocked', matchesExpected: false });
@@ -5823,7 +6285,15 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       writeFileSync(finalPath, '{"readiness":{"preserve":"existing-readiness"}}\n', { mode: 0o600 });
       chmodSync(finalPath, 0o600);
 
-      const dryRunOutput = execFileSync('node', ['scripts/data/connectors/promote-amazon-readiness-fill-draft.mjs', '--private-dir', privateDir], {
+      const dryRunOutput = execFileSync('node', [
+        'scripts/data/connectors/promote-amazon-readiness-fill-draft.mjs',
+        '--private-dir',
+        privateDir,
+        '--window-start',
+        '2026-06-01',
+        '--window-end',
+        '2026-06-15',
+      ], {
         cwd: process.cwd(),
         encoding: 'utf8',
       });
@@ -5844,7 +6314,16 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
 
       const writeOutput = execFileSync(
         'node',
-        ['scripts/data/connectors/promote-amazon-readiness-fill-draft.mjs', '--private-dir', privateDir, '--write-final'],
+        [
+          'scripts/data/connectors/promote-amazon-readiness-fill-draft.mjs',
+          '--private-dir',
+          privateDir,
+          '--window-start',
+          '2026-06-01',
+          '--window-end',
+          '2026-06-15',
+          '--write-final',
+        ],
         {
           cwd: process.cwd(),
           encoding: 'utf8',
@@ -5973,6 +6452,10 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     };
 
     expect(output).not.toContain('fixture-client-secret');
+    expect(output).not.toContain('fixture-auth-record-20260602');
+    expect(output).not.toContain('fixture-commerce-owner');
+    expect(output).not.toContain('fixture-market-insight-owner');
+    expect(output).not.toContain('fixture-compliance-owner');
     expect(gate.status).toBe('blocked');
     expect(gate.readinessPathSource).toBe('none');
     expect(gate.privateInput).toMatchObject({
@@ -5995,6 +6478,10 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
         'tests/fixtures/amazon-commerce-mapping-partial-valid.json',
         '--readiness',
         'tests/fixtures/amazon-commerce-readiness-partial-valid.json',
+        '--window-start',
+        '2026-06-01',
+        '--window-end',
+        '2026-06-15',
       ],
       {
         cwd: process.cwd(),
@@ -6020,6 +6507,10 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
     expect(output).not.toContain('fixture-client-secret');
     expect(gate.status).toBe('blocked');
     expect(gate.readinessPathSource).toBe('cli');
+    expect(output).not.toContain('fixture-auth-record-20260602');
+    expect(output).not.toContain('fixture-commerce-owner');
+    expect(output).not.toContain('fixture-market-insight-owner');
+    expect(output).not.toContain('fixture-compliance-owner');
     expect(gate.checks.find((check) => check.id === 'authorizationRecord')?.status).toBe('ready');
     expect(gate.checks.find((check) => check.id === 'collectionWindow')?.status).toBe('ready');
     expect(gate.checks.find((check) => check.id === 'collectionWindow')?.details).toMatchObject({
@@ -6136,9 +6627,32 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
         cwd: process.cwd(),
         encoding: 'utf8',
       });
-      const manifest = JSON.parse(writeOutput) as { checklist: { path: string; status: string; overwritten: boolean } };
+      const manifest = JSON.parse(writeOutput) as {
+        checklist: {
+          path: string;
+          status: string;
+          overwritten: boolean;
+          backup?: { path: string; status: string; mode: string; originalMode: string };
+        };
+        safety: {
+          networkCalls: number;
+          businessDataWrites: number;
+          productionWrites: number;
+          privateInputWrites: number;
+          privateBackupWrites: number;
+          privateFileWrites: number;
+        };
+      };
 
       expect(manifest.checklist).toMatchObject({ status: 'created', overwritten: false });
+      expect(manifest.safety).toMatchObject({
+        networkCalls: 0,
+        businessDataWrites: 0,
+        productionWrites: 0,
+        privateInputWrites: 1,
+        privateBackupWrites: 0,
+        privateFileWrites: 1,
+      });
       expect(readFileSync(manifest.checklist.path, 'utf8')).toContain('totalMinimumMappedItems: 67');
       expect(statSync(targetDir).mode & 0o777).toBe(0o700);
       expect(statSync(manifest.checklist.path).mode & 0o777).toBe(0o600);
@@ -6151,7 +6665,45 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
       const secondManifest = JSON.parse(secondOutput) as typeof manifest;
 
       expect(secondManifest.checklist).toMatchObject({ status: 'exists', overwritten: false });
+      expect(secondManifest.safety).toMatchObject({
+        privateInputWrites: 0,
+        privateBackupWrites: 0,
+        privateFileWrites: 0,
+      });
       expect(readFileSync(targetPath, 'utf8')).toContain('preserve existing checklist');
+
+      const forceOutput = execFileSync('node', [
+        'scripts/data/connectors/amazon-commerce-readiness-checklist.mjs',
+        '--write',
+        targetPath,
+        '--force',
+        '--generated-at',
+        '2026-08-09T02:03:04.005Z',
+      ], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
+      const forceManifest = JSON.parse(forceOutput) as typeof manifest;
+
+      expect(forceManifest.checklist).toMatchObject({
+        status: 'replaced',
+        overwritten: true,
+        backup: { status: 'created', mode: '600', originalMode: '600' },
+      });
+      expect(forceManifest.safety).toMatchObject({
+        networkCalls: 0,
+        businessDataWrites: 0,
+        productionWrites: 0,
+        privateInputWrites: 1,
+        privateBackupWrites: 1,
+        privateFileWrites: 2,
+      });
+      expect(forceManifest.checklist.backup).toBeDefined();
+      expect(readFileSync(forceManifest.checklist.backup!.path, 'utf8')).toBe('preserve existing checklist\n');
+      expect(readFileSync(targetPath, 'utf8')).toContain('generatedAt: 2026-08-09T02:03:04.005Z');
+      expect(readFileSync(targetPath, 'utf8')).toContain('complianceReviewer');
+      expect(statSync(join(targetDir, 'backups')).mode & 0o777).toBe(0o700);
+      expect(statSync(forceManifest.checklist.backup!.path).mode & 0o777).toBe(0o600);
     } finally {
       rmSync(targetDir, { recursive: true, force: true });
     }
@@ -6174,7 +6726,15 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
         encoding: 'utf8',
       });
 
-      const output = execFileSync('node', ['scripts/data/connectors/amazon-commerce-private-input-audit.mjs', '--private-dir', targetDir], {
+      const output = execFileSync('node', [
+        'scripts/data/connectors/amazon-commerce-private-input-audit.mjs',
+        '--private-dir',
+        targetDir,
+        '--window-start',
+        '2026-06-01',
+        '--window-end',
+        '2026-06-15',
+      ], {
         cwd: process.cwd(),
         encoding: 'utf8',
         env: {
@@ -6236,7 +6796,17 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
 
       const writeOutput = execFileSync(
         'node',
-        ['scripts/data/connectors/amazon-commerce-private-input-audit.mjs', '--private-dir', targetDir, '--write', auditPath],
+        [
+          'scripts/data/connectors/amazon-commerce-private-input-audit.mjs',
+          '--private-dir',
+          targetDir,
+          '--window-start',
+          '2026-06-01',
+          '--window-end',
+          '2026-06-15',
+          '--write',
+          auditPath,
+        ],
         {
           cwd: process.cwd(),
           encoding: 'utf8',
@@ -6253,7 +6823,17 @@ describe('production helper scripts', { timeout: SCRIPT_INTEGRATION_TIMEOUT_MS }
 
       const secondWriteOutput = execFileSync(
         'node',
-        ['scripts/data/connectors/amazon-commerce-private-input-audit.mjs', '--private-dir', targetDir, '--write', auditPath],
+        [
+          'scripts/data/connectors/amazon-commerce-private-input-audit.mjs',
+          '--private-dir',
+          targetDir,
+          '--window-start',
+          '2026-06-01',
+          '--window-end',
+          '2026-06-15',
+          '--write',
+          auditPath,
+        ],
         {
           cwd: process.cwd(),
           encoding: 'utf8',

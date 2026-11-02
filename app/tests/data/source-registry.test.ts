@@ -166,17 +166,23 @@ describe('source registry', () => {
   });
 
   it('keeps P0 connector gaps as explicit L0 readiness gates instead of fact surfaces', () => {
-    const p0ConnectorSourceIds = ['ds-007', 'ds-009', 'ds-010', 'ds-013', 'ds-019', 'ds-021', 'ds-023', 'ds-032', 'ds-038', 'ds-039', 'ds-041'];
+    const amazonSourceIds = ['ds-007', 'ds-009', 'ds-010', 'ds-019', 'ds-037', 'ds-038', 'ds-039'];
+    const p0ConnectorSourceIds = [...amazonSourceIds, 'ds-013', 'ds-021', 'ds-023', 'ds-032', 'ds-041'];
     const p0Sources = p0ConnectorSourceIds.map((id) => getSourceRegistryItem(id));
+    const amazonSources = amazonSourceIds.map((id) => getSourceRegistryItem(id));
+    const legacyPacketSources = p0Sources.filter((item) => !amazonSourceIds.includes(item.id));
 
     expect(p0Sources.every((item) => item.collectionMethod === 'connector-required')).toBe(true);
     expect(p0Sources.every((item) => item.evidenceGrade === 'L0-unverified')).toBe(true);
     expect(p0Sources.every((item) => item.privacyLevel === 'private/internal')).toBe(true);
     expect(p0Sources.every((item) => item.canDisplayAsFact === false)).toBe(true);
     expect(p0Sources.every((item) => item.blockingReason === 'authorized-connector-or-private-snapshot-required')).toBe(true);
-    expect(p0Sources.every((item) => item.evidenceArtifactPath === 'tmp/audits/p0-connector-readiness-binding-batch4-20260630/readiness_packets.csv')).toBe(true);
-    expect(p0Sources.map((item) => item.note).join(' ')).toContain('P0');
-    expect(p0Sources.map((item) => item.action).join(' ')).toContain('证据包');
+    expect(amazonSources.every((item) => item.evidenceArtifactPath.includes('/dq-020-amazon-owner-intake-20260730/packets/'))).toBe(true);
+    expect(amazonSources.map((item) => item.note).join(' ')).toContain('DQ-020');
+    expect(amazonSources.map((item) => item.note).join(' ')).toContain('0 approved');
+    expect(legacyPacketSources.every((item) => item.evidenceArtifactPath === 'tmp/audits/p0-connector-readiness-binding-batch4-20260630/readiness_packets.csv')).toBe(true);
+    expect(legacyPacketSources.map((item) => item.note).join(' ')).toContain('P0');
+    expect(legacyPacketSources.map((item) => item.action).join(' ')).toContain('证据包');
     expect(p0Sources.map((item) => item.claimScope).join(' ')).toContain('readiness gate only');
   });
 
@@ -196,7 +202,7 @@ describe('source registry', () => {
     expect(tech.note).toContain('不支撑性能排名');
   });
 
-  it('keeps ERP internal operating sources private, connector-backed, and Batch19 approved', () => {
+  it('keeps ERP historical L3 scope while blocking current use without freshness receipts', () => {
     const erpSourceIds = ['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051'];
     const erpSources = erpSourceIds.map((id) => getSourceRegistryItem(id));
 
@@ -206,7 +212,9 @@ describe('source registry', () => {
     expect(erpSources.every((item) => item.evidenceGrade === 'L3-production-read-only')).toBe(true);
     expect(erpSources.every((item) => item.verificationStatus === 'verified')).toBe(true);
     expect(erpSources.every((item) => item.canDisplayAsFact === true)).toBe(true);
-    expect(erpSources.every((item) => item.blockingReason === 'approved-internal-proxy-display-export; connector-refresh-still-required')).toBe(true);
+    expect(erpSources.every((item) => item.blockingReason.includes('freshness-current-use-blocked'))).toBe(true);
+    expect(erpSources.every((item) => item.action.includes('历史快照'))).toBe(true);
+    expect(erpSources.every((item) => item.action.includes('当前新鲜度阻断'))).toBe(true);
     expect(erpSources.map((item) => item.note).join(' ')).toContain('Batch19');
     expect(erpSources.every((item) => item.evidenceArtifactPath && item.evidenceArtifactPath.length > 20)).toBe(true);
     expect(erpSources.map((item) => item.claimScope).join(' ')).toContain('internal');

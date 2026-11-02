@@ -106,7 +106,7 @@ test.describe('core pages visual guard', () => {
       }
 
       if (pageConfig.path === '/#/ai-assistant') {
-        await expect(page.getByText('AI助手静态入口配置已复核')).toBeVisible();
+        await expect(page.getByText('AI / VOC 证据链仍处于阻断治理')).toBeVisible();
       }
 
       if (pageConfig.path === '/#/ai-assistant/review-analysis') {

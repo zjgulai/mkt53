@@ -7,7 +7,10 @@ import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 import DataSourcePage from '@/pages/DataSourcePage';
 
 vi.mock('@/hooks/useDataSourceRegistry');
-vi.mock('@/hooks/usePeriodicManifest');
+vi.mock('@/hooks/usePeriodicManifest', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/hooks/usePeriodicManifest')>()),
+  usePeriodicManifest: vi.fn(),
+}));
 
 const apiRuntime = resolveDataSourceRegistryRuntime('api', false);
 const retry = vi.fn();
@@ -22,6 +25,7 @@ describe('DataSourcePage source metrics', () => {
       period: '2026-07-H1',
       generatedAtText: '2026/7/6 11:40:50',
       windowText: '2026-07-01 至 2026-07-15',
+      scheduleStatus: 'scheduled',
       nextScheduleText: '下次计划 2026/7/16 09:00:00',
     });
   });
@@ -58,5 +62,24 @@ describe('DataSourcePage source metrics', () => {
     expect(screen.getByText('来源总数').parentElement).not.toHaveTextContent('53');
     expect(screen.getByText('公开/本地可验证').parentElement).toHaveTextContent('1');
     expect(screen.getByText('公开/本地可验证').parentElement).not.toHaveTextContent('16');
+  });
+
+  it('renders an unknown manifest schedule as a warning instead of success', () => {
+    vi.mocked(usePeriodicManifest).mockReturnValue({
+      ...vi.mocked(usePeriodicManifest)(),
+      scheduleStatus: 'unknown',
+      nextScheduleText: '等待调度信息',
+    });
+    vi.mocked(useDataSourceRegistry).mockReturnValue({
+      runtime: apiRuntime,
+      status: 'ready',
+      sources: [sourceRegistry[0]],
+      retry,
+    });
+
+    render(<DataSourcePage />);
+
+    expect(screen.getByLabelText('调度信息未知')).toHaveAttribute('data-schedule-tone', 'warning');
+    expect(screen.queryByLabelText('调度正常')).not.toBeInTheDocument();
   });
 });

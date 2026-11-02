@@ -102,6 +102,67 @@ describe('P0-04 semi-monthly recovery candidate', () => {
     expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(false);
   });
 
+  it('accepts validated live source observations for a no-network candidate', () => {
+    const root = mkdtempSync(join(tmpdir(), 'mkt53-source-observation-contract-'));
+    cleanupPaths.push(root);
+    const candidatePath = join(root, 'candidate.json');
+    const canonicalPath = join(root, 'canonical.json');
+    const candidate = {
+      sources: [
+        {
+          id: 'ds-001',
+          sourceName: 'Public source',
+          method: 'public-url-check',
+          status: 'public-url-check',
+          checkedAt: '2026-08-09T00:00:00.000Z',
+        },
+      ],
+    };
+    const canonical = {
+      sources: [
+        {
+          id: 'ds-001',
+          sourceName: 'Public source',
+          method: 'public-url-check',
+          status: 'ok',
+          checkedAt: '2026-08-09T00:00:00.000Z',
+          attempt: 1,
+          httpStatus: 200,
+          contentType: 'text/html',
+          etag: '',
+          lastModified: '',
+          sampleHash: 'a'.repeat(64),
+          requestVariant: 'ranged-preview',
+          retryable: false,
+          checkAttemptCount: 1,
+          attempts: [
+            {
+              attempt: 1,
+              status: 'ok',
+              checkedAt: '2026-08-09T00:00:00.000Z',
+              httpStatus: 200,
+              retryable: false,
+            },
+          ],
+          statusStability: 'fresh-ok',
+        },
+      ],
+    };
+    writeFileSync(candidatePath, JSON.stringify(candidate));
+    writeFileSync(canonicalPath, JSON.stringify(canonical));
+
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(true);
+
+    canonical.sources[0].httpStatus = '200' as unknown as number;
+    writeFileSync(canonicalPath, JSON.stringify(canonical));
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(false);
+
+    canonical.sources[0].httpStatus = 200;
+    canonical.sources[0].sourceName = 123 as unknown as string;
+    writeFileSync(canonicalPath, JSON.stringify(canonical));
+    expect(compareCandidateContract(candidatePath, canonicalPath).compatible).toBe(false);
+  });
+
   it('does not treat arbitrary empty and populated arrays as the same contract', () => {
     const root = mkdtempSync(join(tmpdir(), 'mkt53-array-contract-'));
     cleanupPaths.push(root);

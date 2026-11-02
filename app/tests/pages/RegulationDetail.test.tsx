@@ -14,9 +14,9 @@ describe('RegulationDetail', () => {
     expect(screen.getByRole('heading', { name: '行业法规与标准解读' })).toBeInTheDocument();
     expect(screen.getByTestId('regulation-sku-contract-panel')).toBeInTheDocument();
     expect(screen.getByTestId('regulation-intake-readiness-panel')).toBeInTheDocument();
-    expect(screen.getByText('DATA-REG 合同与 intake 模板就绪，真实输入仍为 0')).toBeInTheDocument();
-    expect(screen.getByText(/intake 0\/6/)).toBeInTheDocument();
-    expect(screen.getByText(/0 publishable decisions/)).toBeInTheDocument();
+    expect(screen.getByText('DATA-REG 合同与 owner packet 就绪，尚未获批')).toBeInTheDocument();
+    expect(screen.getByText(/intake 尚未完成/)).toBeInTheDocument();
+    expect(screen.getByText(/无可发布决定/)).toBeInTheDocument();
     expect(screen.queryByText(/已合规|合规通过/)).not.toBeInTheDocument();
   });
 

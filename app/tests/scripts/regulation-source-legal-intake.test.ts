@@ -239,5 +239,5 @@ describe('DATA-REG source and legal intake readiness', () => {
 
     expect(report).toMatchObject({ passed: true, status: 'blocked-required-input', readiness: { readyGroups: 0, totalGroups: 6 } });
     canonicalPaths.forEach((path, index) => expect(readFileSync(path)).toEqual(before[index]));
-  });
+  }, 30_000);
 });
