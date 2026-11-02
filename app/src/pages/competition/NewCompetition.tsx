@@ -180,8 +180,8 @@ export default function NewCompetition() {
             {/* 2026 Market Snapshot */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { label: '2026全球吸奶器市场', value: '$3.81B', sub: 'Precedence Research · ds-001', color: '#C25B6E', icon: <TrendingUp className="w-4 h-4" /> },
-                { label: '2026穿戴式市场', value: '$233M', sub: 'Fortune BI · ds-045', color: '#ff9500', icon: <Zap className="w-4 h-4" /> },
+                { label: '2026全球吸奶器市场', value: '$3.81B', sub: 'Precedence Research · ds-001', color: '#C25B6E', icon: <TrendingUp className="w-4 h-4" />, sourceIds: ['ds-001'] },
+                { label: '穿戴式市场来源', value: '阻断', sub: '同页口径冲突 · ds-045', color: '#ff9500', icon: <Zap className="w-4 h-4" />, sourceIds: ['ds-045'] },
                 { label: 'Momcozy 2026新品', value: '5款', sub: 'W1/Air1/BM08等', color: '#34c759', icon: <CheckCircle className="w-4 h-4" /> },
                 { label: '高威胁线索', value: String(highThreat), sub: '内部判断 · 待授权验证', color: '#ff3b30', icon: <AlertTriangle className="w-4 h-4" /> },
               ].map((s, i) => (

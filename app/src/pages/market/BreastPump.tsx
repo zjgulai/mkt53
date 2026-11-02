@@ -55,9 +55,9 @@ export default function BreastPump() {
       evidenceDescription="公开报告已支撑全球TAM和segment-TAM品类拆分口径；SAM、SOM、品牌份额、SKU价格、评分和型号参数仍不得展示为真实全渠道结论。"
       gateStatus={{
         sourceIds: ['ds-047', 'ds-049'],
-        label: 'ERP代理与公开TAM口径已放行',
+        label: 'ERP历史代理待当前新鲜度复核',
         tone: 'approved',
-        description: '吸奶器关键词代理、SKU hash覆盖和月度内部代理量可按private/internal proxy展示并导出；公开报告只支撑TAM/segment-TAM，不支撑SAM、品牌份额、均价、评分和型号对比。',
+        description: '吸奶器关键词代理、SKU hash覆盖和月度内部代理量保留Batch19历史scope；当前artifact/hash合同/刷新回执未齐，不展示或导出。公开报告只支撑TAM/segment-TAM。',
       }}
       tabs={['市场规模', '品牌格局', '产品矩阵', '型号对比', '功能需求']}
       blockedItems={[
@@ -68,11 +68,11 @@ export default function BreastPump() {
       collectionPlan={[
         '保留 Mordor、Precedence、Fortune 报告页证据和hash。',
         '为每个品牌和 SKU 建立 source_id、采集窗口和证据路径。',
-        'ds-047/ds-049 已沉淀吸奶器关键词代理与 SKU 映射，并按Batch19 internal proxy口径展示。',
+        'ds-047/ds-049 已沉淀Batch19历史关键词代理与 SKU 映射；DQ-016当前新鲜度阻断。',
         '将公开报告数值统一按TAM/segment-TAM展示，不写成SAM、SOM或品牌份额。',
       ]}
       displayPolicy={[
-        'ERP内部代理可以展示为 proxy；份额、均价、评分、收入和专利数量仍等待外部证据。',
+        'ERP历史代理仅保留证据说明；当前数值和CSV等待artifact、hash合同与刷新回执。',
         '公开报告支撑的第一批数据只恢复品类TAM和细分TAM。',
         '连接器数据只在授权快照进入后才能进入 CSV 导出。',
       ]}
@@ -101,7 +101,7 @@ export default function BreastPump() {
           </div>
           <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
             <div>
-              <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP内部代理摘要 · Batch19已放行</h2>
+              <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP内部代理摘要 · Batch19历史快照</h2>
               <p className="text-[10px] text-[#86868b] mt-1">
                 Batch {erpDerivedBatch2Artifact.batchId}；source ids: {erpDerivedBatch2Artifact.sourceIds.join(' / ')}；canDisplayAsFact=true；仅限内部proxy。
               </p>
@@ -148,7 +148,7 @@ export default function BreastPump() {
                       <td className="py-2 text-[#1d1d1f]">{row.month}</td>
                       <td className="py-2 text-[#1d1d1f]">{formatNumber(row.combinedProxyUnits)}</td>
                       <td className="py-2 text-[#1d1d1f]">{row.internalMixProxyPct.toFixed(2)}% proxy</td>
-                      <td className="py-2 text-[#2f7d32]">Batch19 approved proxy · ds-047/ds-048/ds-049</td>
+                      <td className="py-2 text-[#a85f00]">Batch19 historical proxy · DQ-016 current blocked · ds-047/ds-048/ds-049</td>
                     </tr>
                   ))}
                 </tbody>
@@ -165,11 +165,11 @@ export default function BreastPump() {
               <div>
                 <h3 className="text-[11px] font-semibold text-[#1d1d1f]">Batch 7 字段字典 / 品类复核 gate</h3>
                 <p className="mt-1 text-[10px] leading-relaxed text-[#86868b]">
-                  {erpGovernanceBatch7Artifact.manifestPath} · 字段字典 {erpGovernanceBatch7Artifact.summary.fieldDictionaryRows} 行 · 品类复核 {erpGovernanceBatch7Artifact.summary.categoryReviewRows} 行 · Batch19已完成展示/导出放行
+                  {erpGovernanceBatch7Artifact.manifestPath} · 字段字典 {erpGovernanceBatch7Artifact.summary.fieldDictionaryRows} 行 · 品类复核 {erpGovernanceBatch7Artifact.summary.categoryReviewRows} 行 · Batch19仅保留历史审批记录
                 </p>
               </div>
               <span className="rounded-lg bg-[#ff9500]/10 px-2 py-1 text-[10px] text-[#a85f00]">
-                {priorityLabel(breastPumpReview?.priority)} · Batch19 approved proxy
+                {priorityLabel(breastPumpReview?.priority)} · Batch19 historical proxy · current blocked
               </span>
             </div>
             <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">

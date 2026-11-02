@@ -111,7 +111,7 @@ export const coreDataModules: DataModule[] = [
     tables: [
       {
         id: 't_comp_product', name: 'competitor_products', desc: '竞品产品数据库（Amazon连接器待接入）',
-        updateFreq: '半月复核', upstream: ['<span className="text-[#B5AFA8]">Amazon.com</span>'], downstream: ['new_product_tracker', 'price_analysis'],
+        updateFreq: '目标半月复核 · 当前未接入', upstream: ['Amazon.com 连接器待接入'], downstream: ['new_product_tracker', 'price_analysis'],
         fields: [
           { name: 'product_id', type: 'VARCHAR(20)', desc: '产品唯一ID', source: '系统生成', required: true },
           { name: 'brand', type: 'VARCHAR(50)', desc: '品牌（Medela/Elvie/Willow等）', source: 'Amazon', required: true },
@@ -135,7 +135,7 @@ export const coreDataModules: DataModule[] = [
       },
       {
         id: 't_new_product', name: 'new_product_tracker', desc: '新品上市追踪监测',
-        updateFreq: '周', upstream: ['competitor_products'], downstream: ['dashboard_kpi'],
+        updateFreq: '目标周频 · 当前按公开线索复核', upstream: ['competitor_products'], downstream: ['dashboard_kpi'],
         fields: [
           { name: 'product_id', type: 'VARCHAR(20)', desc: '产品ID', source: 'competitor_products', required: true },
           { name: 'brand', type: 'VARCHAR(50)', desc: '品牌', source: 'competitor_products', required: true },
@@ -164,7 +164,7 @@ export const coreDataModules: DataModule[] = [
       },
       {
         id: 't_price', name: 'price_analysis', desc: '价格分析数据（历史价格走势）',
-        updateFreq: '周', upstream: ['competitor_products'], downstream: ['dashboard_kpi'],
+        updateFreq: '目标周频 · 当前未接入', upstream: ['competitor_products'], downstream: ['dashboard_kpi'],
         fields: [
           { name: 'product_id', type: 'VARCHAR(20)', desc: '产品ID', source: 'competitor_products', required: true },
           { name: 'price_usd', type: 'DECIMAL(8,2)', desc: '价格（美元）', source: 'Amazon', required: true },
@@ -202,7 +202,7 @@ export const coreDataModules: DataModule[] = [
       },
       {
         id: 't_social', name: 'social_mention_data', desc: '社交声量监测数据',
-        updateFreq: '日', upstream: ['社交媒体API'], downstream: ['dashboard_kpi'],
+        updateFreq: '目标日频 · 当前未接入', upstream: ['社交媒体API待授权'], downstream: ['dashboard_kpi'],
         fields: [
           { name: 'date', type: 'DATE', desc: '日期', source: '社交媒体API', required: true },
           { name: 'platform', type: 'VARCHAR(50)', desc: '平台（TikTok/IG/FB等）', source: 'API', required: true },
@@ -215,7 +215,7 @@ export const coreDataModules: DataModule[] = [
       },
       {
         id: 't_comment', name: 'user_comments', desc: '用户评论明细数据',
-        updateFreq: '日', upstream: ['Amazon API'], downstream: ['comment_analysis_ai'],
+        updateFreq: '目标日频 · 当前未接入', upstream: ['Amazon API待授权'], downstream: ['comment_analysis_ai'],
         fields: [
           { name: 'comment_id', type: 'VARCHAR(50)', desc: '评论唯一ID', source: 'Amazon', required: true },
           { name: 'product_id', type: 'VARCHAR(20)', desc: '产品ID', source: 'competitor_products', required: true },

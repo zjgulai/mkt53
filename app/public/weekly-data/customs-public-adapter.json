@@ -3,7 +3,7 @@
   "connectorId": "customs-public-data-adapter",
   "mode": "public-customs-source-adapter",
   "status": "blocked",
-  "generatedAt": "2026-07-28T03:02:42.100Z",
+  "generatedAt": "2026-08-09T03:13:04.870Z",
   "sourceId": "ds-006",
   "page": "CustomsData",
   "metric": "HS编码进出口",
@@ -80,6 +80,7 @@
         "networkCalls": 0,
         "businessDataWrites": 0,
         "countersValid": true,
+        "countersMatchRecords": true,
         "rawTextPublicBundleAllowed": false,
         "shipmentFactsGenerated": false
       },
@@ -109,13 +110,22 @@
       "missingEvidenceTerms": [],
       "ready": false,
       "missingProofFields": [
+        "finalUrl",
         "title",
         "visibleTextHash",
+        "nonVerbatimSummary",
         "localEvidence.textArchivePath"
       ],
       "missingMatchedTerms": [
         "Merchandise Trade Imports",
         "HTSUSA"
+      ],
+      "eligibilityBlockers": [
+        "manifestMode",
+        "captureStatus",
+        "matchedEvidenceTerms",
+        "missingEvidenceTerms",
+        "safety.networkCalls"
       ]
     },
     {
@@ -129,13 +139,22 @@
       "missingEvidenceTerms": [],
       "ready": false,
       "missingProofFields": [
+        "finalUrl",
         "title",
         "visibleTextHash",
+        "nonVerbatimSummary",
         "localEvidence.textArchivePath"
       ],
       "missingMatchedTerms": [
         "electric breast pump",
         "8413.81.0040"
+      ],
+      "eligibilityBlockers": [
+        "manifestMode",
+        "captureStatus",
+        "matchedEvidenceTerms",
+        "missingEvidenceTerms",
+        "safety.networkCalls"
       ]
     }
   ],

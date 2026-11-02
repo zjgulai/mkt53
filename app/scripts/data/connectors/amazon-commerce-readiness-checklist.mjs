@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { chmodSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { assertSafePrivatePath } from '../lib/private-path-safety.mjs';
 
@@ -11,11 +11,15 @@ const readinessTemplatePath = 'scripts/data/connectors/templates/amazon-commerce
 function parseArgs(argv) {
   const options = {
     writePath: undefined,
+    backupDir: undefined,
+    generatedAt: undefined,
     force: argv.includes('--force'),
   };
 
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === '--write') options.writePath = argv[i + 1];
+    if (argv[i] === '--backup-dir') options.backupDir = argv[i + 1];
+    if (argv[i] === '--generated-at') options.generatedAt = argv[i + 1];
   }
 
   return options;
@@ -33,7 +37,17 @@ function checklistRow(cells) {
   return `| ${cells.join(' | ')} |`;
 }
 
-export function buildChecklist(mappingTemplate, readinessTemplate) {
+function resolveGeneratedAt(value) {
+  const generatedAt = value ? new Date(value) : new Date();
+  if (Number.isNaN(generatedAt.getTime())) throw new Error(`Invalid --generated-at value: ${value}`);
+  return generatedAt;
+}
+
+function timestampForFile(date) {
+  return date.toISOString().replace(/[:.]/g, '-');
+}
+
+export function buildChecklist(mappingTemplate, readinessTemplate, { generatedAt = new Date() } = {}) {
   const mappingRows = mappingTemplate.mappings;
   const totalMinimumMappedItems = mappingRows.reduce((sum, item) => sum + item.minimumMappedItems, 0);
   const uniqueKey = mappingTemplate.uniqueKey.join(' + ');
@@ -44,7 +58,7 @@ export function buildChecklist(mappingTemplate, readinessTemplate) {
   return [
     '# Amazon Commerce Private Input Readiness Checklist',
     '',
-    `generatedAt: ${new Date().toISOString()}`,
+    `generatedAt: ${generatedAt.toISOString()}`,
     `connectorId: ${connectorId}`,
     'status: manual-fill-required',
     'privateOnly: true',
@@ -108,33 +122,93 @@ export function buildChecklist(mappingTemplate, readinessTemplate) {
   ].join('\n');
 }
 
-function writeChecklist(writePath, checklist, force) {
+function writeChecklist(writePath, checklist, { force, backupDir, generatedAt }) {
   const target = assertSafeWritePath(writePath);
   if (existsSync(target) && !force) {
     chmodSync(target, 0o600);
-    return { path: target, status: 'exists', overwritten: false, mode: '600' };
+    return {
+      path: target,
+      status: 'exists',
+      overwritten: false,
+      mode: '600',
+      backup: undefined,
+      privateInputWrites: 0,
+      privateBackupWrites: 0,
+      privateFileWrites: 0,
+    };
   }
 
   const existedBefore = existsSync(target);
+  let backup;
   mkdirSync(dirname(target), { recursive: true, mode: 0o700 });
-  writeFileSync(target, checklist, { mode: 0o600 });
   chmodSync(dirname(target), 0o700);
+
+  if (existedBefore) {
+    const safeBackupDir = assertSafePrivatePath(
+      backupDir ?? join(dirname(target), 'backups'),
+      'readiness checklist backup directory',
+    );
+    mkdirSync(safeBackupDir, { recursive: true, mode: 0o700 });
+    chmodSync(safeBackupDir, 0o700);
+    const backupPath = join(
+      safeBackupDir,
+      `amazon-commerce-readiness-checklist-backup-${timestampForFile(generatedAt)}.md`,
+    );
+    writeFileSync(backupPath, readFileSync(target), { flag: 'wx', mode: 0o600 });
+    chmodSync(backupPath, 0o600);
+    backup = {
+      path: backupPath,
+      status: 'created',
+      mode: '600',
+      originalMode: (statSync(target).mode & 0o777).toString(8),
+    };
+  }
+
+  writeFileSync(target, checklist, { mode: 0o600 });
   chmodSync(target, 0o600);
-  return { path: target, status: existedBefore ? 'replaced' : 'created', overwritten: existedBefore, mode: '600' };
+  return {
+    path: target,
+    status: existedBefore ? 'replaced' : 'created',
+    overwritten: existedBefore,
+    mode: '600',
+    backup,
+    privateInputWrites: 1,
+    privateBackupWrites: existedBefore ? 1 : 0,
+    privateFileWrites: existedBefore ? 2 : 1,
+  };
 }
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
-  const checklist = buildChecklist(readJson(mappingTemplatePath), readJson(readinessTemplatePath));
+  const generatedAt = resolveGeneratedAt(options.generatedAt);
+  const checklist = buildChecklist(readJson(mappingTemplatePath), readJson(readinessTemplatePath), { generatedAt });
   if (!options.writePath) {
     process.stdout.write(checklist);
     return;
   }
 
-  const result = writeChecklist(options.writePath, checklist, options.force);
-  process.stdout.write(`${JSON.stringify({ schemaVersion: 1, connectorId, generatedAt: new Date().toISOString(), checklist: result }, null, 2)}\n`);
+  const result = writeChecklist(options.writePath, checklist, { ...options, generatedAt });
+  process.stdout.write(`${JSON.stringify({
+    schemaVersion: 1,
+    connectorId,
+    generatedAt: generatedAt.toISOString(),
+    checklist: result,
+    safety: {
+      credentialValuesRedacted: true,
+      authorizationValuesRedacted: true,
+      ownerValuesRedacted: true,
+      businessValuesRedacted: true,
+      networkCalls: 0,
+      businessDataWrites: 0,
+      productionWrites: 0,
+      requiresForceToOverwrite: true,
+      privateInputWrites: result.privateInputWrites,
+      privateBackupWrites: result.privateBackupWrites,
+      privateFileWrites: result.privateFileWrites,
+    },
+  }, null, 2)}\n`);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   await main();
 }

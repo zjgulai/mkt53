@@ -29,30 +29,29 @@ export const marketSizingFunnel = [
   {
     label: '细分TAM',
     sublabel: '穿戴式吸奶器',
-    value: 0.233,
-    unit: '$B',
+    value: '阻断',
+    unit: '',
     color: '#34c759',
-    desc: '2026E · Fortune BI',
-    opportunity: 5,
-    opportunityText: '穿戴式口径 CAGR 15.08%，可作为细分市场份额分母；不是SOM，SOM需Momcozy可获份额假设。',
-    focus: '穿戴式核心',
+    desc: '公开页内部口径冲突 · ds-045',
+    opportunity: 0,
+    opportunityText: '同页规模与区域份额无法相互校验；待出版方澄清、授权报告或同等级替代来源复核。',
+    focus: '待来源澄清',
     sourceIds: ['ds-045'],
   },
 ];
 
 export const marketSizeTrendData = [
-  { year: '2025', upperTam: 355.9, categoryTam: 3.51, wearableTam: 0.203, type: '历史', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
-  { year: '2026E', upperTam: 375.8, categoryTam: 3.81, wearableTam: 0.233, type: '预测', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
-  { year: '2027E', upperTam: 399.85, categoryTam: 4.13, wearableTam: 0.268, type: '预测', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
-  { year: '2028E', upperTam: 425.44, categoryTam: 4.49, wearableTam: 0.309, type: '预测', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
-  { year: '2029E', upperTam: 452.67, categoryTam: 4.87, wearableTam: 0.355, type: '预测', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
-  { year: '2030E', upperTam: 481.64, categoryTam: 5.28, wearableTam: 0.409, type: '预测', sourceIds: ['ds-044', 'ds-001', 'ds-045'] },
+  { year: '2025', upperTam: 355.9, categoryTam: 3.51, type: '历史', sourceIds: ['ds-044', 'ds-001'] },
+  { year: '2026E', upperTam: 375.8, categoryTam: 3.81, type: '预测', sourceIds: ['ds-044', 'ds-001'] },
+  { year: '2027E', upperTam: 399.85, categoryTam: 4.13, type: '预测', sourceIds: ['ds-044', 'ds-001'] },
+  { year: '2028E', upperTam: 425.44, categoryTam: 4.49, type: '预测', sourceIds: ['ds-044', 'ds-001'] },
+  { year: '2029E', upperTam: 452.67, categoryTam: 4.87, type: '预测', sourceIds: ['ds-044', 'ds-001'] },
+  { year: '2030E', upperTam: 481.64, categoryTam: 5.28, type: '预测', sourceIds: ['ds-044', 'ds-001'] },
 ];
 
 export const marketCagrLines = [
   { label: '上层TAM CAGR 6.4%', color: '#C25B6E', sourceIds: ['ds-044'] },
   { label: '品类TAM CAGR 8.52%', color: '#ff9500', sourceIds: ['ds-001'] },
-  { label: '细分TAM CAGR 15.08%', color: '#34c759', sourceIds: ['ds-045'] },
 ];
 
 export const marketDenominatorBoundary = [
@@ -75,10 +74,10 @@ export const marketDenominatorBoundary = [
   {
     label: '细分TAM',
     scope: '全球穿戴式吸奶器市场',
-    chartKey: 'wearableTam',
-    denominatorUse: '可作为穿戴式细分份额分母；命名为细分TAM，不再写作SOM。',
+    chartKey: 'blocked',
+    denominatorUse: '公开页内部市场规模与区域份额口径冲突；当前不得作为细分份额分母或导出事实。',
     sourceIds: ['ds-045'],
-    canDisplayAsFact: true,
+    canDisplayAsFact: false,
   },
   {
     label: 'SAM',
@@ -1370,14 +1369,14 @@ export const marketRegionalShareData = [
 export const marketTopStats = [
   { label: '全球吸奶器市场', value: '$3.81B', change: '2026E · CAGR 8.52%', up: true, icon: 'DollarSign', color: '#C25B6E', sourceIds: ['ds-001'] },
   { label: '北美公开份额', value: '45.05%', change: 'Fortune BI 2025', up: true, icon: 'Globe', color: '#5856d6', sourceIds: ['ds-002'] },
-  { label: '穿戴式吸奶器', value: '$233M', change: '2026E · CAGR 15.08%', up: true, icon: 'Package', color: '#ff9500', sourceIds: ['ds-045'] },
+  { label: '穿戴式吸奶器', value: '阻断', change: '公开页口径冲突', up: false, icon: 'Package', color: '#ff9500', sourceIds: ['ds-045'] },
   { label: '公开月度峰值', value: '100', change: 'Wikimedia 2026-05', up: true, icon: 'TrendingUp', color: '#34c759', sourceIds: ['ds-046'] },
 ];
 
 export const marketQuickInsights = [
   { label: '全球吸奶器市场', value: '$3.81B', change: '+8.52% CAGR', trend: 'up', meaning: 'Precedence Research 2026E · 品类TAM口径', sourceIds: ['ds-001'] },
   { label: '北美市场份额', value: '45.05%', change: '2025年', trend: 'up', meaning: 'Fortune BI 2025 · 最大公开区域市场', sourceIds: ['ds-002'] },
-  { label: '穿戴式市场', value: '$233M', change: '+15.08% CAGR', trend: 'up', meaning: 'Fortune BI 2026E · 细分TAM口径', sourceIds: ['ds-045'] },
+  { label: '穿戴式市场', value: '阻断', change: '来源冲突', trend: 'blocked', meaning: 'ds-045 同页口径冲突，事实展示已阻断', sourceIds: ['ds-045'] },
   { label: '公开月度趋势', value: '100', change: '2026-05峰值', trend: 'up', meaning: 'Wikimedia Pageviews · 非GMV/销量代理指标', sourceIds: ['ds-046'] },
 ];
 

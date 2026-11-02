@@ -1,5 +1,6 @@
 import { TrendingUp } from 'lucide-react';
 import MarketDataGate from '@/components/MarketDataGate';
+import SourceBackedReviewPacket from '@/components/SourceBackedReviewPacket';
 
 export default function MarketTrend() {
   return (
@@ -56,6 +57,27 @@ export default function MarketTrend() {
               </div>
             ))}
           </div>
+          {/* audit-source: ds-003 ds-004 */}
+          <SourceBackedReviewPacket
+            route="/market/trend"
+            modelContract="trend-signal-review-v1"
+            evidenceScope={[
+              'ds-003：FDA、DOL、CDC、WHO 仅支撑政策、监管和公共健康语境。',
+              'ds-004：公开行业报告仅作为市场结构与趋势模型输入，不提供内部模型评分。',
+            ]}
+            allowedUses={[
+              '按同一 taxonomy 复核信号方向、权重、情景和引用来源。',
+              '形成带模型版本与复核人的内部趋势讨论候选，不直接形成经营决策。',
+            ]}
+            prohibitedUses={[
+              '不得解释为销量、GMV、市场份额或外部机构评分。',
+              '不得把政策语境、公开报告摘要或内部情景模型写成已发生的市场事实。',
+            ]}
+            reviewChecklist={[
+              '业务 owner 签核信号定义、方向、权重与情景版本。',
+              '逐条确认引用、适用市场、复核日期和反例处理。',
+            ]}
+          />
         </div>
       }
     />

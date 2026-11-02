@@ -1,37 +1,7 @@
 import { Shield } from 'lucide-react';
 import EvidenceGatePage from '@/components/EvidenceGatePage';
-
-function getIndustrySidebarItems() {
-  return [
-    {
-      label: '政策分析',
-      children: [
-        { label: '母婴标准与法规地图', path: '/industry' },
-        { label: '行业法规与标准解读', path: '/industry/regulation' },
-        { label: '区域标准洞察', path: '/industry/policy-insight' },
-      ],
-    },
-    {
-      label: 'VOC趋势',
-      children: [
-        { label: 'VOC趋势地图', path: '/industry/flavor-map' },
-        { label: 'VOC趋势报告', path: '/industry/flavor-report' },
-      ],
-    },
-    {
-      label: '行业新闻',
-      children: [
-        { label: '母婴行业资讯', path: '/industry/news' },
-        { label: '母婴科技资讯', path: '/industry/tech' },
-        { label: '母婴行业报告', path: '/industry/reports' },
-      ],
-    },
-    { label: '母婴供应链情报', path: '/industry/supply' },
-    { label: 'IP分析', path: '/industry/ip' },
-    { label: '母婴展会调研', path: '/industry/exhibition' },
-    { label: '区域宏观分析', path: '/industry/macro' },
-  ];
-}
+import SourceBackedReviewPacket from '@/components/SourceBackedReviewPacket';
+import { industrySidebarItems } from './industry-sidebar-items';
 
 export default function IPAnalysis() {
   return (
@@ -75,9 +45,30 @@ export default function IPAnalysis() {
             <span className="rounded-lg bg-[#FBF8F5] px-3 py-2">EPO：Espacenet</span>
             <span className="rounded-lg bg-[#FBF8F5] px-3 py-2">CNIPA：Patent resources</span>
           </div>
+          {/* audit-source: ds-017 */}
+          <SourceBackedReviewPacket
+            route="/industry/ip"
+            modelContract="patent-query-family-review-v1"
+            evidenceScope={[
+              'ds-017：仅覆盖 WIPO、USPTO、EPO、CNIPA 等公开检索入口与后续可复现查询。',
+              '每个专利族需保留检索式、家族映射、法律状态来源、权利要求复核日期。',
+            ]}
+            allowedUses={[
+              '复核检索覆盖、专利族归并和公开法律状态的证据完整性。',
+              '形成供 IP 专业人员继续核查的检索候选清单。',
+            ]}
+            prohibitedUses={[
+              '不得解释为侵权判断、FTO 或法律意见。',
+              '不得以数据库入口存在性推导专利数量、有效性、诉讼或产品覆盖。',
+            ]}
+            reviewChecklist={[
+              'IP owner 签核检索式、家族归并规则和适用法域。',
+              '补齐 claim chart、法律状态日期和产品相关性人工复核。',
+            ]}
+          />
         </div>
       }
-      sidebarItems={getIndustrySidebarItems()}
+      sidebarItems={industrySidebarItems}
     />
   );
 }

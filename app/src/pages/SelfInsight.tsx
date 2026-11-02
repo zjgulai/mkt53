@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { ClipboardCheck, Eye, FileLock2, Megaphone, Package, ShieldAlert, Target, Truck } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import SourceFreshnessOverview from '@/components/SourceFreshnessOverview';
+import { getSourceFreshness } from '@/data/source-freshness';
 import {
   erpBatch2DisplayPolicy,
   erpBatch3DisplayPolicy,
@@ -63,15 +65,15 @@ const tabs = [
 const governanceByTab: Record<string, Array<{ title: string; state: string; detail: string }>> = {
   overview: [
     { title: '战略结论', state: '待复核', detail: '拆分内部经营、平台公开信息和主观判断，不再混写成事实。' },
-    { title: '综合看板', state: 'ERP内部代理已放行', detail: 'ds-047/ds-050/ds-051 可补内部销量、渠道增长和目标达成；公开份额和主观象限仍待复核。' },
+    { title: '综合看板', state: 'ERP历史快照当前阻断', detail: 'ds-047/ds-050/ds-051 仅保留历史scope；当前销量、渠道增长和目标达成等待freshness回执。' },
   ],
   product: [
     { title: '产品矩阵', state: '待校准', detail: '产品象限需要内部营收快照和外部份额依据共同支撑。' },
     { title: '品类生态', state: '待归档', detail: '品类覆盖范围需要产品主数据和上架状态作为证据。' },
   ],
   place: [
-    { title: '渠道结构', state: 'ERP内部代理已放行', detail: 'ERP渠道hash和YTD代理可展示；平台、独立站、零售和社交电商仍需拆分为独立来源。' },
-    { title: '区域策略', state: '份额待授权', detail: '内部numerator已可展示，区域份额仍需要国家/平台/渠道分母。' },
+    { title: '渠道结构', state: 'ERP历史快照当前阻断', detail: 'ERP渠道hash和YTD代理等待artifact/hash/receipt；平台、独立站、零售和社交电商仍需独立来源。' },
+    { title: '区域策略', state: '份额待授权', detail: '内部numerator当前也受freshness阻断；区域份额另需国家/平台/渠道分母。' },
   ],
   promotion: [
     { title: '投放表现', state: '待授权', detail: 'ROAS、达人覆盖和线索数据必须来自广告或社媒后台快照。' },
@@ -92,6 +94,10 @@ function formatUsdMillions(value: number) {
 export default function SelfInsight() {
   const [activeTab, setActiveTab] = useState('overview');
   const activeTasks = governanceByTab[activeTab] ?? governanceByTab.overview;
+  const erpSelfSourceIds = ['ds-047', 'ds-050', 'ds-051'] as const;
+  const erpSelfCurrentUseAllowed = erpSelfSourceIds.every(
+    (sourceId) => getSourceFreshness(sourceId).currentUseAllowed,
+  );
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -105,13 +111,13 @@ export default function SelfInsight() {
               <div>
                 <h1 className="text-lg font-semibold text-[#1d1d1f]">看自己</h1>
                 {/* audit-source: ds-047 ds-050 ds-051 */}
-                <p className="text-xs text-[#86868b]">ERP内部代理已通过Batch19</p>
+                <p className="text-xs text-[#86868b]">ERP Batch19历史证据保留 · 当前新鲜度阻断</p>
                 {/* audit-source: ds-019 ds-020 */}
                 <p className="text-[10px] text-[#B5AFA8]">公开份额、平台数据与主观测算仍待拆分</p>
               </div>
             </div>
             <span className="text-xs text-[#86868b] bg-[#FBF8F5] px-3 py-1.5 rounded-lg">
-              <span className="text-[#B5AFA8]">展示状态：</span>ERP proxy 本地已放行
+              <span className="text-[#B5AFA8]">展示状态：</span>ERP proxy 历史可审计 · 当前数值阻断
             </span>
           </div>
           <div className="flex items-center gap-1 flex-wrap">
@@ -130,9 +136,13 @@ export default function SelfInsight() {
         </div>
 
         <PageEvidenceNotice
-          sourceIds={['ds-047', 'ds-050', 'ds-051']}
+          sourceIds={erpSelfSourceIds}
           title="自我诊断来源口径 · ERP内部代理"
-          description="ERP销售统计、全渠道增长和目标达成已通过Batch19作为 private/internal proxy 展示和导出。"
+          description="ds-047/ds-050/ds-051 ERP销售统计、全渠道增长和目标达成保留Batch19历史private/internal L3 scope；当前artifact、受控sha256合同和刷新回执未齐，数值展示与导出阻断。"
+        />
+        <SourceFreshnessOverview
+          sourceIds={erpSelfSourceIds}
+          title="自我诊断 ERP 当前使用门禁"
         />
         <PageEvidenceNotice
           sourceIds={['ds-019', 'ds-020']}
@@ -145,7 +155,7 @@ export default function SelfInsight() {
             <div>
               <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP高价值表格治理沉淀</h2>
               <p className="text-[10px] text-[#86868b] mt-1">
-                Batch {erpDerivedBatch2Artifact.batchId} 已生成 DataManage 可登记的事实表/维表；source ids: {erpDerivedBatch2Artifact.sourceIds.join(' / ')}；Batch19已放行为内部proxy，canDisplayAsFact=true。
+                Batch {erpDerivedBatch2Artifact.batchId} 已生成 DataManage 可登记的历史治理表/维表；source ids: {erpDerivedBatch2Artifact.sourceIds.join(' / ')}；Batch19历史scope保留，DQ-016当前使用阻断。
               </p>
             </div>
             <span className="rounded-lg bg-[#34c759]/10 px-3 py-1.5 text-[10px] font-medium text-[#2f7d32]">
@@ -203,23 +213,23 @@ export default function SelfInsight() {
             ))}
           </div>
           <p className="mt-3 text-[10px] leading-relaxed text-[#86868b]">
-            当前可补充页面：/market/mtl 读取 {formatNumber(erpCategoryProxySummary[0]?.skuHashCount ?? 0)} 个吸奶器代理 SKU hash；/market/category 读取 {formatNumber(erpCategoryProxySummary.length)} 个品类代理；/self 展示内部经营 proxy 和治理状态。
+            历史映射覆盖：/market/mtl 记录 {formatNumber(erpCategoryProxySummary[0]?.skuHashCount ?? 0)} 个吸奶器代理 SKU hash；/market/category 记录 {formatNumber(erpCategoryProxySummary.length)} 个品类代理；当前仅展示治理状态，不作为新鲜经营输入。
           </p>
         </div>
 
         <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
           <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
             <div>
-              <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP Batch 3 全渠道执行 proxy · Batch19已放行</h2>
+              <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP Batch 3 全渠道执行 proxy · Batch19历史快照</h2>
               <p className="text-[10px] text-[#86868b] mt-1">
-                Batch {erpDerivedBatch3Artifact.batchId}；source ids: {erpDerivedBatch3Artifact.sourceIds.join(' / ')}；{erpDerivedBatch3Artifact.evidenceGrade}；{erpDerivedBatch3Artifact.privacyLevel}；canDisplayAsFact=true；仅限内部proxy。
+                Batch {erpDerivedBatch3Artifact.batchId}；source ids: {erpDerivedBatch3Artifact.sourceIds.join(' / ')}；{erpDerivedBatch3Artifact.evidenceGrade}；{erpDerivedBatch3Artifact.privacyLevel}；当前使用资格={String(erpSelfCurrentUseAllowed)}。
               </p>
             </div>
             <span className="rounded-lg bg-[#34c759]/10 px-3 py-1.5 text-[10px] font-medium text-[#2f7d32]">
-              internal numerator · 非 TAM/SAM/SOM
+              历史 numerator · 当前阻断
             </span>
           </div>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-xs lg:grid-cols-5">
+          {erpSelfCurrentUseAllowed ? <><div className="grid grid-cols-2 gap-x-6 gap-y-3 text-xs lg:grid-cols-5">
             <div className="border-b border-[#EDE6DF] pb-2">
               <p className="text-[10px] text-[#86868b]">YTD 实际销售额代理</p>
               <p className="font-semibold text-[#1d1d1f]">{formatUsdMillions(erpChannelGrowthSnapshot.actualSalesUsd)}</p>
@@ -256,6 +266,13 @@ export default function SelfInsight() {
               <p key={policy} className="rounded-xl border border-[#EDE6DF] bg-[#FBF8F5] p-3 text-[10px] leading-relaxed text-[#86868b]">{policy}</p>
             ))}
           </div>
+          </> : (
+            <div className="rounded-xl border border-dashed border-[#ff3b30]/30 bg-[#ff3b30]/5 p-6 text-center">
+              <p className="text-xs leading-relaxed text-[#86868b]">
+                历史L3等级不变，但当前artifact、受控sha256合同与刷新回执未齐；经营代理数值已 fail closed。
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
@@ -263,7 +280,7 @@ export default function SelfInsight() {
             <div>
               <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP Batch 7 字段字典与展示审批门禁 · 历史治理层</h2>
               <p className="text-[10px] text-[#86868b] mt-1">
-                {erpGovernanceBatch7Artifact.manifestPath}；source ids: {erpGovernanceBatch7Artifact.sourceIds.join(' / ')}；Batch7 blocked rows {formatNumber(erpGovernanceBatch7Artifact.summary.blockedRows)}；当前放行由Batch19承担。
+                {erpGovernanceBatch7Artifact.manifestPath}；source ids: {erpGovernanceBatch7Artifact.sourceIds.join(' / ')}；Batch7 blocked rows {formatNumber(erpGovernanceBatch7Artifact.summary.blockedRows)}；Batch19仅保留历史审批，当前freshness另行阻断。
               </p>
             </div>
             <span className="rounded-lg bg-[#34c759]/10 px-3 py-1.5 text-[10px] font-medium text-[#2f7d32]">
@@ -329,7 +346,7 @@ export default function SelfInsight() {
             <div>
               <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP Batch 8 owner approval packets</h2>
               <p className="text-[10px] text-[#86868b] mt-1">
-                {erpOwnerApprovalBatch8Artifact.manifestPath}；upstream {erpOwnerApprovalBatch8Artifact.upstreamBatchId}；Batch8 remaining blocked {formatNumber(erpOwnerApprovalBatch8Artifact.summary.remainingBlockedRows)}；当前放行由Batch19承担。
+                {erpOwnerApprovalBatch8Artifact.manifestPath}；upstream {erpOwnerApprovalBatch8Artifact.upstreamBatchId}；Batch8 remaining blocked {formatNumber(erpOwnerApprovalBatch8Artifact.summary.remainingBlockedRows)}；Batch19仅保留历史审批，当前freshness另行阻断。
               </p>
             </div>
             <span className="rounded-lg bg-[#ff9500]/10 px-3 py-1.5 text-[10px] font-medium text-[#a85f00]">
@@ -985,7 +1002,7 @@ export default function SelfInsight() {
               </p>
             </div>
             <span className="rounded-lg bg-[#34c759]/10 px-3 py-1.5 text-[10px] font-medium text-[#2f7d32]">
-              display/export approved={formatNumber(erpManualReleaseReviewBatch19Artifact.summary.approvedForDisplayRows)}
+              historical display/export approvals={formatNumber(erpManualReleaseReviewBatch19Artifact.summary.approvedForDisplayRows)}
             </span>
           </div>
           <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-xs md:grid-cols-4">
@@ -1066,8 +1083,8 @@ export default function SelfInsight() {
             </div>
             <div className="space-y-3">
               {[
-                'ERP内部proxy已放行，但不得升级为GMV、公开营收、价格、投放效果或渠道占比。',
-                'ERP proxy只能补自有经营 numerator、目标达成和渠道趋势，不能写成外部市场份额。',
+                'ERP内部proxy仅保留Batch19历史scope，DQ-016当前新鲜度未通过。',
+                'ds-047/ds-050/ds-051 当前artifact、受控sha256和refresh receipt补齐前，不展示经营numerator、目标达成或渠道趋势。',
                 '主观象限判断不得导出为真实产品矩阵。',
                 '公开网页信息不得替代平台后台或财务快照。',
                 '恢复任一图表前必须通过深度审计矩阵。',
@@ -1094,7 +1111,7 @@ export default function SelfInsight() {
             ))}
           </div>
           <p className="text-[11px] text-[#86868b] mt-4 leading-relaxed">
-            ERP内部proxy已由Batch19放行展示和CSV导出。其他公开证据、平台快照和主观分析仍需拆成不同 evidence grade，再分别决定是否可展示为事实。
+            ERP内部proxy保留Batch19历史审批记录；DQ-016因freshness回执不完整，当前展示和CSV导出已阻断。其他公开证据、平台快照和主观分析仍需拆成不同 evidence grade。
           </p>
         </div>
       </div>

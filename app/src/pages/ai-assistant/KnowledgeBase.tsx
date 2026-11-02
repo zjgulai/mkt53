@@ -90,3 +90,5 @@ export default function KnowledgeBase() {
     </div>
   );
 }
+
+// route-audit-source: AiReportGovernancePanel focus=model ds-022 ds-029 ds-030 ds-031

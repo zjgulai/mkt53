@@ -4,6 +4,7 @@ import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { buildAmazonCommerceDryRun } from './amazon-commerce-dry-run.mjs';
 import { assertSafePrivatePath, isPrivatePath } from '../lib/private-path-safety.mjs';
+import { resolveCurrentPeriodWindow } from '../lib/current-period-window.mjs';
 
 const connectorId = 'amazon-commerce';
 const mappingTemplatePath = 'scripts/data/connectors/templates/amazon-commerce-mapping-template.json';
@@ -23,8 +24,8 @@ function parseArgs(argv) {
     force: argv.includes('--force'),
     site: 'amazon.com',
     marketplaceId: 'ATVPDKIKX0DER',
-    windowStart: '2026-06-01',
-    windowEnd: '2026-06-15',
+    windowStart: undefined,
+    windowEnd: undefined,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -45,7 +46,7 @@ function parseArgs(argv) {
     options.checklistPath ??= join(options.privateDir, defaultChecklistFileName);
   }
 
-  return options;
+  return { ...options, ...resolveCurrentPeriodWindow(options) };
 }
 
 function readJson(path) {
@@ -205,6 +206,8 @@ function readinessAudit(options, readinessTemplate) {
     isIsoDate(readiness.collectionWindowStart) && isIsoDate(readiness.collectionWindowEnd)
       ? readiness.collectionWindowStart > readiness.collectionWindowEnd
       : false;
+  const collectionWindowMatchesExpected =
+    readiness.collectionWindowStart === options.windowStart && readiness.collectionWindowEnd === options.windowEnd;
   const allowedSnapshotTypes = Array.isArray(readiness.allowedSnapshotTypes) ? readiness.allowedSnapshotTypes : [];
   const missingSnapshotTypes = readinessTemplate.expectedSnapshotTypes.filter((snapshotType) => !allowedSnapshotTypes.includes(snapshotType));
   const forbiddenFieldNames = findForbiddenKeys(readiness);
@@ -213,6 +216,9 @@ function readinessAudit(options, readinessTemplate) {
     ...(missingRequiredFields.length ? [{ type: 'missing-readiness-fields', fields: missingRequiredFields }] : []),
     ...(invalidDateFields.length ? [{ type: 'invalid-readiness-date-fields', fields: invalidDateFields }] : []),
     ...(collectionWindowOrderInvalid ? [{ type: 'invalid-collection-window-order' }] : []),
+    ...(!collectionWindowMatchesExpected
+      ? [{ type: 'collection-window-mismatch', expectedStart: options.windowStart, expectedEnd: options.windowEnd }]
+      : []),
     ...(readiness.complianceReviewStatus === 'approved' ? [] : [{ type: 'missing-compliance-approval' }]),
     ...(missingSnapshotTypes.length ? [{ type: 'snapshot-scope-incomplete', missingSnapshotTypes }] : []),
     ...(forbiddenFieldNames.length ? [{ type: 'secret-like-readiness-field', fields: forbiddenFieldNames }] : []),
@@ -225,6 +231,8 @@ function readinessAudit(options, readinessTemplate) {
     missingRequiredFields,
     invalidDateFields,
     collectionWindowOrderInvalid,
+    collectionWindowMatchesExpected,
+    expectedCollectionWindow: { start: options.windowStart, end: options.windowEnd },
     missingSnapshotTypes,
     forbiddenFieldNames,
   };
@@ -269,7 +277,7 @@ function checklistAudit(options, mappingTemplate, readinessTemplate) {
   };
 }
 
-function buildAudit(options) {
+export function buildAmazonCommercePrivateInputAudit(options) {
   const mappingTemplate = readJson(mappingTemplatePath);
   const readinessTemplate = readJson(readinessTemplatePath);
   const mapping = mappingAudit(options, mappingTemplate);
@@ -323,7 +331,7 @@ function writeAudit(writePath, audit, force) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
-  const audit = buildAudit(options);
+  const audit = buildAmazonCommercePrivateInputAudit(options);
   if (!options.writePath) {
     process.stdout.write(`${JSON.stringify(audit, null, 2)}\n`);
     return;
@@ -333,6 +341,6 @@ async function main() {
   process.stdout.write(`${JSON.stringify({ schemaVersion: 1, connectorId, generatedAt: new Date().toISOString(), audit: writeResult, status: audit.status }, null, 2)}\n`);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   await main();
 }

@@ -19,11 +19,11 @@ import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 // 热门板块（8个核心工作台入口）
 const hotModules = [
   { icon: BarChart3, title: '市场数据看板', desc: '市场层级 · PEST · 波特五力', color: '#C25B6E', link: '/market/trend', badge: null },
-  { icon: Target, title: '竞品库', desc: '8品牌25款 · Amazon连接器待接入', color: '#ff9500', link: '/competition', badge: '8品牌' },
-  { icon: Cpu, title: '新品监测', desc: '2026新品追踪 · 威胁评估', color: '#34c759', link: '/competition/new', badge: '15款' },
-  { icon: Users, title: '用户画像', desc: '6类画像 · 8大人群聚类', color: '#af52de', link: '/users/regional', badge: null },
+  { icon: Target, title: '竞品库', desc: '8品牌25条产品线索 · Amazon连接器待接入', color: '#ff9500', link: '/competition', badge: '目录' },
+  { icon: Cpu, title: '新品监测', desc: '2026新品线索目录 · 商业表现待授权', color: '#34c759', link: '/competition/new', badge: '目录' },
+  { icon: Users, title: '用户画像', desc: '6类示例画像 · 样本与CRM待补证', color: '#af52de', link: '/users/regional', badge: null },
   { icon: Shield, title: '政策法规', desc: '多国政策 · 合规追踪', color: '#5856d6', link: '/industry', badge: '复核' },
-  { icon: FileText, title: '报告中心', desc: '16份报告 · 4大分类', color: '#ff3b30', link: '/reports', badge: 'NEW' },
+  { icon: FileText, title: '报告中心', desc: '16条报告目录 · 正文事实待审批', color: '#ff3b30', link: '/reports', badge: '目录' },
   { icon: Lightbulb, title: '看自己', desc: '营销4P · BCG矩阵', color: '#C25B6E', link: '/self', badge: null },
   { icon: MessageSquare, title: 'AI助手', desc: '评论分析 · 设计助手', color: '#34c759', link: '/ai-assistant', badge: null },
 ];
@@ -49,7 +49,7 @@ const policyTimeline = [
     tag: '合规复核', type: 'urgent', status: '即将实施',
     source: { name: cpscEfilingSource.sourceName, url: cpscEfilingSource.sourceUrl, reliability: cpscEfilingSource.reliability },
     impact: { level: '高', desc: '官方规则支持儿童产品证书随货/电子方式提供；未核实到“官网嵌入实时合规声明”强制要求', products: ['M5', 'M9', 'M6', 'W1'] },
-    momcozyAction: { status: '进行中', progress: 45, desc: '复核CPC证书、eFiling字段和官网披露需求，避免按未证实规则建设', owner: '郑法务' },
+    momcozyAction: { status: '待owner复核', progress: null, desc: '待合规owner提交CPC证书、eFiling字段、SKU适用性与审核回执。', owner: '合规Owner' },
     audit: {录入人: '郑法务', 录入时间: '2026-04-20', 审核状态: '待复核', 审核人: '合规总监', 来源验证: cpscEfilingSource.note},
   },
   {
@@ -57,48 +57,48 @@ const policyTimeline = [
     tag: '标准更新', type: 'normal', status: '已生效',
     source: { name: 'ASTM International', url: 'https://www.astm.org/standards/f2088.htm', reliability: 'A' },
     impact: { level: '中', desc: '摇篮类产品需通过新标准测试', products: ['孕妇枕'] },
-    momcozyAction: { status: '已完成', progress: 100, desc: '供应商已提供ASTM F2088-25测试报告', owner: '林产品' },
-    audit: {录入人: '林产品', 录入时间: '2026-05-23', 审核状态: '已审核', 审核人: '质量经理', 来源验证: '官方来源复核通过'},
+    momcozyAction: { status: '待owner复核', progress: null, desc: '待质量owner提交适用SKU、测试报告hash与审批记录。', owner: '质量Owner' },
+    audit: {录入人: '待导入', 录入时间: '未确认', 审核状态: '待复核', 审核人: '质量Owner', 来源验证: '官方入口可用，产品级证据待补'},
   },
   {
     id: 'p-003', country: '日本', date: '2025-12-01', title: '新《消费品安全法》：36个月以下玩具强制PSC标志认证',
     tag: '强制认证', type: 'urgent', status: '即将实施',
     source: { name: '日本经济产业省(METI)', url: 'https://www.meti.go.jp/policy/consumer/seihin/consumer-products-safety-act.html', reliability: 'A' },
     impact: { level: '高', desc: '36个月以下玩具类产品需复核PSC标志适用性，日本市场准入门槛提高', products: ['M5', 'M9', 'W1'] },
-    momcozyAction: { status: '待启动', progress: 10, desc: 'PSC认证申请准备中，需联系日本代理机构', owner: '郑法务' },
-    audit: {录入人: '郑法务', 录入时间: '2025-12-05', 审核状态: '待复核', 审核人: '合规总监', 来源验证: '官方链接和SKU适用范围待复核'},
+    momcozyAction: { status: '待owner复核', progress: null, desc: '待合规owner确认产品范围、代理机构与认证申请回执。', owner: '合规Owner' },
+    audit: {录入人: '待导入', 录入时间: '未确认', 审核状态: '待复核', 审核人: '合规Owner', 来源验证: '官方链接和SKU适用范围待复核'},
   },
   {
     id: 'p-004', country: '中国', date: '2026-11-01', title: 'GB 46523-2025儿童用品通用安全要求计划生效',
     tag: '国标实施', type: 'normal', status: '即将实施',
     source: { name: '国家市场监督管理总局', url: 'https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/rzjgs/art/2025/art_8e7c3f2b1c5d4e6a9f0e8d7c6b5a4f3e2d1c0b.html', reliability: 'A' },
     impact: { level: '高', desc: '儿童用品通用安全国标，涵盖物理/化学/阻燃性要求', products: ['M5', 'M9', 'M6', '温奶器', '消毒器'] },
-    momcozyAction: { status: '进行中', progress: 35, desc: '产品材质检测报告已出，物理测试进行中', owner: '王运营' },
-    audit: {录入人: '王运营', 录入时间: '2026-03-10', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '官方来源复核通过'},
+    momcozyAction: { status: '待owner复核', progress: null, desc: '待质量owner提交适用产品、检测报告hash与物理测试状态回执。', owner: '质量Owner' },
+    audit: {录入人: '待导入', 录入时间: '未确认', 审核状态: '待复核', 审核人: '质量Owner', 来源验证: '官方来源与产品适用性待复核'},
   },
   {
     id: 'p-005', country: '加拿大', date: '2025-12-15', title: 'Health Canada发布2025-2027前向监管计划',
     tag: '监管计划', type: 'normal', status: '已发布',
     source: { name: 'Health Canada', url: 'https://www.canada.ca/en/health-canada/corporate/transparency/regulatory-transparency/regulatory-plan.html', reliability: 'A' },
     impact: { level: '中', desc: '预告2026-2027年监管重点方向，需持续跟踪', products: ['全线产品'] },
-    momcozyAction: { status: '已跟踪', progress: 100, desc: '已订阅Health Canada更新通知', owner: '郑法务' },
-    audit: {录入人: '郑法务', 录入时间: '2025-12-20', 审核状态: '已审核', 审核人: '合规总监', 来源验证: '官方来源复核通过'},
+    momcozyAction: { status: '待owner复核', progress: null, desc: '待合规owner提交订阅或监测任务回执，并确认影响范围。', owner: '合规Owner' },
+    audit: {录入人: '待导入', 录入时间: '未确认', 审核状态: '待复核', 审核人: '合规Owner', 来源验证: '官方监管计划入口可用，内部跟踪状态待补'},
   },
   {
     id: 'p-006', country: '欧盟', date: '2027-01-01', title: 'MDR Class IIa过渡安排需按产品分类复核',
     tag: '合规新规', type: 'urgent', status: '即将实施',
     source: { name: euMdrSource.sourceName, url: euMdrSource.sourceUrl, reliability: euMdrSource.reliability },
     impact: { level: '高', desc: '过渡期存在类别和证书条件差异，需按Class IIa路径复核CE marking计划', products: ['M5', 'M9'] },
-    momcozyAction: { status: '进行中', progress: 45, desc: 'TUV SUD已受理CE申请，技术文档准备中；复核过渡期条件', owner: '郑法务' },
-    audit: {录入人: '郑法务', 录入时间: '2026-02-15', 审核状态: '待复核', 审核人: '合规总监', 来源验证: euMdrSource.note},
+    momcozyAction: { status: '待owner复核', progress: null, desc: '待合规owner提交产品分类、notified body、证书与过渡资格回执。', owner: '合规Owner' },
+    audit: {录入人: '待导入', 录入时间: '未确认', 审核状态: '待复核', 审核人: '合规Owner', 来源验证: euMdrSource.note},
   },
   {
     id: 'p-007', country: '中国', date: '2026-05-01', title: 'GB/T 46491-2025婴儿食品加工器具标准生效',
     tag: '标准更新', type: 'normal', status: '已生效',
     source: { name: '国家标准化管理委员会', url: 'https://www.sac.gov.cn/', reliability: 'A' },
     impact: { level: '高', desc: '温奶器、消毒器等食品加工器具材料安全新要求', products: ['温奶器', 'KleanPal Pro'] },
-    momcozyAction: { status: '已完成', progress: 100, desc: '产品材料已通过GB/T 46491检测', owner: '王运营' },
-    audit: {录入人: '王运营', 录入时间: '2026-04-28', 审核状态: '已审核', 审核人: '质量经理', 来源验证: '官方来源复核通过'},
+    momcozyAction: { status: '待owner复核', progress: null, desc: '待质量owner提交适用SKU、材料检测报告hash与审批记录。', owner: '质量Owner' },
+    audit: {录入人: '待导入', 录入时间: '未确认', 审核状态: '待复核', 审核人: '质量Owner', 来源验证: '标准入口可用，产品级检测证据待补'},
   },
 ];
 
@@ -115,13 +115,13 @@ const notifications = [
 // 本期关键洞察 — 驱动行动的顶层结论
 // 模板: [数据发现] + [业务含义] + [建议行动]
 const periodInsights = [
-  { icon: TrendingUp, title: '穿戴式增速领先', value: '+15.08%', desc: 'Fortune BI 2026E穿戴式吸奶器$233M，增速高于整体吸奶器市场 · ds-045', color: '#C25B6E', action: '查看市场总览' },
-  { icon: Target, title: '北美份额最大', value: '45.05%', desc: 'Fortune BI 2025确认北美为最大公开区域市场，品牌份额仍需授权数据 · ds-002', color: '#ff9500', action: '查看区域份额' },
-  { icon: Shield, title: '月度趋势边界', value: '代理', desc: '当前接入Wikimedia公开兴趣指数；GMV/销量月趋势需Amazon或ERP快照 · ds-046', color: '#ff3b30', action: '查看数据口径' },
+  { icon: TrendingUp, title: '穿戴式来源冲突', value: '阻断', desc: 'Fortune BI 同页规模与区域份额口径无法相互校验，事实展示已阻断，等待澄清或授权报告 · ds-045', color: '#C25B6E', action: '查看市场总览', sourceIds: ['ds-045'] },
+  { icon: Target, title: '北美份额最大', value: '45.05%', desc: 'Fortune BI 2025确认北美为最大公开区域市场，品牌份额仍需授权数据 · ds-002', color: '#ff9500', action: '查看区域份额', sourceIds: ['ds-002'] },
+  { icon: Shield, title: '月度趋势边界', value: '代理', desc: '当前接入Wikimedia公开兴趣指数；GMV/销量月趋势需Amazon或ERP快照 · ds-046', color: '#ff3b30', action: '查看数据口径', sourceIds: ['ds-046'] },
 ];
 
 const homeEvidenceGroups = [
-  { label: 'Public facts', value: '3', desc: 'TAM、北美区域份额、穿戴式细分TAM', color: '#34c759', sourceIds: 'ds-001 / ds-002 / ds-045' },
+  { label: 'Public facts', value: '2', desc: '吸奶器品类TAM、北美区域份额；穿戴式来源已阻断', color: '#34c759', sourceIds: 'ds-001 / ds-002' },
   { label: 'Public proxy', value: '1', desc: 'Wikimedia公开兴趣指数，非GMV或销量', color: '#5856d6', sourceIds: 'ds-046' },
   { label: 'Internal gated', value: '5', desc: 'ERP销售、售后、零售渠道、全渠道增长和目标达成候选源', color: '#0A84FF', sourceIds: 'ds-047 / ds-048 / ds-049 / ds-050 / ds-051' },
   { label: 'Sample/demo', value: '隔离', desc: '未复核页面只展示治理状态，不进入首页KPI', color: '#ff9500', sourceIds: 'deep audit backlog' },
@@ -143,7 +143,7 @@ const statusColors2: Record<string, { bg: string; text: string }> = {
 };
 
 const actionColors2: Record<string, string> = {
-  '已完成': '#34c759', '进行中': '#ff9500', '待启动': '#ff3b30', '已跟踪': '#5856d6',
+  '已完成': '#34c759', '进行中': '#ff9500', '待启动': '#ff3b30', '已跟踪': '#5856d6', '待owner复核': '#ff9500',
 };
 
 export default function HomePage() {
@@ -154,6 +154,7 @@ export default function HomePage() {
     period: collectionPeriod,
     generatedAtText: collectionGeneratedAt,
     windowText: collectionWindow,
+    scheduleStatus,
     nextScheduleText,
   } = usePeriodicManifest();
   // R3: 政策法规筛选状态
@@ -194,7 +195,11 @@ export default function HomePage() {
         { label: '公开来源成功', value: collectionTotals.ok ?? 0, color: '#34c759' },
         { label: '连接器待接入', value: collectionTotals['connector-required'] ?? 0, color: '#ff9500' },
         { label: '人工补录', value: collectionTotals['manual-required'] ?? 0, color: '#5856d6' },
-        { label: '下次计划', value: nextScheduleText.replace('下次计划 ', ''), color: '#86868b' },
+        {
+          label: scheduleStatus === 'overdue' ? '调度逾期' : scheduleStatus === 'scheduled' ? '下次计划' : '调度未知',
+          value: nextScheduleText.replace('下次计划 ', '').replace('计划已逾期 ', ''),
+          color: scheduleStatus === 'overdue' ? '#ff3b30' : scheduleStatus === 'scheduled' ? '#86868b' : '#ff9500',
+        },
       ]
     : [{ label: '采集状态', value: collectionStatus === 'loading' ? '读取中' : '未生成', color: '#ff9500' }];
 
@@ -316,8 +321,10 @@ export default function HomePage() {
               <section className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                 <div className="flex items-center justify-between mb-2">
                   <div>
+                    {/* audit-source: ds-044 ds-001 */}
                     <h3 className="text-sm font-semibold text-[#1d1d1f]">全球婴童/吸奶器市场规模趋势（2025-2030E）</h3>
-                    <p className="text-[10px] text-[#86868b] mt-0.5">数据来源: ds-001 / ds-002 / ds-045；SAM/SOM需另有可服务范围和可获份额假设，2026后为CAGR外推</p>
+                    {/* audit-source: ds-044 ds-001 ds-045；穿戴式事实展示已阻断 */}
+                    <p className="text-[10px] text-[#86868b] mt-0.5">数据来源: ds-044 / ds-001；穿戴式来源 ds-045 已因同页口径冲突移除，SAM/SOM仍需可服务范围和可获份额假设</p>
                   </div>
                   <button onClick={() => navigate('/market/trend')} className="text-xs text-[#C25B6E] hover:underline flex-shrink-0">查看详情 →</button>
                 </div>
@@ -344,11 +351,9 @@ export default function HomePage() {
                       </ReferenceLine>
 
                       {/* R3: 上层TAM — 实线(历史) + 虚线(预测) */}
-                      <Line yAxisId="tam" type="monotone" dataKey="tam" name="上层TAM 全球婴童用品" stroke="#C25B6E" strokeWidth={2.5} dot={{ r: 3, fill: '#C25B6E', strokeWidth: 0 }} activeDot={{ r: 5 }} connectNulls />
+                      <Line yAxisId="tam" type="monotone" dataKey="upperTam" name="上层TAM 全球婴童用品" stroke="#C25B6E" strokeWidth={2.5} dot={{ r: 3, fill: '#C25B6E', strokeWidth: 0 }} activeDot={{ r: 5 }} connectNulls />
                       {/* R3: 品类TAM — 实线(历史) + 虚线(预测) */}
-                      <Line yAxisId="sam" type="monotone" dataKey="sam" name="品类TAM 全球吸奶器" stroke="#ff9500" strokeWidth={2} dot={{ r: 3, fill: '#ff9500', strokeWidth: 0 }} activeDot={{ r: 5 }} />
-                      {/* R4: 细分TAM — 穿戴式细分 */}
-                      <Line yAxisId="sam" type="monotone" dataKey="som" name="细分TAM 穿戴式吸奶器" stroke="#34c759" strokeWidth={2} dot={{ r: 3, fill: '#34c759', strokeWidth: 0 }} activeDot={{ r: 5 }} />
+                      <Line yAxisId="sam" type="monotone" dataKey="categoryTam" name="品类TAM 全球吸奶器" stroke="#ff9500" strokeWidth={2} dot={{ r: 3, fill: '#ff9500', strokeWidth: 0 }} activeDot={{ r: 5 }} />
                     </ComposedChart>
                   </ResponsiveContainer>
                 </div>
@@ -367,9 +372,9 @@ export default function HomePage() {
                 {/* R9: 关键发现 — 行业洞察 */}
                 <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
                   <div className="p-3 rounded-xl bg-[#C25B6E]/5 border border-[#C25B6E]/10">
-                    {/* audit-source: ds-044 ds-001 ds-045 */}
-                    <p className="text-[10px] text-[#C25B6E] font-semibold mb-1">三层漏斗加速扩大</p>
-                    <p className="text-[11px] text-[#1d1d1f]">穿戴式细分TAM增速(15.08%) {'>'} 吸奶器品类TAM(8.52%) {'>'} 婴童用品上层TAM(6.4%)，穿戴式是当前公开报告中增速最高的相关细分。</p>
+                    {/* audit-source: ds-044 ds-001 */}
+                    <p className="text-[10px] text-[#C25B6E] font-semibold mb-1">已复核两层口径</p>
+                    <p className="text-[11px] text-[#1d1d1f]">首页仅保留婴童用品上层TAM与吸奶器品类TAM趋势；穿戴式来源冲突已从图表和关键结论移除。</p>
                   </div>
                   <div className="p-3 rounded-xl bg-[#ff9500]/5 border border-[#ff9500]/10">
                     <p className="text-[10px] text-[#ff9500] font-semibold mb-1">Momcozy定位建议</p>
@@ -455,7 +460,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h2 className="text-base font-semibold text-[#1d1d1f]">政策法规追踪</h2>
-                    <p className="text-[10px] text-[#86868b]">{policyTimeline.length}条政策 · {policyTimeline.filter(p => p.type === 'urgent').length}项紧急 · 覆盖7国</p>
+                    <p className="text-[10px] text-[#86868b]">{policyTimeline.length}条政策 · {policyTimeline.filter(p => p.type === 'urgent').length}项紧急 · 覆盖{new Set(policyTimeline.map(p => p.country)).size}个国家/地区</p>
                   </div>
                 </div>
                 <button onClick={() => navigate('/industry/policy-insight')} className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#FBF8F5] text-xs text-[#5856d6] hover:bg-[#5856d6]/10 transition-colors font-medium">
@@ -509,7 +514,7 @@ export default function HomePage() {
                             <a href={item.source.url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="flex items-center gap-1 text-[9px] text-[#5856d6] hover:underline bg-[#5856d6]/5 px-1.5 py-0.5 rounded"><ExternalLink className="w-2.5 h-2.5" />{item.source.name}</a>
                             <span className="flex items-center gap-0.5 text-[9px] text-[#34c759] bg-[#34c759]/5 px-1.5 py-0.5 rounded"><CheckCircle className="w-2.5 h-2.5" />可信度{item.source.reliability}</span>
                             <span className={`text-[9px] px-1.5 py-0.5 rounded font-medium ${item.impact.level === '高' ? 'bg-[#ff9500]/10 text-[#ff9500]' : 'bg-[#86868b]/10 text-[#86868b]'}`}>影响{item.impact.level}</span>
-                            <span className="flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded text-white font-medium" style={{ backgroundColor: aColor }}>{item.momcozyAction.status} {item.momcozyAction.progress}%</span>
+                            <span className="flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded text-white font-medium" style={{ backgroundColor: aColor }}>{item.momcozyAction.status} · 进度未知</span>
                           </div>
                         </div>
                         {expandedPolicyIds.has(item.id) && (
@@ -528,12 +533,7 @@ export default function HomePage() {
                                 <span className="text-[9px] text-[#86868b]">Owner: {item.momcozyAction.owner}</span>
                               </div>
                               <p className="text-[11px] text-[#1d1d1f] leading-relaxed">{item.momcozyAction.desc}</p>
-                              <div className="mt-2 flex items-center gap-2">
-                                <div className="flex-1 min-w-0 h-1.5 rounded-full bg-[#EDE6DF] overflow-hidden">
-                                  <div className="h-full rounded-full" style={{ width: `${item.momcozyAction.progress}%`, backgroundColor: aColor }} />
-                                </div>
-                                <span className="text-[9px] text-[#86868b] w-8 text-right">{item.momcozyAction.progress}%</span>
-                              </div>
+                              <p className="mt-2 text-[9px] text-[#86868b]">未收到 owner 回执前不显示完成百分比。</p>
                             </div>
                             <div className="p-2.5 rounded-lg bg-[#FBF8F5] border border-[#EDE6DF]">
                               <p className="text-[10px] text-[#86868b] font-semibold mb-1.5 flex items-center gap-1"><FileText className="w-3 h-3" />信息审计记录</p>

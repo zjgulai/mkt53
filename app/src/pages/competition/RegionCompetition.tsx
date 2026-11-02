@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Award, Database, ExternalLink, FileBarChart, Globe, LayoutGrid, Map as MapIcon, MapPin, ShieldAlert, Target } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import SourceFreshnessOverview from '@/components/SourceFreshnessOverview';
 import Sidebar from '@/components/Sidebar';
 import { erpChannelGrowthSnapshot, erpChannelTargetAttainment, erpDerivedBatch3Artifact } from '@/data/market-insight-data';
+import { getSourceFreshness } from '@/data/source-freshness';
 import { usePublicEvidence } from '@/hooks/usePublicEvidence';
 
 interface CountryEvidence {
@@ -93,7 +95,7 @@ const regionData: RegionEvidence[] = [
 const evidenceChecklist = [
   { title: 'Amazon Brand Analytics', status: '待授权', note: '仅可覆盖 Amazon 渠道，不能外推全渠道份额' },
   { title: '零售面板/行业报告', status: '待采购或人工复核', note: '用于国家级份额、排名和竞品结构交叉验证' },
-  { title: '内部ERP/渠道销售快照', status: 'Batch19内部代理已放行', note: '用于 Momcozy 自身YTD numerator；不生成区域份额或排名' },
+  { title: '内部ERP/渠道销售历史快照', status: '当前新鲜度阻断', note: 'ds-050/ds-051 Batch19历史scope保留；当前不生成或展示YTD numerator、区域份额或排名' },
   { title: '公开平台/官网采集', status: '可做线索', note: '只能支撑上新、渠道存在和卖点线索，不支撑份额结论' },
 ];
 
@@ -125,6 +127,10 @@ export default function RegionCompetition() {
     statusLabel: regionEvidenceStatusLabel,
   } = usePublicEvidence('ds-010', 'RegionCompetition');
   const region = regionData.find(r => r.region === activeRegion) || regionData[0];
+  const erpRegionSourceIds = ['ds-050', 'ds-051'] as const;
+  const erpRegionCurrentUseAllowed = erpRegionSourceIds.every(
+    (sourceId) => getSourceFreshness(sourceId).currentUseAllowed,
+  );
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -223,25 +229,29 @@ export default function RegionCompetition() {
             </div>
 
             <PageEvidenceNotice
-              sourceIds={['ds-050', 'ds-051']}
+              sourceIds={erpRegionSourceIds}
               title="区域竞争份额边界"
-              description="ERP ds-050/ds-051 已经Batch19放行，可提供 Momcozy 自身YTD private/internal proxy numerator；当前仍缺国家、平台、渠道明细和外部份额分母，不能计算区域份额或排名。"
+              description="ERP ds-050/ds-051 保留Batch19历史L3证据与限定scope；当前artifact、受控sha256合同和刷新回执未齐，YTD private/internal proxy numerator 当前阻断。国家、平台、渠道明细和外部份额分母也仍缺失。"
+            />
+            <SourceFreshnessOverview
+              sourceIds={erpRegionSourceIds}
+              title="区域竞争 ERP 当前使用门禁"
             />
 
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
               <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
                 <div>
                   {/* audit-source: ds-050 ds-051 */}
-                  <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP区域份额 numerator · Batch19已放行</h2>
+                  <h2 className="text-sm font-semibold text-[#1d1d1f]">ERP区域份额 numerator · Batch19历史快照</h2>
                   <p className="text-[10px] text-[#86868b] mt-1">
-                    {erpDerivedBatch3Artifact.batchId}；source ids: {erpChannelGrowthSnapshot.sourceIds.join(' / ')} / {erpChannelTargetAttainment.sourceIds.join(' / ')}；private/internal L3；canDisplayAsFact=true；仅限内部proxy。
+                    {erpDerivedBatch3Artifact.batchId}；source ids: {erpChannelGrowthSnapshot.sourceIds.join(' / ')} / {erpChannelTargetAttainment.sourceIds.join(' / ')}；private/internal L3历史scope保留；当前使用资格={String(erpRegionCurrentUseAllowed)}。
                   </p>
                 </div>
-                <span className="rounded-lg bg-[#34c759]/10 px-3 py-1.5 text-[10px] font-medium text-[#2f7d32]">
-                  可展示内部 numerator
+                <span className="rounded-lg bg-[#ff3b30]/10 px-3 py-1.5 text-[10px] font-medium text-[#ff3b30]">
+                  当前 numerator 阻断
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-xs md:grid-cols-4">
+              {erpRegionCurrentUseAllowed ? <><div className="grid grid-cols-2 gap-x-6 gap-y-3 text-xs md:grid-cols-4">
                 <div className="border-b border-[#EDE6DF] pb-2">
                   <p className="text-[10px] text-[#86868b]">全渠道YTD实际销售代理</p>
                   <p className="font-semibold text-[#1d1d1f]">{formatUsdMillions(erpChannelGrowthSnapshot.actualSalesUsd)}</p>
@@ -262,6 +272,13 @@ export default function RegionCompetition() {
               <p className="mt-3 text-[10px] leading-relaxed text-[#86868b]">
                 该聚合没有国家、平台、Amazon/零售/线下渠道拆分，也没有外部市场分母；本页可以展示“自有经营 numerator”，但不能据此计算北美、欧洲、亚太等区域份额或排名。
               </p>
+              </> : (
+                <div className="rounded-xl border border-dashed border-[#ff3b30]/30 bg-[#ff3b30]/5 p-6 text-center">
+                  <p className="text-xs leading-relaxed text-[#86868b]">
+                    历史L3等级不变，但当前artifact、受控sha256合同与刷新回执未齐；YTD代理数值已 fail closed。
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">

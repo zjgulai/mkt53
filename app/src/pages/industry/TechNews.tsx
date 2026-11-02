@@ -1,37 +1,7 @@
 import { Cpu } from 'lucide-react';
 import EvidenceGatePage from '@/components/EvidenceGatePage';
-
-function getIndustrySidebarItems() {
-  return [
-    {
-      label: '政策分析',
-      children: [
-        { label: '母婴标准与法规地图', path: '/industry' },
-        { label: '行业法规与标准解读', path: '/industry/regulation' },
-        { label: '区域标准洞察', path: '/industry/policy-insight' },
-      ],
-    },
-    {
-      label: 'VOC趋势',
-      children: [
-        { label: 'VOC趋势地图', path: '/industry/flavor-map' },
-        { label: 'VOC趋势报告', path: '/industry/flavor-report' },
-      ],
-    },
-    {
-      label: '行业新闻',
-      children: [
-        { label: '母婴行业资讯', path: '/industry/news' },
-        { label: '母婴科技资讯', path: '/industry/tech' },
-        { label: '母婴行业报告', path: '/industry/reports' },
-      ],
-    },
-    { label: '母婴供应链情报', path: '/industry/supply' },
-    { label: 'IP分析', path: '/industry/ip' },
-    { label: '母婴展会调研', path: '/industry/exhibition' },
-    { label: '区域宏观分析', path: '/industry/macro' },
-  ];
-}
+import SourceBackedReviewPacket from '@/components/SourceBackedReviewPacket';
+import { industrySidebarItems } from './industry-sidebar-items';
 
 export default function TechNews() {
   return (
@@ -75,9 +45,29 @@ export default function TechNews() {
             <span className="rounded-lg bg-[#FBF8F5] px-3 py-2">Willow：Willow 360</span>
             <span className="rounded-lg bg-[#FBF8F5] px-3 py-2">Medela：Pump In Style Pro</span>
           </div>
+          <SourceBackedReviewPacket
+            route="/industry/tech"
+            modelContract="technology-spec-ontology-v1"
+            evidenceScope={[
+              'ds-036：仅覆盖品牌公开产品页、规格页和可复核的产品版本入口。',
+              '单位换算、版本沿革与同义规格必须在 ontology 内显式记录。',
+            ]}
+            allowedUses={[
+              '复核同版本、同规格定义与同单位下的公开规格可比性。',
+              '形成带来源、版本和换算规则的技术观察候选。',
+            ]}
+            prohibitedUses={[
+              '不得解释为独立性能排名、实验室结论或技术领先性。',
+              '不得用不同版本、不同测试条件或营销文案拼接性能结论。',
+            ]}
+            reviewChecklist={[
+              '业务 owner 签核规格 ontology、单位换算和产品版本链。',
+              '逐项确认来源日期、适用型号、缺失值与不可比原因。',
+            ]}
+          />
         </div>
       }
-      sidebarItems={getIndustrySidebarItems()}
+      sidebarItems={industrySidebarItems}
     />
   );
 }

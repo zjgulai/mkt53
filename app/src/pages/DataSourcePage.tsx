@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Database, ExternalLink, AlertTriangle, CheckCircle, Info, Shield, TrendingUp, BarChart3, Globe, Users, Target } from 'lucide-react';
 import { DataSourceRegistryStatus } from '@/components/DataSourceRegistryStatus';
+import SourceFreshnessOverview from '@/components/SourceFreshnessOverview';
+import { getSourceFreshness, getSourceFreshnessMeta } from '@/data/source-freshness';
 import { getVerificationStatusMeta, type SourceRegistryItem } from '@/data/source-registry';
 import { useDataSourceRegistry } from '@/hooks/useDataSourceRegistry';
-import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
+import { getManifestSchedulePresentation, usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 
 // ═══════════════════════════════════════════════════════════════════
 // 数据来源管理页面 — 企业级数据溯源与质量管控
@@ -13,7 +15,7 @@ import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
 type DataSource = SourceRegistryItem;
 
 type DataSourceTabId = 'sources' | 'divergence' | 'models';
-type FactDisplayFilter = 'all' | 'displayable' | 'gated' | 'private';
+type FactDisplayFilter = 'all' | 'displayable' | 'current-ready' | 'gated' | 'private';
 
 // R46: 数据可信度趋势分析 (todo: 未来实现图表)
 /* const reliabilityTrend = [
@@ -34,7 +36,7 @@ const divergenceData = [
 
 // 测算模型说明
 const calcModels = [
-  { name: '市场层级/TAM边界', icon: BarChart3, desc: '份额分母与可服务市场边界', method: '全球婴童用品=上层TAM；全球吸奶器=品类TAM；穿戴式吸奶器=细分TAM。SAM需叠加地域/渠道/SKU/合规可服务范围，SOM需Momcozy可获份额假设。', source: '公开报告交叉验证 + 内部服务范围待补', sourceIds: ['ds-001', 'ds-044', 'ds-045'] },
+  { name: '市场层级/TAM边界', icon: BarChart3, desc: '份额分母与可服务市场边界', method: '全球婴童用品=上层TAM；全球吸奶器=品类TAM。穿戴式来源同页口径冲突，当前不作为细分TAM。SAM需叠加地域/渠道/SKU/合规可服务范围，SOM需Momcozy可获份额假设。', source: '公开报告交叉验证 + 内部服务范围待补', sourceIds: ['ds-001', 'ds-044', 'ds-045'] },
   { name: '波特五力', icon: Target, desc: '行业竞争强度框架', method: '五力维度框架；Mordor、Precedence、Fortune公开报告只支撑模型输入，评分必须标为Momcozy内部解释性模型。', source: '公开报告交叉验证 + 内部模型', sourceIds: ['ds-004'] },
   { name: 'PEST官方来源矩阵', icon: Globe, desc: '政策、监管和公共健康语境', method: 'FDA吸奶器监管、DOL Pump at Work、CDC breastfeeding data、WHO infant feeding 分别支撑监管、劳动政策、公共健康和全球建议语境。', source: 'FDA / DOL / CDC / WHO', sourceIds: ['ds-003'] },
   { name: '品类拆分/TAM口径', icon: TrendingUp, desc: '吸奶器品类TAM与segment-TAM', method: 'Mordor、Precedence、Fortune交叉验证公开报告口径；本批只支撑TAM/segment-TAM，SAM需叠加地域、渠道、SKU和合规可服务范围。', source: '公开报告交叉验证', sourceIds: ['ds-005'] },
@@ -93,6 +95,7 @@ export default function DataSourcePage() {
     period: collectionPeriod,
     generatedAtText: collectionGeneratedAt,
     windowText: collectionWindow,
+    scheduleStatus,
     nextScheduleText,
   } = usePeriodicManifest();
 
@@ -100,6 +103,7 @@ export default function DataSourcePage() {
   const moduleFiltered = filterModule === '全部' ? dataSources : dataSources.filter(d => d.module === filterModule);
   const filtered = moduleFiltered.filter((source) => {
     if (factFilter === 'displayable') return getCanDisplayAsFact(source);
+    if (factFilter === 'current-ready') return getSourceFreshness(source.id).currentUseAllowed;
     if (factFilter === 'gated') return !getCanDisplayAsFact(source);
     if (factFilter === 'private') return getPrivacyLevel(source) === 'private/internal';
     return true;
@@ -164,6 +168,7 @@ export default function DataSourcePage() {
       ? stats.verified
       : collectionTotals.ok ?? stats.verified
     : '-';
+  const collectionSchedule = getManifestSchedulePresentation(collectionStatus, scheduleStatus);
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -182,12 +187,17 @@ export default function DataSourcePage() {
         </div>
 
         <DataSourceRegistryStatus {...sourceRegistryState} />
+        <SourceFreshnessOverview className="mb-6" />
 
         {/* 半月数据状态 */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-[#EDE6DF] mb-6">
           <div className="flex items-center gap-3 flex-wrap">
-            <div className="w-9 h-9 rounded-xl bg-[#5856d6]/10 flex items-center justify-center">
-              {collectionStatus === 'ready' ? <CheckCircle className="w-4 h-4 text-[#34c759]" /> : <AlertTriangle className="w-4 h-4 text-[#ff9500]" />}
+            <div
+              aria-label={collectionSchedule.label}
+              data-schedule-tone={collectionSchedule.tone}
+              className={`w-9 h-9 rounded-xl flex items-center justify-center ${collectionSchedule.tone === 'danger' ? 'bg-[#ff3b30]/10' : collectionSchedule.tone === 'success' ? 'bg-[#34c759]/10' : 'bg-[#ff9500]/10'}`}
+            >
+              {collectionSchedule.tone === 'success' ? <CheckCircle className="w-4 h-4 text-[#34c759]" /> : <AlertTriangle className={`w-4 h-4 ${collectionSchedule.tone === 'danger' ? 'text-[#ff3b30]' : 'text-[#ff9500]'}`} />}
             </div>
             <div className="min-w-[260px]">
               <p className="text-xs font-semibold text-[#1d1d1f]">半月数据状态</p>
@@ -263,7 +273,7 @@ export default function DataSourcePage() {
             { label: 'P0 示例数据', value: gapPriority.p0, color: '#ff3b30', desc: '不可用于正式结论' },
             { label: 'P1 待复核', value: gapPriority.p1, color: '#ff9500', desc: '需补来源或口径' },
             { label: 'P2 一般缺口', value: gapPriority.p2, color: '#5856d6', desc: '纳入计划' },
-            { label: '已复核', value: gapPriority.ok, color: '#34c759', desc: '可作为当前依据' },
+            { label: '历史证据已复核', value: gapPriority.ok, color: '#34c759', desc: '当前使用仍需过新鲜度门禁' },
           ].map((s, i) => (
             <div key={i} className="bg-white rounded-2xl p-4 shadow-sm border border-[#EDE6DF]">
               <span className="text-xs text-[#86868b]">{s.label}</span>
@@ -276,7 +286,7 @@ export default function DataSourcePage() {
         {/* Evidence gate overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {[
-            { label: '可展示事实', value: stats.displayable, color: '#34c759', desc: 'public fact或公开复核来源' },
+            { label: '历史scope可展示', value: stats.displayable, color: '#34c759', desc: '不等于当前新鲜可用' },
             { label: 'Gated来源', value: stats.gated, color: '#ff9500', desc: '待复核/样例/内部权限' },
             { label: '内部来源', value: stats.privateInternal, color: '#0A84FF', desc: 'ERP/CRM/内部系统' },
             { label: 'Source总数', value: stats.total, color: '#1d1d1f', desc: 'source registry登记项' },
@@ -347,7 +357,8 @@ export default function DataSourcePage() {
             <div className="flex items-center gap-2 mb-5 flex-wrap">
               {([
                 { id: 'all', label: '全部展示状态' },
-                { id: 'displayable', label: '可展示事实' },
+                { id: 'displayable', label: '历史证据可展示' },
+                { id: 'current-ready', label: '当前新鲜可用' },
                 { id: 'gated', label: 'Gated/待复核' },
                 { id: 'private', label: 'Private/Internal' },
               ] satisfies Array<{ id: FactDisplayFilter; label: string }>).map(item => (
@@ -362,7 +373,7 @@ export default function DataSourcePage() {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="border-b border-[#EDE6DF] bg-[#FAF8F6]">
-                      {['ID', '模块/页面', '数据指标', '来源机构', '类型', '年份', '可信度', '复核状态', '隐私层', '证据等级', '展示门禁', '阻断原因', '数据缺口', '补全动作'].map((h, i) => (
+                      {['ID', '模块/页面', '数据指标', '来源机构', '类型', '年份', '可信度', '复核状态', '隐私层', '证据等级', '历史展示资格', '当前新鲜度', '阻断原因', '数据缺口', '补全动作'].map((h, i) => (
                         <th key={i} className="py-3 px-3 text-[10px] text-[#86868b] font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
@@ -413,10 +424,29 @@ export default function DataSourcePage() {
                         </td>
                         <td className="py-2.5 px-3">
                           {getCanDisplayAsFact(ds) ? (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#34c759]/10 text-[#34c759]">可展示事实</span>
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#34c759]/10 text-[#34c759]">历史scope可展示</span>
                           ) : (
                             <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#ff9500]/10 text-[#a85f00]">gated</span>
                           )}
+                        </td>
+                        <td className="py-2.5 px-3">
+                          {(() => {
+                            const freshness = getSourceFreshness(ds.id);
+                            const meta = getSourceFreshnessMeta(freshness.status);
+                            return (
+                              <div className="min-w-[112px]">
+                                <span
+                                  className="px-1.5 py-0.5 rounded text-[10px] font-medium"
+                                  style={{ backgroundColor: `${meta.color}15`, color: meta.color }}
+                                >
+                                  {meta.label} · {freshness.effectiveScore}分
+                                </span>
+                                {getCanDisplayAsFact(ds) && !freshness.currentUseAllowed ? (
+                                  <p className="mt-1 text-[9px] text-[#ff3b30]">历史可展示 · 当前阻断</p>
+                                ) : null}
+                              </div>
+                            );
+                          })()}
                         </td>
                         <td className="py-2.5 px-3 text-[10px] text-[#86868b]">{getBlockingReason(ds)}</td>
                         <td className="py-2.5 px-3">
@@ -478,11 +508,12 @@ export default function DataSourcePage() {
 
             <div className="bg-white rounded-2xl p-5 shadow-sm border border-[#EDE6DF]">
               <h3 className="text-sm font-semibold text-[#1d1d1f] mb-3">Momcozy采用 Precedence Research 口径说明</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {[
                   { title: '口径边界清晰', desc: 'Precedence当前只用于全球吸奶器品类TAM；SAM仍需地域、渠道、SKU和合规可服务范围证据。', color: '#34c759', sourceIds: ['ds-001'] },
                   { title: '时效性已登记', desc: '2026年4月发布周期和2021-2035年预测窗口已登记在source registry，页面按品类TAM展示。', color: '#5856d6', sourceIds: ['ds-001'] },
-                  { title: '增长率分层展示', desc: '吸奶器品类CAGR 8.52%来自ds-001；穿戴式细分CAGR 15.08%来自ds-045，二者不合并为SAM。', color: '#C25B6E', sourceIds: ['ds-001', 'ds-045'] },
+                  { title: '增长率分层展示', desc: '吸奶器品类CAGR只使用ds-001，不与其他市场层级合并为SAM。', color: '#C25B6E', sourceIds: ['ds-001'] },
+                  { title: '穿戴式来源阻断', desc: 'ds-045因公开页内部口径冲突保持阻断，不展示穿戴式规模或增长率。', color: '#ff9500', sourceIds: ['ds-045'] },
                 ].map((r, i) => (
                   <div key={i} className="p-3 rounded-xl bg-[#FBF8F5] border-l-3" style={{ borderLeft: `3px solid ${r.color}` }}>
                     <p className="text-xs font-medium" style={{ color: r.color }}>{r.title}</p>

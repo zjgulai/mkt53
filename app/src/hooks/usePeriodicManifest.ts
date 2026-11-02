@@ -51,6 +51,21 @@ export interface PeriodicCollectionManifest {
 
 export type CollectionManifestPath = '/periodic-data/latest.json' | '/weekly-data/latest.json';
 export type CollectionManifestStatus = 'loading' | 'ready' | 'missing';
+export type ManifestScheduleStatus = 'scheduled' | 'overdue' | 'unknown';
+export type ManifestScheduleTone = 'success' | 'warning' | 'danger';
+
+export function getManifestSchedulePresentation(
+  collectionStatus: CollectionManifestStatus,
+  scheduleStatus: ManifestScheduleStatus,
+): { tone: ManifestScheduleTone; label: string } {
+  if (collectionStatus === 'ready' && scheduleStatus === 'scheduled') {
+    return { tone: 'success', label: '调度正常' };
+  }
+  if (collectionStatus === 'ready' && scheduleStatus === 'overdue') {
+    return { tone: 'danger', label: '调度逾期' };
+  }
+  return { tone: 'warning', label: scheduleStatus === 'unknown' ? '调度信息未知' : '采集状态未就绪' };
+}
 
 export function formatManifestDateTime(value?: string) {
   if (!value) return '-';
@@ -59,6 +74,26 @@ export function formatManifestDateTime(value?: string) {
   if (Number.isNaN(parsed.getTime())) return value;
 
   return parsed.toLocaleString('zh-CN', { hour12: false });
+}
+
+export function getManifestScheduleStatus(
+  value?: string,
+  now: Date = new Date(),
+): ManifestScheduleStatus {
+  if (!value) return 'unknown';
+
+  const scheduledAt = new Date(value);
+  if (Number.isNaN(scheduledAt.getTime())) return 'unknown';
+
+  return scheduledAt.getTime() < now.getTime() ? 'overdue' : 'scheduled';
+}
+
+export function formatManifestScheduleText(value?: string, now: Date = new Date()) {
+  const scheduleStatus = getManifestScheduleStatus(value, now);
+  if (scheduleStatus === 'unknown') return '等待调度信息';
+
+  const formatted = formatManifestDateTime(value);
+  return scheduleStatus === 'overdue' ? `计划已逾期 ${formatted}` : `下次计划 ${formatted}`;
 }
 
 export async function fetchCollectionManifest(): Promise<{ manifest: PeriodicCollectionManifest; path: CollectionManifestPath }> {
@@ -112,7 +147,8 @@ export function usePeriodicManifest() {
       : manifest?.refreshCadence === 'weekly'
         ? '兼容周度窗口'
         : '等待采集窗口';
-  const nextScheduleText = manifest?.nextScheduledAt ? `下次计划 ${formatManifestDateTime(manifest.nextScheduledAt)}` : '等待调度信息';
+  const scheduleStatus = getManifestScheduleStatus(manifest?.nextScheduledAt);
+  const nextScheduleText = formatManifestScheduleText(manifest?.nextScheduledAt);
 
   return {
     manifest,
@@ -122,6 +158,7 @@ export function usePeriodicManifest() {
     period,
     generatedAtText,
     windowText,
+    scheduleStatus,
     nextScheduleText,
   };
 }

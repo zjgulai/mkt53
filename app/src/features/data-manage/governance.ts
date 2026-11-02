@@ -132,7 +132,7 @@ export const changeHistory = [
 export const dataLineage = [
   { from: '外部研报（Grand View Research/Statista）', to: 'market_size_global', type: '外部导入' },
   { from: 'market_size_global', to: 'market_trend_monthly', type: '派生计算' },
-  { from: '<span className="text-[#B5AFA8]">Amazon.com</span>', to: 'competitor_products', type: '连接器待接入' },
+  { from: 'Amazon.com 连接器待接入', to: 'competitor_products', type: '连接器待接入' },
   { from: 'competitor_products', to: 'new_product_tracker', type: '派生计算' },
   { from: 'competitor_products', to: 'price_analysis', type: '派生计算' },
   { from: 'user_comments', to: 'comment_analysis_ai', type: 'AI分析' },

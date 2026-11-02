@@ -37,6 +37,8 @@ export const Exhibition = lazy(() => import('@/pages/industry/Exhibition'));
 export const RegulationDetail = lazy(() => import('@/pages/industry/RegulationDetail'));
 export const FlavorReport = lazy(() => import('@/pages/industry/FlavorReport'));
 export const IndustryNews = lazy(() => import('@/pages/industry/IndustryNews'));
+export const IndustryReports = lazy(() => import('@/pages/industry/IndustryReports'));
+export const MacroAnalysis = lazy(() => import('@/pages/industry/MacroAnalysis'));
 export const TechNews = lazy(() => import('@/pages/industry/TechNews'));
 export const IPAnalysis = lazy(() => import('@/pages/industry/IPAnalysis'));
 

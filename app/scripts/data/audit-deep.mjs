@@ -4,6 +4,8 @@ import { basename, dirname, join, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import ts from 'typescript';
 import { analyzeConsistency, classifyCollectionMethod, extractSourceRegistry, listPageComponents } from './lib/project-analysis.mjs';
+import { routeMeceCategory } from './lib/route-taxonomy.mjs';
+import { loadRouteTargetMetrics } from './lib/route-target-metrics.mjs';
 
 const highImpactPattern =
   /(?:\bGMV\b|\bCAGR\b|\bNPS\b|\bROI\b|\bBSR\b|market\s*share|share|revenue|sales|units|price|rating|review|rank|trend|growth|\$|%|市场规模|市场份额|份额|月度趋势|趋势|增速|同比|环比|销量|销售|营收|收入|价格|售价|评分|评价|评论|排名|库存|成本|转化率|复购|客单价|关税|货值|专利|法规|合规|展会|供应链)/i;
@@ -11,6 +13,7 @@ const gatedDisclosurePattern =
   /(?:gated|gate|readiness|manifest|governance|canDisplayAsFact=false|private\/internal|private|internal|proxy|connector|required|authorized|blocked|artifact|publish|no model call|no provider call|no connector access|待复核|待授权|待审批|需复核|需授权|需审批|展示审批|字段字典|事实表|拆入|页面读取|候选源|候选|代理|不能写成|不可替代|保留|接入|证据|来源|权限|脱敏|样例|示例|治理|门禁|阻断|不包含|不得|不可作为|仅登记)/i;
 const numericPattern = /(?:[$￥]?\d+(?:,\d{3})*(?:\.\d+)?\s*(?:%|[KMB]|万|亿|千|美元|USD|usd|分|星|页|条|个|件|天|周|月|年|mAh|mmHg)?|20\d{2}(?:[-/年.]\d{1,2})?)/g;
 const sourceIdPattern = /\b(?:ds-\d{3}|policy-[a-z0-9-]+)\b/g;
+const routeAuditSourceLinePattern = /^.*route-audit-source:.*$/gm;
 const jsxAttributeSkip = new Set([
   'className',
   'style',
@@ -74,6 +77,10 @@ const moduleSourceLabels = {
   ai: 'AI助手',
 };
 
+const registryPageAliases = {
+  ReportPreview: ['ReportsPage'],
+};
+
 function parseArgs(argv) {
   const options = {
     json: argv.includes('--json'),
@@ -120,6 +127,16 @@ function countBy(values) {
   }, {});
 }
 
+function routeAuditSourceIds(sourceText, knownSourceIds) {
+  return unique((sourceText.match(routeAuditSourceLinePattern) ?? [])
+    .flatMap((line) => line.match(sourceIdPattern) ?? []))
+    .filter((id) => knownSourceIds.has(id));
+}
+
+function claimSourceText(sourceText) {
+  return sourceText.replace(routeAuditSourceLinePattern, '');
+}
+
 function walkFiles(dir, predicate) {
   return readdirSync(dir).flatMap((name) => {
     const path = join(dir, name);
@@ -128,6 +145,146 @@ function walkFiles(dir, predicate) {
     if (stat.isDirectory()) return walkFiles(path, predicate);
     return predicate(path) ? [path] : [];
   });
+}
+
+function resolveLocalImport(appRoot, importerPath, specifier) {
+  let unresolved;
+  if (specifier.startsWith('@/')) {
+    unresolved = join(appRoot, 'src', specifier.slice(2));
+  } else if (specifier.startsWith('.')) {
+    unresolved = resolve(dirname(importerPath), specifier);
+  } else {
+    return undefined;
+  }
+
+  const candidates = [
+    unresolved,
+    `${unresolved}.ts`,
+    `${unresolved}.tsx`,
+    `${unresolved}.js`,
+    `${unresolved}.jsx`,
+    join(unresolved, 'index.ts'),
+    join(unresolved, 'index.tsx'),
+    join(unresolved, 'index.js'),
+    join(unresolved, 'index.jsx'),
+  ];
+  return candidates.find((candidate) => existsSync(candidate) && statSync(candidate).isFile());
+}
+
+function importedBindingNames(importClause) {
+  const names = [];
+  if (importClause.name) names.push('default');
+  const bindings = importClause.namedBindings;
+  if (bindings && ts.isNamespaceImport(bindings)) return ['*'];
+  if (bindings) {
+    names.push(...bindings.elements
+      .filter((element) => !element.isTypeOnly)
+      .map((element) => element.propertyName?.text ?? element.name.text));
+  }
+  return unique(names);
+}
+
+function sourceIdsForImportedBindings(filePath, bindingNames, sourceRowsById) {
+  const sourceText = readFileSync(filePath, 'utf8');
+  if (bindingNames.includes('*')) {
+    return unique(sourceText.match(sourceIdPattern) ?? []).filter((id) => sourceRowsById.has(id));
+  }
+
+  const sourceFile = ts.createSourceFile(filePath, sourceText, ts.ScriptTarget.Latest, true);
+  const declarationsByName = new Map();
+  for (const statement of sourceFile.statements) {
+    if (ts.isVariableStatement(statement)) {
+      for (const declaration of statement.declarationList.declarations) {
+        if (ts.isIdentifier(declaration.name)) declarationsByName.set(declaration.name.text, declaration);
+      }
+    } else if (
+      (ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement) || ts.isEnumDeclaration(statement))
+      && statement.name
+    ) {
+      declarationsByName.set(statement.name.text, statement);
+    } else if (ts.isExportAssignment(statement) && ts.isIdentifier(statement.expression)) {
+      declarationsByName.set('default', statement.expression);
+    }
+  }
+
+  const pending = [...bindingNames];
+  const visitedBindings = new Set();
+  const sourceIds = [];
+  while (pending.length > 0) {
+    const bindingName = pending.shift();
+    if (!bindingName || visitedBindings.has(bindingName)) continue;
+    visitedBindings.add(bindingName);
+
+    const declaration = declarationsByName.get(bindingName);
+    if (!declaration) continue;
+    sourceIds.push(...(declaration.getText(sourceFile).match(sourceIdPattern) ?? []));
+
+    function collectLocalDependencies(node) {
+      if (ts.isIdentifier(node) && declarationsByName.has(node.text) && !visitedBindings.has(node.text)) {
+        pending.push(node.text);
+      }
+      ts.forEachChild(node, collectLocalDependencies);
+    }
+    collectLocalDependencies(declaration);
+  }
+
+  return unique(sourceIds).filter((id) => sourceRowsById.has(id));
+}
+
+function importedSourceIdsFor(appRoot, entryPath, sourceRowsById) {
+  const visited = new Set();
+  const sourceIds = [];
+  const srcRoot = join(appRoot, 'src');
+  const registryPath = join(appRoot, 'src', 'data', 'source-registry.ts');
+
+  function visit(filePath) {
+    if (!filePath || visited.has(filePath)) return;
+    visited.add(filePath);
+
+    const sourceText = readFileSync(filePath, 'utf8');
+    sourceIds.push(...(claimSourceText(sourceText).match(sourceIdPattern) ?? []));
+    if (filePath === entryPath) sourceIds.push(...routeAuditSourceIds(sourceText, new Set(sourceRowsById.keys())));
+    const sourceFile = ts.createSourceFile(filePath, sourceText, ts.ScriptTarget.Latest, true);
+
+    for (const statement of sourceFile.statements) {
+      if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)) continue;
+      const importClause = statement.importClause;
+      if (!importClause || importClause.isTypeOnly) continue;
+
+      const dependencyPath = resolveLocalImport(appRoot, filePath, statement.moduleSpecifier.text);
+      if (!dependencyPath) continue;
+
+      if (dependencyPath === registryPath) {
+        const bindings = importClause.namedBindings;
+        const consumesWholeRegistry = Boolean(
+          bindings && (
+            ts.isNamespaceImport(bindings)
+            || bindings.elements.some((element) =>
+              !element.isTypeOnly
+              && (element.propertyName?.text ?? element.name.text) === 'sourceRegistry')
+          ),
+        );
+        if (consumesWholeRegistry) sourceIds.push(...sourceRowsById.keys());
+        continue;
+      }
+
+      const dependencyRelativePath = relative(srcRoot, dependencyPath);
+      if (filePath === entryPath && dependencyRelativePath.startsWith('data/')) {
+        sourceIds.push(...sourceIdsForImportedBindings(
+          dependencyPath,
+          importedBindingNames(importClause),
+          sourceRowsById,
+        ));
+        continue;
+      }
+      const followsPageComposition = ['components', 'hooks', 'features']
+        .some((directory) => dependencyRelativePath.startsWith(`${directory}/`));
+      if (followsPageComposition) visit(dependencyPath);
+    }
+  }
+
+  visit(entryPath);
+  return unique(sourceIds).filter((id) => sourceRowsById.has(id));
 }
 
 function businessFiles(appRoot) {
@@ -139,7 +296,13 @@ function businessFiles(appRoot) {
     if (rel.startsWith(join('components', 'ui'))) return false;
     return true;
   });
-  const dataFiles = walkFiles(join(srcRoot, 'data'), (path) => path.endsWith('.ts') && !path.endsWith('source-registry.ts'));
+  const dataFiles = walkFiles(
+    join(srcRoot, 'data'),
+    (path) =>
+      path.endsWith('.ts') &&
+      !path.endsWith('source-registry.ts') &&
+      !path.endsWith('.generated.ts'),
+  );
   const featureRoot = join(srcRoot, 'features');
   const featureFiles = existsSync(featureRoot)
     ? walkFiles(featureRoot, (path) => path.endsWith('.ts') || path.endsWith('.tsx'))
@@ -340,7 +503,8 @@ function nodeSourceIds(node, sourceText, sourceFile, knownSourceIds, sourceIdCon
 function shouldKeepText(text) {
   const normalized = normalizeText(text);
   if (normalized.length < 2 || normalized.length > 320) return false;
-  if (!numericPattern.test(normalized)) {
+  const withoutPriorityLabels = normalized.replace(/\bP[0-3]\b/gi, '');
+  if (!numericPattern.test(withoutPriorityLabels)) {
     numericPattern.lastIndex = 0;
     return false;
   }
@@ -478,6 +642,9 @@ function riskForClaim({ text, sourceIds, coverage, sourceById, gatedByContext = 
     if (hasClaimLevelSource) return { risk: 'low', issueCode: 'claim-is-explicit-gated-disclosure' };
     return { risk: 'medium', issueCode: 'gated-source-disclosure' };
   }
+  if (isGatedDisclosure && hasClaimLevelSource) {
+    return { risk: 'low', issueCode: 'claim-is-explicit-gated-disclosure' };
+  }
   if (displayable.length === 0) return { risk: 'high', issueCode: 'no-displayable-source-evidence' };
   if (coverage !== 'record-level' && coverage !== 'near-line') return { risk: 'medium', issueCode: 'page-level-source-only' };
   if (rows.some((source) => source.verification_status !== 'verified')) return { risk: 'medium', issueCode: 'mixed-source-verification-status' };
@@ -485,7 +652,7 @@ function riskForClaim({ text, sourceIds, coverage, sourceById, gatedByContext = 
 }
 
 function collectFileSourceIds(path, sourceText, component, sourceRegistry, knownSourceIds) {
-  const directIds = unique([...(sourceText.match(sourceIdPattern) ?? [])]).filter((id) => knownSourceIds.has(id));
+  const directIds = unique([...(claimSourceText(sourceText).match(sourceIdPattern) ?? [])]).filter((id) => knownSourceIds.has(id));
   const registryIds = sourceRegistry.filter((source) => source.page === component).map((source) => source.id);
   return unique([...directIds, ...registryIds]);
 }
@@ -606,49 +773,119 @@ function buildTableRows(consistency, sourceRowsById) {
   });
 }
 
-function buildRouteRows(routes, consistency, claims, sourceRowsById) {
+function buildRouteRows(appRoot, routes, consistency, claims, sourceRowsById, targetMetricContractByRoute) {
   const pageByComponent = new Map(consistency.pages.map((page) => [page.component, page]));
-  const rows = routes.map((route) => {
-    const componentClaims = claims.filter((claim) => claim.page_component === route.component);
-    const sourceIds = unique(componentClaims.flatMap((claim) => claim.source_ids));
+  const registrySourceIdsFor = (component) => {
+    const registryPages = new Set([component, ...(registryPageAliases[component] ?? [])]);
+    return [...sourceRowsById.values()]
+      .filter((source) => registryPages.has(source.page))
+      .map((source) => source.source_id);
+  };
+  const pageSourceIdsFor = (page) => {
+    if (!page?.path) return [];
+    const pagePath = join(appRoot, 'src', page.path);
+    if (!existsSync(pagePath)) return [];
+    return importedSourceIdsFor(appRoot, pagePath, sourceRowsById);
+  };
+  const readinessFor = (route, sources) => {
+    if (route === '*') return 'not-applicable';
+    if (sources.length === 0) return 'unmapped';
+
+    const blockedSources = sources.filter((source) => !source.can_display_as_fact);
+    const scopeGapSources = sources.filter((source) => normalizeText(source.gap).length > 0);
+    if (blockedSources.length === sources.length) return 'blocked';
+    if (blockedSources.length > 0 || scopeGapSources.length > 0) return 'partial';
+    return 'source-backed';
+  };
+  const meceCategoryFor = (route, component, componentClaims, embedded) => {
+    if (!embedded) return routeMeceCategory(route);
+    const counts = countBy(componentClaims.map((claim) => claim.mece_category));
+    const [dominantCategory] = Object.entries(counts).sort((a, b) => b[1] - a[1])[0] ?? [];
+    return dominantCategory ?? impliedMeceCategory(route, component, '');
+  };
+  const buildRow = ({ route, component, page, componentClaims, embedded = false }) => {
+    const targetMetricContract = embedded ? undefined : targetMetricContractByRoute.get(route);
+    const targetMetric = targetMetricContract?.metric;
+    const sourceIds = unique([
+      ...componentClaims.flatMap((claim) => claim.source_ids),
+      ...pageSourceIdsFor(page),
+      ...registrySourceIdsFor(component),
+    ]);
     const sources = sourceIds.map((id) => sourceRowsById.get(id)).filter(Boolean);
-    const page = pageByComponent.get(route.component);
+    const blockedSources = sources.filter((source) => !source.can_display_as_fact);
+    const scopeGapSources = sources.filter((source) => normalizeText(source.gap).length > 0);
+    const workSources = unique([...blockedSources, ...scopeGapSources].map((source) => source.source_id))
+      .map((id) => sourceRowsById.get(id))
+      .filter(Boolean);
 
     return {
-      route: route.route,
-      component: route.component,
-      file_path: page?.path ?? '',
+      route,
+      component,
+      file_path: page?.path ?? componentClaims[0]?.file_path ?? '',
+      embedded,
+      mece_category: meceCategoryFor(route, component, componentClaims, embedded),
+      target_metric_contract_status: embedded
+        ? 'not-applicable'
+        : targetMetric
+          ? 'defined-not-certified'
+          : targetMetricContract
+            ? 'invalid'
+            : 'missing',
+      target_metric_contract_id: targetMetric?.metricId ?? '',
+      target_metric_name: targetMetric?.name ?? '',
+      target_metric_owner: targetMetric?.owner ?? '',
+      target_metric_grain: targetMetric?.grain ?? '',
+      target_metric_required_source_ids: Array.isArray(targetMetric?.requiredSourceIds)
+        ? targetMetric.requiredSourceIds
+        : [],
+      decision_question: targetMetricContract?.decisionQuestion ?? '',
+      decision_ready: targetMetricContract?.decisionReady === true,
+      source_readiness: readinessFor(route, sources),
       static_array_count: page?.staticArrayCount ?? 0,
-      uses_csv_export: Boolean(page?.usesCsvExport),
+      uses_csv_export: Boolean(page?.usesCsvExport) || componentClaims.some((claim) => claim.claim_type === 'csv_export'),
       claim_count: componentClaims.length,
       high_risk_claim_count: componentClaims.filter((claim) => claim.risk === 'high').length,
       medium_risk_claim_count: componentClaims.filter((claim) => claim.risk === 'medium').length,
       source_ids: sourceIds,
+      source_count: sources.length,
+      displayable_source_count: sources.length - blockedSources.length,
+      blocked_source_count: blockedSources.length,
+      scope_gap_source_count: scopeGapSources.length,
       evidence_grade_counts: countBy(sources.map((source) => source.evidence_grade)),
       verification_status_counts: countBy(sources.map((source) => source.verification_status)),
+      collection_method_counts: countBy(sources.map((source) => source.collection_method)),
       issue_counts: countBy(componentClaims.map((claim) => claim.issue_code)),
+      blocking_reasons: unique(blockedSources.map((source) => source.blocking_reason)),
+      next_actions: workSources.map((source) => ({
+        source_id: source.source_id,
+        lane: source.recommended_collection_lane,
+        gap: source.gap || source.blocking_reason,
+        action: source.action,
+      })),
     };
+  };
+  const rows = routes.map((route) => {
+    const componentClaims = claims.filter((claim) => claim.routes.split('|').includes(route.route));
+    const page = pageByComponent.get(route.component);
+
+    return buildRow({
+      route: route.route,
+      component: route.component,
+      page,
+      componentClaims,
+    });
   });
 
   const embeddedComponents = unique(claims.map((claim) => claim.page_component)).filter((component) => !routes.some((route) => route.component === component));
   for (const component of embeddedComponents) {
     const componentClaims = claims.filter((claim) => claim.page_component === component);
-    const sourceIds = unique(componentClaims.flatMap((claim) => claim.source_ids));
-    const sources = sourceIds.map((id) => sourceRowsById.get(id)).filter(Boolean);
-    rows.push({
+    rows.push(buildRow({
       route: impliedRoutes(component, routes).join('|'),
       component,
-      file_path: componentClaims[0]?.file_path ?? '',
-      static_array_count: 0,
-      uses_csv_export: componentClaims.some((claim) => claim.claim_type === 'csv_export'),
-      claim_count: componentClaims.length,
-      high_risk_claim_count: componentClaims.filter((claim) => claim.risk === 'high').length,
-      medium_risk_claim_count: componentClaims.filter((claim) => claim.risk === 'medium').length,
-      source_ids: sourceIds,
-      evidence_grade_counts: countBy(sources.map((source) => source.evidence_grade)),
-      verification_status_counts: countBy(sources.map((source) => source.verification_status)),
-      issue_counts: countBy(componentClaims.map((claim) => claim.issue_code)),
-    });
+      page: pageByComponent.get(component),
+      componentClaims,
+      embedded: true,
+    }));
   }
 
   return rows;
@@ -656,9 +893,14 @@ function buildRouteRows(routes, consistency, claims, sourceRowsById) {
 
 function buildReport(audit) {
   const topRoutes = [...audit.routeEvidenceMatrix]
-    .sort((a, b) => b.high_risk_claim_count - a.high_risk_claim_count)
-    .slice(0, 12)
-    .map((row) => `| ${row.route} | ${row.component} | ${row.claim_count} | ${row.high_risk_claim_count} | ${row.source_ids.join(' ')} |`)
+    .filter((row) => !row.embedded && row.route !== '*')
+    .sort((a, b) => {
+      const readinessRank = { unmapped: 4, blocked: 3, partial: 2, 'source-backed': 1 };
+      return (readinessRank[b.source_readiness] ?? 0) - (readinessRank[a.source_readiness] ?? 0)
+        || b.scope_gap_source_count - a.scope_gap_source_count
+        || b.blocked_source_count - a.blocked_source_count;
+    })
+    .map((row) => `| ${row.route} | ${row.component} | ${row.source_readiness} | ${row.claim_count} | ${row.blocked_source_count} | ${row.scope_gap_source_count} | ${row.source_ids.join(' ')} |`)
     .join('\n');
   const gapRows = audit.sourceGapMatrix
     .filter((row) => !row.can_display_as_fact)
@@ -686,15 +928,17 @@ provider_calls: false
 - Visible/data claim count: ${audit.summary.claimCount}
 - High risk claim count: ${audit.summary.highRiskClaimCount}
 - Source gap count: ${audit.summary.sourceGapCount}
+- Target metric contract coverage: ${audit.summary.targetMetricContractCoveredBusinessRouteCount}/${audit.summary.businessRouteCount}
+- Decision-ready business routes: ${audit.summary.decisionReadyBusinessRouteCount}
 
 ## Evidence Boundary
 
 This audit is local read-only/runtime evidence. It scans repository source files and does not call restricted providers, log in, bypass access controls, write production data, or deploy the site.
 
-## P0 Route Backlog
+## Route Readiness Matrix
 
-| route | component | claims | high risk | source ids |
-|---|---:|---:|---:|---|
+| route | component | readiness | claims | blocked sources | scope gaps | source ids |
+|---|---|---|---:|---:|---:|---|
 ${topRoutes}
 
 ## Source Gaps
@@ -719,12 +963,24 @@ export function buildDeepAudit(appRoot = process.cwd(), options = {}) {
   const routes = readRoutes(appRoot);
   const sourceGapMatrix = sourceRows(registry);
   const sourceRowsById = new Map(sourceGapMatrix.map((source) => [source.source_id, source]));
+  const businessRoutes = routes
+    .filter((route) => route.route !== '*')
+    .map((route) => ({ ...route, meceCategory: routeMeceCategory(route.route) }));
+  const targetMetricContracts = loadRouteTargetMetrics(appRoot, businessRoutes, new Set(sourceRowsById.keys()));
   const files = businessFiles(appRoot);
   const pageClaims = files.flatMap((file) => scanClaimsForFile(appRoot, file, routes, registry, sourceRowsById));
   const tableSourceMatrix = buildTableRows(consistency, sourceRowsById);
-  const routeEvidenceMatrix = buildRouteRows(routes, consistency, pageClaims, sourceRowsById);
+  const routeEvidenceMatrix = buildRouteRows(
+    appRoot,
+    routes,
+    consistency,
+    pageClaims,
+    sourceRowsById,
+    targetMetricContracts.contractByRoute,
+  );
   const highRiskClaims = pageClaims.filter((claim) => claim.risk === 'high');
   const sourceGaps = sourceGapMatrix.filter((source) => !source.can_display_as_fact);
+  const businessRouteRows = routeEvidenceMatrix.filter((row) => !row.embedded && row.route !== '*');
 
   const audit = {
     schemaVersion: 1,
@@ -756,8 +1012,23 @@ export function buildDeepAudit(appRoot = process.cwd(), options = {}) {
       issueCounts: countBy(pageClaims.map((claim) => claim.issue_code)),
       sourceEvidenceGradeCounts: countBy(sourceGapMatrix.map((source) => source.evidence_grade)),
       sourceCollectionMethods: countBy(sourceGapMatrix.map((source) => source.collection_method)),
+      businessRouteCount: businessRouteRows.length,
+      routeSourceReadinessCounts: countBy(businessRouteRows.map((row) => row.source_readiness)),
+      unmappedBusinessRouteCount: businessRouteRows.filter((row) => row.source_readiness === 'unmapped').length,
+      blockedBusinessRouteCount: businessRouteRows.filter((row) => row.source_readiness === 'blocked').length,
+      partialBusinessRouteCount: businessRouteRows.filter((row) => row.source_readiness === 'partial').length,
+      sourceBackedBusinessRouteCount: businessRouteRows.filter((row) => row.source_readiness === 'source-backed').length,
+      targetMetricContractDefinitionCount: targetMetricContracts.validation.summary.metricDefinitionCount,
+      targetMetricContractCoveredBusinessRouteCount: businessRouteRows
+        .filter((row) => row.target_metric_contract_status === 'defined-not-certified').length,
+      missingTargetMetricContractBusinessRouteCount: businessRouteRows
+        .filter((row) => row.target_metric_contract_status === 'missing').length,
+      invalidTargetMetricContractErrorCount: targetMetricContracts.validation.errors.length,
+      decisionReadyBusinessRouteCount: businessRouteRows.filter((row) => row.decision_ready).length,
     },
     consistencySummary: consistency.summary,
+    targetMetricContractValidation: targetMetricContracts.validation,
+    targetMetricContracts: targetMetricContracts.contract,
     pageClaims,
     tableSourceMatrix,
     sourceGapMatrix,
@@ -843,6 +1114,8 @@ function writeAudit(appRoot, audit, outDir) {
     'recommended_collection_lane',
   ]);
   writeJson(join(targetDir, 'route_evidence_matrix.json'), audit.routeEvidenceMatrix);
+  writeJson(join(targetDir, 'target_metric_contract_validation.json'), audit.targetMetricContractValidation);
+  writeJson(join(targetDir, 'target_metric_contracts.json'), audit.targetMetricContracts);
   writeFileSync(join(targetDir, 'audit-report.md'), audit.auditReportMarkdown);
 
   return targetDir;
@@ -882,7 +1155,9 @@ async function main() {
           generatedAt: audit.generatedAt,
           boundaries: audit.boundaries,
           summary: audit.summary,
+          targetMetricContractValidation: audit.targetMetricContractValidation,
           sourceGapMatrix: audit.sourceGapMatrix,
+          routeEvidenceMatrix: audit.routeEvidenceMatrix.filter((row) => !row.embedded),
           highRiskClaimSamples: audit.pageClaims.filter((claim) => claim.risk === 'high').slice(0, 20),
           outputDir: outputDir ? relative(appRoot, outputDir) : undefined,
         },
@@ -891,12 +1166,24 @@ async function main() {
       )}\n`,
     );
   } else if (options.json) {
-    process.stdout.write(`${JSON.stringify({ ...audit, auditReportMarkdown: undefined, outputDir: outputDir ? relative(appRoot, outputDir) : undefined }, null, 2)}\n`);
+    process.stdout.write(`${JSON.stringify({
+      ...audit,
+      auditReportMarkdown: undefined,
+      targetMetricContracts: undefined,
+      outputDir: outputDir ? relative(appRoot, outputDir) : undefined,
+    }, null, 2)}\n`);
   } else {
     printHuman(audit, outputDir);
   }
 
-  if (options.strict && audit.summary.highRiskClaimCount > 0) {
+  if (
+    options.strict
+    && (
+      audit.summary.highRiskClaimCount > 0
+      || audit.summary.missingTargetMetricContractBusinessRouteCount > 0
+      || audit.summary.invalidTargetMetricContractErrorCount > 0
+    )
+  ) {
     process.exitCode = 1;
   }
 }

@@ -51,3 +51,5 @@ export default function DesignAssistant() {
     />
   );
 }
+
+// route-audit-source: AiReportGovernancePanel focus=review ds-021 ds-023 ds-024 ds-026

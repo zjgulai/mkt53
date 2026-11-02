@@ -2,7 +2,9 @@ import { useState, type ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { CheckCircle, ClipboardCheck, Database, Lock, ShieldAlert } from 'lucide-react';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import SourceFreshnessOverview from '@/components/SourceFreshnessOverview';
 import Sidebar from '@/components/Sidebar';
+import { getSourceFreshness } from '@/data/source-freshness';
 
 interface MarketDataGateProps {
   title: string;
@@ -30,7 +32,7 @@ function getSidebarItems() {
     {
       label: '看市场',
       children: [
-        { label: '总览', path: '/market' },
+        { label: '总览', path: '/market', exact: true },
         { label: '大盘趋势', path: '/market/trend' },
         { label: '吸奶器', path: '/market/mtl' },
         { label: '哺乳用品', path: '/market/dtl' },
@@ -59,11 +61,25 @@ export default function MarketDataGate({
 }: MarketDataGateProps) {
   const [activeTab, setActiveTab] = useState(tabs[0] ?? '数据边界');
   const sidebarItems = getSidebarItems();
-  const resolvedGateStatus = gateStatus ?? {
+  const requestedGateStatus = gateStatus ?? {
     label: '事实展示已暂停，等待来源复核',
     description: '当前标签页只保留业务问题和治理状态。待来源 URL、采集窗口、字段口径、hash、复核人和证据路径补齐后，才恢复图表、排行榜、金额、百分比、价格、税率或品牌份额展示。',
     tone: 'blocked' as const,
   };
+  const freshnessSourceIds = gateStatus?.sourceIds ?? [];
+  const freshnessCurrentUseAllowed =
+    freshnessSourceIds.length === 0 ||
+    freshnessSourceIds.every((sourceId) => getSourceFreshness(sourceId).currentUseAllowed);
+  const freshnessBlocked =
+    requestedGateStatus.tone === 'approved' && !freshnessCurrentUseAllowed;
+  const resolvedGateStatus = freshnessBlocked
+    ? {
+      label: '历史证据保留 · 当前新鲜度阻断',
+      description:
+        '历史证据等级和限定claim scope保持不变；当前artifact、受控sha256合同或刷新回执未齐，因此本页对受影响的内部proxy内容 fail closed。',
+      tone: 'blocked' as const,
+    }
+    : requestedGateStatus;
   const gateApproved = resolvedGateStatus.tone === 'approved';
   const GateIcon = gateApproved ? CheckCircle : Lock;
 
@@ -96,9 +112,22 @@ export default function MarketDataGate({
               description={evidenceDescription}
             />
 
-            {internalFactSummary ? (
+            {freshnessSourceIds.length > 0 ? (
+              <SourceFreshnessOverview
+                sourceIds={freshnessSourceIds}
+                title="本页内部来源当前使用门禁"
+              />
+            ) : null}
+
+            {internalFactSummary && gateApproved ? (
               <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
                 {internalFactSummary}
+              </div>
+            ) : internalFactSummary && freshnessBlocked ? (
+              <div className="rounded-2xl border border-dashed border-[#ff3b30]/30 bg-[#ff3b30]/5 p-6 text-center">
+                <p className="text-xs leading-relaxed text-[#86868b]">
+                  Batch19 历史审批记录仍可审计，但本页不渲染其代理数值或导出内容。补齐不可变artifact、受控sha256和refresh receipt并重新校验后，才恢复当前使用。
+                </p>
               </div>
             ) : null}
 

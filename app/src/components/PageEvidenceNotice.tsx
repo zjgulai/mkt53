@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
 import { AlertTriangle, CheckCircle, Info } from 'lucide-react';
 import { getSourceRegistryItem, getVerificationStatusMeta, type SourceRegistryItem, type VerificationStatus } from '@/data/source-registry';
+import { getSourceFreshness, getSourceFreshnessMeta } from '@/data/source-freshness';
 
 interface PageEvidenceNoticeProps {
-  sourceIds: string[];
+  sourceIds: readonly string[];
   title: string;
   description: ReactNode;
   className?: string;
@@ -47,12 +48,16 @@ export default function PageEvidenceNotice({ sourceIds, title, description, clas
             <span className="px-2 py-0.5 rounded-full text-[10px] font-medium" style={{ backgroundColor: `${style.text}14`, color: style.text }}>{cadence}</span>
           </div>
           <p className="text-[11px] text-[#86868b] leading-relaxed mt-1">{description}</p>
-          <div className="flex flex-wrap gap-1.5 mt-2">
+          <div className="flex flex-wrap gap-1.5 mt-2" data-evidence-source-list>
             {sources.map((source) => {
               const meta = getVerificationStatusMeta(source.verificationStatus);
+              const freshness = getSourceFreshness(source.id);
+              const freshnessMeta = getSourceFreshnessMeta(freshness.status);
               return (
                 <span key={source.id} className="px-2 py-0.5 rounded-full bg-white/70 border border-[#EDE6DF] text-[10px] text-[#86868b]">
                   {source.id} · {source.metric} · <strong style={{ color: meta.color }}>{meta.label}</strong>
+                  {' · '}
+                  <strong style={{ color: freshnessMeta.color }}>{freshnessMeta.label} {freshness.effectiveScore}分</strong>
                 </span>
               );
             })}

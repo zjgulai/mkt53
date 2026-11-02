@@ -44,9 +44,9 @@ export default function RegulationDetail() {
       accent="#C25B6E"
       sourceIds={['ds-016', 'policy-cpsc-efiling', 'policy-eu-mdr-transition']}
       evidenceTitle="法规条目逐项复核中"
-      evidenceDescription="CPSC CPC/eFiling、EU MDR 过渡安排和部分区域法规需要官方条文、SKU 适用范围与法务复核记录逐项绑定；未完成前不展示合规进度、负责人结论或 CSV 清单。"
-      statusLabel="DATA-REG 合同与 intake 模板就绪，真实输入仍为 0"
-      cadence="contract v1 · intake 0/6 · 0 publishable decisions"
+      evidenceDescription="本门禁 owner packet 已分别覆盖 CPSC 与 EU 产品级复核，但 SKU、证书、分类和法务证据仍全部缺失且尚未获批；未完成前不展示合规进度、负责人结论或 CSV 清单。"
+      statusLabel="DATA-REG 合同与 owner packet 就绪，尚未获批"
+      cadence="intake 尚未完成 · owner/reviewer 尚未获批 · 无可发布决定"
       internalFactSummary={(
         <div className="space-y-5">
           <RegulationSkuContractPanel />

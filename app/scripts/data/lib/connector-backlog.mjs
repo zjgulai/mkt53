@@ -93,8 +93,21 @@ const connectorDefinitions = [
   },
 ];
 
+const amazonCommerceSourceIds = new Set([
+  'ds-007',
+  'ds-009',
+  'ds-010',
+  'ds-019',
+  'ds-037',
+  'ds-038',
+  'ds-039',
+]);
+
 function connectorDefinitionFor(source) {
   const text = `${source.id} ${source.page} ${source.metric} ${source.sourceName} ${source.sourceType} ${source.note} ${source.action}`.toLowerCase();
+  if (amazonCommerceSourceIds.has(source.id)) {
+    return connectorDefinitions.find((definition) => definition.connectorId === 'amazon-commerce');
+  }
 
   const exactOrder = [
     ['trade-import', /import genius|海关|hs编码|进出口|\bhts(?:usa)?\b/i],

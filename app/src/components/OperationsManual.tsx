@@ -29,9 +29,9 @@ const pageGuides = [
     ],
     businessValue: '将公开市场报告、待授权经营数据和内部复核任务分层呈现；效率收益需接入使用日志后再量化',
     keyInsights: [
-      { title: '品类TAM $3.81B / 细分TAM $233M', desc: '吸奶器品类TAM登记 ds-001；穿戴式细分TAM登记 ds-045；SAM/SOM需另补服务范围和可获份额假设', type: 'strategic' },
-      { title: '北美公开份额45.05%', desc: 'Fortune BI 2025区域市场口径已登记 ds-002', type: 'strength' },
-      { title: '穿戴式CAGR 15.08%', desc: '穿戴式细分赛道公开报告口径已登记 ds-045', type: 'opportunity' },
+      { title: '品类TAM已登记 / 细分来源阻断', desc: '吸奶器品类TAM登记 ds-001；穿戴式来源 ds-045 同页口径冲突，SAM/SOM仍需服务范围和可获份额假设', type: 'strategic', sourceIds: ['ds-001', 'ds-045'] },
+      { title: '北美公开份额45.05%', desc: 'Fortune BI 2025区域市场口径已登记 ds-002', type: 'strength', sourceIds: ['ds-002'] },
+      { title: '穿戴式口径待澄清', desc: 'ds-045 只登记来源冲突和补证动作，不展示市场规模或增长率', type: 'opportunity', sourceIds: ['ds-045'] },
       { title: '品牌份额待授权', desc: 'Momcozy/Medela份额需Amazon Brand Analytics或零售面板接入', type: 'action' }
     ],
     storyLine: '从"我们在哪"到"我们要去哪"——首页仪表盘先给出公开报告可复核的市场规模和区域份额，再把品牌份额、GMV月趋势等授权数据列为待接入项。'
@@ -210,8 +210,12 @@ const insightStories = [
     title: '我们在哪？——全球母婴护理市场的坐标',
     icon: Compass,
     color: '#C25B6E',
-    narrative: '公开报告口径显示：全球吸奶器品类TAM约$3.81B（2026E，ds-001），穿戴式吸奶器细分TAM约$233M（2026E，ds-045）。全球婴童用品为上层TAM，不能作为吸奶器份额分母；SAM/SOM需Amazon Brand Analytics、零售面板、ERP快照和服务范围假设接入后再下经营判断。',
-    dataPoints: ['北美公开份额45.05%（ds-002）', '穿戴式CAGR 15.08%（ds-045）', '公开月趋势为Wikimedia兴趣代理，非GMV'],
+    narrative: '公开报告口径保留全球吸奶器品类TAM（ds-001）；穿戴式来源 ds-045 因同页市场规模与区域份额无法相互校验而阻断。全球婴童用品为上层TAM，不能作为吸奶器份额分母；SAM/SOM需Amazon Brand Analytics、零售面板、ERP快照和服务范围假设接入后再下经营判断。',
+    dataPoints: [
+      { text: '北美公开份额45.05%（ds-002）', sourceIds: ['ds-002'] },
+      { text: '穿戴式来源冲突，事实展示已阻断（ds-045）', sourceIds: ['ds-045'] },
+      { text: '公开月趋势为Wikimedia兴趣代理，非GMV', sourceIds: ['ds-046'] },
+    ],
     action: '优先补齐Amazon/零售面板/ERP授权数据，再做品牌份额和渠道投放结论'
   },
   {
@@ -381,7 +385,7 @@ export default function OperationsManual() {
                     <div className="flex flex-wrap gap-2 mb-3">
                       {story.dataPoints.map((dp, di) => (
                         <span key={di} className="px-2 py-1 rounded-lg bg-[#FBF8F5] text-[10px] text-[#1d1d1f] border border-[#EDE6DF] flex items-center gap-1">
-                          <BarChart3 className="w-3 h-3 text-[#C25B6E]" /> {dp}
+                          <BarChart3 className="w-3 h-3 text-[#C25B6E]" /> {typeof dp === 'string' ? dp : dp.text}
                         </span>
                       ))}
                     </div>

@@ -42,7 +42,12 @@ export default function EvidenceGatePage({
   const [activeTab, setActiveTab] = useState(tabs[0] ?? '数据边界');
 
   return (
-    <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+    <div
+      className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8"
+      data-testid="evidence-gate-page"
+      data-evidence-mode="definition-only"
+      data-business-values={internalFactSummary ? 'internal-summary' : 'absent'}
+    >
       <div className="max-w-[1600px] mx-auto">
         <div className="flex gap-8">
           {sidebarItems && <Sidebar items={sidebarItems} />}

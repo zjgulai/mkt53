@@ -284,3 +284,5 @@ export default function ReportsPage() {
     </div>
   );
 }
+
+// route-audit-source: AiReportGovernancePanel focus=report ds-024 ds-035 ds-047 ds-049 ds-050 ds-051

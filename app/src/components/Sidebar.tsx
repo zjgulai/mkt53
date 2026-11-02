@@ -10,6 +10,7 @@ export interface SidebarItem {
   children?: SidebarItem[];
   defaultOpen?: boolean;
   sectionId?: string;
+  exact?: boolean;
 }
 
 interface SidebarProps {
@@ -35,16 +36,17 @@ function SidebarItemComponent({
   const hasChildren = item.children && item.children.length > 0;
 
   const isActive = useCallback(
-    (path?: string, sectionId?: string) => {
+    (path?: string, sectionId?: string, exact?: boolean) => {
       if (activeSection && sectionId) return activeSection === sectionId;
       if (!path) return false;
+      if (exact) return location.pathname === path;
       return location.pathname === path || location.pathname.startsWith(path + '/');
     },
     [activeSection, location.pathname]
   );
 
   const isAnyChildActive = hasChildren
-    ? item.children!.some((c) => isActive(c.path, c.sectionId))
+    ? item.children!.some((c) => isActive(c.path, c.sectionId, c.exact))
     : false;
   const isParentActive = activeSection && item.sectionId
     ? activeSection === item.sectionId
@@ -92,7 +94,7 @@ function SidebarItemComponent({
                 key={i}
                 item={child}
                 level={level + 1}
-                isActive={isActive(child.path, child.sectionId)}
+                isActive={isActive(child.path, child.sectionId, child.exact)}
                 onClick={() => handleChildClick(child.sectionId)}
                 hasCustomNav={!!onSectionChange}
               />
@@ -123,12 +125,15 @@ function SidebarItemComponent({
     );
   }
 
+  const leafPathActive = isActive(item.path, item.sectionId, item.exact);
+
   return (
     <Link
       to={item.path || '#'}
+      aria-current={leafPathActive ? 'page' : undefined}
       className={cn(
         'flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-all',
-        isActive(item.path)
+        leafPathActive
           ? 'bg-[#C25B6E]/10 text-[#C25B6E] font-medium'
           : 'text-[#1d1d1f] hover:bg-[#FBF8F5] transition-colors duration-200 duration-200'
       )}
@@ -174,6 +179,7 @@ function SidebarChildItem({
   return (
     <Link
       to={item.path || '#'}
+      aria-current={isActive ? 'page' : undefined}
       className={cn(
         'flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-all',
         isActive

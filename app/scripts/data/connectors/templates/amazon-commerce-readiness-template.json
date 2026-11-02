@@ -15,6 +15,7 @@
     "collectionWindowEnd",
     "reviewOwner",
     "reviewApprovedAt",
+    "complianceReviewer",
     "complianceReviewStatus",
     "allowedSnapshotTypes"
   ],

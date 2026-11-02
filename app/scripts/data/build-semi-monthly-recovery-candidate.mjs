@@ -151,6 +151,24 @@ const optionalPublicEvidenceStringArrayFields = new Set([
 
 const optionalPublicEvidenceNumberFields = new Set(['httpStatus', 'visibleTextLength']);
 const optionalCustomsBooleanFields = new Set(['countersMatchRecords']);
+const optionalSourceObservationNumberFields = new Set(['attempt', 'checkAttemptCount', 'httpStatus']);
+const optionalSourceObservationStringFields = new Set([
+  'contentType',
+  'error',
+  'etag',
+  'lastModified',
+  'requestVariant',
+  'sampleHash',
+  'statusStability',
+]);
+const optionalSourceObservationBooleanFields = new Set(['retryable']);
+const optionalSourceObservationFields = new Set([
+  ...optionalSourceObservationNumberFields,
+  ...optionalSourceObservationStringFields,
+  ...optionalSourceObservationBooleanFields,
+  'attempts',
+  'fallbackFrom',
+]);
 const optionalPublicEvidenceRecordFields = new Set([
   ...optionalPublicEvidenceStringFields,
   ...optionalPublicEvidenceStringArrayFields,
@@ -201,6 +219,51 @@ function isValidBlockerArray(value) {
         item.type.trim().length > 0,
     )
   );
+}
+
+function isValidSourceFallback(value, depth = 0) {
+  if (!isPlainRecord(value) || depth > 4) return false;
+  const allowedFields = new Set(['error', 'httpStatus', 'note', 'previousFallback', 'requestVariant']);
+  if (Object.keys(value).some((field) => !allowedFields.has(field))) return false;
+  if (typeof value.requestVariant !== 'string' || value.requestVariant.trim().length === 0) return false;
+  if (Object.hasOwn(value, 'httpStatus') && (!Number.isInteger(value.httpStatus) || value.httpStatus < 100)) return false;
+  if (Object.hasOwn(value, 'error') && (typeof value.error !== 'string' || value.error.trim().length === 0)) return false;
+  if (Object.hasOwn(value, 'note') && (typeof value.note !== 'string' || value.note.trim().length === 0)) return false;
+  if (Object.hasOwn(value, 'previousFallback') && !isValidSourceFallback(value.previousFallback, depth + 1)) return false;
+  return true;
+}
+
+function isValidSourceAttempts(value) {
+  if (!Array.isArray(value) || value.length === 0) return false;
+  const allowedFields = new Set(['attempt', 'checkedAt', 'error', 'httpStatus', 'retryable', 'status']);
+  return value.every((item) => {
+    if (!isPlainRecord(item) || Object.keys(item).some((field) => !allowedFields.has(field))) return false;
+    if (!Number.isInteger(item.attempt) || item.attempt < 1) return false;
+    if (typeof item.checkedAt !== 'string' || Number.isNaN(Date.parse(item.checkedAt))) return false;
+    if (typeof item.status !== 'string' || item.status.trim().length === 0) return false;
+    if (typeof item.retryable !== 'boolean') return false;
+    if (Object.hasOwn(item, 'httpStatus') && (!Number.isInteger(item.httpStatus) || item.httpStatus < 100)) return false;
+    if (Object.hasOwn(item, 'error') && (typeof item.error !== 'string' || item.error.trim().length === 0)) return false;
+    return true;
+  });
+}
+
+function isSourceObservationField(path, field) {
+  return path.at(-1) === '[]' && path.at(-2) === 'sources' && optionalSourceObservationFields.has(field);
+}
+
+function isValidSourceObservationValue(field, value) {
+  if (optionalSourceObservationNumberFields.has(field)) return Number.isInteger(value) && value >= 0;
+  if (optionalSourceObservationStringFields.has(field)) {
+    if (typeof value !== 'string') return false;
+    if (field === 'sampleHash') return /^[a-f0-9]{64}$/i.test(value);
+    if (field === 'error' || field === 'requestVariant' || field === 'statusStability') return value.trim().length > 0;
+    return true;
+  }
+  if (optionalSourceObservationBooleanFields.has(field)) return typeof value === 'boolean';
+  if (field === 'attempts') return isValidSourceAttempts(value);
+  if (field === 'fallbackFrom') return isValidSourceFallback(value);
+  return false;
 }
 
 function isValidOptionalFieldValue(field, value) {
@@ -264,6 +327,12 @@ function areValuesContractCompatible(candidate, canonical, path = []) {
   for (const field of allFields) {
     const candidateHasField = Object.hasOwn(candidate, field);
     const canonicalHasField = Object.hasOwn(canonical, field);
+    if (isSourceObservationField(path, field)) {
+      const candidateValid = !candidateHasField || isValidSourceObservationValue(field, candidate[field]);
+      const canonicalValid = !canonicalHasField || isValidSourceObservationValue(field, canonical[field]);
+      if (candidateValid && canonicalValid) continue;
+      return false;
+    }
     if (!candidateHasField || !canonicalHasField) {
       if (isOptionalField(path, field)) {
         const presentValue = candidateHasField ? candidate[field] : canonical[field];

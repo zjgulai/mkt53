@@ -342,7 +342,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "保留公开品牌入口证据包；提交p0-amazon-connector-owner-01证据包并通过owner intake验证后再复核竞品价格、排名、份额、销量和SKU结论"
+      "nextAction": "仅在获批私有路径填写DQ-020映射/readiness草稿，依次通过mapping coverage、Amazon readiness、private audit和独立release review；当前保持事实阻断"
     },
     {
       "id": "ds-009",
@@ -366,7 +366,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "提交p0-amazon-connector-owner-01证据包并通过owner intake验证"
+      "nextAction": "仅在获批私有路径填写DQ-020映射/readiness草稿，依次通过mapping coverage、Amazon readiness、private audit和独立release review；当前保持事实阻断"
     },
     {
       "id": "ds-010",
@@ -391,7 +391,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "保留公开区域来源入口证据包；提交p0-amazon-connector-owner-01证据包并补国家/marketplace映射、Amazon BA快照和零售面板分母后再复核区域份额与排名"
+      "nextAction": "仅在获批私有路径填写DQ-020映射/readiness草稿，补齐Amazon渠道分母边界后依次通过mapping coverage、readiness、private audit和独立release review；当前保持事实阻断"
     },
     {
       "id": "ds-019",
@@ -415,7 +415,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "提交p0-amazon-connector-owner-01证据包；继续把ERP proxy和平台结论分开展示"
+      "nextAction": "仅在获批私有路径填写DQ-020映射/readiness草稿，保持Amazon、DTC、广告和ERP来源分离，并依次通过mapping coverage、readiness、private audit和独立release review"
     },
     {
       "id": "ds-037",
@@ -439,7 +439,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "保留公开报告入口证据包；提交p0-amazon-connector-owner-01证据包并补类目/品牌映射后再复核婴儿护理外部趋势和品牌结论"
+      "nextAction": "仅在获批私有路径填写DQ-020映射/readiness草稿，补齐类目taxonomy与权重公式后依次通过mapping coverage、readiness、private audit和独立release review"
     },
     {
       "id": "ds-038",
@@ -463,7 +463,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "保留公开报告入口证据包；提交p0-amazon-connector-owner-01证据包并补品类测算表后再复核外部品类结论"
+      "nextAction": "仅在获批私有路径填写DQ-020映射/readiness草稿，补齐BSR比较集与生命周期模型后依次通过mapping coverage、readiness、private audit和独立release review"
     },
     {
       "id": "ds-039",
@@ -487,7 +487,7 @@
       ],
       "stopCondition": "dry-run 输出带 requestId、site、window、sampleCount、sourceIds，且不含真实凭据。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "保留公开报告入口证据包；提交p0-amazon-connector-owner-01证据包并补类目/品牌映射后再复核哺乳用品外部趋势和品牌结论"
+      "nextAction": "仅在获批私有路径填写DQ-020映射/readiness草稿，补齐类目taxonomy与Amazon渠道份额口径后依次通过mapping coverage、readiness、private audit和独立release review"
     },
     {
       "id": "ds-023",
@@ -600,7 +600,7 @@
       ],
       "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "OK：仅按private/internal proxy展示；保持非GMV/非份额/非TAM标签"
+      "nextAction": "仅保留历史快照说明；当前新鲜度阻断，补齐不可变artifact、受控sha256和refresh receipt后再复核"
     },
     {
       "id": "ds-048",
@@ -623,7 +623,7 @@
       ],
       "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "OK：仅按private/internal proxy展示；保持非售后率/非GMV/非份额标签"
+      "nextAction": "仅保留历史快照说明；当前新鲜度阻断，补齐不可变artifact、受控sha256和refresh receipt后再复核"
     },
     {
       "id": "ds-049",
@@ -646,7 +646,7 @@
       ],
       "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "OK：只展示可见列内部代理和来源状态；不外推渠道份额或市场份额"
+      "nextAction": "仅保留历史快照说明；当前新鲜度阻断，补齐不可变artifact、受控sha256和refresh receipt后再复核"
     },
     {
       "id": "ds-050",
@@ -669,7 +669,7 @@
       ],
       "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "OK：沉淀到ERP内部经营数据治理；不写成区域份额、竞品份额或TAM/SAM/SOM"
+      "nextAction": "仅保留历史快照说明；当前新鲜度阻断，补齐不可变artifact、受控sha256和refresh receipt后再复核"
     },
     {
       "id": "ds-051",
@@ -692,7 +692,7 @@
       ],
       "stopCondition": "dry-run 输出 warehouseSet、skuCount、snapshotAt 和 owner。",
       "blockedReason": "缺少授权连接器、采集窗口或脱敏复核记录；刷新脚本不得伪造已采集数据。",
-      "nextAction": "OK：仅作为内部目标达成proxy；不作为公开市场规模或份额分母"
+      "nextAction": "仅保留历史快照说明；当前新鲜度阻断，补齐不可变artifact、受控sha256和refresh receipt后再复核"
     },
     {
       "id": "ds-020",

@@ -154,7 +154,7 @@ export default function StoreInterviews() {
     <FactDisplayGate
       sourceIds={['ds-042']}
       title="门店访谈仅保留治理状态"
-      description="当前缺少门店运营快照、访谈授权、现场记录、计算口径和证据哈希，不能展示转化率、坪效、NPS、客流或营收。"
+      description="本门禁 owner packet 已生成，但门店快照、访谈授权、现场记录、计算口径和 reviewer 尚未获批；不能展示转化率、坪效、NPS、客流或营收。"
       layout="page"
       navigation={<Sidebar items={sidebarItems} responsive />}
     >
@@ -208,7 +208,7 @@ export default function StoreInterviews() {
             <PageEvidenceNotice
               sourceIds={['ds-042']}
               title="门店访谈复核口径"
-              description="转化率、坪效、NPS 和门店访谈结论需要绑定门店运营快照、访谈样本与授权状态；当前图表不作为真实门店经营结果。"
+              description="本门禁 owner packet 已列明门店选样、授权、脱敏现场记录、不可变快照、schema/hash、指标口径和匿名化证据；当前尚未获批，不提升未核验事实状态。"
             />
 
             {/* ═══ AI Agents ═══ */}

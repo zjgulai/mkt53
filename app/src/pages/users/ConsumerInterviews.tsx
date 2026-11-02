@@ -185,7 +185,7 @@ export default function ConsumerInterviews() {
     <FactDisplayGate
       sourceIds={['ds-014']}
       title="消费者访谈仅保留治理状态"
-      description="当前缺少业务 owner 签核、样本窗口、招募条件、脱敏原文、授权状态和证据哈希，不能展示 NPS、满意度、原话或主题占比。"
+      description="本门禁 owner packet 已生成，但必填证据仍全部缺失，owner/reviewer 尚未获批；当前不能展示 NPS、满意度、原话或主题占比。"
       layout="page"
       navigation={<Sidebar items={sidebarItems} responsive />}
     >
@@ -241,7 +241,7 @@ export default function ConsumerInterviews() {
             <PageEvidenceNotice
               sourceIds={['ds-014']}
               title="消费者访谈样本口径"
-              description="当前访谈记录缺少完整招募条件、样本配额和原始访谈凭证；NPS、Kano 和旅程结论应作为定性线索，不能替代量化调研结论。"
+              description="本门禁 owner packet 已列明 consent、招募配额、访谈窗口、脱敏原文 hash、编码和 saturation 证据；当前尚未获批，不提升未核验事实状态。"
             />
 
             {/* ═══ AI Agents ═══ */}

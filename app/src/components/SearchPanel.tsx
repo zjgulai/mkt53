@@ -35,7 +35,7 @@ const allSearchData: SearchResult[] = [
   // 市场数据
   { id: 'sm-01', title: '全球吸奶器市场规模与份额分母', category: '市场', path: '/market', desc: '$3.81B 品类TAM · CAGR 8.52% · Precedence Research · ds-001', icon: BarChart3, color: '#C25B6E' },
   { id: 'sm-02', title: '品牌份额趋势待授权', category: '市场', path: '/market', desc: '需Amazon Brand Analytics/零售面板接入，不使用示例份额', icon: TrendingUp, color: '#ff9500' },
-  { id: 'sm-03', title: '穿戴式吸奶器细分市场', category: '市场', path: '/market', desc: '$233M · CAGR 15.08% · Fortune BI · ds-045', icon: BarChart3, color: '#34c759' },
+  { id: 'sm-03', title: '穿戴式吸奶器来源复核', category: '市场', path: '/market', desc: '同页市场规模与区域份额口径冲突 · 阻断 · ds-045', icon: BarChart3, color: '#34c759' },
 ];
 
 const recentSearches = ['M5', 'CPSC复核', '市场份额', 'W1加热款', 'Medela'];

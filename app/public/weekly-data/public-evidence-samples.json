@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-28T03:02:43.213Z",
+  "generatedAt": "2026-08-09T03:13:13.463Z",
   "mode": "dry-run",
   "generatedRule": "Browser-assisted public evidence captures only public visible pages. It does not log in, bypass access controls, write business datasets, or replace authorized connectors.",
   "seedPath": "scripts/data/public-evidence-seeds.json",
@@ -44,7 +44,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -76,7 +76,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -108,7 +108,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -140,7 +140,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -172,7 +172,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -204,7 +204,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -236,7 +236,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -268,7 +268,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -300,7 +300,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -332,7 +332,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -364,7 +364,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -396,7 +396,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -428,7 +428,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -460,7 +460,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -492,7 +492,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -524,7 +524,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -556,7 +556,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -588,7 +588,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -620,7 +620,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -652,7 +652,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -684,7 +684,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -716,7 +716,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -748,7 +748,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -780,7 +780,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -812,7 +812,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -844,7 +844,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -876,7 +876,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -908,7 +908,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -940,7 +940,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -972,7 +972,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -1004,7 +1004,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -1036,7 +1036,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -1068,7 +1068,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -1100,7 +1100,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -1132,7 +1132,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -1164,7 +1164,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -1196,7 +1196,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -1228,7 +1228,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,
@@ -1260,7 +1260,7 @@
       "rawTextPublicBundleAllowed": false,
       "screenshotPublicBundleAllowed": false,
       "captureStatus": "planned",
-      "capturedAt": "2026-07-28T03:02:43.213Z",
+      "capturedAt": "2026-08-09T03:13:13.463Z",
       "browser": "not-launched",
       "safety": {
         "networkCalls": 0,

@@ -1,7 +1,8 @@
 import { lazy, Suspense, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Database, Table, ChevronRight, ChevronDown, BarChart3, Users, Sparkles, Link2, AlertCircle, CheckCircle, Info, ShieldCheck, Download, Lock, Globe, HardDrive, Search, Layers, RefreshCw, FileText, BookOpen } from 'lucide-react';
-import { usePeriodicManifest } from '@/hooks/usePeriodicManifest';
+import { getManifestSchedulePresentation, usePeriodicManifest } from '@/hooks/usePeriodicManifest';
+import SourceFreshnessOverview from '@/components/SourceFreshnessOverview';
 import { dataModules } from '@/features/data-manage/catalog';
 import { changeHistory, dataLineage, tableGovernance } from '@/features/data-manage/governance';
 import { classifySource, layerMeta, type DataGovernance, type DataLayer, type SourceScope } from '@/features/data-manage/model';
@@ -35,6 +36,7 @@ export default function DataManage() {
     period: collectionPeriod,
     generatedAtText: collectionGeneratedAt,
     windowText: collectionWindow,
+    scheduleStatus,
     nextScheduleText: nextSchedule,
   } = usePeriodicManifest();
 
@@ -50,6 +52,7 @@ export default function DataManage() {
   const currentModule = dataModules.find(m => m.id === activeModule)!;
   const totalTables = dataModules.reduce((s, m) => s + m.tables.length, 0);
   const totalFields = dataModules.reduce((s, m) => s + m.tables.reduce((ts, t) => ts + t.fields.length, 0), 0);
+  const collectionSchedule = getManifestSchedulePresentation(collectionManifestStatus, scheduleStatus);
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -62,7 +65,7 @@ export default function DataManage() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-[#1d1d1f]">数据管理</h1>
-              <p className="text-xs text-[#86868b]">{totalTables}张数据表 · {totalFields}个字段 · 6大模块 · MECE原则组织</p>
+              <p className="text-xs text-[#86868b]">{totalTables}张数据表 · {totalFields}个字段 · {dataModules.length}大模块 · MECE原则组织</p>
             </div>
             <button onClick={() => navigate('/data-source')} className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#5856d6] to-[#34c759] text-white text-sm font-medium hover:opacity-90 transition-opacity shadow-sm">
               <ShieldCheck className="w-4 h-4" />数据来源管理
@@ -96,8 +99,12 @@ export default function DataManage() {
         {/* 半月采集刷新状态 */}
         <div className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF] mb-6">
           <div className="flex items-center gap-3 flex-wrap">
-            <div className="w-9 h-9 rounded-xl bg-[#34c759]/10 flex items-center justify-center">
-              {collectionManifestStatus === 'ready' ? <CheckCircle className="w-4 h-4 text-[#34c759]" /> : <AlertCircle className="w-4 h-4 text-[#ff9500]" />}
+            <div
+              aria-label={collectionSchedule.label}
+              data-schedule-tone={collectionSchedule.tone}
+              className={`w-9 h-9 rounded-xl flex items-center justify-center ${collectionSchedule.tone === 'danger' ? 'bg-[#ff3b30]/10' : collectionSchedule.tone === 'success' ? 'bg-[#34c759]/10' : 'bg-[#ff9500]/10'}`}
+            >
+              {collectionSchedule.tone === 'success' ? <CheckCircle className="w-4 h-4 text-[#34c759]" /> : <AlertCircle className={`w-4 h-4 ${collectionSchedule.tone === 'danger' ? 'text-[#ff3b30]' : 'text-[#ff9500]'}`} />}
             </div>
             <div className="min-w-[240px]">
               <p className="text-xs font-semibold text-[#1d1d1f]">半月数据采集刷新</p>
@@ -124,12 +131,18 @@ export default function DataManage() {
           </div>
         </div>
 
+        <SourceFreshnessOverview
+          sourceIds={['ds-047', 'ds-048', 'ds-049', 'ds-050', 'ds-051']}
+          title="L3 ERP 历史快照当前使用门禁"
+          className="mb-6"
+        />
+
         {/* Overview Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[
             { label: '数据表总数', value: String(totalTables), color: '#C25B6E' },
             { label: '字段总数', value: String(totalFields), color: '#ff9500' },
-            { label: '模块数', value: '6', color: '#34c759' },
+            { label: '模块数', value: String(dataModules.length), color: '#34c759' },
             { label: '数据血缘', value: String(dataLineage.length), color: '#5856d6' },
           ].map((s, i) => (
             <div key={i} className="bg-white rounded-2xl p-4 card-shadow-sm border border-[#EDE6DF]">
@@ -623,7 +636,7 @@ export default function DataManage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-[#86868b] leading-relaxed truncate">
             <div className="p-3 rounded-xl bg-[#FBF8F5]">
               <p className="font-medium text-[#1d1d1f] truncate mb-1">Mutually Exclusive（相互独立）</p>
-              <p>6大模块按业务域严格划分：市场洞察（外部市场环境）↔ 竞争情报（竞争对手）↔ 用户研究（消费者）↔ 行业动态（政策法规/供应链/IP）↔ 品牌自研（Momcozy自身）↔ AI辅助（AI工具链）。每类数据只归属一个模块，避免重复存储。</p>
+              <p>{dataModules.length}大模块按业务域严格划分：市场洞察（外部市场环境）↔ 竞争情报（竞争对手）↔ 用户研究（消费者）↔ 行业动态（政策法规/供应链/IP）↔ 品牌自研（Momcozy自身）↔ ERP内部经营（受限历史快照）↔ AI辅助（AI工具链）。每类数据只归属一个模块，避免重复存储。</p>
             </div>
             <div className="p-3 rounded-xl bg-[#FBF8F5]">
               <p className="font-medium text-[#1d1d1f] truncate mb-1">Collectively Exhaustive（完全穷尽）</p>

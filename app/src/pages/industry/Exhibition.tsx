@@ -2,6 +2,8 @@
 import { Calendar, CheckCircle2, ExternalLink, Globe, MapPin, Ticket, Users } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import PageEvidenceNotice from '@/components/PageEvidenceNotice';
+import SourceBackedReviewPacket from '@/components/SourceBackedReviewPacket';
+import { industrySidebarItems } from './industry-sidebar-items';
 
 const exhibitions = [
   {
@@ -82,42 +84,12 @@ const reviewSummary = [
   { label: '下一场待举办', value: '3', detail: 'Tokyo、CBME、Kind + Jugend 仍在 2026 后续窗口' },
 ];
 
-const sidebarItems = [
-  {
-    label: '政策分析',
-    children: [
-      { label: '母婴标准与法规地图', path: '/industry' },
-      { label: '行业法规与标准解读', path: '/industry/regulation' },
-      { label: '区域标准洞察', path: '/industry/policy-insight' },
-    ],
-  },
-  {
-    label: 'VOC趋势',
-    children: [
-      { label: 'VOC趋势地图', path: '/industry/flavor-map' },
-      { label: 'VOC趋势报告', path: '/industry/flavor-report' },
-    ],
-  },
-  {
-    label: '行业新闻',
-    children: [
-      { label: '母婴行业资讯', path: '/industry/news' },
-      { label: '母婴科技资讯', path: '/industry/tech' },
-      { label: '母婴行业报告', path: '/industry/reports' },
-    ],
-  },
-  { label: '母婴供应链情报', path: '/industry/supply' },
-  { label: 'IP分析', path: '/industry/ip' },
-  { label: '母婴展会调研', path: '/industry/exhibition' },
-  { label: '区域宏观分析', path: '/industry/macro' },
-];
-
 export default function Exhibition() {
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex gap-8">
-          <Sidebar items={sidebarItems} />
+          <Sidebar items={industrySidebarItems} />
           <div className="flex-1 min-w-0 space-y-6">
             {/* Header */}
             <div className="bg-white rounded-2xl p-5 card-shadow-sm border border-[#EDE6DF]">
@@ -136,6 +108,27 @@ export default function Exhibition() {
               sourceIds={['ds-018']}
               title="展会线索使用口径"
               description="展会官网可支撑日程与参展线索，但线索数、订单和 ROI 仍需 CRM 或展会复盘快照复核；页面不直接输出经营结论。"
+            />
+
+            <SourceBackedReviewPacket
+              route="/industry/exhibition"
+              modelContract="exhibition-task-evidence-v1"
+              evidenceScope={[
+                'ds-018：公开展会页仅支撑展会名称、日期、地点与来源入口。',
+                '行动闭环必须关联任务 owner、截止日、现场证据与完成状态。',
+              ]}
+              allowedUses={[
+                '复核展会线索、现场情报任务和后续行动的证据闭环设计。',
+                '形成带 owner、due date 和验证材料的内部执行候选。',
+              ]}
+              prohibitedUses={[
+                '不得解释为线索转化、订单、ROI 或参展成效。',
+                '不得以官网日程、报名状态或现场任务替代 CRM 与财务复盘。',
+              ]}
+              reviewChecklist={[
+                '业务 owner 签核重点竞品、现场情报清单与任务优先级。',
+                '补齐任务负责人、截止日、完成凭证和关闭原因。',
+              ]}
             />
 
             {/* Source Review Summary */}

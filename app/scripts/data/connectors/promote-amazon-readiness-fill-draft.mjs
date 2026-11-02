@@ -3,6 +3,7 @@ import { chmodSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync
 import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { assertSafePrivatePath } from '../lib/private-path-safety.mjs';
+import { resolveCurrentPeriodWindow } from '../lib/current-period-window.mjs';
 
 const connectorId = 'amazon-commerce';
 const defaultTargetDir = process.env.MKT53_AMAZON_PRIVATE_DIR ?? 'configs/private';
@@ -19,8 +20,8 @@ function parseArgs(argv) {
     outputPath: undefined,
     backupDir: undefined,
     writeFinal: argv.includes('--write-final'),
-    windowStart: '2026-06-01',
-    windowEnd: '2026-06-15',
+    windowStart: undefined,
+    windowEnd: undefined,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -32,7 +33,7 @@ function parseArgs(argv) {
     if (argv[i] === '--window-end') options.windowEnd = argv[i + 1];
   }
 
-  return options;
+  return { ...options, ...resolveCurrentPeriodWindow(options) };
 }
 
 function readJson(path) {
@@ -78,6 +79,7 @@ function validateReadiness(readiness, template, options) {
   const expectedSnapshotTypes = template.expectedSnapshotTypes;
   const allowedComplianceReviewStatuses = new Set(template.allowedComplianceReviewStatuses);
   const dateFields = ['authorizationApprovedAt', 'collectionWindowStart', 'collectionWindowEnd', 'reviewApprovedAt'];
+  const ownerIdentityFields = ['authorizationRecordId', 'authorizationOwner', 'reviewOwner', 'complianceReviewer'];
   const missingRequiredFields = requiredFields.filter((field) => !hasRequiredValue(readiness[field]));
   const invalidDateFields = dateFields.filter((field) => readiness[field] && !isIsoDate(readiness[field]));
   const collectionWindowOrderInvalid =
@@ -86,6 +88,8 @@ function validateReadiness(readiness, template, options) {
       : false;
   const collectionWindowMatchesExpected =
     readiness.collectionWindowStart === options.windowStart && readiness.collectionWindowEnd === options.windowEnd;
+  const ownerContentDetected = ownerIdentityFields.some((field) => hasRequiredValue(readiness[field]))
+    || dateFields.some((field) => isIsoDate(readiness[field]));
   const allowedSnapshotTypes = Array.isArray(readiness.allowedSnapshotTypes) ? readiness.allowedSnapshotTypes : [];
   const missingSnapshotTypes = expectedSnapshotTypes.filter((snapshotType) => !allowedSnapshotTypes.includes(snapshotType));
   const forbiddenFieldNames = findForbiddenReadinessKeys(readiness);
@@ -109,6 +113,10 @@ function validateReadiness(readiness, template, options) {
       requiredFields: {
         status: missingRequiredFields.length === 0 ? 'ready' : 'blocked',
         missingRequiredFields,
+      },
+      ownerContent: {
+        status: ownerContentDetected ? 'detected' : 'absent',
+        detected: ownerContentDetected,
       },
       dates: {
         status: invalidDateFields.length === 0 ? 'ready' : 'blocked',
@@ -246,6 +254,6 @@ async function main() {
   process.stdout.write(`${JSON.stringify(manifest, null, 2)}\n`);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   await main();
 }

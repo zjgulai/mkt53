@@ -13,6 +13,7 @@ import {
   unwrapJsonObject,
 } from '../lib/connector-readiness.mjs';
 import { extractSourceRegistry, isoWeek } from '../lib/project-analysis.mjs';
+import { resolveCurrentPeriodWindow } from '../lib/current-period-window.mjs';
 
 const connectorId = 'amazon-commerce';
 const defaultWritePath = 'tmp/data-collection/connectors/amazon-commerce-dry-run.json';
@@ -66,19 +67,80 @@ const requiredSourceIds = new Set(requiredMappingScopes.map((scope) => scope.sou
 const snapshotContracts = [
   {
     snapshotType: 'product_snapshot',
-    requiredFields: ['requestId', 'sourceId', 'site', 'marketplaceId', 'asin', 'sku', 'brand', 'productName', 'category', 'capturedAt'],
+    requiredFields: [
+      'requestId',
+      'sourceId',
+      'site',
+      'marketplaceId',
+      'asin',
+      'sku',
+      'brand',
+      'productName',
+      'category',
+      'variantKey',
+      'priceAmount',
+      'currency',
+      'taxIncluded',
+      'promotionType',
+      'promotionAmount',
+      'collectionWindowStart',
+      'collectionWindowEnd',
+      'capturedAt',
+      'schemaVersion',
+    ],
   },
   {
     snapshotType: 'review_snapshot',
-    requiredFields: ['requestId', 'sourceId', 'site', 'asin', 'rating', 'reviewCount', 'capturedAt', 'sampleWindow'],
+    requiredFields: [
+      'requestId',
+      'sourceId',
+      'site',
+      'marketplaceId',
+      'asin',
+      'rating',
+      'reviewCount',
+      'capturedAt',
+      'sampleWindow',
+      'schemaVersion',
+    ],
   },
   {
     snapshotType: 'brand_share_snapshot',
-    requiredFields: ['requestId', 'sourceId', 'site', 'marketplaceId', 'brand', 'category', 'shareMetric', 'capturedAt'],
+    requiredFields: [
+      'requestId',
+      'sourceId',
+      'site',
+      'marketplaceId',
+      'countryOrRegion',
+      'brand',
+      'category',
+      'shareMetric',
+      'numerator',
+      'denominator',
+      'unit',
+      'collectionWindowStart',
+      'collectionWindowEnd',
+      'metricDefinitionVersion',
+      'capturedAt',
+      'schemaVersion',
+    ],
   },
   {
     snapshotType: 'category_rank_snapshot',
-    requiredFields: ['requestId', 'sourceId', 'site', 'marketplaceId', 'asin', 'rankType', 'rankValue', 'capturedAt'],
+    requiredFields: [
+      'requestId',
+      'sourceId',
+      'site',
+      'marketplaceId',
+      'asin',
+      'category',
+      'rankType',
+      'rankValue',
+      'collectionWindowStart',
+      'collectionWindowEnd',
+      'capturedAt',
+      'schemaVersion',
+    ],
   },
 ];
 
@@ -101,8 +163,8 @@ function parseArgs(argv) {
     readinessPath: undefined,
     site: 'amazon.com',
     marketplaceId: 'ATVPDKIKX0DER',
-    windowStart: '2026-06-01',
-    windowEnd: '2026-06-15',
+    windowStart: undefined,
+    windowEnd: undefined,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -119,7 +181,7 @@ function parseArgs(argv) {
     if (argv[i] === '--window-end') options.windowEnd = argv[i + 1];
   }
 
-  return options;
+  return { ...options, ...resolveCurrentPeriodWindow(options) };
 }
 
 function safeRetention(retention) {
@@ -189,17 +251,17 @@ function credentialPreflight(env) {
 }
 
 function mappingPreflight(mappings, context) {
-  const validations = mappings.map((mapping) => validateMapping(mapping, context));
+  const validations = mappings.map((mapping, rowIndex) => ({ ...validateMapping(mapping, context), rowIndex }));
   const validMappings = validations.filter((item) => item.valid).map((item) => item.mapping);
   const invalidMappings = validations.filter((item) => !item.valid);
   const seenKeys = new Set();
   const duplicateMappings = [];
   const uniqueValidMappings = [];
 
-  for (const mapping of validMappings) {
+  for (const [rowIndex, mapping] of validMappings.entries()) {
     const mappingKey = [mapping.sourceId, mapping.site, mapping.marketplaceId, mapping.asin].join('|');
     if (seenKeys.has(mappingKey)) {
-      duplicateMappings.push({ sourceId: mapping.sourceId, site: mapping.site, marketplaceId: mapping.marketplaceId, asin: mapping.asin });
+      duplicateMappings.push({ rowIndex, sourceId: mapping.sourceId, site: mapping.site, marketplaceId: mapping.marketplaceId });
     } else {
       seenKeys.add(mappingKey);
       uniqueValidMappings.push(mapping);
@@ -227,9 +289,8 @@ function mappingPreflight(mappings, context) {
     uniqueValidMappingCount: uniqueValidMappings.length,
     invalidMappingCount: invalidMappings.length,
     invalidMappings: invalidMappings.map((item) => ({
+      rowIndex: item.rowIndex,
       sourceId: item.mapping.sourceId ?? '',
-      sku: item.mapping.sku ?? '',
-      asin: item.mapping.asin ?? '',
       missingFields: item.missingFields,
       asinValid: item.asinValid,
       sourceIdAllowed: item.sourceIdAllowed,
@@ -393,7 +454,7 @@ function archiveMappingCoverageReport(dryRun, report, archiveDir, retention) {
   };
 }
 
-function buildAmazonCommerceReadinessGate(dryRun, options = {}, env = process.env) {
+export function buildAmazonCommerceReadinessGate(dryRun, options = {}, env = process.env) {
   const readinessPath = options.readinessPath ?? env.MKT53_AMAZON_READINESS_PATH;
   const readinessPathSource = configuredPathSource({
     explicitPath: options.readinessPath,
@@ -438,9 +499,9 @@ function buildAmazonCommerceReadinessGate(dryRun, options = {}, env = process.en
       {
         readinessPathSource,
         configured: Boolean(readinessPath),
-        authorizationRecordId: readiness?.authorizationRecordId ?? '',
-        authorizationOwner: readiness?.authorizationOwner ?? '',
-        authorizationApprovedAt: readiness?.authorizationApprovedAt ?? '',
+        authorizationRecordIdPresent: Boolean(readiness?.authorizationRecordId),
+        authorizationOwnerPresent: Boolean(readiness?.authorizationOwner),
+        authorizationApprovedAtValid: isIsoDate(readiness?.authorizationApprovedAt),
       },
       { type: readinessPath ? 'invalid-authorization-record' : 'missing-readiness-record' },
     ),
@@ -462,8 +523,8 @@ function buildAmazonCommerceReadinessGate(dryRun, options = {}, env = process.en
       'Business owner review is approved',
       Boolean(readiness?.reviewOwner && isIsoDate(readiness?.reviewApprovedAt)),
       {
-        reviewOwner: readiness?.reviewOwner ?? '',
-        reviewApprovedAt: readiness?.reviewApprovedAt ?? '',
+        reviewOwnerPresent: Boolean(readiness?.reviewOwner),
+        reviewApprovedAtValid: isIsoDate(readiness?.reviewApprovedAt),
       },
       { type: 'missing-owner-review' },
     ),
@@ -473,7 +534,7 @@ function buildAmazonCommerceReadinessGate(dryRun, options = {}, env = process.en
       readiness?.complianceReviewStatus === 'approved',
       {
         complianceReviewStatus: readiness?.complianceReviewStatus ?? '',
-        complianceReviewer: readiness?.complianceReviewer ?? '',
+        complianceReviewerPresent: Boolean(readiness?.complianceReviewer),
       },
       { type: 'missing-compliance-approval' },
     ),
@@ -540,6 +601,10 @@ function buildAmazonCommerceReadinessGate(dryRun, options = {}, env = process.en
       networkCalls: dryRun.safety.networkCalls,
       businessDataWrites: dryRun.safety.businessDataWrites,
       credentialValuesRedacted: dryRun.safety.credentialValuesRedacted,
+      asinValuesRedacted: true,
+      skuValuesRedacted: true,
+      authorizationValuesRedacted: true,
+      ownerValuesRedacted: true,
       dryRunOnly: dryRun.safety.dryRunOnly,
     },
     stopCondition:
@@ -584,6 +649,8 @@ export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
       networkCalls: 0,
       businessDataWrites: 0,
       credentialValuesRedacted: true,
+      asinValuesRedacted: true,
+      skuValuesRedacted: true,
       dryRunOnly: true,
       rule: '该脚本只校验授权前置条件和输出契约，不调用 Amazon，不生成真实业务快照。',
     },
@@ -591,6 +658,8 @@ export function buildAmazonCommerceDryRun(options = {}, env = process.env) {
       start: options.windowStart,
       end: options.windowEnd,
       timezone: 'UTC',
+      source: options.source ?? 'caller',
+      period: options.period,
     },
     site: options.site,
     marketplaceId: options.marketplaceId,
@@ -701,6 +770,6 @@ async function main() {
   ].join('\n'));
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   await main();
 }

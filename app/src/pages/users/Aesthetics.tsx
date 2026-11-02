@@ -66,7 +66,7 @@ export default function Aesthetics() {
             <PageEvidenceNotice
               sourceIds={['ds-040']}
               title="美学偏好示例口径"
-              description="颜色、风格和区域审美偏好尚未绑定真实用户调研样本、地区分布和图片偏好实验；当前页面只作为设计方向探索。"
+              description="本门禁 owner packet 已列明地区配额、实验版本、刺激素材许可/hash、随机化和分析计划；当前尚未获批，页面仍只作为设计方向探索。"
             />
 
             {/* Color + Style Trends */}

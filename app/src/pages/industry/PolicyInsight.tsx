@@ -42,7 +42,7 @@ export default function PolicyInsight() {
       accent="#C25B6E"
       sourceIds={['ds-016', 'policy-cpsc-efiling', 'policy-eu-mdr-transition']}
       evidenceTitle="区域法规公开来源矩阵已补证"
-      evidenceDescription="本页已绑定 EU Commission、GOV.UK、Justice Canada 和中国 GB 标准二级摘要等公开入口，只展示法规来源语境；SKU 适用矩阵、合规通过率、风险等级和法律结论仍需内部审批证据。"
+      evidenceDescription="本页公开法规入口仍只展示来源语境；本门禁 owner packet 已生成但产品分类、SKU、证书、notified body 与法务证据尚未获批，不能推导合规结论。"
       tabs={['区域标准', '风险分层', '合规状态', '变更追踪']}
       blockedItems={[
         '公开法规入口不能直接推导 Momcozy SKU 合规状态。',
@@ -59,8 +59,8 @@ export default function PolicyInsight() {
         '内部合规状态、SKU 适用范围和法律意见必须与公开入口分开展示。',
         'CSV 导出需按同一证据矩阵生成，禁止从页面静态数组导出。',
       ]}
-      statusLabel="公开来源矩阵已补证，合规结论仍门禁"
-      cadence="公开证据批次：tmp/audits/public-source-fill-batch2-industry-20260630/ds016_evidence.json"
+      statusLabel="公开来源矩阵已补证，owner packet 尚未获批"
+      cadence="公开证据保留 · 产品级 owner/reviewer 尚未获批 · 未达到决策就绪"
       internalFactSummary={
         <div className="space-y-3">
           <div>

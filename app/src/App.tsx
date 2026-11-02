@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { Routes, Route } from 'react-router';
 import Navbar from '@/components/Navbar';
+import RouteReadinessStatus from '@/components/RouteReadinessStatus';
 import { useScrollTop } from '@/hooks/useScrollTop';
 import NotFoundPage from '@/pages/NotFoundPage';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -26,7 +27,9 @@ import {
   IPAnalysis,
   IndustryNews,
   IndustryPage,
+  IndustryReports,
   KnowledgeBase,
+  MacroAnalysis,
   MarketPage,
   MarketTrend,
   NewCompetition,
@@ -62,6 +65,7 @@ function App() {
     <ErrorBoundary>
       <div className="min-h-screen bg-[#F7F0EB]">
         <Navbar />
+        <RouteReadinessStatus />
         <Suspense fallback={<PageFallback />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -91,11 +95,11 @@ function App() {
             <Route path="/industry/flavor-report" element={<FlavorReport />} />
             <Route path="/industry/news" element={<IndustryNews />} />
             <Route path="/industry/tech" element={<TechNews />} />
-            <Route path="/industry/reports" element={<IndustryNews />} />
+            <Route path="/industry/reports" element={<IndustryReports />} />
             <Route path="/industry/supply" element={<SupplyChain />} />
             <Route path="/industry/ip" element={<IPAnalysis />} />
             <Route path="/industry/exhibition" element={<Exhibition />} />
-            <Route path="/industry/macro" element={<RegulationDetail />} />
+            <Route path="/industry/macro" element={<MacroAnalysis />} />
             <Route path="/self" element={<SelfInsight />} />
             <Route path="/ai-assistant" element={<AIAssistantPage />} />
             <Route path="/ai-assistant/review-analysis" element={<ReviewAnalysis />} />
