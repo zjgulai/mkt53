@@ -61,11 +61,11 @@
     },
     {
       "path": "app/package.json",
-      "sha256": "55568325045764fed05fb61b533e65fa715e5d66a543416a838f0fa19cc06272"
+      "sha256": "e159bae7c53b0ea969571fa0b801ab369eeb0ccac181f736a86ac69c50595921"
     },
     {
       "path": "app/package-lock.json",
-      "sha256": "38a231d41ab4024cd77734c1c60dc7b98560242bfa41017fef391f4b284d7a8d"
+      "sha256": "b0471723a5e0d2d96129245acc5a519c4d469f3e78d5754c79c3650a890d61cc"
     },
     {
       "path": "app/src/features/data-manage/catalog-core.tsx",
