@@ -61,7 +61,7 @@
     },
     {
       "path": "app/package.json",
-      "sha256": "7802b52440d58f692bd78a0965deec1dc08ce426aa7b99fe880f333d97ed3053"
+      "sha256": "55568325045764fed05fb61b533e65fa715e5d66a543416a838f0fa19cc06272"
     },
     {
       "path": "app/package-lock.json",
