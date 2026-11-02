@@ -1,0 +1,85 @@
+{
+  "gate": "DQ-016",
+  "contractVersion": "1.0.0",
+  "projectionAsOf": "2026-07-30T09:00:00.000Z",
+  "defaultsByCollectionMethod": {
+    "public-url-check": {
+      "warnAfterDays": 30,
+      "expireAfterDays": 60
+    },
+    "manual-required": {
+      "warnAfterDays": 30,
+      "expireAfterDays": 60
+    },
+    "connector-required": {
+      "warnAfterDays": 16,
+      "expireAfterDays": 32
+    },
+    "local-file-check": {
+      "warnAfterDays": 30,
+      "expireAfterDays": 90
+    }
+  },
+  "l3Rules": {
+    "forbidRegistryLastVerifiedOnly": true,
+    "requireSnapshotObservedThrough": true,
+    "requireEvidenceArtifact": true,
+    "requireArtifactSha256Contract": true,
+    "requireRefreshReceipt": true
+  },
+  "overrides": [
+    {
+      "sourceId": "ds-047",
+      "snapshotObservedThrough": "2026-06-24",
+      "expectedArtifactPath": "tmp/exports/erp_sales_monthly_summary_2026-01-01_2026-06-24.evidence.json",
+      "expectedArtifactSha256": null,
+      "refreshReceiptPath": null,
+      "basisType": "snapshot-observed-through+artifact-receipt"
+    },
+    {
+      "sourceId": "ds-048",
+      "snapshotObservedThrough": "2026-06-24",
+      "expectedArtifactPath": "tmp/exports/erp_after_sales_monthly_summary_2026-01-01_2026-06-24.evidence.json",
+      "expectedArtifactSha256": null,
+      "refreshReceiptPath": null,
+      "basisType": "snapshot-observed-through+artifact-receipt"
+    },
+    {
+      "sourceId": "ds-049",
+      "snapshotObservedThrough": "2026-06-24",
+      "expectedArtifactPath": "tmp/exports/erp_retail_channel_monthly_summary_2026-01-01_2026-06-24.evidence.json",
+      "expectedArtifactSha256": null,
+      "refreshReceiptPath": null,
+      "basisType": "snapshot-observed-through+artifact-receipt"
+    },
+    {
+      "sourceId": "ds-050",
+      "snapshotObservedThrough": "2026-06-24",
+      "expectedArtifactPath": "tmp/audits/erp-readonly-source-check-20260624/erp_source_matrix.csv",
+      "expectedArtifactSha256": null,
+      "refreshReceiptPath": null,
+      "basisType": "snapshot-observed-through+artifact-receipt"
+    },
+    {
+      "sourceId": "ds-051",
+      "snapshotObservedThrough": "2026-06-24",
+      "expectedArtifactPath": "tmp/audits/erp-readonly-source-check-20260624/erp_source_matrix.csv",
+      "expectedArtifactSha256": null,
+      "refreshReceiptPath": null,
+      "basisType": "snapshot-observed-through+artifact-receipt"
+    }
+  ],
+  "boundaries": {
+    "networkCalls": false,
+    "providerCalls": false,
+    "restrictedConnectorAccess": false,
+    "connectorCalls": false,
+    "databaseWrites": false,
+    "productionWrites": false,
+    "deployment": false,
+    "liveCollection": false,
+    "externalSend": false,
+    "factPromotion": false,
+    "evidenceGradePromotion": false
+  }
+}
