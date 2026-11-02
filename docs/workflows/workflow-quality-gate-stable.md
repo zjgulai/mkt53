@@ -36,11 +36,11 @@ npm run test:e2e
 
 `npm run test:e2e` 使用 Playwright 启动本地 Vite 服务，覆盖桌面 `1440x900` 与移动端 `390x844`，断言核心页面标题可见、无水平滚动、无控制台 error。
 
-本机存在其他高 CPU Node/Vitest 任务时，组件测试可能出现交互超时。此时先不要把超时直接判定为业务回归，改用串行诊断入口复核：
+默认 `npm run test` 与正式 release evidence 都使用单 worker，避免数据生成器、组件测试和构建并发时因资源争用触发伪超时。需要显式诊断并行执行能力时，才使用 `npm run test:parallel`；该命令不替代稳定 release gate：
 
 ```bash
 cd app
-npm run test:serial
+npm run test:parallel
 ```
 
 改动宿主导航页入口、生产域名、landing 卡片文案或发布验收规则时，额外执行：
@@ -102,8 +102,9 @@ uv sync --frozen
 | 命令 | 职责 |
 |---|---|
 | `npm run quality:release-evidence` | 前端 8 项候选门禁与单份 JSON 汇总证据 |
-| `npm run test` | Vitest 单元测试、组件测试、路由懒加载、脚本约束、客户端 bundle 泄漏检查 |
-| `npm run test:serial` | 本机资源紧张时的串行 Vitest 诊断入口，不替代 CI 默认并行测试 |
+| `npm run test` | 单 worker Vitest 稳定门禁：单元测试、组件测试、路由懒加载、脚本约束、客户端 bundle 泄漏检查 |
+| `npm run test:serial` | 与默认测试相同的显式串行入口，供 release evidence 和故障定位复用 |
+| `npm run test:parallel` | 并行能力诊断入口；高并发资源争用下的 timeout 不单独作为 release 结论 |
 | `npm run lint` | ESLint 静态检查，范围限定为 `src`、`tests`、Playwright 配置和 Vite 配置 |
 | `npm audit` | npm 依赖漏洞检查 |
 | `npm run build` | TypeScript 编译与 Vite 生产构建 |
