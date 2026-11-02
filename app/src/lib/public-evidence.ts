@@ -23,7 +23,6 @@ export interface PublicEvidenceRecord {
   captureStatus: string;
   capturedAt?: string;
   plannedAt?: string;
-  plannedAt?: string;
   title?: string;
   label?: string;
   url: string;
