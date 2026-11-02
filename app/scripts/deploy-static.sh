@@ -14,7 +14,8 @@ cd "${APP_DIR}"
 
 npm run test:serial
 npm run lint
-npm audit
+# 只审计生产依赖：静态产物不打包 devDependencies；dev 工具链 advisory 不应阻断发布
+npm audit --omit=dev
 npm run build
 npm run quality:bundle-budget
 
